@@ -37,7 +37,7 @@ O **ABADÁ APP** foi projetado para resolver a fragmentação de informações n
     - #### **Clone o repositório**: 
      
     ```
-      https://github.com/PAFONTINHAS/abada-app.git
+      git clone https://github.com/PAFONTINHAS/abada-app.git
       cd abada-app
     ```
   
