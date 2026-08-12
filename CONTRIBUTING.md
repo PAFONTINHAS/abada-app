@@ -26,10 +26,10 @@ O controle de versão do projeto é gerenciado via Git e hospedado no GitHub, ut
   - **Código-fonte em inglês**: Toda a estrutura do código (nome de arquivos, classes, métodos, variáveis, comentários, commits) **deve ser escrita estritamente em inglês**.
   - **Exceção**: Textos, rascunhos de UI e strings exibidos na interface do aplicativo para o usuário final permanecem em Português.
 
-- ### Padronização do Framework (Flutter/Dart)
+- ### Padronização do Framework (Flutter/Dart) 
 
-Para manter a conformidade com as diretrizes oficiais da linguagem Dart e do ecossistema Flutter:
-`
+  Para manter a conformidade com as diretrizes oficiais da linguagem Dart e do ecossistema Flutter:
+
   |ELEMENTO| Convenção | Exemplo |
   |-|-|-|
   |**Arquivos e Pastas**| `snake_case` |  `user_profile_screen.dart`, `auth_service.dart` |
@@ -52,9 +52,9 @@ Para manter a conformidade com as diretrizes oficiais da linguagem Dart e do eco
       - `String confirmationDialogTitle = "Cancel Event";`
       - `String getUserNickname(String userId){}`
   
-- Modularização e Tamanho de arquivos
+- ### Modularização e Tamanho de arquivos
   - **Limite Extensivo**: Arquivos que ultrapassarem o limite de **150 linhas de código** devem ser obrigatoriamente refatorados e divididos em componentes menores
-  - **Componentização da UI**: A extensão visual das telas (como decorators) não jusitificam arquivos acoplados. Widgets complexos ou trechos de decoração repetitivos devem ser extraídos para arquivos/widgets próprios na pasta `widgets/`
+  - **Componentização da UI**: A extensão visual das telas (como decorators) não justificam arquivos acoplados. Widgets complexos ou trechos de decoração repetitivos devem ser extraídos para arquivos/widgets próprios na pasta `widgets/`
   - **Refatoração Contínua**: O **Clean Code** é um princípio ativo do projeto. Escrever código legível reduz a incidência de bugs e otimiza o tempo de leitura de toda a equipe 
   
   
