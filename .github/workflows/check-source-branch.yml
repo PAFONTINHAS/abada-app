@@ -4,7 +4,6 @@ on:
   pull_request:
     branches:
       - main  # Aplica quando o destino da PR for a main
-      - development
 
 jobs:
   verify-source:
