@@ -15,7 +15,7 @@ jobs:
           echo "Branch de origem: ${{ github.head_ref }}"
           echo "Branch de destino: ${{ github.base_ref }}"
           
-          if [ "${{ github.head_ref }}" != "dev" ]; then
-            echo "Erro: Pull requests para a 'main' só podem ser criados a partir da branch 'dev'."
+          if [ "${{ github.head_ref }}" != "development" ]; then
+            echo "Erro: Pull requests para a 'main' só podem ser criados a partir da branch 'development'."
             exit 1
           fi
