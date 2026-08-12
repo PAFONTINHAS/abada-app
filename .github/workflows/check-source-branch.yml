@@ -2,8 +2,9 @@ name: Check PR Source Branch
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened]
     branches:
-      - main  # Aplica quando o destino da PR for a main
+      - main  # Only run when PR target is main
 
 jobs:
   verify-source:
@@ -14,7 +15,7 @@ jobs:
           echo "Branch de origem: ${{ github.head_ref }}"
           echo "Branch de destino: ${{ github.base_ref }}"
           
-          if [ "${{ github.head_ref }}" != "development" ]; then
-            echo "Erro: Pull requests para a 'main' só podem ser criados a partir da branch 'development'."
+          if [ "${{ github.head_ref }}" != "dev" ]; then
+            echo "Erro: Pull requests para a 'main' só podem ser criados a partir da branch 'dev'."
             exit 1
           fi
