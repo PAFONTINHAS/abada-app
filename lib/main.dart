@@ -2,6 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/home_page_controller.dart';
+import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/login_form_controller.dart';
+import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/register_form_controller.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/pages/home_page.dart';
 
 void main() async{
@@ -15,6 +17,8 @@ void main() async{
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => HomePageController()),
+        ChangeNotifierProvider(create: (_) => LoginFormController()),
+        ChangeNotifierProvider(create: (_) => RegisterFormController())
       ],
       child: const MyApp(),
     )  

@@ -21,15 +21,20 @@ class HomePage extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Center(child: Image.asset('assets/images/logo.png')),
 
-              Text("Bem-vindo(a)!"),
-              Text("Faça o login para acessar sua conta"),
+                Padding(
+                  padding: EdgeInsetsGeometry.symmetric(vertical: 50),
+                  child: Center(child: Image.asset('assets/images/logo.png')),
+                ),
+            
+
+              Text("Bem-vindo(a)! 👋", style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold ),),
+              Text("Faça o login para acessar sua conta", style: TextStyle(fontSize: 15),),
 
               TabBar(
-                padding: EdgeInsets.all(50),
+                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
                 labelColor: Colors.white,
-                unselectedLabelColor: Color.fromRGBO(113, 118, 168, 100),
+                unselectedLabelColor: Color.fromRGBO(193, 194, 199, 1),
                 indicatorColor: Color.fromRGBO(78, 39, 211, 100),
                 indicatorSize: TabBarIndicatorSize.tab,
                 indicator: BoxDecoration(
@@ -46,9 +51,9 @@ class HomePage extends StatelessWidget {
               Selector<HomePageController, bool>(
                 selector: (_, controller) => controller.isLogin, 
                 builder: (context, isLogin, child) => 
-                  isLogin 
-                  ? LoginWidget() 
-                  : RegisterWidget()
+                 isLogin 
+                  ? const LoginWidget() 
+                  : const RegisterWidget()
                 ),
             ],
           ),
