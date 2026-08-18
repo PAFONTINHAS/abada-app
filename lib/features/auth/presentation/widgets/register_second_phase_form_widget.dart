@@ -14,7 +14,7 @@ class RegisterSecondPhaseFormWidget extends StatelessWidget {
         Align(
           alignment: Alignment.center,
           child: Text(
-            "Mias Informações",
+            "Mais Informações",
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ),

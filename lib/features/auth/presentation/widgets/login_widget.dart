@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
+import 'package:sistema_abada_capoeira/features/home_user/presentation/pages/home_user_page.dart';
 import 'package:sistema_abada_capoeira/shared/inputs/custom_text_input.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/widgets/form_button_widget.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/login_form_controller.dart';
@@ -67,6 +68,8 @@ class LoginWidget extends StatelessWidget {
             textColor: Colors.black,
             prefixImagePath: "assets/images/google.png",
             onPressed: (){
+
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeUserPage()));
               
             },
           ),

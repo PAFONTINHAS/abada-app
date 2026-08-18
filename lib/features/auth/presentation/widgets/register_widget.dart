@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/models/register_phase.dart';
+import 'package:sistema_abada_capoeira/features/home_user/presentation/pages/home_user_page.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/widgets/form_button_widget.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/register_form_controller.dart';
+import 'package:sistema_abada_capoeira/features/auth/presentation/widgets/register_phase_based_button.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/widgets/register_phase_progress_widget.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/widgets/register_first_phase_form_widget.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/widgets/register_second_phase_form_widget.dart';
@@ -18,10 +21,6 @@ class RegisterWidget extends StatelessWidget {
     return Selector<RegisterFormController, RegisterPhase>(
       selector: (_, controller) => controller.registerPhase,
       builder: (context, registerPhase, child){
-
-        String registerPhaseTextButton = "Continuar";
-
-        if(registerPhase == RegisterPhase.secondPhase) registerPhaseTextButton = "Cadastrar";
 
         return Padding(
           padding: EdgeInsetsGeometry.all(25),
@@ -40,26 +39,30 @@ class RegisterWidget extends StatelessWidget {
 
               if(registerPhase == RegisterPhase.secondPhase) SizedBox(height: 40),
 
-              Selector<RegisterFormController, bool>(
-                selector: (_, controller) => controller.isFirstPhaseComplete,
-                builder: (context, isFirstPhaseComplete, child) {
-                  return FormButtonWidget(
-                    height: 54,
-                    text: registerPhaseTextButton,
-                    buttonCollor: isFirstPhaseComplete
-                        ? ColorConstants.indigoColor
-                        : Colors.grey,
-                    onPressed: () async{
+              RegisterPhaseBasedButton(
+                registerPhase: registerPhase,
+                onFirstPhasePressed: () => formController.moveToTheNextPhase(),
+                onSecondPhasePressed: () async{
 
-                      if(isFirstPhaseComplete && registerPhase == RegisterPhase.firstPhase){
+                  MessageHandler.showInfo(context, "Criando sua conta");
 
-                        formController.moveToTheNextPhase();
-                        return;
-                      }
+                  final success = await formController.registerUser();
 
-                    },
-                  );
-              }),
+                  if(!context.mounted) return;
+
+                  if(!success && formController.errorMessage != null){
+
+                    MessageHandler.showError(context, formController.errorMessage!);
+
+                    return;
+                  }
+
+                  MessageHandler.showSuccess(context, "Conta criada com sucesso! Redirecionando...");
+
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder:(context) => HomeUserPage()));
+
+                },
+              ),
 
               SizedBox(height: 20),
 

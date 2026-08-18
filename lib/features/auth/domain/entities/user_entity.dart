@@ -11,7 +11,6 @@ class UserEntity {
     required this.phone,
     required this.rope,
     required this.nickname,
-    required this.password,
     required this.professor,
     this.userType = 'Usuario'
 
@@ -21,7 +20,6 @@ class UserEntity {
   final String fullName;
   final String email;
   final String phone;
-  final String password;
   final String nickname;
   final String rope;
   final String professor;
@@ -36,7 +34,6 @@ class UserEntity {
       phone: userRegistrationParams.phone,
       rope: userRegistrationParams.rope,
       nickname: userRegistrationParams.nickname,
-      password: userRegistrationParams.password,
       professor: userRegistrationParams.professor,
     );
   }
@@ -48,7 +45,6 @@ class UserEntity {
       'rope': rope,
       'fullName': fullName,
       'nickname': nickname,
-      'password': password,
       'professor': professor,
       'userType': userType
     };

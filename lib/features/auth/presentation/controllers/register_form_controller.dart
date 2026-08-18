@@ -8,7 +8,38 @@ class RegisterFormController extends ChangeNotifier {
 
   RegisterUserUsecase _registerUserUsecase;
 
-  RegisterFormController(this._registerUserUsecase);
+  RegisterFormController(this._registerUserUsecase){
+    fullNameController.addListener(notifyListeners);
+    phoneController.addListener(notifyListeners);
+    emailController.addListener(notifyListeners);
+    passwordController.addListener(notifyListeners);
+    confirmPasswordController.addListener(notifyListeners);
+    nicknameController.addListener(notifyListeners);
+    ropeController.addListener(notifyListeners);
+    professorController.addListener(notifyListeners);
+  }
+
+  @override
+  void dispose() {
+    fullNameController.dispose();
+    phoneController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    nicknameController.dispose();
+    ropeController.dispose();
+    professorController.dispose();
+    super.dispose();
+  }
+
+  TextEditingController fullNameController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+  TextEditingController nicknameController = TextEditingController();
+  TextEditingController ropeController = TextEditingController();
+  TextEditingController professorController = TextEditingController();
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -47,15 +78,6 @@ class RegisterFormController extends ChangeNotifier {
     notifyListeners();
   }
 
-  TextEditingController fullNameController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController confirmPasswordController = TextEditingController();
-  TextEditingController nicknameController = TextEditingController();
-  TextEditingController ropeController = TextEditingController();
-  TextEditingController professorController = TextEditingController();
-
   UserRegistrationParams _buildUserRegistrationEntity(){
 
     return UserRegistrationParams(
@@ -73,6 +95,10 @@ class RegisterFormController extends ChangeNotifier {
 
   Future<bool> registerUser() async{
 
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
     final UserRegistrationParams user = _buildUserRegistrationEntity();
 
     final result = await _registerUserUsecase.call(user);
@@ -89,6 +115,9 @@ class RegisterFormController extends ChangeNotifier {
       
       return true;
     });
+
+    _isLoading = false;
+    notifyListeners();
 
     return success;
     

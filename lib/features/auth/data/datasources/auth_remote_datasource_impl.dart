@@ -33,7 +33,7 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource{
     try{
 
 
-      final UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+      final UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: userCredentialParams.email,
         password: userCredentialParams.password,
       );
