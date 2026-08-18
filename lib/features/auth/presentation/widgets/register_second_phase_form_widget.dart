@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/register_form_controller.dart';
-import 'package:sistema_abada_capoeira/shared/inputs/custom_text_input.dart';
+import 'package:sistema_abada_capoeira/shared/inputs/custom_text_input/custom_text_input.dart';
 
 class RegisterSecondPhaseFormWidget extends StatelessWidget {
   const RegisterSecondPhaseFormWidget({super.key});
