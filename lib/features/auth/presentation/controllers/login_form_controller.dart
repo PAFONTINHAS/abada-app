@@ -19,6 +19,14 @@ class LoginFormController extends ChangeNotifier{
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
+  @override
+  void dispose(){
+    super.dispose();
+
+    emailController.dispose();
+    passwordController.dispose();
+  }
+
 
   UserLoginParams _buildUserLoginParamsEntity(){
 
