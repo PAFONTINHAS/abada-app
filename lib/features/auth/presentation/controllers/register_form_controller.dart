@@ -6,7 +6,7 @@ import 'package:sistema_abada_capoeira/features/auth/presentation/models/registe
 
 class RegisterFormController extends ChangeNotifier {
 
-  RegisterUserUsecase _registerUserUsecase;
+  final RegisterUserUsecase _registerUserUsecase;
 
   RegisterFormController(this._registerUserUsecase){
     fullNameController.addListener(notifyListeners);
@@ -78,7 +78,7 @@ class RegisterFormController extends ChangeNotifier {
     notifyListeners();
   }
 
-  UserRegistrationParams _buildUserRegistrationEntity(){
+  UserRegistrationParams _buildUserRegistrationParamsEntity(){
 
     return UserRegistrationParams(
       fullName: fullNameController.text,
@@ -93,13 +93,26 @@ class RegisterFormController extends ChangeNotifier {
     
   }
 
+  void cleanControllers(){
+
+    fullNameController.clear();
+    emailController.clear();
+    phoneController.clear();
+    ropeController.clear();
+    nicknameController.clear();
+    passwordController.clear();
+    professorController.clear();
+    confirmPasswordController.clear();
+
+  }
+
   Future<bool> registerUser() async{
 
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
 
-    final UserRegistrationParams user = _buildUserRegistrationEntity();
+    final UserRegistrationParams user = _buildUserRegistrationParamsEntity();
 
     final result = await _registerUserUsecase.call(user);
 
@@ -117,7 +130,10 @@ class RegisterFormController extends ChangeNotifier {
     });
 
     _isLoading = false;
+
     notifyListeners();
+
+    cleanControllers();
 
     return success;
     

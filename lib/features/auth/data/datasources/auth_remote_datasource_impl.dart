@@ -3,9 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sistema_abada_capoeira/core/errors/failure.dart';
 import 'package:sistema_abada_capoeira/core/errors/exception_handler.dart';
+import 'package:sistema_abada_capoeira/features/auth/data/models/user_entity_model.dart';
 import 'package:sistema_abada_capoeira/features/auth/domain/entities/user_entity.dart';
 import 'package:sistema_abada_capoeira/features/auth/domain/entities/user_credential_params.dart';
 import 'package:sistema_abada_capoeira/features/auth/data/datasources/auth_remote_datasource.dart';
+import 'package:sistema_abada_capoeira/features/auth/domain/entities/user_login_params.dart';
 
 class AuthRemoteDatasourceImpl implements AuthRemoteDatasource{
 
@@ -44,6 +46,42 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource{
     }catch(e){
 
       return ExceptionHandler.handleException(exception: e, contextMessage: "createUserCredential");
+    }
+
+  }
+
+  @override
+  Future<Either<Failure, UserEntity>> getUserDataByUserId(String userId) async{
+
+    try{
+
+      final DocumentSnapshot userDoc = await _firestore.collection('users').doc(userId).get();
+
+      final UserEntityModel userEntity = UserEntityModel.fromSnapshot(userDoc);
+
+      return Right(userEntity);
+
+    } catch(e){
+      return ExceptionHandler.handleException(exception: e, contextMessage: "getUserDataByUserId");
+    }
+
+  }
+
+  @override
+  Future<Either<Failure, UserCredential>> authenticateUser(UserLoginParams userLoginParams) async { 
+
+    try{
+
+      final UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: userLoginParams.email,
+        password: userLoginParams.password,
+      );
+
+      return Right(userCredential);
+
+    } catch(e){
+
+      return ExceptionHandler.handleException(exception: e, contextMessage: "authenticateUser");
     }
 
   }

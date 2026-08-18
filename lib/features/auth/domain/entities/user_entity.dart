@@ -12,7 +12,7 @@ class UserEntity {
     required this.rope,
     required this.nickname,
     required this.professor,
-    this.userType = 'Usuario'
+    this.userRole = 'Usuario'
 
   }); 
 
@@ -23,7 +23,7 @@ class UserEntity {
   final String nickname;
   final String rope;
   final String professor;
-  final String userType;
+  final String userRole;
 
   factory UserEntity.fromRegisterParams(UserCredential userCredential, UserRegistrationParams userRegistrationParams){
 
@@ -46,7 +46,7 @@ class UserEntity {
       'fullName': fullName,
       'nickname': nickname,
       'professor': professor,
-      'userType': userType
+      'userRole': userRole
     };
   }
 

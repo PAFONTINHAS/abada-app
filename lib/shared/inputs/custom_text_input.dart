@@ -59,6 +59,8 @@ class _CustomTextInputState extends State<CustomTextInput> {
   }
 
   late TextEditingController _internalController;
+  final ValueNotifier<bool> _hasTextNotifier = ValueNotifier<bool>(false);
+
   bool _hasText = false; // Controla se há texto para borda verde
   bool _passwordVisible = false;
 
@@ -67,7 +69,8 @@ class _CustomTextInputState extends State<CustomTextInput> {
     super.initState();
     // Usa controller fornecido ou cria um interno
     _internalController = widget.controller ?? TextEditingController();
-    _hasText = _internalController.text.isNotEmpty;
+    // _hasText = _internalController.text.isNotEmpty;
+    _hasTextNotifier.value = _internalController.text.isNotEmpty;
 
     // Escuta mudanças no texto para atualizar a borda
     _internalController.addListener(_onTextChanged);
@@ -82,15 +85,17 @@ class _CustomTextInputState extends State<CustomTextInput> {
     if (widget.controller == null) {
       _internalController.dispose();
     }
+
+    _hasTextNotifier.dispose();
     super.dispose();
   }
 
   // Atualiza estado quando texto muda
   void _onTextChanged() {
     final hasText = _internalController.text.isNotEmpty;
-    if (hasText != _hasText) {
+    if (hasText != _hasTextNotifier.value) {
       setState(() {
-        _hasText = hasText;
+        _hasTextNotifier.value = hasText;
       });
     }
   }

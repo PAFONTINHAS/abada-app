@@ -59,7 +59,7 @@ class RegisterWidget extends StatelessWidget {
 
                   MessageHandler.showSuccess(context, "Conta criada com sucesso! Redirecionando...");
 
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder:(context) => HomeUserPage()));
+                  Navigator.of(context).push(MaterialPageRoute(builder:(context) => HomeUserPage()));
 
                 },
               ),

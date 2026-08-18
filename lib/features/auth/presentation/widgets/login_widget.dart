@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
+import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
 import 'package:sistema_abada_capoeira/features/home_user/presentation/pages/home_user_page.dart';
 import 'package:sistema_abada_capoeira/shared/inputs/custom_text_input.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/widgets/form_button_widget.dart';
@@ -53,7 +54,26 @@ class LoginWidget extends StatelessWidget {
             text: "Entrar",
             height: 52,
             buttonCollor: ColorConstants.indigoColor,
-            onPressed: () {},
+            onPressed: () async {
+
+              MessageHandler.showInfo(context, "Autenticando...");
+
+              final success = await formController.loginUser();
+
+              if(!context.mounted) return;
+
+              if(!success && formController.errorMessage != null){
+
+                MessageHandler.showError(context, formController.errorMessage!);
+
+                return;
+              }
+
+              MessageHandler.showSuccess(context, "Usuário autenticado com sucesso! Redirecionando...");
+
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeUserPage()));
+
+            },
           ),
 
           SizedBox(
