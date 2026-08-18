@@ -13,7 +13,6 @@ class LoginWidget extends StatelessWidget {
 
     final formController = context.read<LoginFormController>();
 
-
     return Padding(
       padding: EdgeInsetsGeometry.all(25),
       child: Column(

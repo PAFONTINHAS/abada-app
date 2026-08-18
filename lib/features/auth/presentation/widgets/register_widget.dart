@@ -49,8 +49,14 @@ class RegisterWidget extends StatelessWidget {
                     buttonCollor: isFirstPhaseComplete
                         ? ColorConstants.indigoColor
                         : Colors.grey,
-                    onPressed: () {
-                      formController.moveToTheNextPhase();
+                    onPressed: () async{
+
+                      if(isFirstPhaseComplete && registerPhase == RegisterPhase.firstPhase){
+
+                        formController.moveToTheNextPhase();
+                        return;
+                      }
+
                     },
                   );
               }),
