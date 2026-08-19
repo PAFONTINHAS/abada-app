@@ -6,11 +6,11 @@ const Color _lightPurple = Color(0xFFF1EDFB);
 
 /// Avatar + name + role
 
-class ProfileHeader extends StatelessWidget {
+class ProfileHeaderWidget extends StatelessWidget {
   final String userName;
   final String roleLabel;
 
-  const ProfileHeader({
+  const ProfileHeaderWidget({
     super.key,
     required this.userName,
     required this.roleLabel,

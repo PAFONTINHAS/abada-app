@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/bottom_navbar.dart';
-import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/current_belt.dart';
-import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/personal_info.dart';
-import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/profile_header.dart';
-import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/quick_action.dart';
-import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/tusca_seal.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/bottom_nav_bar_widget.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/current_belt_card_widget.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/personal_info_widget.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/profile_header_widget.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/quick_actions_section_widget.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/tusca_seal_card_widget.dart';
 
 /// RF04 - Gerenciar Perfil
 class ProfilePage extends StatelessWidget {
@@ -28,7 +28,7 @@ class ProfilePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const ProfileHeader(
+            const ProfileHeaderWidget(
               userName: _mockUserName,
               roleLabel: _mockRoleLabel,
             ),
@@ -39,14 +39,14 @@ class ProfilePage extends StatelessWidget {
               phoneNumber: _mockPhoneNumber,
             ),
             const SizedBox(height: 16),
-            CurrentBeltCard(
+            CurrentBeltCardWidget(
               currentBeltName: _mockCurrentBeltName,
               onViewHistory: () {
                 // TODO: histórico de graduação (RF03)
               },
             ),
             const SizedBox(height: 16),
-            TuscaSealCard(
+            TuscaSealCardWidget(
               statusLabel: _mockTuscaStatusLabel,
               expirationDate: _mockTuscaExpirationDate,
               onDownloadReceipt: () {
@@ -54,7 +54,7 @@ class ProfilePage extends StatelessWidget {
               },
             ),
             const SizedBox(height: 20),
-            QuickActionsSection(
+            QuickActionsSectionWidget(
               onRequestExemption: () {
                 // TODO: Navegar para Solicitar isencao (RF12)
               },
@@ -66,7 +66,7 @@ class ProfilePage extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: const MainBottomNavBar(currentIndex: 4),
+      bottomNavigationBar: const BottomNavBarWidget(currentIndex: 4),
     );
   }
  

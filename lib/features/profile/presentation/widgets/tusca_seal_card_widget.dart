@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/info_card.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/info_card_widget.dart';
 
 const Color _primaryPurple = Color(0xFF7C5CBF);
 const Color _lightPurple = Color(0xFFF1EDFB);
 
 /// Selo TUSCA
-class TuscaSealCard extends StatelessWidget {
+class TuscaSealCardWidget extends StatelessWidget {
   final String statusLabel;
   final String expirationDate;
   final VoidCallback onDownloadReceipt;
 
-  const TuscaSealCard({
+  const TuscaSealCardWidget({
     super.key,
     required this.statusLabel,
     required this.expirationDate,
@@ -19,7 +19,7 @@ class TuscaSealCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InfoCard(
+    return InfoCardWidget(
       children: [
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,

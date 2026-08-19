@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 //Widget para cada acao rapida
-class ActionTitle extends StatelessWidget {
+class ActionTitleWidget extends StatelessWidget {
   final IconData icon;
   final String label;
   final String subtitle;
   final Color accentColor;
   final VoidCallback onTap;
 
-  const ActionTitle({
+  const ActionTitleWidget({
     super.key,
     required this.icon,
     required this.label,

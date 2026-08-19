@@ -6,10 +6,10 @@ const Color _primaryPurple = Color(0xFF7C5CBF);
 /// (Início, Turmas, Eventos, Notícias, Perfil)
 
 
-class MainBottomNavBar extends StatelessWidget {
+class BottomNavBarWidget extends StatelessWidget {
   final int currentIndex;
 
-  const MainBottomNavBar({super.key, required this.currentIndex});
+  const BottomNavBarWidget({super.key, required this.currentIndex});
 
   @override
   Widget build(BuildContext context) {

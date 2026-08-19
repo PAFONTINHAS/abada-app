@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/info_card.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/info_card_widget.dart';
 
 const Color _primaryPurple = Color(0xFF7C5CBF);
 const Color _lightPurple = Color(0xFFF1EDFB);
 
 /// Widget da Corda atual e historico
-class CurrentBeltCard extends StatelessWidget {
+class CurrentBeltCardWidget extends StatelessWidget {
   final String currentBeltName;
   final VoidCallback onViewHistory;
 
-  const CurrentBeltCard({
+  const CurrentBeltCardWidget({
     super.key,
     required this.currentBeltName,
     required this.onViewHistory,
@@ -17,7 +17,7 @@ class CurrentBeltCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InfoCard(
+    return InfoCardWidget(
       children: [
         Row(
           children: [

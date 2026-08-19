@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 /// widget do icon +  label + value
 
 
-class InfoRow extends StatelessWidget {
+class InfoRowWidget extends StatelessWidget {
   final IconData icon;
   final String label;
   final String value;
 
-  const InfoRow({
+  const InfoRowWidget({
     super.key,
     required this.icon,
     required this.label,

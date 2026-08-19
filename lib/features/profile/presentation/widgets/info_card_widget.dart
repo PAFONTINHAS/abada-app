@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 /// Widget de containers brancos
 
-class InfoCard extends StatelessWidget {
+class InfoCardWidget extends StatelessWidget {
   final List<Widget> children;
 
-  const InfoCard({super.key, required this.children});
+  const InfoCardWidget({super.key, required this.children});
 
   @override
   Widget build(BuildContext context) {
