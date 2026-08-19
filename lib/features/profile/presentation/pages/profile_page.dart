@@ -10,7 +10,7 @@ import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/tus
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
  
-  static const String _mockUserName = 'João da Silva';
+  static const String _mockUserName = 'Saci João da Silva';
   static const String _mockRoleLabel = 'Professor(a)';
   static const String _mockEmail = 'joao.silva@abadacapoeira.com';
   static const String _mockPhoneNumber = '(41) 99999-9999';
