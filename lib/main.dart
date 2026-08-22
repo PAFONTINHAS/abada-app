@@ -1,17 +1,15 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sistema_abada_capoeira/core/providers/provider_injection.dart';
-import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/home_page_controller.dart';
-import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/login_form_controller.dart';
-import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/register_form_controller.dart';
-import 'package:sistema_abada_capoeira/features/auth/presentation/pages/home_page.dart';
+import 'package:sistema_abada_capoeira/core/providers/providers_injection.dart';
+import 'package:sistema_abada_capoeira/features/dashboard/presentation/pages/coordenator_dashboard_page.dart';
+import 'package:sistema_abada_capoeira/features/home_user/presentation/pages/home_user_page.dart';
 
 void main() async{
 
   WidgetsFlutterBinding.ensureInitialized();
 
-  final ProviderInjection providerInjection = ProviderInjection();
+  final ProvidersInjection providerInjection = ProvidersInjection();
 
   await Firebase.initializeApp();
 
@@ -42,7 +40,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white
       ),
       title: 'Flutter Demo',
-      home: ProfilePage()
+      home: CoordenatorDashboardPage()
     );
   }
 }
