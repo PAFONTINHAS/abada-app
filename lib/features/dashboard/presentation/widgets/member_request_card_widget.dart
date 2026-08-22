@@ -7,7 +7,7 @@ class MemberRequestCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsetsGeometry.symmetric(vertical: 3),
+      padding: EdgeInsetsGeometry.symmetric(vertical: 3, horizontal: 10),
       child: Column(
         children: [
           Align(
@@ -38,7 +38,7 @@ class MemberRequestCardWidget extends StatelessWidget {
                     SizedBox(width: 10),
 
                     Expanded(
-                      child: Column(
+                      child: Column( 
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
