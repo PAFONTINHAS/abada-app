@@ -15,7 +15,7 @@ class MemberRequestCardWidget extends StatelessWidget {
             child: GestureDetector(
               onTap: () {},
               child: Container(
-                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                 decoration: BoxDecoration(
                   color: ColorConstants.whiteColor,
                   border: BoxBorder.all(color: Colors.black, width: 0.3),
