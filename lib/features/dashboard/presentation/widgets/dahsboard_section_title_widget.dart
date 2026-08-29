@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 
 class DahsboardSectionTitleWidget extends StatelessWidget {
-  const DahsboardSectionTitleWidget({super.key, required this.sectionTitle, this.itemsQuantity});
+  const DahsboardSectionTitleWidget({
+    super.key,
+    required this.sectionTitle,
+    this.itemsQuantity,
+  });
 
   final String sectionTitle;
   final int? itemsQuantity;
@@ -17,8 +21,8 @@ class DahsboardSectionTitleWidget extends StatelessWidget {
         ),
 
         SizedBox(width: 10),
-        
-        if(itemsQuantity != null)
+
+        if (itemsQuantity != null)
           Container(
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
@@ -33,7 +37,6 @@ class DahsboardSectionTitleWidget extends StatelessWidget {
               ),
             ),
           ),
-
       ],
     );
   }
