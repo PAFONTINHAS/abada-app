@@ -1,0 +1,30 @@
+Esse arquivo é um diário de bordo,
+ele explica algumas coisas, pensamentos,
+motivações, justificativas e anotações para
+não esquecer e/ou levar para o grupo.
+
+- Dia 1:
+R02 Validação de vínculo x RXX Camada de espera
+
+R02: se usuário será ou não aceito
+CREATE usuário acabou de se cadastrar
+CREATE solicitação de vinculo é criada com status = pendente
+GET prof recebe a solicitação
+GET prof vê/analisa a solicitação:
+UPDATE -> aprova ->
+UPDATE -> recusa + motivo
+UPDATE altera status
+
+RXX: o que o usuário pode fazer enquanto pendente
+CREATE usuário acabou de se cadastrar/autenticar
+GET + status da solicitação = pendente, pois prof nao aprovou ainda
+= mostra uma camada intermediária que permite:
+GET -> ver status pendente
+UPDATE -> editar dados pessoais
+-> sair da conta
+DELETE -> excluir conta
+
+NAO PODE:
+-> ver turma
+-> ver eventos
+-> inscrever-se em eventos
