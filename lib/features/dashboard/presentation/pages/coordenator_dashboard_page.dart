@@ -5,6 +5,7 @@ import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/d
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/event_request_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/irregular_tusca_badge_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/member_entry_request_card_widget.dart';
+import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/rapid_metrics_chart_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/regional_metric_summary_card_list_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/regular_tusca_badge_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/view_more_requests_button_widget.dart';
@@ -27,21 +28,20 @@ class CoordenatorDashboardPage extends StatelessWidget {
               children: [
 
                 DahsboardSectionTitleWidget(sectionTitle: "Resumo da região"),
-                SizedBox(height: 15),
 
                 const RegionalMetricSummaryCardListWidget(),
 
-                SizedBox(height: 15),
+                DahsboardSectionTitleWidget(sectionTitle: "Métricas Rápidas"),
+
+                const RapidMetricsChartWidget(),
 
                 DahsboardSectionTitleWidget(sectionTitle: "Selo TUSCA"),
-                SizedBox(height: 10),
 
                 const IrregularTuscaBadgeWidget(),
                 
-                SizedBox(height: 15),
 
                 DahsboardSectionTitleWidget(
-                  sectionTitle: "Solicitações de entrada na turma",
+                  sectionTitle: "Solicitações de evento",
                   itemsQuantity: 3,
                 ),
 

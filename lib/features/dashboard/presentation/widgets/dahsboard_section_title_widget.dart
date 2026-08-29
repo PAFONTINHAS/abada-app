@@ -13,31 +13,34 @@ class DahsboardSectionTitleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text(
-          sectionTitle,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
-        ),
+    return Padding(
+      padding: EdgeInsetsDirectional.symmetric(vertical: 15, horizontal: 5),
+      child: Row(
+        children: [
+          Text(
+            sectionTitle,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+          ),
 
-        SizedBox(width: 10),
+          SizedBox(width: 10),
 
-        if (itemsQuantity != null)
-          Container(
-            padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: ColorConstants.indigoColor,
-              shape: BoxShape.circle,
-            ),
-            child: Text(
-              "$itemsQuantity",
-              style: TextStyle(
-                color: ColorConstants.whiteColor,
-                fontWeight: FontWeight.bold,
+          if (itemsQuantity != null)
+            Container(
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: ColorConstants.indigoColor,
+                shape: BoxShape.circle,
+              ),
+              child: Text(
+                "$itemsQuantity",
+                style: TextStyle(
+                  color: ColorConstants.whiteColor,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-      ],
+        ],
+      ),
     );
   }
 }
