@@ -24,18 +24,13 @@ class ProfessorDashboardPage extends StatelessWidget {
               children: [
 
                 DahsboardSectionTitleWidget(sectionTitle: "Resumo"),
-                SizedBox(height: 15),
 
                 const LocalMetricSummaryCardListWidget(),
 
-                SizedBox(height: 15),
 
                 DahsboardSectionTitleWidget(sectionTitle: "Selo TUSCA"),
-                SizedBox(height: 10),
-
                 const RegularTuscaBadgeWidget(),
                 
-                SizedBox(height: 15),
 
                 DahsboardSectionTitleWidget(
                   sectionTitle: "Solicitações de entrada na turma",
@@ -46,14 +41,7 @@ class ProfessorDashboardPage extends StatelessWidget {
                 const MemberEntryRequestCardWidget(),
                 const MemberEntryRequestCardWidget(),
 
-                
-                SizedBox(height: 15),
-
                 const ViewMoreRequestsButtonWidget(),
-
-                SizedBox(height: 10),
-
-
               ],
             ),
           ),

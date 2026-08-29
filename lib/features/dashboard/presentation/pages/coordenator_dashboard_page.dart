@@ -4,10 +4,8 @@ import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/d
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/dashboard_app_bar_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/event_request_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/irregular_tusca_badge_widget.dart';
-import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/member_entry_request_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/rapid_metrics_chart_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/regional_metric_summary_card_list_widget.dart';
-import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/regular_tusca_badge_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/view_more_requests_button_widget.dart';
 
 class CoordenatorDashboardPage extends StatelessWidget {
@@ -35,11 +33,6 @@ class CoordenatorDashboardPage extends StatelessWidget {
 
                 const RapidMetricsChartWidget(),
 
-                DahsboardSectionTitleWidget(sectionTitle: "Selo TUSCA"),
-
-                const IrregularTuscaBadgeWidget(),
-                
-
                 DahsboardSectionTitleWidget(
                   sectionTitle: "Solicitações de evento",
                   itemsQuantity: 3,
@@ -49,11 +42,10 @@ class CoordenatorDashboardPage extends StatelessWidget {
                 const EventRequestCardWidget(requestType: RequestType.cancellation, eventName: 'Workshop Mestre Bandeira'),
                 const EventRequestCardWidget(requestType: RequestType.dateChange, eventName: 'Workshop de Maculelê'),
                 
-                SizedBox(height: 15),
-
                 const ViewMoreRequestsButtonWidget(),
 
-                SizedBox(height: 10),
+                DahsboardSectionTitleWidget(sectionTitle: "Selo TUSCA"),
+                const IrregularTuscaBadgeWidget(),
               ],
             ),
           ),
