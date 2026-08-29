@@ -4,7 +4,6 @@ import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 class RegularTuscaBadgeWidget extends StatelessWidget {
   const RegularTuscaBadgeWidget({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -24,22 +23,19 @@ class RegularTuscaBadgeWidget extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-
                     Image.asset(
                       "assets/images/regular_tusca_badge.png",
-                      width: 100,
+                      width: 90,
                     ),
 
                     SizedBox(width: 10),
 
                     Expanded(
-                      child: Column( 
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-
                           Row(
                             children: [
-
                               Text(
                                 "TUSCA",
                                 style: TextStyle(
@@ -54,11 +50,10 @@ class RegularTuscaBadgeWidget extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   color: const Color.fromARGB(255, 76, 175, 79),
                                   borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
+                                    Radius.circular(20),
                                   ),
                                 ),
-                                padding: EdgeInsets.all(5),
-
+                                padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                                 child: Text(
                                   "REGULAR",
                                   style: TextStyle(
@@ -67,20 +62,21 @@ class RegularTuscaBadgeWidget extends StatelessWidget {
                                     fontSize: 15,
                                   ),
                                 ),
-                              )
+                              ),
                             ],
-                          ),         
+                          ),
 
-                          SizedBox(height: 5),          
-
+                          SizedBox(height: 5),
 
                           RichText(
                             text: TextSpan(
                               children: [
-
                                 TextSpan(
                                   text: "Válido até ",
-                                  style: TextStyle(color: Colors.black),
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 13,
+                                  ),
                                 ),
 
                                 TextSpan(
@@ -88,12 +84,12 @@ class RegularTuscaBadgeWidget extends StatelessWidget {
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
+                                    fontSize: 13,
                                   ),
-                                )
-                              ]
+                                ),
+                              ],
                             ),
-                          )       
-
+                          ),
                         ],
                       ),
                     ),

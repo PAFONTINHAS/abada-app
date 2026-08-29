@@ -27,7 +27,7 @@ class IrregularTuscaBadgeWidget extends StatelessWidget {
 
                     Image.asset(
                       "assets/images/irregular_tusca_badge.png",
-                      width: 100,
+                      width: 90,
                     ),
 
                     SizedBox(width: 10),
@@ -44,7 +44,7 @@ class IrregularTuscaBadgeWidget extends StatelessWidget {
                                 "TUSCA",
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 13,
+                                  fontSize: 15,
                                 ),
                               ),
 
@@ -54,22 +54,32 @@ class IrregularTuscaBadgeWidget extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   color: Colors.red,
                                   borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
+                                    Radius.circular(20),
                                   ),
                                 ),
-                                padding: EdgeInsets.all(5),
+                                padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
 
                                 child: Text(
                                   "IRREGULAR",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
-                                    fontSize: 13,
+                                    fontSize: 15,
                                   ),
                                 ),
                               )
                             ],
-                          ),         
+                          ),
+
+                          SizedBox(height: 5),
+
+                          Text(
+                            "Esteja regular com a TUSCA",
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )         
                         ],
                       ),
                     ),

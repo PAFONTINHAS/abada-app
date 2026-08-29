@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 
-class MemberRequestCardWidget extends StatelessWidget {
-  const MemberRequestCardWidget({super.key});
+class MemberEntryRequestCardWidget extends StatelessWidget {
+  const MemberEntryRequestCardWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class MemberRequestCardWidget extends StatelessWidget {
 
                       child: Image.asset(
                         "assets/images/capoeira_member_profile_picture.png",
-                        width: 80,
+                        width: 70,
                       ),
                     ),
 
@@ -45,13 +45,13 @@ class MemberRequestCardWidget extends StatelessWidget {
                             "Pedro Henrique",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 17,
+                              fontSize: 15,
                             ),
                           ),
 
-                          Text("Unidade Centro"),
+                          Text("Unidade Centro", style: TextStyle(fontSize: 13),),
 
-                          Text("Solicitado em 26/06/2026, 10:30"),
+                          Text("Solicitado em 26/06/2026, 10:30", style: TextStyle(fontSize: 13),),
                         ],
                       ),
                     ),

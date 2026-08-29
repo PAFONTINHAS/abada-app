@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/dashboard_app_bar_widget.dart';
-import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/member_request_card_widget.dart';
+import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/member_entry_request_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/regular_tusca_badge_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/dahsboard_section_title_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/local_summary_card_list_widget.dart';
@@ -42,9 +42,9 @@ class ProfessorDashboardPage extends StatelessWidget {
                   itemsQuantity: 3,
                 ),
 
-                const MemberRequestCardWidget(),
-                const MemberRequestCardWidget(),
-                const MemberRequestCardWidget(),
+                const MemberEntryRequestCardWidget(),
+                const MemberEntryRequestCardWidget(),
+                const MemberEntryRequestCardWidget(),
 
                 
                 SizedBox(height: 15),
