@@ -20,7 +20,6 @@ class CoordenatorDashboardPage extends StatelessWidget {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Padding(
             padding: EdgeInsetsGeometry.symmetric(horizontal: 15, vertical: 10),
             child: Column(
               children: [
@@ -48,7 +47,6 @@ class CoordenatorDashboardPage extends StatelessWidget {
                 const IrregularTuscaBadgeWidget(),
               ],
             ),
-          ),
         ),
       ),
     );

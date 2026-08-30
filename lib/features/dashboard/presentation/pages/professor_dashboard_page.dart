@@ -18,32 +18,27 @@ class ProfessorDashboardPage extends StatelessWidget {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsetsGeometry.symmetric(horizontal: 15, vertical: 10),
-            child: Column(
-              children: [
+          padding: EdgeInsetsGeometry.symmetric(horizontal: 15, vertical: 10),
+          child: Column(
+            children: [
+              DahsboardSectionTitleWidget(sectionTitle: "Resumo"),
 
-                DahsboardSectionTitleWidget(sectionTitle: "Resumo"),
+              const LocalMetricSummaryCardListWidget(),
 
-                const LocalMetricSummaryCardListWidget(),
+              DahsboardSectionTitleWidget(sectionTitle: "Selo TUSCA"),
+              const RegularTuscaBadgeWidget(),
 
+              DahsboardSectionTitleWidget(
+                sectionTitle: "Solicitações de entrada na turma",
+                itemsQuantity: 3,
+              ),
 
-                DahsboardSectionTitleWidget(sectionTitle: "Selo TUSCA"),
-                const RegularTuscaBadgeWidget(),
-                
+              const MemberEntryRequestCardWidget(),
+              const MemberEntryRequestCardWidget(),
+              const MemberEntryRequestCardWidget(),
 
-                DahsboardSectionTitleWidget(
-                  sectionTitle: "Solicitações de entrada na turma",
-                  itemsQuantity: 3,
-                ),
-
-                const MemberEntryRequestCardWidget(),
-                const MemberEntryRequestCardWidget(),
-                const MemberEntryRequestCardWidget(),
-
-                const ViewMoreRequestsButtonWidget(),
-              ],
-            ),
+              const ViewMoreRequestsButtonWidget(),
+            ],
           ),
         ),
       ),

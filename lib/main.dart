@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:sistema_abada_capoeira/core/providers/providers_injection.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/pages/coordenator_dashboard_page.dart';
+import 'package:sistema_abada_capoeira/features/dashboard/presentation/pages/student_dashboard_page.dart';
 
 void main() async{
 
@@ -39,7 +40,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white
       ),
       title: 'Flutter Demo',
-      home: CoordenatorDashboardPage()
+      home: StudentDashboardPage()
     );
   }
 }
