@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sistema_abada_capoeira/core/constants/app_spacing.dart';
 import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
-import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
+import 'package:sistema_abada_capoeira/features/auth/domain/entities/user_role.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/models/auth_status.dart';
+import 'package:sistema_abada_capoeira/features/auth/domain/extensions/user_role_extension.dart';
+import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:sistema_abada_capoeira/features/splash_screen/presentation/controllers/data_loading_controller.dart';
 
 
@@ -29,12 +32,24 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _prepareUserApp() async{
 
     final AuthController authController = context.read<AuthController>();
+
+    // ATENÇÃO CABEÇA DE VENTO! ESSE CÓDIGO DEVE SER TEMPORÁRIO!! REMOVA ELE ASSIM QUE A FEATURE DE PERFIL ESTIVER CONCLUIDA!!!!
+    // COISA FEIA FICAR CHAMANDO BANCO DE DADOS NA CAMADA DE APRESENTAÇÃO - PETERSON FONTINHAS, 30/08/2026.
+
+    final userDocument = await FirebaseFirestore.instance
+        .collection('users')
+        .doc('ymm7Mvj1jmSoPrndCJR9LjnVhbQ2')
+        .get();
+
+    final userData = userDocument.data() as Map<String, dynamic>;
+
+    final UserRole userRole = UserRoleExtension.getFromString(userData['userRole']);
     
     try{
 
-      authController.setAuthStatus(AuthStatus.authenticated);
+      if(userRole == UserRole.unknown) throw Exception("Papel de Usuário não reconhecido");
 
-
+      authController.setAuthenticatedUser(role: userRole);
     }catch(error, stack){
 
       LoggingService.displayError( "Erro na inicialização do dispositivo. Saindo da conta...", error: error, stack: stack,);
@@ -64,7 +79,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   selector: (_, controller) => controller.progressText,
                   builder: (context, value, child){
                     return Text(
-                      "$value🌱",
+                      value,
                       key: ValueKey<String>(value),
                       textAlign: TextAlign.center,
                     );

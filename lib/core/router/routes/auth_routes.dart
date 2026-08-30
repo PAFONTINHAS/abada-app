@@ -3,7 +3,9 @@ import 'package:sistema_abada_capoeira/features/auth/presentation/pages/home_pag
 
 class AuthRoutes {
 
-  static final homeRoute = GoRoute(
+  AuthRoutes._();
+
+  static final route = GoRoute(
     path: '/',
     builder: (context, state) => HomePage(),
   );

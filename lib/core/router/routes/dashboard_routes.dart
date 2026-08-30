@@ -1,31 +1,32 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:sistema_abada_capoeira/features/auth/domain/entities/user_role.dart';
+import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/pages/coordenator_dashboard_page.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/pages/professor_dashboard_page.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/pages/student_dashboard_page.dart';
+import 'package:sistema_abada_capoeira/features/waiting_layer/presentation/pages/waiting_page.dart';
 
 class DashboardRoutes {
 
-  static final dashboardRoute = GoRoute(
+  DashboardRoutes._();
+
+  static final route = GoRoute(
     path: '/dashboard',
-    routes: [
-      _professorDashboardPage,
-      _studentDashboardPage,
-      _coordenatorDashboardPage,
-    ]
+    builder: (context, state){
+
+      final userRole = context.watch<AuthController>().userRole;
+
+      switch(userRole){
+        
+        case UserRole.professor: return const ProfessorDashboardPage();
+        case UserRole.student: return const StudentDashboardPage();
+        case UserRole.unvalidatedUser: return const WaitingPage();
+        case UserRole.unknown: return Placeholder();
+        case UserRole.coordenator: return CoordenatorDashboardPage();
+      }
+    },
   );
 
-  static final _professorDashboardPage = GoRoute(
-    path: 'professor',
-    builder: (context, state) => ProfessorDashboardPage(),
-  );
-
-  static final _studentDashboardPage = GoRoute(
-    path: 'student',
-    builder: (context, state) => StudentDashboardPage(),
-  );
-
-  static final _coordenatorDashboardPage = GoRoute(
-    path: 'coordenator',
-    builder: (context, state) => CoordenatorDashboardPage(),
-  );
 }

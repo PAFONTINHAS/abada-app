@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
+import 'package:sistema_abada_capoeira/features/auth/domain/entities/user_role.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/models/auth_status.dart';
 
 class AuthController extends ChangeNotifier{
@@ -10,9 +12,12 @@ class AuthController extends ChangeNotifier{
 
     _auth.authStateChanges().listen(_onAuthStateChanged);
   }
-  
+
   User? _user;
   User? get user => _user; 
+
+  UserRole _userRole = UserRole.unknown;
+  UserRole get userRole => _userRole;
 
   AuthStatus _status = AuthStatus.initializing;
   AuthStatus get status => _status;
@@ -26,29 +31,58 @@ class AuthController extends ChangeNotifier{
   bool _isSigningIn = false;
   bool get isSigningIn => _isSigningIn;
 
+
   void _onAuthStateChanged(User? changedUser){
+
+    LoggingService.displayInfo("Estado de Autenticação modificado");
 
     _user = changedUser;
 
     if(_user == null){
-      _status = AuthStatus.unauthenticated;
 
+      _status = AuthStatus.unauthenticated;
       notifyListeners();
       return;
     }
 
 
-    if(!_isRegistering || !_isSigningIn){
+    if((!_isRegistering || !_isSigningIn) && _userRole != UserRole.unknown){
 
-      _status = AuthStatus.initializing;
+      LoggingService.displayInfo('''
+
+        UserRole: $_userRole
+        IsRegistering: $_isRegistering
+        IsSigningIn: $_isSigningIn
+
+      ''');
+
+      _status = AuthStatus.authenticated;
+  
+      notifyListeners();
     }
 
-    notifyListeners();
+
   }
 
   void setAuthStatus(AuthStatus status){
 
     _status = status;
     notifyListeners();
+  }
+
+  void setUserRole(UserRole userRole){
+    _userRole = userRole;
+    notifyListeners();
+  }
+
+  void setAuthenticatedUser({required UserRole role}){
+
+    _userRole = role;
+    _status = AuthStatus.authenticated;
+
+    notifyListeners();
+
+    LoggingService.displayInfo("[CONTROLLER] AuthStatus: $_status. UserRole: $role");
+    
   }
 }

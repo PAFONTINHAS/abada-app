@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sistema_abada_capoeira/features/waiting_layer/presentation/widgets/pending_status_badge_widget.dart';
 import 'package:sistema_abada_capoeira/features/waiting_layer/presentation/widgets/waiting_info_card_widget.dart';
+import 'package:sistema_abada_capoeira/features/waiting_layer/presentation/widgets/pending_status_badge_widget.dart';
 import 'package:sistema_abada_capoeira/features/waiting_layer/presentation/widgets/delete_account_dialog_widget.dart';
 
 class WaitingPage extends StatelessWidget {
@@ -36,7 +36,7 @@ class WaitingPage extends StatelessWidget {
                     ),
                     child: Center(
                       child: Image.asset(
-                        'assets/images/waiting.png',
+                        'assets/images/waiting_icon.png',
                         width: 280,
                       ),
                     ),

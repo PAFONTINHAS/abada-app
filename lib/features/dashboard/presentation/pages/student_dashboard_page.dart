@@ -60,13 +60,6 @@ class StudentDashboardPage extends StatelessWidget {
               UserEventSubscriptionCardWidget(eventName: "Batizado e Troca de Crodas 2026", subscriptionConfirmed: true),
               UserEventSubscriptionCardWidget(eventName: "Workshop de Maculelê", subscriptionConfirmed: true),
               UserEventSubscriptionCardWidget(eventName: "Troca de Cordas Infantil", subscriptionConfirmed: false),
-
-
-
-
-              
-
-
             ],
           ),
         ),

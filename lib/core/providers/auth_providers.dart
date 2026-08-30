@@ -17,6 +17,7 @@ class AuthProvider {
   AuthProvider ._();
 
 
+  static final AuthController authController = AuthController();
   static final LoginUserUsecase loginUserUsecase = LoginUserUsecase(authRepository);
   static final AuthRemoteDatasource authRemoteDatasource = AuthRemoteDatasourceImpl();
   static final AuthRepository authRepository = AuthRepositoryImpl(authRemoteDatasource);
@@ -24,7 +25,7 @@ class AuthProvider {
 
   static List<SingleChildWidget> providers = [
 
-    ChangeNotifierProvider(create: (_) => AuthController()),
+    ChangeNotifierProvider(create: (_) => authController),
     ChangeNotifierProvider(create: (_) => HomePageController()),
     ChangeNotifierProvider(create: (_) => LoginFormController(loginUserUsecase)),
     ChangeNotifierProvider(create: (_) => RegisterFormController(registerUserUsecase))
