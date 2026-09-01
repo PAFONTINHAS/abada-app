@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/bottom_nav_bar_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/current_belt_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/personal_info_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/profile_header_widget.dart';
@@ -66,7 +65,6 @@ class ProfilePage extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: const BottomNavBarWidget(currentIndex: 4),
     );
   }
  
