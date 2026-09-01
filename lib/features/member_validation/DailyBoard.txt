@@ -1,0 +1,78 @@
+1. Aluno termina cadastro
+2. Solicitação de vínculo é criada com status=pendente
+3. Professor recebe notificação
+4. Professor confere se:
+    - é aluno dele = está tendo aula em alguma turma
+    - corda correta
+    - apelido correto
+5. Toma decisao
+    - aprova se campos =  correto
+    - rejeita se membro = !ABADA
+            - escreve justificativa obrigatoria
+    - pede p corrigir se apelido ou corda = !correto
+        - se corrigir = sim e corrigido = sim -> status = updated
+        - se campos = correto -> aprova
+        - se campos !correto -> pede p corrigir
+
+status só muda para updated quando é atualizado apelido e/ou corda dependendo da obs do Professor
+as informações da solicitação sempre refletem o perfil atual
+foi retirado memberName, nickname e belt de MembershipRequest para ser puxado sempre pelo id com infos espelhadas
+
+Aluno altera nome e/ou telefone
+→ perfil é atualizado
+→ status da solicitação NÃO muda
+
+Aluno altera apelido
+→ perfil é atualizado
+→ se a solicitação estava em changesRequested
+status → updated
+
+Aluno altera corda
+→ perfil é atualizado
+→ se a solicitação estava em changesRequested
+status → updated
+
+Aluno altera corda + apelido
+→ perfil é atualizado
+→ status → updated
+
+A diferença é que o repository do domain trabalha com: MembershipRequest
+e o datasource trabalha com: MembershipRequestModel, pq o model usa fromMap e toMap pra falar com firebase
+
+Sobre markRequestAsUpdated: o Use Case continua em membership_validation, porque a regra pertence à validação de vínculo; 
+mas quem chama esse Use Case é o controller de perfil, porque a ação nasceu de uma edição de perfil.
+
+Lista de solicitações pendentes fluxo de estado:
+Maria → requested
+↓
+professor pede correção
+↓
+Maria → changesRequested
+↓
+recarrega lista de pendentes do professor
+↓
+Maria desaparece
+-> quando maria corrgir corda e/ou apelido:
+changesRequested
+↓
+updated -> volta para a lista
+
+requested
+→ APARECE
+
+changesRequested
+→ SOME
+
+updated
+→ APARECE NOVAMENTE
+
+approved
+→ SOME DEFINITIVAMENTE
+
+rejected
+→ SOME DEFINITIVAMENTE
+
+
+Firebase executa → DataSource acessa →
+Repository encaminha → Use Case decide a ação →
+Controller conversa com a tela → Provider entrega o Controller.
