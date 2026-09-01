@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
+import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
+import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
+import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:sistema_abada_capoeira/features/home_user/presentation/pages/home_user_page.dart';
 import 'package:sistema_abada_capoeira/shared/inputs/custom_text_input/custom_text_input.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/widgets/form_button_widget.dart';
@@ -56,6 +59,8 @@ class LoginWidget extends StatelessWidget {
             buttonCollor: ColorConstants.indigoColor,
             onPressed: () async {
 
+              final authController = context.read<AuthController>();
+
               MessageHandler.showInfo(context, "Autenticando...");
 
               final success = await formController.loginUser();
@@ -69,10 +74,18 @@ class LoginWidget extends StatelessWidget {
                 return;
               }
 
-              MessageHandler.showSuccess(context, "Usuário autenticado com sucesso! Redirecionando...");
+              if(formController.authenticatedUserRole != null){
 
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeUserPage()));
 
+                LoggingService.displayInfo("Papel do usuário: ${formController.authenticatedUserRole!}");
+
+                MessageHandler.showSuccess(context, "Usuário autenticado com sucesso! Redirecionando...");
+
+                authController.setAuthenticatedUser(role: formController.authenticatedUserRole!);
+
+                RouteController.redirectToDashboardPage(context: context);
+
+              }
             },
           ),
 

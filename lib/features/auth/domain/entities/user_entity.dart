@@ -12,7 +12,7 @@ class UserEntity {
     required this.rope,
     required this.nickname,
     required this.professor,
-    this.userRole = 'Usuario'
+    this.userRole = 'unvalidatedUser'
 
   }); 
 

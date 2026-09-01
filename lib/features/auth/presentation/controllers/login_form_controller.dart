@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:sistema_abada_capoeira/features/auth/domain/entities/user_entity.dart';
 import 'package:sistema_abada_capoeira/features/auth/domain/entities/user_login_params.dart';
+import 'package:sistema_abada_capoeira/features/auth/domain/entities/user_role.dart';
+import 'package:sistema_abada_capoeira/features/auth/domain/extensions/user_role_extension.dart';
 import 'package:sistema_abada_capoeira/features/auth/domain/usecases/login_user_usecase.dart';
 
 class LoginFormController extends ChangeNotifier{
@@ -15,7 +18,9 @@ class LoginFormController extends ChangeNotifier{
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
 
-  
+  UserRole? _authenticatedUserRole;
+  UserRole? get authenticatedUserRole => _authenticatedUserRole;
+
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
@@ -57,7 +62,17 @@ class LoginFormController extends ChangeNotifier{
       (failure) {
         _errorMessage = failure.message;
         return false;
-      }, (userEntity) => true
+      }, (userEntity){
+
+        final UserRole userRole = UserRoleExtension.getFromString(userEntity.userRole);
+
+        if(userRole != UserRole.unknown){
+
+          _authenticatedUserRole = userRole;
+        }
+
+        return true;
+      }
     );
 
     _isLoading = false;
