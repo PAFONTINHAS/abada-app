@@ -87,6 +87,21 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource{
   }
 
 
+  @override
+  Future<Either<Failure, void>> logoutUser() async{
+
+    try{
+      await _auth.signOut();
+
+      return Right(null);
+    } catch(error){
+
+      return ExceptionHandler.handleException(exception: error, contextMessage: 'logoutUser');
+    }
+
+  }
+
+
 
 
 

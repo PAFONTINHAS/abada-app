@@ -18,8 +18,6 @@ class AppRouter {
     refreshListenable: authController,
     redirect: (context, state){
 
-      LoggingService.displayInfo("[APP-ROUTER] Mudança de estado");
-
       final String loginRoute = '/';
       final String splashRoute = '/splash';
       final String dashboardRoute = '/dashboard';
@@ -27,8 +25,6 @@ class AppRouter {
       final currentPath = state.uri.path;
       
       final AuthStatus authStatus = authController.status;
-
-      LoggingService.displayInfo("AuthStatus: $authStatus");
 
       if(authStatus == AuthStatus.unauthenticated){
         if(currentPath == loginRoute) return null;

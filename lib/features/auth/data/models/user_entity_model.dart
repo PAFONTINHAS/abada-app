@@ -28,6 +28,7 @@ class UserEntityModel extends UserEntity{
       email: data['email'],
       phone: data['phone'],
       rope: data['rope'],
+      userRole: data['userRole'],
       nickname: data['nickname'],
       professor: data['professor'],
     );

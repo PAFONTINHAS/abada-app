@@ -2,13 +2,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/features/auth/domain/entities/user_role.dart';
+import 'package:sistema_abada_capoeira/features/auth/domain/usecases/logout_user_usecase.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/models/auth_status.dart';
 
 class AuthController extends ChangeNotifier{
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final LogoutUserUsecase _logoutUserUsecase;
 
-  AuthController(){
+  AuthController(this._logoutUserUsecase){
 
     _auth.authStateChanges().listen(_onAuthStateChanged);
   }
@@ -33,8 +35,6 @@ class AuthController extends ChangeNotifier{
 
 
   void _onAuthStateChanged(User? changedUser){
-
-    LoggingService.displayInfo("Estado de Autenticação modificado");
 
     _user = changedUser;
 
@@ -64,6 +64,17 @@ class AuthController extends ChangeNotifier{
 
   }
 
+  Future<bool> logoutUser() async{
+
+    final result = await _logoutUserUsecase.call();
+
+    return result.fold(
+
+      (failure) => false,
+      (_) => true
+    );
+  }
+
   void setAuthStatus(AuthStatus status){
 
     _status = status;
@@ -81,8 +92,5 @@ class AuthController extends ChangeNotifier{
     _status = AuthStatus.authenticated;
 
     notifyListeners();
-
-    LoggingService.displayInfo("[CONTROLLER] AuthStatus: $_status. UserRole: $role");
-    
   }
 }

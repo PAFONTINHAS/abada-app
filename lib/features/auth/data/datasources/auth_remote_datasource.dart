@@ -7,11 +7,11 @@ import 'package:sistema_abada_capoeira/features/auth/domain/entities/user_login_
 
 abstract class AuthRemoteDatasource {
 
+  Future<Either<Failure, void>> logoutUser();
   Future<Either<Failure, UserEntity>> getUserDataByUserId(String userId);
   Future<Either<Failure, UserEntity>> registerUser(UserEntity userRegistrationParams);
   Future<Either<Failure, UserCredential>> authenticateUser(UserLoginParams userLoginParams); 
   Future<Either<Failure, UserCredential>> createUserCredential(UserCredentialParams userCredentialParams);
-
 
 
 }

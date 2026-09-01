@@ -15,30 +15,30 @@ class AuthRepositoryImpl implements AuthRepository{
 
   @override
   Future<Either<Failure, UserEntity>> registerUser(UserEntity user) async{
-
     return await authRemoteDatasource.registerUser(user);
-
   }
   
   @override
   Future<Either<Failure, UserCredential>> createUserCredential(UserCredentialParams userCredentialParams) async{
-
     return await authRemoteDatasource.createUserCredential(userCredentialParams);
-
   }
 
 
 
   @override
   Future<Either<Failure, UserEntity>> getUserDataByUserId(String userId) async {
-
     return await authRemoteDatasource.getUserDataByUserId(userId);
   }
 
   @override
   Future<Either<Failure, UserCredential>> authenticateUser(UserLoginParams userLoginParams) async {
-
     return await authRemoteDatasource.authenticateUser(userLoginParams);
+  }
+
+
+  @override
+  Future<Either<Failure, void>> logoutUser() async{
+    return await authRemoteDatasource.logoutUser();
   }
 
 } 
