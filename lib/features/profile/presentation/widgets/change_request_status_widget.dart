@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/profile_change_request_entity.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/repository/profile_repository.dart';
 
+//status da solicitacao
 class ChangeRequestStatusWidget extends StatefulWidget {
   const ChangeRequestStatusWidget({super.key});
 

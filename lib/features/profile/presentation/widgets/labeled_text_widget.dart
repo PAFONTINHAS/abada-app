@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 const Color _primaryPurple = Color(0xFF7C5CBF);
 
-/// A small label above a rounded, bordered text field with a
-/// leading icon. Generic building block for any edit form.
+/// rotulo e icone para nova corda e novo apelido
 class LabeledTextField extends StatelessWidget {
   final String label;
   final IconData icon;

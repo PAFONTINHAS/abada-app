@@ -3,8 +3,7 @@ import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/lab
 
 const Color _primaryPurple = Color(0xFF7C5CBF);
 
-/// "Informações pessoais" section on the Edit Profile screen:
-/// title + the 3 fields the user can edit directly (RF04).
+/// titulo + 3 campos para editar diretamente
 class PersonalInfoForm extends StatelessWidget {
   final TextEditingController nameController;
   final TextEditingController emailController;

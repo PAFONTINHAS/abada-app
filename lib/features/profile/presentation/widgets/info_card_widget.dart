@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 /// Widget de containers brancos
-
 class InfoCardWidget extends StatelessWidget {
   final List<Widget> children;
 

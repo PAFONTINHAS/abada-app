@@ -4,8 +4,6 @@ const Color _primaryPurple = Color(0xFF7C5CBF);
 const Color _lightPurple = Color(0xFFF1EDFB);
 
 /// Avatar + name + role
-/// - Read-only (isEditable: false) no "Meu Perfil".
-/// - Editable (isEditable: true) no "Editar Perfil"
 class ProfileHeaderWidget extends StatelessWidget {
   final String userName;
   final String roleLabel;
