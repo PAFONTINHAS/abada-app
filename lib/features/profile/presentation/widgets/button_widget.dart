@@ -6,12 +6,16 @@ class ButtonWidget extends StatelessWidget {
   final String label;
   final bool isLoading;
   final VoidCallback? onPressed;
+  final IconData? icon;
+  final Color? backgroundColor;
 
   const ButtonWidget({
     super.key,
     required this.label,
     required this.isLoading,
     required this.onPressed,
+    this.icon,
+    this.backgroundColor,
   });
 
   @override
@@ -20,7 +24,7 @@ class ButtonWidget extends StatelessWidget {
       width: double.infinity,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: _primaryPurple,
+          backgroundColor: backgroundColor ?? _primaryPurple,
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -36,12 +40,21 @@ class ButtonWidget extends StatelessWidget {
                   color: Colors.white,
                 ),
               )
-            : Text(
-                label,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (icon != null) ...[
+                    Icon(icon, color: Colors.white),
+                    const SizedBox(width: 8),
+                  ],
+                  Text(
+                    label,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
       ),
     );
