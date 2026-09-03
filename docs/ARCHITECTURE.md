@@ -109,27 +109,145 @@ lib/features/nome_feature/
   - **/models**: Extensões diretas das entities de domain especializadas em serialização (conversão de dados JSON/Firestore para objetos Dart). Convertem dados externos para Entities no domínio através de métodos como toEntity() e fromMap().
 
     - **Nomenclatura**: Sufixo `_model.dart` (Ex: `user_entity_model.dart`);
+
+
+## 4. Tratamento Funcional de Erros com Either ('fpadart' / 'dartz')
+
+Para garantir a previsibilidade e evitar o lançamento de exceções não tratadas (`try-catch` espalhados pela UI), o projeto adota o tipo monádico `Either<L, R>` em todas as operações assíncronas do backend e das camadas internas.
+
+  - ### 4.1 Conceito do Either
+
+    A classe `Either<L, R>` representa um valor que pode assumir um de dois tipos possíveis:
+    * **Left (`L`):** Representa o lado do **Erro/Falha** (sempre uma subclasse de `Failure` localizada em `core/errors`).
+    * **Right (`R`):** Representa o lado do **Sucesso** (pode retornar uma `Entity`, uma `List<Entity>` ou `void` para ações de alteração sem retorno de dados).
+
+  - ### 4.2 Aplicação do Either no código
+
+    - #### Contrato de Repositories e Use Cases e Datasources
+
+      Todas as assinaturas de métodos nas interfaces do `Domain` e `Data` (Repositories, Use Cases e Datasources) devem retornar um `Future<Either<Failure, T>>`.
+
+      ```dart
+        // Exemplo de Use Case com retorno de Entity
+        abstract class GetUserProfileUseCase {
+          Future<Either<Failure, UserEntity>> call(String userId);
+        }
+
+        // Exemplo de Use Case sem retorno de dados (Void)
+        abstract class DeleteAccountUseCase {
+          Future<Either<Failure, void>> call(String userId);
+        }
+      ```
+    - #### Implementações de Datasoucources
+
+      ```dart
+        // Exemplo de DatasourceImpl
+        class ProfileDatasourceImpl implements ProfileDatasource {
+
+          
+          // Função com retorno de entidade
+          @override
+          Future<Either<Failure, UserEntity>> getUserByUserId(String userId){
+            try{
+
+              final userData = externalApi.getUserById(userId);
+
+              return Right(userData);  // retorna o sucesso para a direita
+
+            } catch(exception){
+              return ExceptionHandler.handleException(exception, contextMessage: 'getUserByUserId'); // retorna a falha para a esquerda
+            }
+          }
+
+          // Função sem nenhum retorno
+          @override
+          Future<Either<Failure, UserEntity>> deleteUserByUserId(String userId){
+            try{
+
+              final userData = externalApi.deleteUserById(userId);
+
+              return Right(null);  // retorna o sucesso para a direita
+
+            } catch(exception){
+
+              return ExceptionHandler.handleException(exception, contextMessage: 'deleteUserByUserId'); // retorna a falha para a esquerda
+
+            }
+          }
+        }
+      ```
+
+  - ### 4.3 Consumo no Controller via `.fold()`
+
+    O `Controller` consome o Use Case utilizando o método `.fold(onLeft, onRight)`. Esse método força o desenvolvedor a tratar obrigatoriamente os dois caminhos possíveis antes de atualizar a UI e disparar o notifyListeners()
+
+    ```dart 
+    
+      class ProfileController extends ChangeNotifier {
+        final GetUserProfileUseCase _getUserProfileUseCase;
+
+        ProfileController(this._getUserProfileUseCase);
+
+        UserEntity? user;
+        String? errorMessage;
+        bool isLoading = false;
+
+        Future<bool> loadProfile(String userId) async {
+          isLoading = true;
+          notifyListeners();
+
+          final result = await _getUserProfileUseCase(userId);
+
+          final success = result.fold(
+            (failure) {
+              // Caminho do ERRO (Left)
+              errorMessage = failure.message;
+              user = null;
+
+              return false;
+            },
+            (successUser) {
+              // Caminho do SUCESSO (Right)
+              user = successUser;
+              errorMessage = null;
+
+              return true;
+            },
+          );
+
+          isLoading = false;
+          notifyListeners();
+
+          return success;
+        }
+      }
+    ```
   
-## 4. Componentes Comuns (/shared)
+## 5. Componentes Comuns (/shared)
 
   Pasta dedicada a elementos e componentes que são consumidos por múltiplas features, mas que não configuram o aplicativo em si(como botões padronizados, caixas de diálogo genéricas, temas globais, componentes de formulário).
 
   - **Nomenclatura**: Sufixo `_widget.dart` (Ex: `text_form_widget.dart`).
 
 
-## 5 Fluxo de Dados na Prática
+## 6. Fluxo de Dados na Prática
 
 Para implementar qualquer funcionalidade, o fluxo de chamadas deve respeitar rigorosamente o caminho abaixo. 
 
-
-
 ```mermaid
+
 flowchart LR
-    UI["UI (Page/Widget)"] --> Controller["Controller (ChangeNotifier)"]
-    Controller --> UseCase["Use Case"]
-    UseCase --> Repository["Repository (Interface)"]
-    Repository --> Datasource["Datasource"]
-    Datasource --> Backend["Firebase"]
+
+UI["UI (Page/Widget)"] --> Controller["Controller (ChangeNotifier)"]
+
+Controller --> UseCase["Use Case"]
+
+UseCase --> Repository["Repository (Interface)"]
+
+Repository --> Datasource["Datasource"]
+
+Datasource --> Backend["Firebase"]
+
 ```
 
 ```
@@ -158,9 +276,9 @@ flowchart LR
 
 **A comunicação de dependências deve sempre ser de fora para dentro.**
 
+  
 
-
-## 6. Regra de Ouro da Arquitetura
+## 7. Regra de Ouro da Arquitetura
 
   - **A camada `Domain` NUNCA importa nada de `Data` ou `Presentation`**
   - **A camada `Presentation` NUNCA chama `Datasource` diretamente**. Sempre passe pelo `Controller` --> `Usecase`
