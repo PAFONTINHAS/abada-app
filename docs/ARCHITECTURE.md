@@ -237,16 +237,11 @@ Para implementar qualquer funcionalidade, o fluxo de chamadas deve respeitar rig
 ```mermaid
 
 flowchart LR
-
-UI["UI (Page/Widget)"] --> Controller["Controller (ChangeNotifier)"]
-
-Controller --> UseCase["Use Case"]
-
-UseCase --> Repository["Repository (Interface)"]
-
-Repository --> Datasource["Datasource"]
-
-Datasource --> Backend["Firebase"]
+  UI["UI (Page/Widget)"] --> Controller["Controller (ChangeNotifier)"]
+  Controller --> UseCase["Use Case"]
+  UseCase --> Repository["Repository (Interface)"]
+  Repository --> Datasource["Datasource"]
+  Datasource --> Backend["Firebase"]
 
 ```
 
