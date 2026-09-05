@@ -111,7 +111,7 @@ lib/features/nome_feature/
     - **Nomenclatura**: Sufixo `_model.dart` (Ex: `user_entity_model.dart`);
 
 
-## 4. Tratamento Funcional de Erros com Either ('fpadart' / 'dartz')
+## 4. Tratamento Funcional de Erros com Either ('fpdart' / 'dartz')
 
 Para garantir a previsibilidade e evitar o lançamento de exceções não tratadas (`try-catch` espalhados pela UI), o projeto adota o tipo monádico `Either<L, R>` em todas as operações assíncronas do backend e das camadas internas.
 
@@ -129,13 +129,24 @@ Para garantir a previsibilidade e evitar o lançamento de exceções não tratad
 
       ```dart
         // Exemplo de Use Case com retorno de Entity
-        abstract class GetUserProfileUseCase {
-          Future<Either<Failure, UserEntity>> call(String userId);
+        class GetUserProfileUseCase {
+
+          ProfileRepository profileRepository;
+
+          GetUserProfileUseCase(this.profileRepository);
+      
+          Future<Either<Failure, UserEntity>> call(String userId) async{
+
+            return await profileRepository.getUserProfile(userId);
+          
+          }
         }
 
-        // Exemplo de Use Case sem retorno de dados (Void)
-        abstract class DeleteAccountUseCase {
-          Future<Either<Failure, void>> call(String userId);
+        // Exemplo de Repository que possui funções com retorno e sem retorno
+        abstract class ProfileRepository {
+          Future<Either<Failure, void>> deleteUserAccount(String userId); // função sem retorno
+      
+          Future<Either<Failure, UserEntity>> getUserProfile(String userId); // função com retorno
         }
       ```
     - #### Implementações de Datasoucources
