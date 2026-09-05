@@ -6,6 +6,7 @@ import '../widgets/membership_request_card.dart';
 import '../widgets/reject_request_dialog.dart';
 import '../widgets/request_changes_dialog.dart';
 import '../widgets/request_result_dialog.dart';
+import '../models/request_result_type.dart';
 
 class MembershipRequestsPage extends StatefulWidget {
   final String professorId;

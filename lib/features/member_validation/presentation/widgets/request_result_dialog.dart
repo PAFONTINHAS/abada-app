@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 
-enum RequestResultType {
-  approved,
-  changesRequested,
-  rejected,
-}
+import '../controllers/request_result_controller.dart';
+import '../models/request_result_type.dart';
 
 class RequestResultDialog extends StatelessWidget {
   final RequestResultType type;
@@ -16,7 +13,8 @@ class RequestResultDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final resultData = _getResultData();
+    final controller = RequestResultController();
+    final resultData = controller.getResultData(type);
 
     return Dialog(
       shape: RoundedRectangleBorder(
@@ -79,54 +77,4 @@ class RequestResultDialog extends StatelessWidget {
       ),
     );
   }
-
-  _RequestResultData _getResultData() {
-    switch (type) {
-      case RequestResultType.approved:
-        return _RequestResultData(
-          icon: Icons.check,
-          iconColor: Colors.green,
-          backgroundColor: Colors.green.shade50,
-          title: 'Solicitação aprovada',
-          message:
-              'O vínculo do aluno foi aprovado com sucesso.',
-        );
-
-      case RequestResultType.changesRequested:
-        return _RequestResultData(
-          icon: Icons.edit_outlined,
-          iconColor: Colors.orange,
-          backgroundColor: Colors.orange.shade50,
-          title: 'Correções solicitadas',
-          message:
-              'As correções foram enviadas ao aluno. A solicitação ficará aguardando as atualizações.',
-        );
-
-      case RequestResultType.rejected:
-        return _RequestResultData(
-          icon: Icons.close,
-          iconColor: Colors.red,
-          backgroundColor: Colors.red.shade50,
-          title: 'Solicitação rejeitada',
-          message:
-              'A solicitação foi rejeitada e o motivo informado será comunicado ao aluno.',
-        );
-    }
-  }
-}
-
-class _RequestResultData {
-  final IconData icon;
-  final Color iconColor;
-  final Color backgroundColor;
-  final String title;
-  final String message;
-
-  const _RequestResultData({
-    required this.icon,
-    required this.iconColor,
-    required this.backgroundColor,
-    required this.title,
-    required this.message,
-  });
 }
