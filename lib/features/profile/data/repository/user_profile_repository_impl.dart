@@ -1,139 +1,189 @@
 import 'dart:typed_data';
-
+import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:sistema_abada_capoeira/core/errors/exception_handler.dart';
+import 'package:sistema_abada_capoeira/core/errors/failure.dart';
 
 import '../../domain/entities/user_profile_entity.dart';
 import '../../domain/entities/profile_change_request_entity.dart';
 import '../models/profile_change_request_model.dart';
 import '../../domain/repository/profile_repository.dart';
-import '../datasources/user_profile_firestore_datasource.dart';
+import '../datasources/profile_remote_datasource.dart';
 
 class ProfileRepositoryImpl implements ProfileRepository {
-  final UserProfileFirestoreDataSource dataSource;
+  final ProfileRemoteDatasource dataSource;
 
   ProfileRepositoryImpl(this.dataSource);
 
   @override
-  Future<UserProfileEntity> searchProfile(String userId) async {
-    return await dataSource.fetchProfile(userId);
-  }
-
-  @override
-  Future<void> updateInfo(
-    String userId, {
-    String? email,
-    String? phoneNumber,
-  }) async {
-    final updatedData = <String, dynamic>{};
-    if (email != null) updatedData['email'] = email;
-    if (phoneNumber != null) updatedData['phoneNumber'] = phoneNumber;
-
-    await dataSource.updateDirectFields(userId, updatedData);
-  }
-
-  @override
-  Future<void> requestChangeBeltNick({
-    required String originalBelt,
-    required String originalNickname,
-    String? newBelt,
-    String? newNickname,
-  }) async {
-    final userId = _currentUserId;
-    if (await dataSource.hasPendingChangeRequest(userId)) {
-      throw Exception('Já existe uma solicitação pendente para este perfil.');
+  Future<Either<Failure, UserProfileEntity>> searchProfile(
+    String userId,
+  ) async {
+    try {
+      final result = await dataSource.fetchProfile(userId);
+      return result.fold(
+        (failure) => Left(failure),
+        (profile) => Right(profile),
+      );
+    } catch (exception) {
+      return ExceptionHandler.handleException(
+        exception: exception,
+        contextMessage: 'searchProfile',
+      );
     }
-    final profile = await getCurrentUserProfile();
-    final requestData = <String, dynamic>{
-      'userName': profile.displayName,
-      'originalBelt': originalBelt,
-      'originalNickname': originalNickname,
-    };
-    if (newBelt != null) requestData['newBelt'] = newBelt;
-    if (newNickname != null) requestData['newNickname'] = newNickname;
-
-    await dataSource.createChangeRequest(userId, requestData);
   }
 
   @override
-  Future<UserProfileEntity> getCurrentUserProfile() async {
-    return searchProfile(_currentUserId);
+  Future<Either<Failure, void>> updateUserEntity(
+    UserProfileEntity profile,
+  ) async {
+    try {
+      return await dataSource.updateUserEntity(profile);
+    } catch (exception) {
+      return ExceptionHandler.handleException(
+        exception: exception,
+        contextMessage: 'updateUserEntity',
+      );
+    }
   }
 
   @override
-  Future<void> updatePersonalInfo({
-    required String fullName,
-    required String email,
-    required String phoneNumber,
-  }) async {
-    final updatedData = <String, dynamic>{
-      'fullName': fullName,
-      'email': email,
-      'phoneNumber': phoneNumber,
-    };
-
-    await dataSource.updateDirectFields(_currentUserId, updatedData);
+  Future<Either<Failure, void>> createChangeRequest(
+    ProfileChangeRequestEntity request,
+  ) async {
+    try {
+      final pendingResult = await dataSource.hasPendingChangeRequest(
+        request.userId,
+      );
+      final hasPendingRequest = pendingResult.fold(
+        (failure) => throw Exception(failure.message),
+        (hasPending) => hasPending,
+      );
+      if (hasPendingRequest) {
+        return const Left(
+          ValidationFailure(
+            'Já existe uma solicitação pendente para este perfil.',
+          ),
+        );
+      }
+      final model = request is ProfileChangeRequestModel
+          ? request
+          : ProfileChangeRequestModel(
+              id: request.id,
+              userId: request.userId,
+              userName: request.userName,
+              originalBelt: request.originalBelt,
+              originalNickname: request.originalNickname,
+              status: request.status,
+              newBelt: request.newBelt,
+              newNickname: request.newNickname,
+              requestDate: request.requestDate,
+              decisionDate: request.decisionDate,
+            );
+      return dataSource.createChangeRequest(model);
+    } catch (exception) {
+      return ExceptionHandler.handleException(
+        exception: exception,
+        contextMessage: 'createChangeRequest',
+      );
+    }
   }
 
   @override
-  Future<void> uploadProfilePhoto(Uint8List imageBytes) async {
-    final userId = _currentUserId;
-    final photoReference = FirebaseStorage.instance.ref(
-      'users/$userId/profile.jpg',
-    );
-    await photoReference.putData(
-      imageBytes,
-      SettableMetadata(contentType: 'image/jpeg'),
-    );
-    final photoUrl = await photoReference.getDownloadURL();
-    await dataSource.updateDirectFields(userId, {'photoUrl': photoUrl});
+  Future<Either<Failure, UserProfileEntity>> getCurrentUserProfile() async {
+    try {
+      return await searchProfile(FirebaseAuth.instance.currentUser!.uid);
+    } catch (exception) {
+      return ExceptionHandler.handleException(
+        exception: exception,
+        contextMessage: 'getCurrentUserProfile',
+      );
+    }
   }
 
   @override
-  Future<List<ProfileChangeRequestEntity>> getMyChangeRequests() {
-    return dataSource.fetchChangeRequests(
-      userId: _currentUserId,
-      pendingOnly: false,
-    );
+  Future<Either<Failure, void>> uploadProfilePhoto(Uint8List imageBytes) async {
+    try {
+      final userId = FirebaseAuth.instance.currentUser!.uid;
+      final uploadResult = await dataSource.uploadProfilePhoto(
+        userId,
+        imageBytes,
+      );
+      final photoUrl = uploadResult.fold((failure) => null, (url) => url);
+      if (photoUrl == null) {
+        return uploadResult.map((_) {});
+      }
+
+      final profileResult = await getCurrentUserProfile();
+      final profile = profileResult.fold(
+        (failure) => throw Exception(failure.message),
+        (profile) => profile,
+      );
+      final updateResult = await updateUserEntity(
+        UserProfileEntity(
+          id: profile.id,
+          nickname: profile.nickname,
+          fullName: profile.fullName,
+          email: profile.email,
+          phoneNumber: profile.phoneNumber,
+          currentBeltName: profile.currentBeltName,
+          role: profile.role,
+          tuscaStatus: profile.tuscaStatus,
+          tuscaExpirationDate: profile.tuscaExpirationDate,
+          photoUrl: photoUrl,
+          city: profile.city,
+          state: profile.state,
+        ),
+      );
+      return updateResult;
+    } catch (exception) {
+      return ExceptionHandler.handleException(
+        exception: exception,
+        contextMessage: 'uploadProfilePhoto',
+      );
+    }
   }
 
   @override
-  Future<List<ProfileChangeRequestEntity>> getPendingChangeRequests() {
-    return dataSource.fetchChangeRequests(userId: '', pendingOnly: true);
+  Future<Either<Failure, List<ProfileChangeRequestEntity>>>
+  getMyChangeRequests() async {
+    try {
+      final result = await dataSource.fetchChangeRequests(
+        userId: FirebaseAuth.instance.currentUser!.uid,
+        pendingOnly: false,
+      );
+      return result.fold(
+        (failure) => Left(failure),
+        (requests) => Right(requests),
+      );
+    } catch (exception) {
+      return ExceptionHandler.handleException(
+        exception: exception,
+        contextMessage: 'getMyChangeRequests',
+      );
+    }
   }
 
   @override
-  Future<void> decideChangeRequest({
+  Future<Either<Failure, void>> updateChangeRequest({
     required ProfileChangeRequestEntity request,
-    required bool approve,
+    required ProfileChangeRequestStatus status,
+    required Map<String, dynamic> profileUpdates,
   }) async {
-    final model = request is ProfileChangeRequestModel
-        ? request
-        : ProfileChangeRequestModel(
-            id: request.id,
-            userId: request.userId,
-            userName: request.userName,
-            originalBelt: request.originalBelt,
-            originalNickname: request.originalNickname,
-            newBelt: request.newBelt,
-            newNickname: request.newNickname,
-            status: request.status,
-            requestDate: request.requestDate,
-            decisionDate: request.decisionDate,
-          );
-    final collection = await dataSource.profileCollectionFor(request.userId);
-    await dataSource.decideChangeRequest(
-      model,
-      approve: approve,
-      profileCollection: collection,
-    );
-  }
-
-  String get _currentUserId {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      throw Exception('Nenhum usuário autenticado.');
+    try {
+      final model = ProfileChangeRequestModel.fromEntity(request);
+      final collection = await dataSource.profileCollectionFor(request.userId);
+      return await dataSource.updateChangeRequest(
+        model,
+        status: status,
+        profileUpdates: profileUpdates,
+        profileCollection: collection,
+      );
+    } catch (exception) {
+      return ExceptionHandler.handleException(
+        exception: exception,
+        contextMessage: 'updateChangeRequest',
+      );
     }
-    return user.uid;
   }
 }

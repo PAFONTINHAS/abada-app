@@ -8,14 +8,34 @@ class ProfileChangeRequestModel extends ProfileChangeRequestEntity {
     required super.userName,
     required super.originalBelt,
     required super.originalNickname,
+    required super.status,
     super.newBelt,
     super.newNickname,
-    required super.status,
     super.requestDate,
     super.decisionDate,
   });
 
-  factory ProfileChangeRequestModel.fromMap(String id, Map<String, dynamic> map) {
+  factory ProfileChangeRequestModel.fromEntity(
+    ProfileChangeRequestEntity request,
+  ) {
+    return ProfileChangeRequestModel(
+      id: request.id,
+      userId: request.userId,
+      userName: request.userName,
+      originalBelt: request.originalBelt,
+      originalNickname: request.originalNickname,
+      status: request.status,
+      newBelt: request.newBelt,
+      newNickname: request.newNickname,
+      requestDate: request.requestDate,
+      decisionDate: request.decisionDate,
+    );
+  }
+
+  factory ProfileChangeRequestModel.fromMap(
+    String id,
+    Map<String, dynamic> map,
+  ) {
     final requestDate = map['requestDate'];
     final decisionDate = map['decisionDate'];
 
@@ -27,7 +47,10 @@ class ProfileChangeRequestModel extends ProfileChangeRequestEntity {
       originalNickname: map['originalNickname'] ?? '',
       newBelt: map['newBelt'],
       newNickname: map['newNickname'],
-      status: map['status'] ?? 'pending',
+      status: ProfileChangeRequestStatus.values.firstWhere(
+        (status) => status.name == map['status'],
+        orElse: () => ProfileChangeRequestStatus.pending,
+      ),
       requestDate: requestDate is Timestamp ? requestDate.toDate() : null,
       decisionDate: decisionDate is Timestamp ? decisionDate.toDate() : null,
     );
@@ -41,9 +64,10 @@ class ProfileChangeRequestModel extends ProfileChangeRequestEntity {
       'originalNickname': originalNickname,
       if (newBelt != null) 'newBelt': newBelt,
       if (newNickname != null) 'newNickname': newNickname,
-      'status': status,
+      'status': status.name,
       if (requestDate != null) 'requestDate': Timestamp.fromDate(requestDate!),
-      if (decisionDate != null) 'decisionDate': Timestamp.fromDate(decisionDate!),
+      if (decisionDate != null)
+        'decisionDate': Timestamp.fromDate(decisionDate!),
     };
   }
 }

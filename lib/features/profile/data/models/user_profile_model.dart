@@ -5,18 +5,35 @@ import '../../domain/entities/user_profile_entity.dart';
 class UserProfileModel extends UserProfileEntity {
   const UserProfileModel({
     required super.id,
-    super.nickname,
     required super.fullName,
     required super.email,
     required super.phoneNumber,
     required super.currentBeltName,
     required super.role,
     required super.tuscaStatus,
+    super.nickname,
     super.tuscaExpirationDate,
     super.photoUrl,
     super.city,
     super.state,
   });
+
+  factory UserProfileModel.fromEntity(UserProfileEntity profile) {
+    return UserProfileModel(
+      id: profile.id,
+      nickname: profile.nickname,
+      fullName: profile.fullName,
+      email: profile.email,
+      phoneNumber: profile.phoneNumber,
+      currentBeltName: profile.currentBeltName,
+      role: profile.role,
+      tuscaStatus: profile.tuscaStatus,
+      tuscaExpirationDate: profile.tuscaExpirationDate,
+      photoUrl: profile.photoUrl,
+      city: profile.city,
+      state: profile.state,
+    );
+  }
 
   factory UserProfileModel.fromMap(Map<String, dynamic> map, String id) {
     return UserProfileModel(
@@ -66,8 +83,8 @@ class UserProfileModel extends UserProfileEntity {
     if (aliases.containsKey(normalized)) return aliases[normalized]!;
 
     return AccessProfile.values.firstWhere(
-      (e) => e.name == value,
-      orElse: () => AccessProfile.user,
+      (e) => e.name == normalized,
+      orElse: () => AccessProfile.unknown,
     );
   }
 

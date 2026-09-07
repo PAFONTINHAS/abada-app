@@ -1,4 +1,5 @@
 enum AccessProfile {
+  unknown,
   user,
   student,
   graduatedStudent,

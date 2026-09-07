@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/download_receipt_button_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/info_card_widget.dart';
 
 const Color _primaryPurple = Color(0xFF7C5CBF);
@@ -75,7 +76,9 @@ class TuscaSealCardWidget extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 280),
-                      child: _buildDownloadButton(),
+                      child: DownloadReceiptButtonWidget(
+                        onDownloadReceipt: onDownloadReceipt,
+                      ),
                     ),
                   ),
                 ],
@@ -84,38 +87,6 @@ class TuscaSealCardWidget extends StatelessWidget {
           ],
         ),
       ],
-    );
-  }
-
-  Widget _buildDownloadButton() {
-    return GestureDetector(
-      onTap: onDownloadReceipt,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFFE8E3F3)),
-        ),
-        child: const Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.download_rounded, size: 14, color: _primaryPurple),
-            SizedBox(width: 6),
-            Flexible(
-              child: Text(
-                'Baixar meu comprovante de regularidade',
-                softWrap: true,
-                style: TextStyle(
-                  color: _primaryPurple,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

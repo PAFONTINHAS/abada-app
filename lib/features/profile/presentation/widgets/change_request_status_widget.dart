@@ -1,51 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/profile_change_request_entity.dart';
-import 'package:sistema_abada_capoeira/features/profile/domain/repository/profile_repository.dart';
+import 'package:sistema_abada_capoeira/features/profile/domain/usecases/get_change_requests_usecase.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/request_status_controller.dart';
 
-//status da solicitacao
-class ChangeRequestStatusWidget extends StatefulWidget {
+class ChangeRequestStatusWidget extends StatelessWidget {
   const ChangeRequestStatusWidget({super.key});
 
   @override
-  State<ChangeRequestStatusWidget> createState() => _ChangeRequestStatusWidgetState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) =>
+          RequestStatusController(context.read<GetChangeRequestsUseCase>()),
+      child: const _RequestStatusContent(),
+    );
+  }
 }
 
-class _ChangeRequestStatusWidgetState extends State<ChangeRequestStatusWidget> {
-  bool _loading = true;
-  ProfileChangeRequestEntity? _latestRequest;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadStatus();
-  }
-
-  Future<void> _loadStatus() async {
-    try {
-      final requests = await context.read<ProfileRepository>().getMyChangeRequests();
-      if (!mounted) return;
-
-      setState(() {
-        _latestRequest = requests.isEmpty ? null : requests.first;
-        _loading = false;
-      });
-    } catch (_) {
-      if (!mounted) return;
-      setState(() => _loading = false);
-    }
-  }
+class _RequestStatusContent extends StatelessWidget {
+  const _RequestStatusContent();
 
   @override
   Widget build(BuildContext context) {
-    if (_loading) {
+    final isLoading = context.select<RequestStatusController, bool>(
+      (controller) => controller.isLoading,
+    );
+    final request = context
+        .select<RequestStatusController, ProfileChangeRequestEntity?>(
+          (controller) => controller.latestRequest,
+        );
+
+    if (isLoading) {
       return const Padding(
         padding: EdgeInsets.symmetric(vertical: 12),
         child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
       );
     }
 
-    final request = _latestRequest;
     if (request == null) {
       return Container(
         width: double.infinity,
@@ -57,7 +48,10 @@ class _ChangeRequestStatusWidgetState extends State<ChangeRequestStatusWidget> {
         ),
         child: const Text(
           'Nenhuma solicitação de alteração registrada até o momento.',
-          style: TextStyle(color: Color(0xFF5B4A8A), fontWeight: FontWeight.w600),
+          style: TextStyle(
+            color: Color(0xFF5B4A8A),
+            fontWeight: FontWeight.w600,
+          ),
         ),
       );
     }
@@ -123,6 +117,8 @@ class _ChangeRequestStatusWidgetState extends State<ChangeRequestStatusWidget> {
     if (request.newBelt != null && request.newBelt!.trim().isNotEmpty) {
       pieces.add('corda: ${request.newBelt}');
     }
-    return pieces.isEmpty ? 'Sem alterações pendentes.' : 'Solicitação para ${pieces.join(' e ')}.';
+    return pieces.isEmpty
+        ? 'Sem alterações pendentes.'
+        : 'Solicitação para ${pieces.join(' e ')}.';
   }
 }

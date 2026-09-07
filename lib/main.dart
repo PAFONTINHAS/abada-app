@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -7,10 +6,12 @@ import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/ho
 import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/login_form_controller.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/register_form_controller.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/pages/home_page.dart';
-import 'package:sistema_abada_capoeira/features/profile/data/datasources/user_profile_firestore_datasource.dart';
+import 'package:sistema_abada_capoeira/features/profile/data/datasources/profile_remote_datasource_impl.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/pages/profile_page.dart';
 import 'package:sistema_abada_capoeira/features/profile/data/repository/user_profile_repository_impl.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/repository/profile_repository.dart';
+import 'package:sistema_abada_capoeira/features/profile/domain/usecases/decide_change_request_usecase.dart';
+import 'package:sistema_abada_capoeira/features/profile/domain/usecases/get_change_requests_usecase.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 
 void main() async {
@@ -27,9 +28,15 @@ void main() async {
         ...providerInjection.providers,
 
         Provider<ProfileRepository>(
-          create: (_) => ProfileRepositoryImpl(
-            UserProfileFirestoreDataSource(FirebaseFirestore.instance),
-          ),
+          create: (_) => ProfileRepositoryImpl(ProfileRemoteDatasourceImpl()),
+        ),
+
+        ProxyProvider<ProfileRepository, GetChangeRequestsUseCase>(
+          update: (_, repository, __) => GetChangeRequestsUseCase(repository),
+        ),
+
+        ProxyProvider<ProfileRepository, DecideChangeRequestUseCase>(
+          update: (_, repository, __) => DecideChangeRequestUseCase(repository),
         ),
 
         ChangeNotifierProvider<ProfileController>(
@@ -54,7 +61,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white,
       ),
       title: 'Flutter Demo',
-      home: HomePage()
+      home: HomePage(),
     );
   }
 }

@@ -22,21 +22,22 @@ class RequestBeltNicknameChangeUseCase {
         );
       }
 
-      final profile = (await repository.getCurrentUserProfile()).fold(
-        (failure) => throw Exception(failure.message),
-        (profile) => profile,
+      final profileResult = await repository.getCurrentUserProfile();
+      return profileResult.fold(
+        (failure) => Left(failure),
+        (profile) => repository.createChangeRequest(
+          ProfileChangeRequestEntity(
+            id: '',
+            userId: profile.id,
+            userName: profile.displayName,
+            originalBelt: originalBelt,
+            originalNickname: originalNickname,
+            newBelt: newBelt,
+            newNickname: newNickname,
+            status: ProfileChangeRequestStatus.pending,
+          ),
+        ),
       );
-      final request = ProfileChangeRequestEntity(
-        id: '',
-        userId: profile.id,
-        userName: profile.displayName,
-        originalBelt: originalBelt,
-        originalNickname: originalNickname,
-        newBelt: newBelt,
-        newNickname: newNickname,
-        status: ProfileChangeRequestStatus.pending,
-      );
-      return await repository.createChangeRequest(request);
     } catch (exception) {
       return ExceptionHandler.handleException(
         exception: exception,

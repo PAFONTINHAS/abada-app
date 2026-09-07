@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 const Color _primaryPurple = Color(0xFF7C5CBF);
 
-class ButtonWidget extends StatelessWidget {
+class ProfileActionButtonWidget extends StatelessWidget {
   final String label;
   final bool isLoading;
   final VoidCallback? onPressed;
   final IconData? icon;
   final Color? backgroundColor;
 
-  const ButtonWidget({
+  const ProfileActionButtonWidget({
     super.key,
     required this.label,
     required this.isLoading,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/current_belt_card_widget.dart';
-import 'package:sistema_abada_capoeira/features/profile/presentation/pages/edit_profile_page.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/personal_info_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/profile_header_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/quick_actions_section_widget.dart';
@@ -9,7 +8,8 @@ import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/tus
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/user_profile_entity.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/change_request_status_widget.dart';
-import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/button_widget.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/profile_action_button_widget.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/profile_settings_action_widget.dart';
 
 /// RF04 - Gerenciar Perfil
 class ProfilePage extends StatelessWidget {
@@ -79,7 +79,7 @@ class ProfilePage extends StatelessWidget {
               },
             ),
             const SizedBox(height: 24),
-            ButtonWidget(
+            ProfileActionButtonWidget(
               label: 'Sair da Conta',
               isLoading: false,
               icon: Icons.logout,
@@ -103,6 +103,7 @@ class ProfilePage extends StatelessWidget {
 
   String _roleLabel(AccessProfile role) {
     const labels = {
+      AccessProfile.unknown: 'Desconhecido',
       AccessProfile.user: 'Usuário',
       AccessProfile.student: 'Aluno(a)',
       AccessProfile.graduatedStudent: 'Aluno(a) graduado(a)',
@@ -141,17 +142,7 @@ class ProfilePage extends StatelessWidget {
           fontSize: 18,
         ),
       ),
-      actions: [
-        IconButton(
-          padding: const EdgeInsets.only(right: 16),
-          icon: const Icon(Icons.settings_outlined, color: Colors.black54),
-          onPressed: () {
-            Navigator.of(
-              context,
-            ).push(MaterialPageRoute(builder: (_) => const EditProfilePage()));
-          },
-        ),
-      ],
+      actions: const [ProfileSettingsActionWidget()],
     );
   }
 }

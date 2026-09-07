@@ -1,35 +1,28 @@
+import 'package:dartz/dartz.dart';
+import 'package:sistema_abada_capoeira/core/errors/failure.dart';
 import 'dart:typed_data';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/profile_change_request_entity.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/user_profile_entity.dart';
 
 abstract class ProfileRepository {
-  Future<UserProfileEntity> searchProfile(String userId);
+  Future<Either<Failure, UserProfileEntity>> searchProfile(String userId);
 
-  Future<void> updateInfo(String userId, {String? email, String? phoneNumber});
+  Future<Either<Failure, void>> updateUserEntity(UserProfileEntity profile);
 
-  Future<void> requestChangeBeltNick({
-    required String originalBelt,
-    required String originalNickname,
-    String? newBelt,
-    String? newNickname,
-  });
+  Future<Either<Failure, void>> createChangeRequest(
+    ProfileChangeRequestEntity request,
+  );
 
-  Future<UserProfileEntity> getCurrentUserProfile();
+  Future<Either<Failure, UserProfileEntity>> getCurrentUserProfile();
 
-  Future<void> updatePersonalInfo({
-    required String fullName,
-    required String email,
-    required String phoneNumber,
-  });
+  Future<Either<Failure, void>> uploadProfilePhoto(Uint8List imageBytes);
 
-  Future<void> uploadProfilePhoto(Uint8List imageBytes);
+  Future<Either<Failure, List<ProfileChangeRequestEntity>>>
+  getMyChangeRequests();
 
-  Future<List<ProfileChangeRequestEntity>> getMyChangeRequests();
-
-  Future<List<ProfileChangeRequestEntity>> getPendingChangeRequests();
-
-  Future<void> decideChangeRequest({
+  Future<Either<Failure, void>> updateChangeRequest({
     required ProfileChangeRequestEntity request,
-    required bool approve,
+    required ProfileChangeRequestStatus status,
+    required Map<String, dynamic> profileUpdates,
   });
 }

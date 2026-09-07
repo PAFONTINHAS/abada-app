@@ -1,3 +1,5 @@
+enum ProfileChangeRequestStatus { pending, approved, rejected }
+
 class ProfileChangeRequestEntity {
   final String id;
   final String userId;
@@ -6,7 +8,7 @@ class ProfileChangeRequestEntity {
   final String originalNickname;
   final String? newBelt;
   final String? newNickname;
-  final String status;
+  final ProfileChangeRequestStatus status;
   final DateTime? requestDate;
   final DateTime? decisionDate;
 
@@ -23,8 +25,7 @@ class ProfileChangeRequestEntity {
     this.decisionDate,
   });
 
-  bool get isPending => status == 'pending';
-  bool get isApproved => status == 'approved';
-  bool get isRejected => status == 'rejected';
+  bool get isPending => status == ProfileChangeRequestStatus.pending;
+  bool get isApproved => status == ProfileChangeRequestStatus.approved;
+  bool get isRejected => status == ProfileChangeRequestStatus.rejected;
 }
-
