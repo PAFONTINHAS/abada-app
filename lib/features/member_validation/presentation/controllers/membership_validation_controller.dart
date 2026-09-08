@@ -2,10 +2,10 @@
 
 import 'package:flutter/foundation.dart';
 import '../../domain/entities/membership_request.dart';
-import '../../domain/usecases/approve_membership_request.dart';
-import '../../domain/usecases/get_professor_membership_requests.dart';
-import '../../domain/usecases/reject_membership_request.dart';
-import '../../domain/usecases/request_membership_changes.dart';
+import '../../domain/usecases/approve_membership_request_usecase.dart';
+import '../../domain/usecases/get_professor_membership_requests_usecase.dart';
+import '../../domain/usecases/reject_membership_request_usecase.dart';
+import '../../domain/usecases/request_membership_changes_usecase.dart';
 
 class MembershipValidationController extends ChangeNotifier {
   //herda funcionalidades de ChangeNotifier permite usar o notifyListeners
@@ -27,8 +27,7 @@ class MembershipValidationController extends ChangeNotifier {
   //lista de solicitações que o Controller vai guardar
 
   bool isLoading = false; //"Estamos carregando alguma coisa agora?"
-  String?
-  errorMessage; //Guarda uma mensagem caso alguma operação dê erro, podendo ser null
+  String? errorMessage; //Guarda uma mensagem caso alguma operação dê erro, podendo ser null
 
   //recebe a ação carregarSolicitações
   Future<void> loadRequests(String professorId) async {
@@ -36,44 +35,126 @@ class MembershipValidationController extends ChangeNotifier {
     errorMessage = null; //limpando erro antigo
     notifyListeners();
     //“Provider, avise quem estiver observando este controller que alguma coisa mudou.”
-
     try {
-      requests = await getProfessorRequests(professorId);
-      //e chama o use case correto, o  get
+      // Chama o use case responsável por buscar as solicitações
+      final result = await getProfessorRequests(professorId);
+      result.fold(
+        (failure) {
+          // Se ocorreu uma falha, guarda a mensagem de erro
+          errorMessage = failure.message;
+        },
+        (loadedRequests) {
+          // Se deu certo, guarda a lista recebida
+          requests = loadedRequests;
+        },
+      );
     } catch (error) {
-      errorMessage = error
-          .toString(); //transforma o erro em string e guarda na variavel
+      // Captura alguma exceção inesperada que não foi tratada pelo Either
+      errorMessage = error.toString();
     } finally {
-      //execute independente de sucesso ou falha
-      isLoading = false; //terminou, não estamos carregando mais nada
-      notifyListeners();
+      // Executa independentemente de sucesso ou falha
+      isLoading = false; // Terminou o carregamento
+      notifyListeners(); // Avisa a interface para atualizar
     }
   }
 
   //recebe a ação aprovarSolicitação + id
-  Future<void> approve(String requestId, String professorId) async {
-    await approveMembershipRequest(requestId);
+  Future<bool> approve(String requestId, String professorId) async {
+    errorMessage = null;
+    final result = await approveMembershipRequest(requestId);
     //e chama o use case correto, o approveMembershipRequest
-    await loadRequests(professorId); //recarrega a lista de pendentes
+    final success = await result.fold(
+      (failure) async {
+        errorMessage = failure.message;
+        notifyListeners();
+        return false;
+      },
+      (_) async {
+        await loadRequests(professorId); //recarrega a lista de pendentes
+        return true;
+      },
+    );
+      isLoading = false;
+      notifyListeners();
+      return success;
   }
 
   //recebe a ação pedir correções + id + motivo
-  Future<void> requestChanges(String requestId, String changeReason,String professorId) async {
-    await requestMembershipChanges(
+  Future<bool> requestChanges( String requestId, String changeReason, String professorId,
+  ) async {
+  isLoading = true;
+  errorMessage = null;
+  notifyListeners();
+
+  try {
+    // Chama o use case responsável por solicitar correções
+    final result = await requestMembershipChanges(
       requestId,
       changeReason,
-      //e chama o use case correto, o requestMembershipChanges
     );
-        await loadRequests(professorId); //recarrega a lista de pendentes
-  }
 
-  //recebe a ação rejeitarSolicitação + id + motivo
-  Future<void> reject(String requestId, String rejectReason, String professorId) async {
-    await rejectMembershipRequest(
-      requestId,
-      rejectReason,
-      //e chama o use case correto, o rejectMembershipRequest
+    // Trata os dois resultados possíveis do Either
+    final success = await result.fold(
+      (failure) async {
+        // Se ocorreu uma falha, guarda a mensagem
+        errorMessage = failure.message;
+        return false;
+      },
+      (_) async {
+        // Se deu certo, recarrega a lista de solicitações
+        await loadRequests(professorId);
+        return true;
+      },
     );
-    await loadRequests(professorId); //recarrega a lista de pendentes
+    return success;
+  } catch (error) {
+    // Captura exceções inesperadas
+    errorMessage = error.toString();
+    return false;
+  } finally {
+    // Executa independentemente de sucesso ou falha
+    isLoading = false;
+    notifyListeners();
   }
 }
+  //recebe a ação rejeitarSolicitação + id + motivo
+  Future<bool> reject( String requestId, String rejectReason, String professorId,
+  ) async {
+  isLoading = true;
+  errorMessage = null;
+  notifyListeners();
+
+  try {
+    // Chama o use case responsável por rejeitar a solicitação
+    final result = await rejectMembershipRequest(
+      requestId,
+      rejectReason,
+    );
+
+    // Trata os dois resultados possíveis do Either
+    final success = await result.fold(
+      (failure) async {
+        // Se ocorreu uma falha, guarda a mensagem
+        errorMessage = failure.message;
+        return false;
+      },
+      (_) async {
+        // Se deu certo, recarrega a lista de solicitações
+        await loadRequests(professorId);
+        return true;
+      },
+    );
+
+    return success;
+  } catch (error) {
+    // Captura exceções inesperadas
+    errorMessage = error.toString();
+    return false;
+  } finally {
+    // Executa independentemente de sucesso ou falha
+    isLoading = false;
+    notifyListeners();
+    }
+  }
+}
+
