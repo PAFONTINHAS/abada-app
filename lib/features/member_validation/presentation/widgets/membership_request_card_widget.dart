@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:sistema_abada_capoeira/features/member_validation/presentation/widgets/action_button_widget.dart';
 
 import '../../domain/entities/membership_request.dart';
 
-class MembershipRequestCard extends StatelessWidget {
+class MembershipRequestCardWidget  extends StatelessWidget {
   final MembershipRequest request;
   final VoidCallback onApprove;
   final VoidCallback onRequestChanges;
   final VoidCallback onReject;
   final VoidCallback? onDetails;
 
-  const MembershipRequestCard({
+  const MembershipRequestCardWidget ({
     super.key,
     required this.request,
     required this.onApprove,
@@ -74,7 +75,7 @@ class MembershipRequestCard extends StatelessWidget {
             ),
           ),
 
-          _ActionButton(
+          ActionButtonWidget(
             icon: Icons.check,
             iconColor: Colors.deepPurple,
             backgroundColor: Colors.deepPurple.shade50,
@@ -83,7 +84,7 @@ class MembershipRequestCard extends StatelessWidget {
 
           const SizedBox(width: 6),
 
-          _ActionButton(
+          ActionButtonWidget(
             icon: Icons.edit_outlined,
             iconColor: Colors.orange,
             backgroundColor: Colors.orange.shade50,
@@ -92,7 +93,7 @@ class MembershipRequestCard extends StatelessWidget {
 
           const SizedBox(width: 6),
 
-          _ActionButton(
+          ActionButtonWidget(
             icon: Icons.close,
             iconColor: Colors.red,
             backgroundColor: Colors.red.shade50,
@@ -122,40 +123,5 @@ class MembershipRequestCard extends StatelessWidget {
     final minute = date.minute.toString().padLeft(2, '0');
 
     return '$day/$month/$year\n$hour:$minute';
-  }
-}
-
-class _ActionButton extends StatelessWidget {
-  final IconData icon;
-  final Color iconColor;
-  final Color backgroundColor;
-  final VoidCallback onPressed;
-
-  const _ActionButton({
-    required this.icon,
-    required this.iconColor,
-    required this.backgroundColor,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onPressed,
-      borderRadius: BorderRadius.circular(8),
-      child: Container(
-        width: 36,
-        height: 36,
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Icon(
-          icon,
-          size: 20,
-          color: iconColor,
-        ),
-      ),
-    );
   }
 }
