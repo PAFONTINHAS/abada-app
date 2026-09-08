@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import '../controllers/request_result_controller.dart';
 import '../models/request_result_type.dart';
 
-class RequestResultDialog extends StatelessWidget {
+class RequestResultDialogWidget  extends StatelessWidget {
   final RequestResultType type;
 
-  const RequestResultDialog({
+  const RequestResultDialogWidget ({
     super.key,
     required this.type,
   });
