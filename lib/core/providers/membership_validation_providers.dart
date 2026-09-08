@@ -6,10 +6,10 @@ import 'package:sistema_abada_capoeira/features/member_validation/domain/reposit
 import '../../features/member_validation/data/datasource/membership_validation_remote_datasource.dart';
 import '../../features/member_validation/data/datasource/membership_validation_remote_datasource_impl.dart';
 import '../../features/member_validation/data/repository/membership_validation_repository_impl.dart';
-import '../../features/member_validation/domain/usecases/approve_membership_request.dart';
-import '../../features/member_validation/domain/usecases/get_professor_membership_requests.dart';
-import '../../features/member_validation/domain/usecases/reject_membership_request.dart';
-import '../../features/member_validation/domain/usecases/request_membership_changes.dart';
+import '../../features/member_validation/domain/usecases/approve_membership_request_usecase.dart';
+import '../../features/member_validation/domain/usecases/get_professor_membership_requests_usecase.dart';
+import '../../features/member_validation/domain/usecases/reject_membership_request_usecase.dart';
+import '../../features/member_validation/domain/usecases/request_membership_changes_usecase.dart';
 import '../../features/member_validation/presentation/controllers/membership_validation_controller.dart';
 
 class MembershipValidationProvider {
@@ -26,7 +26,7 @@ class MembershipValidationProvider {
   
   static final MembershipValidationRemoteDataSource remoteDataSource =
   //quero uma variável seguindo o contrato MembershipValidationRemoteDataSource
-      MembershipValidationRemoteDataSourceImpl(firestore);
+      MembershipValidationRemoteDataSourceImpl();
   //implementação real. DataSource, aqui está seu telefone para falar com o Firebase
 
   static final MembershipValidationRepository repository =
