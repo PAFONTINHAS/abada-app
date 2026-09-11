@@ -13,7 +13,7 @@ abstract class ProfileRepository {
     ProfileChangeRequestEntity request,
   );
 
-  Future<Either<Failure, void>> uploadProfilePhoto(Uint8List imageBytes);
+  Future<Either<Failure, String>> uploadProfilePhoto(String userId, Uint8List imageBytes);
 
   Future<Either<Failure, List<ProfileChangeRequestEntity>>> getMyChangeRequests();
 

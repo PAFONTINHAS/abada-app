@@ -13,14 +13,17 @@ class UploadProfilePhotoUsecase {
   UploadProfilePhotoUsecase(this.profileRepository);
 
 
-  Future<Either<Failure, void>> call(UserProfileEntity userProfileEntity, Uint8List imageBytes) async{
+  Future<Either<Failure, UserProfileEntity>> call(UserProfileEntity userProfileEntity, Uint8List imageBytes) async{
 
-    final updatedUser = userProfileEntity.copyWith(photoUrl: )
+    final uploadProfilePhoto = await profileRepository.uploadProfilePhoto(userProfileEntity.id, imageBytes);
+    
+    return uploadProfilePhoto.fold((failure) => Left(failure), (updatedPhotoUrl) async{
+      
+      final updatedUser = userProfileEntity.copyWith(photoUrl: updatedPhotoUrl);
 
+      return await profileRepository.updateUserEntity(updatedUser);
 
-    return await profileRepository.uploadProfilePhoto(imageBytes);
-
+    });
   }
-
 
 }

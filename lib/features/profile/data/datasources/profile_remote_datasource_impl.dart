@@ -64,7 +64,11 @@ class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
         imageBytes,
         SettableMetadata(contentType: 'image/jpeg'),
       );
-      return Right(await photoReference.getDownloadURL());
+
+      final url = await photoReference.getDownloadURL();
+      
+      return Right(url);
+
     } catch (exception) {
       return ExceptionHandler.handleException(
         exception: exception,

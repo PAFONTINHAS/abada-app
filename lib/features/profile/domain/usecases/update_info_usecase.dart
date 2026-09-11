@@ -37,26 +37,5 @@ class UpdateProfileInfoUseCase {
 
     return await repository.updateUserEntity(updatedUserEntity);
 
-
-    // return profileResult.fold(
-    //   (failure) => Left(failure),
-    //   (currentProfile) => repository.updateUserEntity(
-    //     UserProfileEntity(
-    //       id: currentProfile.id,
-    //       nickname: currentProfile.nickname,
-    //       fullName: fullName,
-    //       email: email,
-    //       phoneNumber: phoneNumber,
-    //       currentBeltName: currentProfile.currentBeltName,
-    //       role: currentProfile.role,
-    //       tuscaStatus: currentProfile.tuscaStatus,
-    //       tuscaExpirationDate: currentProfile.tuscaExpirationDate,
-    //       photoUrl: currentProfile.photoUrl,
-    //       city: currentProfile.city,
-    //       state: currentProfile.state,
-    //     ),
-    //   ),
-    // );
-
   }
 }

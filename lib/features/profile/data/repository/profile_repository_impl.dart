@@ -64,46 +64,9 @@ class ProfileRepositoryImpl implements ProfileRepository {
   }
 
   @override
-  Future<Either<Failure, void>> uploadProfilePhoto(Uint8List imageBytes) async {
-    try {
-      final userId = FirebaseAuth.instance.currentUser!.uid;
-      final uploadResult = await profileRemoteDatasource.uploadProfilePhoto(
-        userId,
-        imageBytes,
-      );
-      final photoUrl = uploadResult.fold((failure) => null, (url) => url);
-      if (photoUrl == null) {
-        return uploadResult.map((_) {});
-      }
+  Future<Either<Failure, String>> uploadProfilePhoto(String userId, Uint8List imageBytes) async {
 
-      final profileResult = await getCurrentUserProfile();
-      final profile = profileResult.fold(
-        (failure) => throw Exception(failure.message),
-        (profile) => profile,
-      );
-      final updateResult = await updateUserEntity(
-        UserProfileEntity(
-          id: profile.id,
-          nickname: profile.nickname,
-          fullName: profile.fullName,
-          email: profile.email,
-          phoneNumber: profile.phoneNumber,
-          currentBeltName: profile.currentBeltName,
-          role: profile.role,
-          tuscaStatus: profile.tuscaStatus,
-          tuscaExpirationDate: profile.tuscaExpirationDate,
-          photoUrl: photoUrl,
-          city: profile.city,
-          state: profile.state,
-        ),
-      );
-      return updateResult;
-    } catch (exception) {
-      return ExceptionHandler.handleException(
-        exception: exception,
-        contextMessage: 'uploadProfilePhoto',
-      );
-    }
+    return await profileRemoteDatasource.uploadProfilePhoto(userId, imageBytes);
   }
 
   @override

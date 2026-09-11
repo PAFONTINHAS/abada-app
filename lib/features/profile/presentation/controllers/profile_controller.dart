@@ -99,16 +99,21 @@ class ProfileController extends ChangeNotifier {
   }
 
   Future<bool> uploadProfilePhoto(Uint8List imageBytes) async {
-    final result = await _uploadProfilePhotoUsecase.call(imageBytes);
+    
+    final result = await _uploadProfilePhotoUsecase.call(_userProfile, imageBytes);
+
     final success = result.fold((failure) {
       errorMessage = failure.message;
       return false;
-    }, (_) => true);
-    if (!success) {
-      notifyListeners();
-      return false;
-    }
-    await getUserProfile();
-    return true;
+    }, (updatedUser){
+
+      _userProfile = updatedUser;
+
+      return true;
+    });
+
+    notifyListeners();
+
+    return success;
   }
 }
