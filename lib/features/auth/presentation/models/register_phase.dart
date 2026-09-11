@@ -1,0 +1,5 @@
+enum RegisterPhase {
+
+  firstPhase,
+  secondPhase
+}

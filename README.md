@@ -9,7 +9,7 @@ Para garantir a qualidade, padronização e manutenibilidade do código por toda
 | Documento | Descrição/Objetivo | Link Rápido |
 |-|-|-|
 |**Padrões de Código**| Gitflow, convenções de nomenclatura, limites de linha e Clean Code | <a href="CONTRIBUTING.md">Acessar Guia</a> |
-|**Arquitetura do Sistema**| Padrões de projeto, gerenciamento de estado (Bloc/Provider) e pastas | `docs/ARCHITECTURE.md` (em breve) |
+|**Arquitetura do Sistema**| Padrões de projeto, gerenciamento de estado (Bloc/Provider) e pastas |  <a href="/docs/ARCHITECTURE.md">Acessar Guia</a> ||
 |**Modelagem de Dados**| Estrutura de coleções NoSQL, subcoleções e índices do Firebase | `docs/DATABASE.md` (em breve)|
 |**Segurança e LGPD**| Política de expiração de comprovantes PIX e proteção de dados | `docs/SECURITY.md` (em breve)|
 
