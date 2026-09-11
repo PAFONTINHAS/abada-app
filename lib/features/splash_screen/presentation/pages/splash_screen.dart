@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sistema_abada_capoeira/core/constants/app_spacing.dart';
 import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
-import 'package:sistema_abada_capoeira/features/profile/domain/entities/user_profile_entity.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 import 'package:sistema_abada_capoeira/features/splash_screen/presentation/controllers/data_loading_controller.dart';
@@ -31,6 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _prepareUserApp() async{
 
+    final DataLoadingController dataLoadingController = context.read<DataLoadingController>();
     final AuthController authController = context.read<AuthController>();
     final ProfileController profileController = context.read<ProfileController>();
 
@@ -40,13 +40,15 @@ class _SplashScreenState extends State<SplashScreen> {
       throw Exception("Usuário não autenticado");
     }
 
-    try{
+    try{ 
 
-      await profileController.getUserProfile(user.uid);
+      await dataLoadingController.fetchUserData(authController, profileController);
 
       final userRole = profileController.userProfile.role;
 
       if(userRole == UserRole.unknown) throw Exception("Papel de Usuário não reconhecido");
+
+      await dataLoadingController.finishSplash(authController, userRole);
 
     }catch(error, stack){
 

@@ -1,4 +1,3 @@
-import 'package:sistema_abada_capoeira/core/errors/exception_handler.dart';
 import 'package:dartz/dartz.dart';
 import 'package:sistema_abada_capoeira/core/errors/failure.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/user_profile_entity.dart';

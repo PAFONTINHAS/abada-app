@@ -1,6 +1,7 @@
 // data/models/user_profile_model.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sistema_abada_capoeira/features/auth/domain/extensions/user_role_extension.dart';
+import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
 import '../../domain/entities/user_profile_entity.dart';
 
 class UserProfileModel extends UserProfileEntity {
@@ -36,20 +37,26 @@ class UserProfileModel extends UserProfileEntity {
     );
   }
 
-  factory UserProfileModel.fromMap(Map<String, dynamic> map, String id) {
+  factory UserProfileModel.fromSnapshot(DocumentSnapshot document) {
+
+
+    final data = document.data() as Map<String, dynamic>;
+
+    final UserRole userRole = UserRoleExtension.getFromString(data['userRole']);
+
     return UserProfileModel(
-      uid: id,
-      nickname: map['nickname'] ?? '',
-      fullName: map['fullName'] ?? '',
-      email: map['email'] ?? '',
-      phoneNumber: map['phoneNumber'] ?? map['phone'] ?? '',
-      currentBeltName: map['currentBeltName'] ?? map['rope'] ?? '',
-      role: UserRoleExtension.getFromString(map['userRole']),
-      tuscaStatus: _tuscaStatusFromString(map['tuscaStatus']),
-      tuscaExpirationDate: (map['tuscaExpirationDate'] as Timestamp?)?.toDate(),
-      photoUrl: map['photoUrl'],
-      city: map['city'] ?? map['cidade'] ?? '',
-      state: map['uf'] ?? map['state'] ?? map['estado'] ?? '',
+      uid: document.id,
+      nickname: data['nickname'] ?? '',
+      fullName: data['fullName'] ?? '',
+      email: data['email'] ?? '',
+      phoneNumber: data['phoneNumber'] ?? data['phone'] ?? '',
+      currentBeltName: data['currentBeltName'] ?? data['rope'] ?? '',
+      role: userRole,
+      tuscaStatus: _tuscaStatusFromString(data['tuscaStatus']),
+      tuscaExpirationDate: (data['tuscaExpirationDate'] as Timestamp?)?.toDate(),
+      photoUrl: data['photoUrl'],
+      city: data['city'] ?? data['cidade'] ?? '',
+      state: data['uf'] ?? data['state'] ?? data['estado'] ?? '',
     );
   }
 

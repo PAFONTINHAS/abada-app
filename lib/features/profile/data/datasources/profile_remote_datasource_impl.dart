@@ -22,7 +22,9 @@ class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
         throw Exception('User not found');
       }
 
-      return Right(UserProfileModel.fromMap(document.data()!, document.id));
+      final userProfileEntityModel = UserProfileModel.fromSnapshot(document);
+
+      return Right(userProfileEntityModel);
     } catch (exception) {
       return ExceptionHandler.handleException(
         exception: exception,
