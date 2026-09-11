@@ -12,10 +12,10 @@ import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/ho
 import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/login_form_controller.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/register_form_controller.dart';
 
-class AuthProvider {
+class AuthProviders {
 
 
-  AuthProvider ._();
+  AuthProviders ._();
 
   static final AuthRemoteDatasource authRemoteDatasource = AuthRemoteDatasourceImpl();
   static final AuthRepository authRepository = AuthRepositoryImpl(authRemoteDatasource);
