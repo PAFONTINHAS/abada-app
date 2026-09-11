@@ -16,14 +16,11 @@ void main() async{
 
   final appRouter = AppRouter(authController: providerInjection.authController);
 
-  runApp( 
-
+  runApp(
     MultiProvider(
       providers: [
-
         Provider.value(value: providerInjection),
-
-        ...providerInjection.providers
+        ...providerInjection.providers,
 
       ] ,
       child: MyApp(router: appRouter.router),
@@ -42,13 +39,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: Colors.white,
-        scaffoldBackgroundColor: Colors.white
+        scaffoldBackgroundColor: Colors.white,
       ),
       title: 'Flutter Demo',
       routerConfig: router,
     );
   }
 }
-
-
-

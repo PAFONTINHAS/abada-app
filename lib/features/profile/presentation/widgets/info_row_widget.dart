@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 /// widget do icon +  label + value
-
-
 class InfoRowWidget extends StatelessWidget {
   final IconData icon;
   final String label;

@@ -17,8 +17,8 @@ class AuthProvider {
 
   AuthProvider ._();
 
-  static final AuthRepository authRepository = AuthRepositoryImpl(authRemoteDatasource);
   static final AuthRemoteDatasource authRemoteDatasource = AuthRemoteDatasourceImpl();
+  static final AuthRepository authRepository = AuthRepositoryImpl(authRemoteDatasource);
 
 
 

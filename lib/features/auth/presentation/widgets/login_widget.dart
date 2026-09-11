@@ -15,15 +15,12 @@ class LoginWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final formController = context.read<LoginFormController>();
 
     return Padding(
       padding: EdgeInsetsGeometry.all(25),
       child: Column(
-
         children: [
-
           CustomTextInput(
             label: "Email",
             prefixIcon: Icon(Icons.email_outlined),
@@ -51,7 +48,7 @@ class LoginWidget extends StatelessWidget {
             ),
           ),
 
-          SizedBox(height: 20,),
+          SizedBox(height: 20),
 
           FormButtonWidget(
             text: "Entrar",
@@ -65,10 +62,9 @@ class LoginWidget extends StatelessWidget {
 
               final success = await formController.loginUser();
 
-              if(!context.mounted) return;
+              if (!context.mounted) return;
 
-              if(!success && formController.errorMessage != null){
-
+              if (!success && formController.errorMessage != null) {
                 MessageHandler.showError(context, formController.errorMessage!);
 
                 return;
@@ -79,20 +75,23 @@ class LoginWidget extends StatelessWidget {
 
                 LoggingService.displayInfo("Papel do usuário: ${formController.authenticatedUserRole!}");
 
-                MessageHandler.showSuccess(context, "Usuário autenticado com sucesso! Redirecionando...");
+                if(formController.authenticatedUserRole != null){
 
-                authController.setAuthenticatedUser(role: formController.authenticatedUserRole!);
 
-                RouteController.redirectToDashboardPage(context: context);
+                  LoggingService.displayInfo("Papel do usuário: ${formController.authenticatedUserRole!}");
 
+                  MessageHandler.showSuccess(context, "Usuário autenticado com sucesso! Redirecionando...");
+
+                  authController.setAuthenticatedUser(role: formController.authenticatedUserRole!);
+
+                  RouteController.redirectToDashboardPage(context: context);
+
+                }
               }
-            },
+            }
           ),
 
-          SizedBox(
-            height: 35,
-            child: Divider(),
-          ),
+          SizedBox(height: 35, child: Divider()),
 
           FormButtonWidget(
             text: "Entrar com o Google",
@@ -100,10 +99,10 @@ class LoginWidget extends StatelessWidget {
             buttonCollor: ColorConstants.whiteColor,
             textColor: Colors.black,
             prefixImagePath: "assets/images/google.png",
-            onPressed: (){
-
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeUserPage()));
-              
+            onPressed: () {
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (context) => HomeUserPage()));
             },
           ),
         ],
