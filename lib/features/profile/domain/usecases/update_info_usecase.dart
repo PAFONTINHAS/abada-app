@@ -10,7 +10,8 @@ class UpdateProfileInfoUseCase {
 
   UpdateProfileInfoUseCase(this.repository);
 
-  Future<Either<Failure, void>> execute({
+  Future<Either<Failure, UserProfileEntity>> execute({
+    required UserProfileEntity userProfileEntity,
     required String fullName,
     required String email,
     required String phoneNumber,
@@ -28,27 +29,34 @@ class UpdateProfileInfoUseCase {
       return const Left(ValidationFailure('Invalid phone number'));
     }
 
-    final profileResult = await repository.getCurrentUserProfile();
-    
-    return profileResult.fold(
-      (failure) => Left(failure),
-      (currentProfile) => repository.updateUserEntity(
-        UserProfileEntity(
-          id: currentProfile.id,
-          nickname: currentProfile.nickname,
-          fullName: fullName,
-          email: email,
-          phoneNumber: phoneNumber,
-          currentBeltName: currentProfile.currentBeltName,
-          role: currentProfile.role,
-          tuscaStatus: currentProfile.tuscaStatus,
-          tuscaExpirationDate: currentProfile.tuscaExpirationDate,
-          photoUrl: currentProfile.photoUrl,
-          city: currentProfile.city,
-          state: currentProfile.state,
-        ),
-      ),
+    final updatedUserEntity = userProfileEntity.copyWith(
+      fullName: fullName,
+      email: email,
+      phoneNumber: phoneNumber
     );
+
+    return await repository.updateUserEntity(updatedUserEntity);
+
+
+    // return profileResult.fold(
+    //   (failure) => Left(failure),
+    //   (currentProfile) => repository.updateUserEntity(
+    //     UserProfileEntity(
+    //       id: currentProfile.id,
+    //       nickname: currentProfile.nickname,
+    //       fullName: fullName,
+    //       email: email,
+    //       phoneNumber: phoneNumber,
+    //       currentBeltName: currentProfile.currentBeltName,
+    //       role: currentProfile.role,
+    //       tuscaStatus: currentProfile.tuscaStatus,
+    //       tuscaExpirationDate: currentProfile.tuscaExpirationDate,
+    //       photoUrl: currentProfile.photoUrl,
+    //       city: currentProfile.city,
+    //       state: currentProfile.state,
+    //     ),
+    //   ),
+    // );
 
   }
 }

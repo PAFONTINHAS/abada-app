@@ -14,7 +14,7 @@ class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   @override
-  Future<Either<Failure, UserProfileEntity>> fetchProfile(String userId) async {
+  Future<Either<Failure, UserProfileEntity>> fetchUserProfile(String userId) async {
     try {
       final document = await firestore.collection('users').doc(userId).get();
 
@@ -32,21 +32,17 @@ class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
   }
 
   @override
-  Future<Either<Failure, void>> updateUserEntity(
-    UserProfileEntity profile,
-  ) async {
+  Future<Either<Failure, UserProfileEntity>> updateUserEntity(UserProfileEntity profile) async {
     try {
-      final usersDocument = await firestore
-          .collection('users')
-          .doc(profile.id)
-          .get();
-      final collection = usersDocument.exists ? 'users' : 'usuarios';
-      final profileModel = UserProfileModel.fromEntity(profile);
-      await firestore
-          .collection(collection)
-          .doc(profile.id)
-          .update(profileModel.toMap());
-      return Right(null);
+
+      final documentReference = firestore.collection('users').doc(profile.id);
+
+      final UserProfileModel userProfileModel = UserProfileModel.fromEntity(profile);
+
+      await documentReference.update(userProfileModel.toMap());
+
+      return Right(userProfileModel);
+
     } catch (exception) {
       return ExceptionHandler.handleException(
         exception: exception,

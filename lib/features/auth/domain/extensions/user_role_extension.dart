@@ -1,4 +1,4 @@
-import 'package:sistema_abada_capoeira/features/auth/domain/entities/user_role.dart';
+import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
 
 class UserRoleExtension {
 
@@ -9,7 +9,9 @@ class UserRoleExtension {
       case 'unvalidatedUser': return UserRole.unvalidatedUser;
       case 'professor': return UserRole.professor;
       case 'student': return UserRole.student;
-      case 'coordenator': return UserRole.coordenator;
+      case 'coordinator': return UserRole.coordinator;
+      case 'tuscaVolunteer': return UserRole.tuscaVolunteer;
+      case 'graduatedStudent': return UserRole.graduatedStudent;
       default: return UserRole.unknown;
     }
   }

@@ -57,7 +57,7 @@ class ProfileFormController extends ChangeNotifier {
       return false;
     }
 
-    final profile = _profileController.profile;
+    final profile = _profileController.userProfile;
     if (profile == null) {
       errorMessage = 'Perfil não carregado.';
       notifyListeners();
@@ -82,7 +82,7 @@ class ProfileFormController extends ChangeNotifier {
   }
 
   Future<bool> requestChange() async {
-    final profile = _profileController.profile;
+    final profile = _profileController.userProfile;
     final newNickname = nicknameController.text.trim();
     final newBelt = beltController.text.trim();
     if (profile == null) {

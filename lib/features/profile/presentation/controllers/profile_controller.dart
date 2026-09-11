@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:sistema_abada_capoeira/features/auth/domain/usecases/logout_user_usecase.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/user_profile_entity.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/usecases/update_info_usecase.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/usecases/upload_profile_photo_usecase.dart';
@@ -9,6 +8,7 @@ import 'package:sistema_abada_capoeira/features/profile/domain/usecases/request_
 enum ProfileLoadStatus { loading, loaded, error }
 
 class ProfileController extends ChangeNotifier {
+
   final UpdateProfileInfoUseCase _updateProfileInfoUseCase;
   final UploadProfilePhotoUsecase _uploadProfilePhotoUsecase;
   final GetCurrentUserProfileUsecase _getCurrentUserProfileUsecase;
@@ -19,28 +19,30 @@ class ProfileController extends ChangeNotifier {
     this._updateProfileInfoUseCase,
     this._uploadProfilePhotoUsecase,
     this._requestBeltNicknameChangeUseCase,
-  ) {
-    loadProfile();
-  }
+  );
 
   ProfileLoadStatus status = ProfileLoadStatus.loading;
-  UserProfileEntity? profile;
+
+  late UserProfileEntity _userProfile;
+  UserProfileEntity get userProfile => _userProfile;
   String? errorMessage;
 
-  Future<void> loadProfile() async {
+  Future<void> getUserProfile(String userId) async {
     status = ProfileLoadStatus.loading;
     notifyListeners();
 
-    final result = await _getCurrentUserProfileUsecase.call();
+    final result = await _getCurrentUserProfileUsecase.call(userId);
 
     result.fold(
       (failure) {
         errorMessage = failure.message;
         status = ProfileLoadStatus.error;
+        return false;
       },
       (loadedProfile) {
-        profile = loadedProfile;
+        _userProfile = loadedProfile;
         status = ProfileLoadStatus.loaded;
+        return true;
       },
     );
 
@@ -53,21 +55,27 @@ class ProfileController extends ChangeNotifier {
     required String phoneNumber,
   }) async {
     final result = await _updateProfileInfoUseCase.execute(
+      userProfileEntity: _userProfile,
       fullName: fullName,
       email: email,
       phoneNumber: phoneNumber,
     );
-    return result.fold(
+
+    final success = result.fold(
       (failure) {
         errorMessage = failure.message;
-        notifyListeners();
         return false;
       },
-      (_) async {
-        await loadProfile();
+      (updatedUser){
+        
+        _userProfile = updatedUser;
         return true;
       },
     );
+
+    notifyListeners();
+
+    return success;
   }
 
 
@@ -100,7 +108,7 @@ class ProfileController extends ChangeNotifier {
       notifyListeners();
       return false;
     }
-    await loadProfile();
+    await getUserProfile();
     return true;
   }
 }

@@ -16,13 +16,13 @@ class ProfileRepositoryImpl implements ProfileRepository {
   ProfileRepositoryImpl(this.profileRemoteDatasource);
 
   @override
-  Future<Either<Failure, UserProfileEntity>> searchProfile(String userId) async {
+  Future<Either<Failure, UserProfileEntity>> fetchUserProfile(String userId) async {
 
-    return await profileRemoteDatasource.fetchProfile(userId);
+    return await profileRemoteDatasource.fetchUserProfile(userId);
   }
 
   @override
-  Future<Either<Failure, void>> updateUserEntity(UserProfileEntity profile) async {
+  Future<Either<Failure, UserProfileEntity>> updateUserEntity(UserProfileEntity profile) async {
 
     return await profileRemoteDatasource.updateUserEntity(profile);
   }
@@ -62,20 +62,6 @@ class ProfileRepositoryImpl implements ProfileRepository {
     return profileRemoteDatasource.createChangeRequest(model);
 
   }
-
-  @override
-  Future<Either<Failure, UserProfileEntity>> getCurrentUserProfile() async {
-
-    try {
-      return await searchProfile(FirebaseAuth.instance.currentUser!.uid);
-    } catch (exception) {
-      return ExceptionHandler.handleException(
-        exception: exception,
-        contextMessage: 'getCurrentUserProfile',
-      );
-    }
-  }
-
 
   @override
   Future<Either<Failure, void>> uploadProfilePhoto(Uint8List imageBytes) async {
