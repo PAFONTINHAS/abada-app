@@ -1,5 +1,7 @@
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
+import 'package:sistema_abada_capoeira/core/providers/auth_providers.dart';
+import 'package:sistema_abada_capoeira/features/auth/domain/usecases/logout_user_usecase.dart';
 import 'package:sistema_abada_capoeira/features/profile/data/datasources/profile_remote_datasource.dart';
 import 'package:sistema_abada_capoeira/features/profile/data/datasources/profile_remote_datasource_impl.dart';
 import 'package:sistema_abada_capoeira/features/profile/data/repository/profile_repository_impl.dart';
@@ -33,7 +35,6 @@ class ProfileProviders {
     uploadProfilePhotoUsecase,
     requestBeltNicknameChangeUseCase,
   );
-
 
   static final RequestStatusController requestStatusController = RequestStatusController(getChangeRequestsUseCase);
 

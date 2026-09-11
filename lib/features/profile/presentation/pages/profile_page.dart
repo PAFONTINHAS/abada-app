@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
+import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/current_belt_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/edit_profile_button_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/personal_info_widget.dart';
@@ -84,8 +86,17 @@ class ProfilePage extends StatelessWidget {
               isLoading: false,
               icon: Icons.logout,
               backgroundColor: Colors.red,
-              onPressed: () {
-                // TODO: Implementar logout
+              onPressed: () async {
+
+                final authController = context.read<AuthController>();
+
+                final success = await authController.logoutUser();
+
+                if(success && context.mounted){
+
+                  MessageHandler.showSuccess(context, "Saiu da conta com sucesso!");
+                }
+
               },
             ),
             const SizedBox(height: 24),

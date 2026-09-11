@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:sistema_abada_capoeira/features/auth/domain/usecases/logout_user_usecase.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/user_profile_entity.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/usecases/update_info_usecase.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/usecases/upload_profile_photo_usecase.dart';
@@ -68,6 +69,7 @@ class ProfileController extends ChangeNotifier {
       },
     );
   }
+
 
   Future<bool> requestBeltNicknameChange({
     required String originalBelt,
