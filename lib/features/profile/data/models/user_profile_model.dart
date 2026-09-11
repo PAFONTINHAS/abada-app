@@ -5,7 +5,7 @@ import '../../domain/entities/user_profile_entity.dart';
 
 class UserProfileModel extends UserProfileEntity {
   const UserProfileModel({
-    required super.id,
+    required super.uid,
     required super.fullName,
     required super.email,
     required super.phoneNumber,
@@ -21,7 +21,7 @@ class UserProfileModel extends UserProfileEntity {
 
   factory UserProfileModel.fromEntity(UserProfileEntity profile) {
     return UserProfileModel(
-      id: profile.id,
+      uid: profile.uid,
       nickname: profile.nickname,
       fullName: profile.fullName,
       email: profile.email,
@@ -38,7 +38,7 @@ class UserProfileModel extends UserProfileEntity {
 
   factory UserProfileModel.fromMap(Map<String, dynamic> map, String id) {
     return UserProfileModel(
-      id: id,
+      uid: id,
       nickname: map['nickname'] ?? '',
       fullName: map['fullName'] ?? '',
       email: map['email'] ?? '',

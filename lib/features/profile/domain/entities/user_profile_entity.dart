@@ -3,7 +3,7 @@ import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_pr
 enum TuscaStatus { regular, pending, exempt, notApplicable }
 
 class UserProfileEntity {
-  final String id;
+  final String uid;
   final String nickname;
   final String fullName;
   final String email;
@@ -17,7 +17,7 @@ class UserProfileEntity {
   final String state;
 
   const UserProfileEntity({
-    required this.id,
+    required this.uid,
     this.nickname = '',
     required this.fullName,
     required this.email,
@@ -55,7 +55,7 @@ class UserProfileEntity {
   }){
 
     return UserProfileEntity(
-      id: id ?? this.id,
+      uid: id ?? this.uid,
       fullName: fullName ?? this.fullName,
       email: email ?? this.email,
       phoneNumber: phoneNumber ?? this.phoneNumber,

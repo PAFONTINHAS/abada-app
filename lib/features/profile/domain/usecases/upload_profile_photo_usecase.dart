@@ -15,7 +15,7 @@ class UploadProfilePhotoUsecase {
 
   Future<Either<Failure, UserProfileEntity>> call(UserProfileEntity userProfileEntity, Uint8List imageBytes) async{
 
-    final uploadProfilePhoto = await profileRepository.uploadProfilePhoto(userProfileEntity.id, imageBytes);
+    final uploadProfilePhoto = await profileRepository.uploadProfilePhoto(userProfileEntity.uid, imageBytes);
     
     return uploadProfilePhoto.fold((failure) => Left(failure), (updatedPhotoUrl) async{
       

@@ -27,40 +27,17 @@ class ProfileRepositoryImpl implements ProfileRepository {
     return await profileRemoteDatasource.updateUserEntity(profile);
   }
 
+  @override 
+  Future<Either<Failure, bool>> checkPendingChangeRequests(String userId) async{
+
+    return await profileRemoteDatasource.hasPendingChangeRequest(userId);
+
+  }
+
   @override
   Future<Either<Failure, void>> createChangeRequest(ProfileChangeRequestEntity request) async {
 
-    final pendingResult = await profileRemoteDatasource.hasPendingChangeRequest(
-      request.userId,
-    );
-    final hasPendingRequest = pendingResult.fold(
-      (failure) => throw Exception(failure.message),
-      (hasPending) => hasPending,
-    );
-    
-    if (hasPendingRequest) {
-      return const Left(
-        ValidationFailure(
-          'Já existe uma solicitação pendente para este perfil.',
-        ),
-      );
-    }
-    final model = request is ProfileChangeRequestModel
-        ? request
-        : ProfileChangeRequestModel(
-            id: request.id,
-            userId: request.userId,
-            userName: request.userName,
-            originalBelt: request.originalBelt,
-            originalNickname: request.originalNickname,
-            status: request.status,
-            newBelt: request.newBelt,
-            newNickname: request.newNickname,
-            requestDate: request.requestDate,
-            decisionDate: request.decisionDate,
-          );
-    return profileRemoteDatasource.createChangeRequest(model);
-
+    return await profileRemoteDatasource.createChangeRequest(request);
   }
 
   @override

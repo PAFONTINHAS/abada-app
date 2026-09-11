@@ -17,6 +17,9 @@ abstract class ProfileRepository {
 
   Future<Either<Failure, List<ProfileChangeRequestEntity>>> getMyChangeRequests();
 
+  Future<Either<Failure, bool>> checkPendingChangeRequests(String userId);
+
+
   Future<Either<Failure, void>> updateChangeRequest({
     required ProfileChangeRequestEntity request,
     required ProfileChangeRequestStatus status,

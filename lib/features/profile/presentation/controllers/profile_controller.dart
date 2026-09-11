@@ -25,6 +25,7 @@ class ProfileController extends ChangeNotifier {
 
   late UserProfileEntity _userProfile;
   UserProfileEntity get userProfile => _userProfile;
+
   String? errorMessage;
 
   Future<void> getUserProfile(String userId) async {
@@ -85,12 +86,15 @@ class ProfileController extends ChangeNotifier {
     String? newBelt,
     String? newNickname,
   }) async {
+    
     final result = await _requestBeltNicknameChangeUseCase.execute(
+      userProfile: _userProfile,
       originalBelt: originalBelt,
       originalNickname: originalNickname,
       newBelt: newBelt,
       newNickname: newNickname,
     );
+
     return result.fold((failure) {
       errorMessage = failure.message;
       notifyListeners();

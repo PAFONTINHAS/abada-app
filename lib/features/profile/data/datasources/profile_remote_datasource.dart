@@ -18,9 +18,7 @@ abstract class ProfileRemoteDatasource {
 
   Future<String> profileCollectionFor(String userId);
 
-  Future<Either<Failure, void>> createChangeRequest(
-    ProfileChangeRequestModel request,
-  );
+  Future<Either<Failure, void>> createChangeRequest(ProfileChangeRequestEntity request);
 
   Future<Either<Failure, bool>> hasPendingChangeRequest(String userId);
 

@@ -35,7 +35,7 @@ class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
   Future<Either<Failure, UserProfileEntity>> updateUserEntity(UserProfileEntity profile) async {
     try {
 
-      final documentReference = firestore.collection('users').doc(profile.id);
+      final documentReference = firestore.collection('users').doc(profile.uid);
 
       final UserProfileModel userProfileModel = UserProfileModel.fromEntity(profile);
 
@@ -85,13 +85,17 @@ class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
 
   @override
   Future<Either<Failure, void>> createChangeRequest(
-    ProfileChangeRequestModel request,
+    ProfileChangeRequestEntity request,
   ) async {
     try {
-      await firestore.collection('change_requests').add({
-        ...request.toMap(),
-        'requestDate': FieldValue.serverTimestamp(),
-      });
+      
+      final ProfileChangeRequestModel profileChangeRequestModel =
+          ProfileChangeRequestModel.fromEntity(request);
+
+      await firestore
+          .collection('change_requests')
+          .add(profileChangeRequestModel.toMap());
+
       return Right(null);
     } catch (exception) {
       return ExceptionHandler.handleException(
