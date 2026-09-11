@@ -1,14 +1,14 @@
 import 'dart:typed_data';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:sistema_abada_capoeira/core/errors/exception_handler.dart';
-import 'package:sistema_abada_capoeira/core/errors/failure.dart';
-import '../../domain/entities/profile_change_request_entity.dart';
-import '../../domain/entities/user_profile_entity.dart';
 import 'profile_remote_datasource.dart';
 import '../models/user_profile_model.dart';
 import '../models/profile_change_request_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../domain/entities/user_profile_entity.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:sistema_abada_capoeira/core/errors/failure.dart';
+import '../../domain/entities/profile_change_request_entity.dart';
+import 'package:sistema_abada_capoeira/core/errors/exception_handler.dart';
 
 class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -125,15 +125,17 @@ class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
     required bool pendingOnly,
   }) async {
     try {
-      Query<Map<String, dynamic>> query = firestore.collection(
-        'change_requests',
-      );
+      Query<Map<String, dynamic>> query = firestore.collection('change_requests');
+
       if (pendingOnly) query = query.where('status', isEqualTo: 'pending');
       if (userId.isNotEmpty) query = query.where('userId', isEqualTo: userId);
+
       final snapshot = await query.get();
+
       final requests = snapshot.docs
           .map((doc) => ProfileChangeRequestModel.fromMap(doc.id, doc.data()))
           .toList();
+      
       return Right(requests);
     } catch (exception) {
       return ExceptionHandler.handleException(
