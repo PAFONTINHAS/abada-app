@@ -11,6 +11,7 @@ import 'package:sistema_abada_capoeira/features/profile/domain/usecases/request_
 import 'package:sistema_abada_capoeira/features/profile/domain/usecases/update_info_usecase.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/usecases/upload_profile_photo_usecase.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/request_status_controller.dart';
 
 class ProfileProviders {
 
@@ -19,9 +20,10 @@ class ProfileProviders {
   static final ProfileRemoteDatasource profileRemoteDatasource = ProfileRemoteDatasourceImpl();
   static final ProfileRepository profileRepository = ProfileRepositoryImpl(profileRemoteDatasource);
 
-  static final DecideChangeRequestUseCase decideChangeRequestUseCase = DecideChangeRequestUseCase(profileRepository);
-  static final UploadProfilePhotoUsecase uploadProfilePhotoUsecase = UploadProfilePhotoUsecase(profileRepository);
   static final UpdateProfileInfoUseCase updateProfileInfoUseCase = UpdateProfileInfoUseCase(profileRepository);
+  static final GetChangeRequestsUseCase getChangeRequestsUseCase = GetChangeRequestsUseCase(profileRepository);
+  static final UploadProfilePhotoUsecase uploadProfilePhotoUsecase = UploadProfilePhotoUsecase(profileRepository);
+  static final DecideChangeRequestUseCase decideChangeRequestUseCase = DecideChangeRequestUseCase(profileRepository);
   static final GetCurrentUserProfileUsecase getCurrentUserProfileUsecase = GetCurrentUserProfileUsecase(profileRepository);
   static final RequestBeltNicknameChangeUseCase requestBeltNicknameChangeUseCase = RequestBeltNicknameChangeUseCase(profileRepository);
   
@@ -32,9 +34,13 @@ class ProfileProviders {
     requestBeltNicknameChangeUseCase,
   );
 
+
+  static final RequestStatusController requestStatusController = RequestStatusController(getChangeRequestsUseCase);
+
   static List<SingleChildWidget> providers = [
 
-    ChangeNotifierProvider(create: (_) => profileController)
+    ChangeNotifierProvider(create: (_) => profileController),
+    ChangeNotifierProvider(create: (_) => requestStatusController)
   ];
 
 

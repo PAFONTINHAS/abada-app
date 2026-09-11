@@ -1,24 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/profile_change_request_entity.dart';
-import 'package:sistema_abada_capoeira/features/profile/domain/usecases/get_change_requests_usecase.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/request_status_controller.dart';
 
 class ChangeRequestStatusWidget extends StatelessWidget {
   const ChangeRequestStatusWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) =>
-          RequestStatusController(context.read<GetChangeRequestsUseCase>()),
-      child: const _RequestStatusContent(),
-    );
-  }
-}
-
-class _RequestStatusContent extends StatelessWidget {
-  const _RequestStatusContent();
 
   @override
   Widget build(BuildContext context) {
@@ -122,3 +108,4 @@ class _RequestStatusContent extends StatelessWidget {
         : 'Solicitação para ${pieces.join(' e ')}.';
   }
 }
+
