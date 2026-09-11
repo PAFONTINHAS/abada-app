@@ -50,7 +50,7 @@ class UserProfileModel extends UserProfileEntity {
       fullName: data['fullName'] ?? '',
       email: data['email'] ?? '',
       phoneNumber: data['phoneNumber'] ?? data['phone'] ?? '',
-      currentBeltName: data['currentBeltName'] ?? data['rope'] ?? '',
+      currentBeltName: data['currentBeltName'] ?? data['belt'] ?? '',
       role: userRole,
       tuscaStatus: _tuscaStatusFromString(data['tuscaStatus']),
       tuscaExpirationDate: (data['tuscaExpirationDate'] as Timestamp?)?.toDate(),

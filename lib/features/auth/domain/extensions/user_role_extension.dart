@@ -16,4 +16,17 @@ class UserRoleExtension {
     }
   }
 
+  static String convertToUIText(UserRole userRole){
+
+    switch(userRole){
+
+      case UserRole.coordinator: return 'Coordenador';
+      case UserRole.graduatedStudent: return 'Aluno Graduado';
+      case UserRole.professor: return 'Professor';
+      case UserRole.tuscaVolunteer: return 'Voluntário TUSCA';
+      case UserRole.student: return 'Aluno';
+      default: return 'Usuário';
+    }
+  }
+
 }

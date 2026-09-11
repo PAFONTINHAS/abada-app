@@ -15,9 +15,9 @@ class CoordenatorDashboardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: DashboardAppBarWidget(
-        name: "Pedro Silva",
-        roleOrGraduation: "Coordenador • Corda Marrom",
+        onNotificationTap: (){} ,
       ),
+
       body: SafeArea(
         child: SingleChildScrollView(
             padding: EdgeInsetsGeometry.symmetric(horizontal: 15, vertical: 10),

@@ -11,9 +11,8 @@ class StudentDashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const DashboardAppBarWidget(
-        name: "João",
-        roleOrGraduation: "Aluno • Corda Amarela",
+      appBar: DashboardAppBarWidget(
+        onNotificationTap: (){},
       ),
       body: SafeArea(
         child: SingleChildScrollView(

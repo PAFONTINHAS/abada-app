@@ -9,7 +9,7 @@ class UserEntityModel extends UserEntity{
     required super.fullName,
     required super.email,
     required super.phone,
-    required super.rope,
+    required super.belt,
     required super.nickname,
     required super.professor,
     super.userRole
@@ -27,7 +27,7 @@ class UserEntityModel extends UserEntity{
       fullName: data['fullName'],
       email: data['email'],
       phone: data['phone'],
-      rope: data['rope'],
+      belt: data['belt'],
       userRole: data['userRole'],
       nickname: data['nickname'],
       professor: data['professor'],
