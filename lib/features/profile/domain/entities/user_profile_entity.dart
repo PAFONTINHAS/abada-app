@@ -1,23 +1,15 @@
-enum AccessProfile {
-  unknown,
-  user,
-  student,
-  graduatedStudent,
-  teacher,
-  coordinator,
-  tuscaVolunteer,
-}
+import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
 
 enum TuscaStatus { regular, pending, exempt, notApplicable }
 
 class UserProfileEntity {
-  final String id;
+  final String uid;
   final String nickname;
   final String fullName;
   final String email;
   final String phoneNumber;
   final String currentBeltName;
-  final AccessProfile role;
+  final UserRole role;
   final TuscaStatus tuscaStatus;
   final DateTime? tuscaExpirationDate;
   final String? photoUrl;
@@ -25,7 +17,7 @@ class UserProfileEntity {
   final String state;
 
   const UserProfileEntity({
-    required this.id,
+    required this.uid,
     this.nickname = '',
     required this.fullName,
     required this.email,
@@ -45,5 +37,34 @@ class UserProfileEntity {
       fullName.trim(),
     ].where((part) => part.isNotEmpty).toList();
     return parts.join(' ');
+  }
+
+  UserProfileEntity copyWith({
+    String? id,
+    String? nickname,
+    String? fullName,
+    String? email,
+    String? phoneNumber,
+    String? currentBeltName,
+    UserRole? role,
+    TuscaStatus? tuscaStatus,
+    DateTime? tuscaExpirationDate,
+    String? photoUrl,
+    String? city,
+    String? state,
+  }){
+
+    return UserProfileEntity(
+      uid: id ?? this.uid,
+      fullName: fullName ?? this.fullName,
+      email: email ?? this.email,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      currentBeltName: currentBeltName ?? this.currentBeltName,
+      role: role ?? this.role,
+      tuscaStatus: tuscaStatus ?? this.tuscaStatus,
+      tuscaExpirationDate: tuscaExpirationDate ?? this.tuscaExpirationDate,
+      photoUrl: photoUrl ?? this.photoUrl
+    );
+
   }
 }

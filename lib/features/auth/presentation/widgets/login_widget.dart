@@ -5,6 +5,7 @@ import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
 import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
+import 'package:sistema_abada_capoeira/features/auth/presentation/models/auth_status.dart';
 import 'package:sistema_abada_capoeira/features/home_user/presentation/pages/home_user_page.dart';
 import 'package:sistema_abada_capoeira/shared/inputs/custom_text_input/custom_text_input.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/widgets/form_button_widget.dart';
@@ -70,24 +71,28 @@ class LoginWidget extends StatelessWidget {
                 return;
               }
 
-              if(formController.authenticatedUserRole != null){
+              authController.setAuthStatus(AuthStatus.initializing);
+
+              MessageHandler.showSuccess(context, "Usuário autenticado com sucesso! Redirecionando...");
 
 
-                LoggingService.displayInfo("Papel do usuário: ${formController.authenticatedUserRole!}");
-
-                if(formController.authenticatedUserRole != null){
+              // if(formController.authenticatedUserRole != null){
 
 
-                  LoggingService.displayInfo("Papel do usuário: ${formController.authenticatedUserRole!}");
+              //   LoggingService.displayInfo("Papel do usuário: ${formController.authenticatedUserRole!}");
 
-                  MessageHandler.showSuccess(context, "Usuário autenticado com sucesso! Redirecionando...");
+              //   if(formController.authenticatedUserRole != null){
 
-                  authController.setAuthenticatedUser(role: formController.authenticatedUserRole!);
 
-                  RouteController.redirectToDashboardPage(context: context);
+              //     LoggingService.displayInfo("Papel do usuário: ${formController.authenticatedUserRole!}");
 
-                }
-              }
+
+              //     authController.setAuthStatus(AuthStatus.initializing);
+
+              //     RouteController.redirectToDashboardPage(context: context);
+
+              //   }
+              // }
             }
           ),
 

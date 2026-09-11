@@ -5,7 +5,7 @@ class UserRegistrationParams {
     required this.fullName,
     required this.email,
     required this.phone,
-    required this.rope,
+    required this.belt,
     required this.nickname,
     required this.password,
     required this.professor,
@@ -18,7 +18,7 @@ class UserRegistrationParams {
   final String password;
   final String confirmPassword;
   final String nickname;
-  final String rope;
+  final String belt;
   final String professor;
 
 }

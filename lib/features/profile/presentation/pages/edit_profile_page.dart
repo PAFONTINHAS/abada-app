@@ -24,7 +24,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     super.initState();
     final profileController = context.read<ProfileController>();
     _formController = ProfileFormController(profileController);
-    _formController.initialize(profileController.profile);
+    _formController.initialize(profileController.userProfile);
     _controllersInitialized = _formController.isInitialized;
   }
 
@@ -78,7 +78,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final profile = context.watch<ProfileController>().profile;
+    final profile = context.watch<ProfileController>().userProfile;
     if (profile != null && !_controllersInitialized) {
       _formController.initialize(profile);
       _controllersInitialized = true;

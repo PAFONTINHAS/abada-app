@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
+import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
+import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/current_belt_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/edit_profile_button_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/personal_info_widget.dart';
@@ -18,18 +21,10 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = context.watch<ProfileController>();
-    final profile = controller.profile;
+    final profile = controller.userProfile;
 
-    if (controller.status == ProfileLoadStatus.loading && profile == null) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
-    }
-
-    if (profile == null) {
-      return Scaffold(
-        body: Center(
-          child: Text(controller.errorMessage ?? 'Perfil não encontrado.'),
-        ),
-      );
+    if (controller.status == ProfileLoadStatus.loading) {
+      return Center(child: CircularProgressIndicator());
     }
 
     return Scaffold(
@@ -42,7 +37,7 @@ class ProfilePage extends StatelessWidget {
           children: [
             ProfileHeaderWidget(
               userName: profile.displayName,
-              roleLabel: _roleLabel(profile.role),
+              roleLabel: profile.role.string,
               cityLabel: _cityLabel(profile),
               photoUrl: profile.photoUrl ?? '',
             ),
@@ -84,8 +79,17 @@ class ProfilePage extends StatelessWidget {
               isLoading: false,
               icon: Icons.logout,
               backgroundColor: Colors.red,
-              onPressed: () {
-                // TODO: Implementar logout
+              onPressed: () async {
+
+                final authController = context.read<AuthController>();
+
+                final success = await authController.logoutUser();
+
+                if(success && context.mounted){
+
+                  MessageHandler.showSuccess(context, "Saiu da conta com sucesso!");
+                }
+
               },
             ),
             const SizedBox(height: 24),
@@ -101,18 +105,6 @@ class ProfilePage extends StatelessWidget {
     return '${profile.city} - ${profile.state}';
   }
 
-  String _roleLabel(AccessProfile role) {
-    const labels = {
-      AccessProfile.unknown: 'Desconhecido',
-      AccessProfile.user: 'Usuário',
-      AccessProfile.student: 'Aluno(a)',
-      AccessProfile.graduatedStudent: 'Aluno(a) graduado(a)',
-      AccessProfile.teacher: 'Professor(a)',
-      AccessProfile.coordinator: 'Coordenador(a)',
-      AccessProfile.tuscaVolunteer: 'Voluntário(a) TUSCA',
-    };
-    return labels[role] ?? 'Usuário';
-  }
 
   String _tuscaStatusLabel(TuscaStatus status) {
     const labels = {

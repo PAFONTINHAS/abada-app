@@ -16,108 +16,34 @@ class ProfileRepositoryImpl implements ProfileRepository {
   ProfileRepositoryImpl(this.profileRemoteDatasource);
 
   @override
-  Future<Either<Failure, UserProfileEntity>> searchProfile(String userId) async {
+  Future<Either<Failure, UserProfileEntity>> fetchUserProfile(String userId) async {
 
-    return await profileRemoteDatasource.fetchProfile(userId);
+    return await profileRemoteDatasource.fetchUserProfile(userId);
   }
 
   @override
-  Future<Either<Failure, void>> updateUserEntity(UserProfileEntity profile) async {
+  Future<Either<Failure, UserProfileEntity>> updateUserEntity(UserProfileEntity profile) async {
 
     return await profileRemoteDatasource.updateUserEntity(profile);
+  }
+
+  @override 
+  Future<Either<Failure, bool>> checkPendingChangeRequests(String userId) async{
+
+    return await profileRemoteDatasource.hasPendingChangeRequest(userId);
+
   }
 
   @override
   Future<Either<Failure, void>> createChangeRequest(ProfileChangeRequestEntity request) async {
 
-    final pendingResult = await profileRemoteDatasource.hasPendingChangeRequest(
-      request.userId,
-    );
-    final hasPendingRequest = pendingResult.fold(
-      (failure) => throw Exception(failure.message),
-      (hasPending) => hasPending,
-    );
-    
-    if (hasPendingRequest) {
-      return const Left(
-        ValidationFailure(
-          'Já existe uma solicitação pendente para este perfil.',
-        ),
-      );
-    }
-    final model = request is ProfileChangeRequestModel
-        ? request
-        : ProfileChangeRequestModel(
-            id: request.id,
-            userId: request.userId,
-            userName: request.userName,
-            originalBelt: request.originalBelt,
-            originalNickname: request.originalNickname,
-            status: request.status,
-            newBelt: request.newBelt,
-            newNickname: request.newNickname,
-            requestDate: request.requestDate,
-            decisionDate: request.decisionDate,
-          );
-    return profileRemoteDatasource.createChangeRequest(model);
-
+    return await profileRemoteDatasource.createChangeRequest(request);
   }
 
   @override
-  Future<Either<Failure, UserProfileEntity>> getCurrentUserProfile() async {
+  Future<Either<Failure, String>> uploadProfilePhoto(String userId, Uint8List imageBytes) async {
 
-    try {
-      return await searchProfile(FirebaseAuth.instance.currentUser!.uid);
-    } catch (exception) {
-      return ExceptionHandler.handleException(
-        exception: exception,
-        contextMessage: 'getCurrentUserProfile',
-      );
-    }
-  }
-
-
-  @override
-  Future<Either<Failure, void>> uploadProfilePhoto(Uint8List imageBytes) async {
-    try {
-      final userId = FirebaseAuth.instance.currentUser!.uid;
-      final uploadResult = await profileRemoteDatasource.uploadProfilePhoto(
-        userId,
-        imageBytes,
-      );
-      final photoUrl = uploadResult.fold((failure) => null, (url) => url);
-      if (photoUrl == null) {
-        return uploadResult.map((_) {});
-      }
-
-      final profileResult = await getCurrentUserProfile();
-      final profile = profileResult.fold(
-        (failure) => throw Exception(failure.message),
-        (profile) => profile,
-      );
-      final updateResult = await updateUserEntity(
-        UserProfileEntity(
-          id: profile.id,
-          nickname: profile.nickname,
-          fullName: profile.fullName,
-          email: profile.email,
-          phoneNumber: profile.phoneNumber,
-          currentBeltName: profile.currentBeltName,
-          role: profile.role,
-          tuscaStatus: profile.tuscaStatus,
-          tuscaExpirationDate: profile.tuscaExpirationDate,
-          photoUrl: photoUrl,
-          city: profile.city,
-          state: profile.state,
-        ),
-      );
-      return updateResult;
-    } catch (exception) {
-      return ExceptionHandler.handleException(
-        exception: exception,
-        contextMessage: 'uploadProfilePhoto',
-      );
-    }
+    return await profileRemoteDatasource.uploadProfilePhoto(userId, imageBytes);
   }
 
   @override

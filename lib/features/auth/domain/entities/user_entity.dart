@@ -9,7 +9,7 @@ class UserEntity {
     required this.fullName,
     required this.email,
     required this.phone,
-    required this.rope,
+    required this.belt,
     required this.nickname,
     required this.professor,
     this.userRole = 'unvalidatedUser'
@@ -21,7 +21,7 @@ class UserEntity {
   final String email;
   final String phone;
   final String nickname;
-  final String rope;
+  final String belt;
   final String professor;
   final String userRole;
 
@@ -32,7 +32,7 @@ class UserEntity {
       fullName: userRegistrationParams.fullName,
       email: userRegistrationParams.email,
       phone: userRegistrationParams.phone,
-      rope: userRegistrationParams.rope,
+      belt: userRegistrationParams.belt,
       nickname: userRegistrationParams.nickname,
       professor: userRegistrationParams.professor,
     );
@@ -42,7 +42,7 @@ class UserEntity {
     return {
       'email': email,
       'phone': phone,
-      'rope': rope,
+      'belt': belt,
       'fullName': fullName,
       'nickname': nickname,
       'professor': professor,

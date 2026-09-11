@@ -89,7 +89,6 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource{
 
   @override
   Future<Either<Failure, void>> logoutUser() async{
-
     try{
       await _auth.signOut();
 

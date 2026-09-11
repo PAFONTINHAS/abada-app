@@ -14,7 +14,7 @@ class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   @override
-  Future<Either<Failure, UserProfileEntity>> fetchProfile(String userId) async {
+  Future<Either<Failure, UserProfileEntity>> fetchUserProfile(String userId) async {
     try {
       final document = await firestore.collection('users').doc(userId).get();
 
@@ -22,7 +22,9 @@ class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
         throw Exception('User not found');
       }
 
-      return Right(UserProfileModel.fromMap(document.data()!, document.id));
+      final userProfileEntityModel = UserProfileModel.fromSnapshot(document);
+
+      return Right(userProfileEntityModel);
     } catch (exception) {
       return ExceptionHandler.handleException(
         exception: exception,
@@ -32,21 +34,17 @@ class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
   }
 
   @override
-  Future<Either<Failure, void>> updateUserEntity(
-    UserProfileEntity profile,
-  ) async {
+  Future<Either<Failure, UserProfileEntity>> updateUserEntity(UserProfileEntity profile) async {
     try {
-      final usersDocument = await firestore
-          .collection('users')
-          .doc(profile.id)
-          .get();
-      final collection = usersDocument.exists ? 'users' : 'usuarios';
-      final profileModel = UserProfileModel.fromEntity(profile);
-      await firestore
-          .collection(collection)
-          .doc(profile.id)
-          .update(profileModel.toMap());
-      return Right(null);
+
+      final documentReference = firestore.collection('users').doc(profile.uid);
+
+      final UserProfileModel userProfileModel = UserProfileModel.fromEntity(profile);
+
+      await documentReference.update(userProfileModel.toMap());
+
+      return Right(userProfileModel);
+
     } catch (exception) {
       return ExceptionHandler.handleException(
         exception: exception,
@@ -68,7 +66,11 @@ class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
         imageBytes,
         SettableMetadata(contentType: 'image/jpeg'),
       );
-      return Right(await photoReference.getDownloadURL());
+
+      final url = await photoReference.getDownloadURL();
+      
+      return Right(url);
+
     } catch (exception) {
       return ExceptionHandler.handleException(
         exception: exception,
@@ -85,13 +87,17 @@ class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
 
   @override
   Future<Either<Failure, void>> createChangeRequest(
-    ProfileChangeRequestModel request,
+    ProfileChangeRequestEntity request,
   ) async {
     try {
-      await firestore.collection('change_requests').add({
-        ...request.toMap(),
-        'requestDate': FieldValue.serverTimestamp(),
-      });
+      
+      final ProfileChangeRequestModel profileChangeRequestModel =
+          ProfileChangeRequestModel.fromEntity(request);
+
+      await firestore
+          .collection('change_requests')
+          .add(profileChangeRequestModel.toMap());
+
       return Right(null);
     } catch (exception) {
       return ExceptionHandler.handleException(

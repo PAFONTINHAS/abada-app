@@ -14,7 +14,7 @@ class RegisterUserUsecaseValidator {
     if(userRegistrationParams.fullName.isEmpty) return 'Campo de nome não pode ser vazio';
     if(userRegistrationParams.confirmPassword.isEmpty) return 'Campo de senha não pode ser vazio';
     if(userRegistrationParams.professor.isEmpty) return 'Campo de professor não pode ser vazio';
-    if(userRegistrationParams.rope.isEmpty) return 'Campo de corda não pode ser vazio';
+    if(userRegistrationParams.belt.isEmpty) return 'Campo de corda não pode ser vazio';
     if(userRegistrationParams.phone.isEmpty) return 'Campo de telefone não pode ser vazio';
 
     if(!isValidEmail(userRegistrationParams.email)) return "Digite um email válido";

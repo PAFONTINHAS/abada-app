@@ -1,7 +1,7 @@
-import 'package:sistema_abada_capoeira/core/errors/exception_handler.dart';
 import 'package:dartz/dartz.dart';
 import 'package:sistema_abada_capoeira/core/errors/failure.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/profile_change_request_entity.dart';
+import 'package:sistema_abada_capoeira/features/profile/domain/entities/user_profile_entity.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/repository/profile_repository.dart';
 
 class RequestBeltNicknameChangeUseCase {
@@ -10,6 +10,8 @@ class RequestBeltNicknameChangeUseCase {
   RequestBeltNicknameChangeUseCase(this.repository);
 
   Future<Either<Failure, void>> execute({
+
+    required UserProfileEntity userProfile,
     required String originalBelt,
     required String originalNickname,
     String? newBelt,
@@ -22,22 +24,29 @@ class RequestBeltNicknameChangeUseCase {
       );
     }
 
-    final profileResult = await repository.getCurrentUserProfile();
-    return profileResult.fold(
-      (failure) => Left(failure),
-      (profile) => repository.createChangeRequest(
-        ProfileChangeRequestEntity(
-          id: '',
-          userId: profile.id,
-          userName: profile.displayName,
-          originalBelt: originalBelt,
-          originalNickname: originalNickname,
-          newBelt: newBelt,
-          newNickname: newNickname,
-          status: ProfileChangeRequestStatus.pending,
-        ),
-      ),
-    );
+    final checkPendingRequests = await repository.checkPendingChangeRequests(userProfile.uid);
+
+
+    return checkPendingRequests.fold((failure) => Left(failure), (hasPendingChangeRequest) async{
+
+      if(hasPendingChangeRequest) return Left(ValidationFailure("Já existe uma solicitação pendente para esse perfil"));
+
+
+      final ProfileChangeRequestEntity profileChangeRequestEntity = ProfileChangeRequestEntity(
+        id: '',
+        userId: userProfile.uid,
+        userName: userProfile.fullName,
+        originalBelt: originalBelt,
+        originalNickname: originalNickname,
+        status: ProfileChangeRequestStatus.pending,
+        newBelt: newBelt,
+        newNickname: newNickname,
+        requestDate: DateTime.now()
+      );
+
+     return await repository.createChangeRequest(profileChangeRequestEntity);
+
+    });
 
   }
 }

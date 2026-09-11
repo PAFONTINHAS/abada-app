@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
-class RopesBarChart extends StatelessWidget {
-  const RopesBarChart({super.key});
+class BeltsBarChart extends StatelessWidget {
+  const BeltsBarChart({super.key});
 
   final List<Map<String, dynamic>> _data = const [
     {'label': 'Branca', 'value': 152.0, 'color': Color(0xFFE2E8F0)},

@@ -4,14 +4,15 @@ import '../../domain/entities/profile_change_request_entity.dart';
 class ProfileChangeRequestModel extends ProfileChangeRequestEntity {
   const ProfileChangeRequestModel({
     required super.id,
+    required super.status,
     required super.userId,
     required super.userName,
+    required super.requestDate,
     required super.originalBelt,
     required super.originalNickname,
-    required super.status,
+    
     super.newBelt,
     super.newNickname,
-    super.requestDate,
     super.decisionDate,
   });
 
@@ -51,7 +52,7 @@ class ProfileChangeRequestModel extends ProfileChangeRequestEntity {
         (status) => status.name == map['status'],
         orElse: () => ProfileChangeRequestStatus.pending,
       ),
-      requestDate: requestDate is Timestamp ? requestDate.toDate() : null,
+      requestDate: requestDate.toDate(),
       decisionDate: decisionDate is Timestamp ? decisionDate.toDate() : null,
     );
   }
@@ -65,7 +66,7 @@ class ProfileChangeRequestModel extends ProfileChangeRequestEntity {
       if (newBelt != null) 'newBelt': newBelt,
       if (newNickname != null) 'newNickname': newNickname,
       'status': status.name,
-      if (requestDate != null) 'requestDate': Timestamp.fromDate(requestDate!),
+      'requestDate': FieldValue.serverTimestamp(),
       if (decisionDate != null)
         'decisionDate': Timestamp.fromDate(decisionDate!),
     };

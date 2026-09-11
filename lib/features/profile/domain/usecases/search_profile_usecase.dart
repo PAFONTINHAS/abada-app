@@ -10,7 +10,7 @@ class SearchProfileUseCase {
 
   Future<Either<Failure, UserProfileEntity>> execute(String userId) async {
     
-    return await repository.searchProfile(userId);
+    return await repository.fetchUserProfile(userId);
 
   }
 }

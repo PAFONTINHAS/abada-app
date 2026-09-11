@@ -13,8 +13,7 @@ class ProfessorDashboardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: DashboardAppBarWidget(
-        name: "Idalina",
-        roleOrGraduation: "Professora • Corda Roxa",
+        onNotificationTap: (){} ,
       ),
       body: SafeArea(
         child: SingleChildScrollView(

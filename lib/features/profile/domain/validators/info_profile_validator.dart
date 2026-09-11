@@ -3,7 +3,7 @@ class InfoProfileValidator {
   InfoProfileValidator._();
 
   static bool isValidEmail(String value) {
-    return value.contains('@') && value.contains('.');
+    return isValidEmail(value);
   }
 
   static bool isValidFullName(String value) {
