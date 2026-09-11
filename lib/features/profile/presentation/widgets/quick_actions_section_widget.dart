@@ -4,7 +4,6 @@ import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/act
 const Color _primaryPurple = Color(0xFF7C5CBF);
 
 /// "Ações rápidas" agrupa cada item de action_title_widget
-
 class QuickActionsSectionWidget extends StatelessWidget {
   final VoidCallback onRequestExemption;
   final VoidCallback onPayFee;

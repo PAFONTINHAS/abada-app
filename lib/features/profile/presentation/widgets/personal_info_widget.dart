@@ -3,7 +3,6 @@ import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/inf
 import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/info_row_widget.dart';
 
 /// widget dos dados do user
-
 class PersonalInfoCard extends StatelessWidget {
   final String fullName;
   final String email;
