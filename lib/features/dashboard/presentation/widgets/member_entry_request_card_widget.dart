@@ -1,69 +1,71 @@
 import 'package:flutter/material.dart';
-import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
+import 'package:sistema_abada_capoeira/shared/clickable/clickable_widget.dart';
 
 class MemberEntryRequestCardWidget extends StatelessWidget {
   const MemberEntryRequestCardWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsetsGeometry.symmetric(vertical: 3, horizontal: 10),
-      child: Column(
-        children: [
-          Align(
-            alignment: Alignment.center,
-            child: GestureDetector(
-              onTap: () {},
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                decoration: BoxDecoration(
-                  color: ColorConstants.whiteColor,
-                  border: BoxBorder.all(color: Colors.black, width: 0.3),
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
+    return ClickableWidget(
+
+        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+        onTap: () {},
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            children: [
+              // Avatar do membro circular com clip
+              Container(
+                width: 56,
+                height: 56,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.amber,
                 ),
-                child: Row(
+                child: Image.asset(
+                  "assets/images/capoeira_member_profile_picture.png",
+                  fit: BoxFit.cover,
+                ),
+              ),
+
+              const SizedBox(width: 14),
+
+              // Dados da Solicitação
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.amber,
-                      ),
-
-                      child: Image.asset(
-                        "assets/images/capoeira_member_profile_picture.png",
-                        width: 70,
+                    const Text(
+                      "Pedro Henrique",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
                       ),
                     ),
-
-                    SizedBox(width: 10),
-
-                    Expanded(
-                      child: Column( 
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Pedro Henrique",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                            ),
-                          ),
-
-                          Text("Unidade Centro", style: TextStyle(fontSize: 13),),
-
-                          Text("Solicitado em 26/06/2026, 10:30", style: TextStyle(fontSize: 13),),
-                        ],
+                    const SizedBox(height: 4),
+                    Text(
+                      "Unidade Centro",
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey.shade800,
                       ),
                     ),
-
-                    Icon(Icons.chevron_right, size: 35),
+                    const SizedBox(height: 2),
+                    Text(
+                      "Solicitado em 26/06/2026, 10:30",
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey.shade700,
+                      ),
+                    ),
                   ],
                 ),
               ),
-            ),
+
+              Icon(Icons.chevron_right, size: 28, color: Colors.grey.shade400),
+            ],
           ),
-        ],
-      ),
+        ),
     );
   }
 }

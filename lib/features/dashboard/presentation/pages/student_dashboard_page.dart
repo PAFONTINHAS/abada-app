@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
-import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/dahsboard_section_title_widget.dart';
+import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
+import 'package:sistema_abada_capoeira/shared/section_widgets/section_title_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/dashboard_app_bar_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/event_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/user_event_subscription_card_widget.dart';
@@ -14,20 +15,17 @@ class StudentDashboardPage extends StatelessWidget {
       appBar: DashboardAppBarWidget(
         onNotificationTap: (){},
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-          child: Column(
+      body: StandardScaffoldBodyWidget(
+        child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
 
-              DahsboardSectionTitleWidget(
+              SectionTitleWidget(
                 sectionTitle: "Próximos eventos",
                 onPressedTitle: "Ver todos",
                 onPressed: () {},
               ),
-
 
               SizedBox(
                 height: 280,
@@ -50,7 +48,7 @@ class StudentDashboardPage extends StatelessWidget {
                 ),
               ),
 
-              DahsboardSectionTitleWidget(
+              SectionTitleWidget(
                 sectionTitle: "Minhas Inscrições",
                 onPressedTitle: "Ver todas",
                 onPressed: () {},
@@ -61,7 +59,6 @@ class StudentDashboardPage extends StatelessWidget {
               UserEventSubscriptionCardWidget(eventName: "Troca de Cordas Infantil", subscriptionConfirmed: false),
             ],
           ),
-        ),
       ),
     );
   }

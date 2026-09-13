@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/dashboard_app_bar_widget.dart';
+import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/irregular_tusca_badge_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/member_entry_request_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/regular_tusca_badge_widget.dart';
-import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/dahsboard_section_title_widget.dart';
-import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/local_summary_card_list_widget.dart';
+import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
+import 'package:sistema_abada_capoeira/shared/section_widgets/section_title_widget.dart';
+import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/dashboard_local_summary_card_list_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/view_more_requests_button_widget.dart';
 
 class ProfessorDashboardPage extends StatelessWidget {
@@ -15,30 +17,27 @@ class ProfessorDashboardPage extends StatelessWidget {
       appBar: DashboardAppBarWidget(
         onNotificationTap: (){} ,
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsetsGeometry.symmetric(horizontal: 15, vertical: 10),
-          child: Column(
-            children: [
-              DahsboardSectionTitleWidget(sectionTitle: "Resumo"),
+      body: StandardScaffoldBodyWidget(
+        child: Column(
+          children: [
+            SectionTitleWidget(sectionTitle: "Resumo"),
 
-              const LocalMetricSummaryCardListWidget(),
+            const DashboardLocalMetricSummaryCardListWidget(),
 
-              DahsboardSectionTitleWidget(sectionTitle: "Selo TUSCA"),
-              const RegularTuscaBadgeWidget(),
+            SectionTitleWidget(sectionTitle: "Selo TUSCA"),
+            const IrregularTuscaBadgeWidget(),
 
-              DahsboardSectionTitleWidget(
-                sectionTitle: "Solicitações de entrada na turma",
-                itemsQuantity: 3,
-              ),
+            SectionTitleWidget(
+              sectionTitle: "Solicitações de entrada na turma",
+              itemsQuantity: 3,
+            ),
 
-              const MemberEntryRequestCardWidget(),
-              const MemberEntryRequestCardWidget(),
-              const MemberEntryRequestCardWidget(),
+            const MemberEntryRequestCardWidget(),
+            const MemberEntryRequestCardWidget(),
+            const MemberEntryRequestCardWidget(),
 
-              const ViewMoreRequestsButtonWidget(),
-            ],
-          ),
+            const ViewMoreRequestsButtonWidget(),
+          ],
         ),
       ),
     );
