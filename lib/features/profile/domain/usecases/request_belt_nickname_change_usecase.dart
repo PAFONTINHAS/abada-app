@@ -1,4 +1,3 @@
-import 'package:sistema_abada_capoeira/core/errors/exception_handler.dart';
 import 'package:dartz/dartz.dart';
 import 'package:sistema_abada_capoeira/core/errors/failure.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/profile_change_request_entity.dart';
@@ -15,34 +14,34 @@ class RequestBeltNicknameChangeUseCase {
     String? newBelt,
     String? newNickname,
   }) async {
-    try {
-      if (newBelt == null && newNickname == null) {
-        return const Left(
-          ValidationFailure('Informe uma nova corda ou apelido.'),
-        );
-      }
-
-      final profileResult = await repository.getCurrentUserProfile();
-      return profileResult.fold(
-        (failure) => Left(failure),
-        (profile) => repository.createChangeRequest(
-          ProfileChangeRequestEntity(
-            id: '',
-            userId: profile.id,
-            userName: profile.displayName,
-            originalBelt: originalBelt,
-            originalNickname: originalNickname,
-            newBelt: newBelt,
-            newNickname: newNickname,
-            status: ProfileChangeRequestStatus.pending,
-          ),
-        ),
-      );
-    } catch (exception) {
-      return ExceptionHandler.handleException(
-        exception: exception,
-        contextMessage: 'requestBeltNicknameChange',
+    if (newBelt == null && newNickname == null) {
+      return const Left(
+        ValidationFailure('Informe uma nova corda ou apelido.'),
       );
     }
+
+    final profileResult = await repository.getCurrentUserProfile();
+    return profileResult.fold((failure) => Left(failure), (profile) async {
+      final requestResult = await repository.createChangeRequest(
+        ProfileChangeRequestEntity(
+          id: '',
+          userId: profile.id,
+          userName: profile.displayName,
+          originalBelt: originalBelt,
+          originalNickname: originalNickname,
+          newBelt: newBelt,
+          newNickname: newNickname,
+          status: ProfileChangeRequestStatus.pending,
+        ),
+      );
+      return requestResult.fold(
+        (failure) => Left(failure),
+        (_) => const Right(null),
+      );
+    });
   }
 }
+
+
+
+

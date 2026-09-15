@@ -1,4 +1,3 @@
-import 'package:sistema_abada_capoeira/core/errors/exception_handler.dart';
 import 'package:dartz/dartz.dart';
 import 'package:sistema_abada_capoeira/core/errors/failure.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/user_profile_entity.dart';
@@ -10,13 +9,8 @@ class SearchProfileUseCase {
   SearchProfileUseCase(this.repository);
 
   Future<Either<Failure, UserProfileEntity>> execute(String userId) async {
-    try {
-      return await repository.searchProfile(userId);
-    } catch (exception) {
-      return ExceptionHandler.handleException(
-        exception: exception,
-        contextMessage: 'searchProfile',
-      );
-    }
+    return repository.searchProfile(userId);
   }
 }
+
+
