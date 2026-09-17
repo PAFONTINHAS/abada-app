@@ -3,23 +3,24 @@ import 'package:sistema_abada_capoeira/core/providers/auth_providers.dart';
 import 'package:sistema_abada_capoeira/core/providers/profile_providers.dart';
 import 'package:sistema_abada_capoeira/core/providers/splash_providers.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
+import 'package:sistema_abada_capoeira/core/providers/fee_exemption_providers.dart';
+import 'package:sistema_abada_capoeira/core/providers/membership_validation_providers.dart';
 
 class ProvidersInjection {
-  
-
-  ProvidersInjection(){
+  ProvidersInjection() {
     _buildProviders();
   }
 
   final AuthController authController = AuthProviders.authController;
   late final List<SingleChildWidget> providers;
 
-  void _buildProviders(){
-
+  void _buildProviders() {
     providers = [
       ...AuthProviders.providers,
       ...SplashProviders.providers,
-      ...ProfileProviders.providers
+      ...ProfileProviders.providers,
+      ...MembershipValidationProvider.providers,
+      ...FeeExemptionProviders.providers,
     ];
   }
 }
