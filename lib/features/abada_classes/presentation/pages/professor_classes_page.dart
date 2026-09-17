@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
+import 'package:sistema_abada_capoeira/shared/clickable/clickable_widget.dart';
+import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
+import 'package:sistema_abada_capoeira/shared/section_widgets/section_title_widget.dart';
+import 'package:sistema_abada_capoeira/features/abada_classes/presentation/pages/student_class_page.dart';
 import 'package:sistema_abada_capoeira/features/abada_classes/presentation/widgets/class_card_widget.dart';
-import 'package:sistema_abada_capoeira/features/abada_classes/presentation/widgets/class_local_summary_card_list_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/member_entry_request_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/view_more_requests_button_widget.dart';
-import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
-import 'package:sistema_abada_capoeira/shared/clickable/clickable_widget.dart';
-import 'package:sistema_abada_capoeira/shared/section_widgets/section_title_widget.dart';
+import 'package:sistema_abada_capoeira/features/abada_classes/presentation/widgets/class_local_summary_card_list_widget.dart';
 
 class ProfessorClassesPage extends StatelessWidget {
   const ProfessorClassesPage({super.key});
@@ -44,15 +45,92 @@ class ProfessorClassesPage extends StatelessWidget {
 
             const ClassLocalMetricSummaryCardListWidget(),
 
-
             SectionTitleWidget(sectionTitle: "Turma Atual"),
-            ClassCardWidget(),
+            ClassCardWidget(
+              className: "Turma CEU",
+              location: "Rua Luiz Leão, 1 - 91287-873",
+              hour: "Seg, Sex - 19:30 às 21:30\nQua - 17:30 às 19:30",
+              professor: "Brasileiro",
+              studentQuantity: 15,
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => StudentClassPage(
+                    className: "Turma CEU",
+                    location: "Rua Luiz Leão, 1 - 91287-873",
+                    hour: "Seg, Sex - 19:30 às 21:30\nQua - 17:30 às 19:30",
+                    professor: "Brasileiro",
+                    studentQuantity: 15,
+                    studentsList: [
+                      "Anônimo",
+                      "Anônimo",
+                      "Muriçoca",
+                      "Anônimo",
+                      "Centelha",
+                    ],
+                  ),
+                ),
+              ),
+            ),
 
             SectionTitleWidget(sectionTitle: "Minhas Turmas"),
 
-            ClassCardWidget(),
-            ClassCardWidget(),
-            ClassCardWidget(),
+            ClassCardWidget(
+              className: "Turma CEP",
+              location: "Av. João Gualberto, 250 - Centro, Curitiba - PR, 80030-000",
+              hour: "Qua - 19:30 às 21:30",
+              professor: "Feijó",
+              studentQuantity: 17,
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => StudentClassPage(
+                    className: "Turma CEP",
+                    location: "Av. João Gualberto, 250 - Centro, Curitiba - PR, 80030-000",
+                    hour: "Qua - 19:30 às 21:30",
+                    professor: "Feijó",
+                    studentQuantity: 17,
+                    studentsList: [
+                      "Capuró",
+                      "Macurau",
+                      "Pororoca",
+                      "Pujiró",
+                      "Macurau",
+                      "Pororoca",
+                      "Pujiró",
+                      "Macurau",
+                      "Pororoca",
+                      "Pujiró",
+                      "Macurau",
+                      "Pororoca",
+                      "Pujiró",
+                      "Macurau",
+                      "Pororoca",
+                      "Pujiró",
+                      "Macurau",
+                      "Pororoca",
+                      "Pujiró",
+                      "Macurau",
+                      "Pororoca",
+                      "Pujiró",
+                      "Macurau",
+                      "Pororoca",
+                      "Pujiró",
+                      "Macurau",
+                      "Pororoca",
+                      "Pujiró",
+                      "Macurau",
+                      "Pororoca",
+                      "Pujiró",
+                      "Macurau",
+                      "Pororoca",
+                      "Pujiró",
+                      "Mercado"
+                    ],
+                  ),
+                ),
+              ),
+            ),            
+            
+        
           
             SectionTitleWidget(sectionTitle: "Solicitações de Entrada", itemsQuantity: 5),
 

@@ -1,11 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
+import 'package:sistema_abada_capoeira/features/abada_classes/presentation/pages/student_class_page.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 
 class ClassCardWidget extends StatelessWidget {
-  const ClassCardWidget({super.key});
+  const ClassCardWidget({
+    super.key,
+    required this.className,
+    required this.hour,
+    required this.location,
+    required this.professor,
+    required this.onPressed,
+    required this.studentQuantity
+  });
+
+  final String className;
+  final String hour;
+  final String location;
+  final String professor;
+  final int studentQuantity;
+  final VoidCallback onPressed;
+
 
   @override
   Widget build(BuildContext context) {
+
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
       child: Material(
@@ -15,9 +36,7 @@ class ClassCardWidget extends StatelessWidget {
         shadowColor: const Color.fromARGB(253, 0, 0, 0),
         child: InkWell(
           borderRadius: BorderRadius.circular(12),
-          onTap: () {
-            // Lógica de navegação aqui
-          },
+          onTap: onPressed,
           child: Padding(
             padding: const EdgeInsets.all(12),
             child: Row(
@@ -44,8 +63,8 @@ class ClassCardWidget extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        "Turma CEU",
+                      Text(
+                        className,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
@@ -53,7 +72,7 @@ class ClassCardWidget extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        "Rua Luiz Leão, 1 - 91287-873",
+                        location,
                         style: TextStyle(
                           fontSize: 13,
                           color: Colors.grey.shade700, // Contraste hierárquico
@@ -61,7 +80,7 @@ class ClassCardWidget extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        "Seg, Sex - 19:30 às 21:30\nQua - 17:30 às 19:30",
+                        hour,
                         style: TextStyle(
                           fontSize: 13,
                           color: Colors.grey.shade700,
@@ -85,11 +104,11 @@ class ClassCardWidget extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                         color: ColorConstants.indigoColor.withOpacity(0.12),
                       ),
-                      child: const Column(
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            '15',
+                            "$studentQuantity",
                             style: TextStyle(
                               color: ColorConstants.indigoColor,
                               fontWeight: FontWeight.bold,

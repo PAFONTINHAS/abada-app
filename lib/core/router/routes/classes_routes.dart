@@ -16,10 +16,12 @@ class ClassRoutes {
 
       final userRole = context.watch<AuthController>().userRole;
 
-      switch(userRole){
-        case UserRole.student: return StudentClassPage();
-        default: return ProfessorClassesPage();
-      }
+      return ProfessorClassesPage();
+
+      // switch(userRole){
+      //   case UserRole.student: return StudentClassPage();
+      //   default: return ProfessorClassesPage();
+      // }
     }
   );
 
