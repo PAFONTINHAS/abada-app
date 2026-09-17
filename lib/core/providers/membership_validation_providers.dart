@@ -1,8 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:sistema_abada_capoeira/features/member_validation/domain/repository/membership_validation_repostitory.dart';
-
 import '../../features/member_validation/data/datasource/membership_validation_remote_datasource.dart';
 import '../../features/member_validation/data/datasource/membership_validation_remote_datasource_impl.dart';
 import '../../features/member_validation/data/repository/membership_validation_repository_impl.dart';
@@ -16,36 +14,29 @@ class MembershipValidationProvider {
   //Representa como tudo dessa feature é montado
   MembershipValidationProvider._();
 
-  static final MembershipValidationRemoteDataSource remoteDataSource =
-      //quero uma variável seguindo o contrato MembershipValidationRemoteDataSource
-      MembershipValidationRemoteDataSourceImpl();
-  //implementação real. DataSource, aqui está seu telefone para falar com o Firebase
+  static final MembershipValidationRemoteDataSource remoteDataSource = MembershipValidationRemoteDataSourceImpl();
+  //quero uma variável seguindo o contrato MembershipValidationRemoteDataSource
+  //com a implementação real DataSource, aqui está seu telefone para falar com o Firebase
 
-  static final MembershipValidationRepository repository =
-      //crie uma variavel seguindo o contrato
-      MembershipValidationRepositoryImpl(remoteDataSource);
+  static final MembershipValidationRepository repository = MembershipValidationRepositoryImpl(remoteDataSource);
+  //crie uma variavel seguindo o contrato
   // o RepositoryImpl precisa de alguém que realmente fale com o banco
 
-  static final GetProfessorMembershipRequestsUseCase getProfessorRequests =
-      GetProfessorMembershipRequestsUseCase(repository);
+  static final GetProfessorMembershipRequestsUseCase getProfessorRequests = GetProfessorMembershipRequestsUseCase(repository);
   //quando precisar buscar, use esse Repository
 
-  static final ApproveMembershipRequestUseCase approveMembershipRequest =
-      ApproveMembershipRequestUseCase(repository);
+  static final ApproveMembershipRequestUseCase approveMembershipRequest = ApproveMembershipRequestUseCase(repository);
   //quando precisar aprovar, use esse Repository
 
-  static final RequestMembershipChangesUseCase requestMembershipChanges =
-      RequestMembershipChangesUseCase(repository);
+  static final RequestMembershipChangesUseCase requestMembershipChanges = RequestMembershipChangesUseCase(repository);
   //quando precisar de correção, use esse Repository
 
-  static final RejectMembershipRequestUsecase rejectMembershipRequest =
-      RejectMembershipRequestUsecase(repository);
+  static final RejectMembershipRequestUsecase rejectMembershipRequest = RejectMembershipRequestUsecase(repository);
   //quando precisar rejeitar, use esse Repository
 
   static List<SingleChildWidget> providers = [
-    //crie uma lista de Providers
     ChangeNotifierProvider(
-      //“Você será responsável por criar e disponibilizar este Controller.”
+      //“Você será responsável por criar e disponibilizar para a arvore de widgets este Controller.”
       create: (_) => MembershipValidationController(
         //create é uma função, espera parametro/contexto e retorno, o traço significa "existe, mas nao vou usar"
         //quando precisa criar o Provider, faça o seguinte:
