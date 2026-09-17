@@ -8,12 +8,14 @@ class UserProfileEntity {
   final String fullName;
   final String email;
   final String phoneNumber;
-  final String currentBeltName;
+  final String currentBelt;
   final UserRole role;
   final TuscaStatus tuscaStatus;
   final DateTime? tuscaExpirationDate;
   final String? photoUrl;
   final String city;
+  final List<String> attendedClasses;
+  final List<String> lecturedClasses;
   final String state;
 
   const UserProfileEntity({
@@ -22,9 +24,11 @@ class UserProfileEntity {
     required this.fullName,
     required this.email,
     required this.phoneNumber,
-    required this.currentBeltName,
+    required this.currentBelt,
     required this.role,
     required this.tuscaStatus,
+    required this.attendedClasses,
+    required this.lecturedClasses,
     this.tuscaExpirationDate,
     this.photoUrl,
     this.city = '',
@@ -52,6 +56,9 @@ class UserProfileEntity {
     String? photoUrl,
     String? city,
     String? state,
+    List<String>? attendedClassess,
+    List<String>? lecturedClasses,
+    
   }){
 
     return UserProfileEntity(
@@ -59,11 +66,13 @@ class UserProfileEntity {
       fullName: fullName ?? this.fullName,
       email: email ?? this.email,
       phoneNumber: phoneNumber ?? this.phoneNumber,
-      currentBeltName: currentBeltName ?? this.currentBeltName,
+      currentBelt: currentBeltName ?? this.currentBelt,
       role: role ?? this.role,
       tuscaStatus: tuscaStatus ?? this.tuscaStatus,
       tuscaExpirationDate: tuscaExpirationDate ?? this.tuscaExpirationDate,
-      photoUrl: photoUrl ?? this.photoUrl
+      photoUrl: photoUrl ?? this.photoUrl,
+      attendedClasses: attendedClassess ?? this.attendedClasses,
+      lecturedClasses: lecturedClasses ?? this.lecturedClasses
     );
 
   }

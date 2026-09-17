@@ -1,21 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
 
 class StudentPageClassInfoCardWidget extends StatelessWidget {
   const StudentPageClassInfoCardWidget({
     super.key,
-    required this.className,
-    required this.hour,
-    required this.location,
-    required this.professor,
-    required this.studentQuantity
+    required this.classEntity
   });
 
   
-  final String className;
-  final String hour;
-  final String location;
-  final String professor;
-  final int studentQuantity;
+  final ClassEntity classEntity;
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +54,7 @@ class StudentPageClassInfoCardWidget extends StatelessWidget {
                     children: [
                        Expanded(
                         child: Text(
-                          className,
+                          classEntity.unitName,
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -89,13 +82,13 @@ class StudentPageClassInfoCardWidget extends StatelessWidget {
                   const SizedBox(height: 16),
                   
                   // Informações em lista
-                  _buildInfoRow(Icons.access_time, hour),
-                  const SizedBox(height: 8),
-                  _buildInfoRow(Icons.location_on_outlined, location),
-                  const SizedBox(height: 8),
-                  _buildInfoRow(Icons.person_outline, professor),
-                  const SizedBox(height: 8),
-                  _buildInfoRow(Icons.people_outline, '$studentQuantity alunos'),
+                  // _buildInfoRow(Icons.access_time, classEntity.schedule),
+                  // const SizedBox(height: 8),
+                  // _buildInfoRow(Icons.location_on_outlined, location),
+                  // const SizedBox(height: 8),
+                  // _buildInfoRow(Icons.person_outline, professor),
+                  // const SizedBox(height: 8),
+                  // _buildInfoRow(Icons.people_outline, '$studentQuantity alunos'),
                 ],
               ),
             ),

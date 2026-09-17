@@ -1,20 +1,9 @@
 import 'package:flutter/material.dart';
 
 class StudentPageBeltInfoCardWidget extends StatelessWidget {
-  const StudentPageBeltInfoCardWidget({
-    super.key,
-    required this.className,
-    required this.hour,
-    required this.location,
-    required this.professor,
-    required this.studentQuantity,
-  });
+  const StudentPageBeltInfoCardWidget({super.key, required this.currentBelt});
 
-  final String className;
-  final String hour;
-  final String location;
-  final String professor;
-  final int studentQuantity;
+  final String currentBelt;
 
   @override
   Widget build(BuildContext context) {
@@ -65,17 +54,17 @@ class StudentPageBeltInfoCardWidget extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Text(
+                          children:  [
+                            const Text(
                               'Corda Atual',
                               style: TextStyle(
                                 fontSize: 13,
                                 color: Colors.black54,
                               ),
                             ),
-                            SizedBox(height: 2),
+                            const SizedBox(height: 2),
                             Text(
-                              'Corda Amarela',
+                              'Corda $currentBelt',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
