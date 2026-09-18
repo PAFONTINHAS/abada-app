@@ -18,6 +18,7 @@ class UserProfileModel extends UserProfileEntity {
     super.photoUrl,
     super.city,
     super.state,
+    super.isActive = true,
   });
 
   factory UserProfileModel.fromEntity(UserProfileEntity profile) {
@@ -34,12 +35,11 @@ class UserProfileModel extends UserProfileEntity {
       photoUrl: profile.photoUrl,
       city: profile.city,
       state: profile.state,
+      isActive: profile.isActive,
     );
   }
 
   factory UserProfileModel.fromSnapshot(DocumentSnapshot document) {
-
-
     final data = document.data() as Map<String, dynamic>;
 
     final UserRole userRole = UserRoleExtension.getFromString(data['userRole']);
@@ -53,18 +53,19 @@ class UserProfileModel extends UserProfileEntity {
       currentBeltName: data['currentBeltName'] ?? data['belt'] ?? '',
       role: userRole,
       tuscaStatus: _tuscaStatusFromString(data['tuscaStatus']),
-      tuscaExpirationDate: (data['tuscaExpirationDate'] as Timestamp?)?.toDate(),
+      tuscaExpirationDate: (data['tuscaExpirationDate'] as Timestamp?)
+          ?.toDate(),
       photoUrl: data['photoUrl'],
       city: data['city'] ?? data['cidade'] ?? '',
       state: data['uf'] ?? data['state'] ?? data['estado'] ?? '',
+      isActive: data['isActive'] ?? true,
     );
   }
 
-  Map<String, dynamic> toMap(){
-
+  Map<String, dynamic> toMap() {
     final Timestamp? expirationDate = tuscaExpirationDate != null
-          ? Timestamp.fromDate(tuscaExpirationDate!)
-          : null;
+        ? Timestamp.fromDate(tuscaExpirationDate!)
+        : null;
 
     return {
       'nickname': nickname,
@@ -74,15 +75,13 @@ class UserProfileModel extends UserProfileEntity {
       'currentBeltName': currentBeltName,
       'role': role.name,
       'tuscaStatus': tuscaStatus.name,
-      'tuscaExpirationDate': expirationDate  ,
+      'tuscaExpirationDate': expirationDate,
       'photoUrl': photoUrl,
       'city': city,
       'uf': state,
+      'isActive': isActive,
     };
   }
-  
-  
-  
 
   static TuscaStatus _tuscaStatusFromString(String? value) {
     return TuscaStatus.values.firstWhere(

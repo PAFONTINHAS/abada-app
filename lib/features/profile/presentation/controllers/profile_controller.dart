@@ -4,21 +4,23 @@ import 'package:sistema_abada_capoeira/features/profile/domain/usecases/update_i
 import 'package:sistema_abada_capoeira/features/profile/domain/usecases/upload_profile_photo_usecase.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/usecases/get_current_user_profile_usecase.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/usecases/request_belt_nickname_change_usecase.dart';
+import 'package:sistema_abada_capoeira/features/profile/domain/usecases/deactivate_account_usecase.dart';
 
 enum ProfileLoadStatus { loading, loaded, error }
 
 class ProfileController extends ChangeNotifier {
-
   final UpdateProfileInfoUseCase _updateProfileInfoUseCase;
   final UploadProfilePhotoUsecase _uploadProfilePhotoUsecase;
   final GetCurrentUserProfileUsecase _getCurrentUserProfileUsecase;
   final RequestBeltNicknameChangeUseCase _requestBeltNicknameChangeUseCase;
+  final DeactivateAccountUseCase _deactivateAccountUseCase;
 
   ProfileController(
     this._getCurrentUserProfileUsecase,
     this._updateProfileInfoUseCase,
     this._uploadProfilePhotoUsecase,
     this._requestBeltNicknameChangeUseCase,
+    this._deactivateAccountUseCase,
   );
 
   ProfileLoadStatus status = ProfileLoadStatus.loading;
@@ -67,8 +69,7 @@ class ProfileController extends ChangeNotifier {
         errorMessage = failure.message;
         return false;
       },
-      (updatedUser){
-        
+      (updatedUser) {
         _userProfile = updatedUser;
         return true;
       },
@@ -79,14 +80,12 @@ class ProfileController extends ChangeNotifier {
     return success;
   }
 
-
   Future<bool> requestBeltNicknameChange({
     required String originalBelt,
     required String originalNickname,
     String? newBelt,
     String? newNickname,
   }) async {
-    
     final result = await _requestBeltNicknameChangeUseCase.execute(
       userProfile: _userProfile,
       originalBelt: originalBelt,
@@ -103,21 +102,43 @@ class ProfileController extends ChangeNotifier {
   }
 
   Future<bool> uploadProfilePhoto(Uint8List imageBytes) async {
-    
-    final result = await _uploadProfilePhotoUsecase.call(_userProfile, imageBytes);
+    final result = await _uploadProfilePhotoUsecase.call(
+      _userProfile,
+      imageBytes,
+    );
 
-    final success = result.fold((failure) {
-      errorMessage = failure.message;
-      return false;
-    }, (updatedUser){
+    final success = result.fold(
+      (failure) {
+        errorMessage = failure.message;
+        return false;
+      },
+      (updatedUser) {
+        _userProfile = updatedUser;
 
-      _userProfile = updatedUser;
-
-      return true;
-    });
+        return true;
+      },
+    );
 
     notifyListeners();
 
+    return success;
+  }
+
+  Future<bool> deactivateAccount() async {
+    final result = await _deactivateAccountUseCase.execute(_userProfile);
+
+    final success = result.fold(
+      (failure) {
+        errorMessage = failure.message;
+        return false;
+      },
+      (updatedProfile) {
+        _userProfile = updatedProfile;
+        return true;
+      },
+    );
+
+    notifyListeners();
     return success;
   }
 }

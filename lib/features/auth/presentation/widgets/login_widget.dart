@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
-import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
-import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/models/auth_status.dart';
@@ -56,7 +54,6 @@ class LoginWidget extends StatelessWidget {
             height: 52,
             buttonCollor: ColorConstants.indigoColor,
             onPressed: () async {
-
               final authController = context.read<AuthController>();
 
               MessageHandler.showInfo(context, "Autenticando...");
@@ -73,19 +70,18 @@ class LoginWidget extends StatelessWidget {
 
               authController.setAuthStatus(AuthStatus.initializing);
 
-              MessageHandler.showSuccess(context, "Usuário autenticado com sucesso! Redirecionando...");
-
+              MessageHandler.showSuccess(
+                context,
+                "Usuário autenticado com sucesso! Redirecionando...",
+              );
 
               // if(formController.authenticatedUserRole != null){
-
 
               //   LoggingService.displayInfo("Papel do usuário: ${formController.authenticatedUserRole!}");
 
               //   if(formController.authenticatedUserRole != null){
 
-
               //     LoggingService.displayInfo("Papel do usuário: ${formController.authenticatedUserRole!}");
-
 
               //     authController.setAuthStatus(AuthStatus.initializing);
 
@@ -93,7 +89,7 @@ class LoginWidget extends StatelessWidget {
 
               //   }
               // }
-            }
+            },
           ),
 
           SizedBox(height: 35, child: Divider()),

@@ -15,6 +15,7 @@ class UserProfileEntity {
   final String? photoUrl;
   final String city;
   final String state;
+  final bool isActive;
 
   const UserProfileEntity({
     required this.uid,
@@ -29,6 +30,7 @@ class UserProfileEntity {
     this.photoUrl,
     this.city = '',
     this.state = '',
+    required this.isActive,
   });
 
   String get displayName {
@@ -52,10 +54,11 @@ class UserProfileEntity {
     String? photoUrl,
     String? city,
     String? state,
-  }){
-
+    bool? isActive,
+  }) {
     return UserProfileEntity(
-      uid: id ?? this.uid,
+      uid: id ?? uid,
+      nickname: nickname ?? this.nickname,
       fullName: fullName ?? this.fullName,
       email: email ?? this.email,
       phoneNumber: phoneNumber ?? this.phoneNumber,
@@ -63,8 +66,10 @@ class UserProfileEntity {
       role: role ?? this.role,
       tuscaStatus: tuscaStatus ?? this.tuscaStatus,
       tuscaExpirationDate: tuscaExpirationDate ?? this.tuscaExpirationDate,
-      photoUrl: photoUrl ?? this.photoUrl
+      photoUrl: photoUrl ?? this.photoUrl,
+      city: city ?? this.city,
+      state: state ?? this.state,
+      isActive: isActive ?? this.isActive,
     );
-
   }
 }
