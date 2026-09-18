@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sistema_abada_capoeira/features/account_deactivation/presentation/controllers/account_deactivation_controller.dart';
+import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:sistema_abada_capoeira/features/waiting_layer/presentation/widgets/waiting_info_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/waiting_layer/presentation/widgets/pending_status_badge_widget.dart';
-import 'package:sistema_abada_capoeira/features/waiting_layer/presentation/widgets/delete_account_dialog_widget.dart';
+import 'package:sistema_abada_capoeira/features/waiting_layer/presentation/widgets/deactivate_account_dialog_widget.dart';
+import 'package:sistema_abada_capoeira/features/waiting_layer/presentation/widgets/deactivate_account_button_widget.dart';
 
 class WaitingPage extends StatelessWidget {
   const WaitingPage({super.key});
@@ -115,34 +119,30 @@ class WaitingPage extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 10),
-                //botao excluir minha conta
-                // TODO: integrar exclusão real com RF05
-                SizedBox(
-                  height: 52,
-                  child: OutlinedButton.icon(
-                    onPressed: () {
+                DeactivateAccountButton(
+                  onPressed: () {
                     showDialog(
                       context: context,
-                      builder: (context) => const DeleteAccountDialog(),
+                      builder: (dialogContext) => DeactivateAccountDialog(
+                        onConfirm: () async {
+                          final authController = context.read<AuthController>();
+                          final userId = authController.user?.uid;
+                          if (userId == null) return false;
+
+                          final deactivationController = context
+                              .read<AccountDeactivationController>();
+                          final deactivated = await deactivationController
+                              .deactivateAccount(userId);
+                          if (!deactivated || !dialogContext.mounted) {
+                            return deactivated;
+                          }
+
+                          Navigator.pop(dialogContext);
+                          return await authController.logoutUser();
+                        },
+                      ),
                     );
                   },
-                    icon: const Icon(Icons.delete_outline, color: Colors.red),
-                    label: const Text(
-                      'Excluir minha conta',
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.red,
-                      side: const BorderSide(color: Colors.red),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                    ),
-                  ),
                 ),
               ],
             ),

@@ -56,7 +56,6 @@ class LoginWidget extends StatelessWidget {
             height: 52,
             buttonCollor: ColorConstants.indigoColor,
             onPressed: () async {
-
               final authController = context.read<AuthController>();
 
               MessageHandler.showInfo(context, "Autenticando...");
@@ -66,6 +65,17 @@ class LoginWidget extends StatelessWidget {
               if (!context.mounted) return;
 
               if (!success && formController.errorMessage != null) {
+                if (formController.isInactiveAccount) {
+                  await authController.logoutUser();
+                  if (context.mounted) {
+                    MessageHandler.showError(
+                      context,
+                      'Sua conta está inativa. Cadastre-se novamente.',
+                    );
+                  }
+                  return;
+                }
+
                 MessageHandler.showError(context, formController.errorMessage!);
 
                 return;
@@ -73,19 +83,18 @@ class LoginWidget extends StatelessWidget {
 
               authController.setAuthStatus(AuthStatus.initializing);
 
-              MessageHandler.showSuccess(context, "Usuário autenticado com sucesso! Redirecionando...");
-
+              MessageHandler.showSuccess(
+                context,
+                "Usuário autenticado com sucesso! Redirecionando...",
+              );
 
               // if(formController.authenticatedUserRole != null){
-
 
               //   LoggingService.displayInfo("Papel do usuário: ${formController.authenticatedUserRole!}");
 
               //   if(formController.authenticatedUserRole != null){
 
-
               //     LoggingService.displayInfo("Papel do usuário: ${formController.authenticatedUserRole!}");
-
 
               //     authController.setAuthStatus(AuthStatus.initializing);
 
@@ -93,7 +102,7 @@ class LoginWidget extends StatelessWidget {
 
               //   }
               // }
-            }
+            },
           ),
 
           SizedBox(height: 35, child: Divider()),

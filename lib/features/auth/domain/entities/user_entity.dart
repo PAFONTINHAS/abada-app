@@ -2,9 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sistema_abada_capoeira/features/auth/domain/entities/user_registration_params.dart';
 
 class UserEntity {
-
   UserEntity({
-
     required this.uid,
     required this.fullName,
     required this.email,
@@ -12,9 +10,9 @@ class UserEntity {
     required this.belt,
     required this.nickname,
     required this.professor,
-    this.userRole = 'unvalidatedUser'
-
-  }); 
+    this.userRole = 'unvalidatedUser',
+    this.isActive = true,
+  });
 
   final String uid;
   final String fullName;
@@ -24,9 +22,12 @@ class UserEntity {
   final String belt;
   final String professor;
   final String userRole;
+  final bool isActive;
 
-  factory UserEntity.fromRegisterParams(UserCredential userCredential, UserRegistrationParams userRegistrationParams){
-
+  factory UserEntity.fromRegisterParams(
+    UserCredential userCredential,
+    UserRegistrationParams userRegistrationParams,
+  ) {
     return UserEntity(
       uid: userCredential.user!.uid,
       fullName: userRegistrationParams.fullName,
@@ -35,6 +36,7 @@ class UserEntity {
       belt: userRegistrationParams.belt,
       nickname: userRegistrationParams.nickname,
       professor: userRegistrationParams.professor,
+      isActive: true,
     );
   }
 
@@ -46,10 +48,7 @@ class UserEntity {
       'fullName': fullName,
       'nickname': nickname,
       'professor': professor,
-      'userRole': userRole
+      'userRole': userRole,
     };
   }
-
-
-
 }
