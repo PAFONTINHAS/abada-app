@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sistema_abada_capoeira/features/account_deactivation/presentation/controllers/account_deactivation_controller.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 import 'package:sistema_abada_capoeira/features/waiting_layer/presentation/widgets/waiting_info_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/waiting_layer/presentation/widgets/pending_status_badge_widget.dart';
 import 'package:sistema_abada_capoeira/features/waiting_layer/presentation/widgets/deactivate_account_dialog_widget.dart';
@@ -126,19 +126,16 @@ class WaitingPage extends StatelessWidget {
                       builder: (dialogContext) => DeactivateAccountDialog(
                         onConfirm: () async {
                           final authController = context.read<AuthController>();
-                          final userId = authController.user?.uid;
-                          if (userId == null) return false;
-
-                          final deactivationController = context
-                              .read<AccountDeactivationController>();
-                          final deactivated = await deactivationController
-                              .deactivateAccount(userId);
+                          final profileController = context
+                              .read<ProfileController>();
+                          final deactivated = await profileController
+                              .deactivateAccount();
                           if (!deactivated || !dialogContext.mounted) {
                             return deactivated;
                           }
 
                           Navigator.pop(dialogContext);
-                          return await authController.logoutUser();
+                          return await authController.deleteCurrentUser();
                         },
                       ),
                     );

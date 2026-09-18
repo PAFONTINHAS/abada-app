@@ -11,7 +11,6 @@ class UserEntityModel extends UserEntity {
     required super.nickname,
     required super.professor,
     super.userRole,
-    super.isActive = true,
   });
 
   factory UserEntityModel.fromSnapshot(DocumentSnapshot doc) {
@@ -29,7 +28,6 @@ class UserEntityModel extends UserEntity {
       userRole: data['userRole'],
       nickname: data['nickname'],
       professor: data['professor'],
-      isActive: data['isActive'] ?? true,
     );
   }
 }

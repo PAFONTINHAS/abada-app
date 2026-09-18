@@ -34,11 +34,7 @@ class LoginUserUsecase {
 
       final userDataResult = await authRepository.getUserDataByUserId(userId);
 
-      return userDataResult.fold(
-        (failure) => Left(failure),
-        (user) =>
-            user.isActive ? Right(user) : const Left(InactiveAccountFailure()),
-      );
+      return userDataResult;
     });
   }
 }

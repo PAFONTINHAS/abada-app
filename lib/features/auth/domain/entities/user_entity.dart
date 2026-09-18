@@ -11,7 +11,6 @@ class UserEntity {
     required this.nickname,
     required this.professor,
     this.userRole = 'unvalidatedUser',
-    this.isActive = true,
   });
 
   final String uid;
@@ -22,7 +21,6 @@ class UserEntity {
   final String belt;
   final String professor;
   final String userRole;
-  final bool isActive;
 
   factory UserEntity.fromRegisterParams(
     UserCredential userCredential,
@@ -36,7 +34,6 @@ class UserEntity {
       belt: userRegistrationParams.belt,
       nickname: userRegistrationParams.nickname,
       professor: userRegistrationParams.professor,
-      isActive: true,
     );
   }
 

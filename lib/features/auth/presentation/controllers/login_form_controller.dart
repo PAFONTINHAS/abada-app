@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/features/auth/domain/entities/user_login_params.dart';
 import 'package:sistema_abada_capoeira/features/auth/domain/usecases/login_user_usecase.dart';
-import 'package:sistema_abada_capoeira/core/errors/failure.dart';
 
 class LoginFormController extends ChangeNotifier {
   final LoginUserUsecase _loginUserUsecase;
@@ -13,9 +12,6 @@ class LoginFormController extends ChangeNotifier {
 
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
-
-  bool _isInactiveAccount = false;
-  bool get isInactiveAccount => _isInactiveAccount;
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -43,7 +39,6 @@ class LoginFormController extends ChangeNotifier {
   Future<bool> loginUser() async {
     _isLoading = true;
     _errorMessage = null;
-    _isInactiveAccount = false;
 
     notifyListeners();
 
@@ -53,7 +48,6 @@ class LoginFormController extends ChangeNotifier {
 
     final success = result.fold((failure) {
       _errorMessage = failure.message;
-      _isInactiveAccount = failure is InactiveAccountFailure;
       return false;
     }, (_) => true);
 

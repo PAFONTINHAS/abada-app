@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
-import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
-import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/models/auth_status.dart';
@@ -65,17 +63,6 @@ class LoginWidget extends StatelessWidget {
               if (!context.mounted) return;
 
               if (!success && formController.errorMessage != null) {
-                if (formController.isInactiveAccount) {
-                  await authController.logoutUser();
-                  if (context.mounted) {
-                    MessageHandler.showError(
-                      context,
-                      'Sua conta está inativa. Cadastre-se novamente.',
-                    );
-                  }
-                  return;
-                }
-
                 MessageHandler.showError(context, formController.errorMessage!);
 
                 return;

@@ -1,6 +1,5 @@
 import 'package:provider/single_child_widget.dart';
 import 'package:sistema_abada_capoeira/core/providers/auth_providers.dart';
-import 'package:sistema_abada_capoeira/core/providers/account_deactivation_providers.dart';
 import 'package:sistema_abada_capoeira/core/providers/profile_providers.dart';
 import 'package:sistema_abada_capoeira/core/providers/splash_providers.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
@@ -18,7 +17,6 @@ class ProvidersInjection {
       ...AuthProviders.providers,
       ...SplashProviders.providers,
       ...ProfileProviders.providers,
-      ...AccountDeactivationProviders.providers,
     ];
   }
 }
