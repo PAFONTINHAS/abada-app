@@ -14,7 +14,7 @@ class DataLoadingController extends ChangeNotifier{
 
   final List<String> _loadingSteps = [
     "Pegando dados do usuário",
-    "Carregando turmas do usuário"
+    "Carregando turmas do usuário",
     "Finalizando Configurações"
   ];
 

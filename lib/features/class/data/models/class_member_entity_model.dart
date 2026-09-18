@@ -16,8 +16,8 @@ class ClassMemberEntityModel extends ClassMemberEntity{
     final data = document.data() as Map<String,dynamic>;
 
     return ClassMemberEntityModel(
+      studentId: document.id,
       belt: data['belt'],
-      studentId: data['studentId'],
       displaySensitiveData: data['displaySensitiveData'],
       name: data['name'],
       nickname: data['nickname'],

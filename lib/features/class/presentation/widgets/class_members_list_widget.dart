@@ -40,11 +40,11 @@ class ClassMembersListWidget extends StatelessWidget {
                 itemCount: studentsList.length,
                 separatorBuilder: (context, index) => Divider(height: 1, color: Colors.grey.shade200, indent: 72),
                 itemBuilder: (context, index) {
-                  final aluno = studentsList[index];
+                  final student = studentsList[index];
 
                   final String memberName =
-                      (aluno.displaySensitiveData && aluno.name != null)
-                      ? aluno.name!
+                      (student.displaySensitiveData && student.name != null)
+                      ? student.name!
                       : "Anônimo";
 
                   return ListTile(
@@ -69,7 +69,7 @@ class ClassMembersListWidget extends StatelessWidget {
                       ),
                     ),
                     subtitle: Text(
-                      'Corda Crua',
+                      'Corda ${student.belt}',
                       style: TextStyle(
                         color: Colors.grey.shade600,
                         fontSize: 13,

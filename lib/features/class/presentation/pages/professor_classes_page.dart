@@ -61,15 +61,18 @@ class ProfessorClassesPage extends StatelessWidget {
 
             SectionTitleWidget(sectionTitle: "Minhas Turmas"),
 
-            ListView.builder(
-              itemCount: classController.lecturedClasses.length,
-              itemBuilder: (context, index){
+            SizedBox(
+              height: 500,
+              child: ListView.builder(
+                itemCount: classController.lecturedClasses.length,
+                itemBuilder: (context, index) {
+                  final lecturedClass = classController.lecturedClasses[index];
 
-                final lecturedClass = classController.lecturedClasses[index];
-
-                return ClassCardWidget(classEntity: lecturedClass);
-              },
-            ),      
+                  return ClassCardWidget(classEntity: lecturedClass);
+                },
+              ),
+            ),
+                
           
             SectionTitleWidget(sectionTitle: "Solicitações de Entrada", itemsQuantity: 5),
 

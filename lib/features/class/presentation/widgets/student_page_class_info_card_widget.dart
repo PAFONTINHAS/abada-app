@@ -12,6 +12,14 @@ class StudentPageClassInfoCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final classLocation = "${classEntity.location}, ${classEntity.city} - ${classEntity.state}, ${classEntity.cep}";
+
+    String classSchedule = "";
+    for (final schedule in classEntity.schedule){
+      classSchedule += "$schedule\n";
+    }
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -82,13 +90,13 @@ class StudentPageClassInfoCardWidget extends StatelessWidget {
                   const SizedBox(height: 16),
                   
                   // Informações em lista
-                  // _buildInfoRow(Icons.access_time, classEntity.schedule),
-                  // const SizedBox(height: 8),
-                  // _buildInfoRow(Icons.location_on_outlined, location),
-                  // const SizedBox(height: 8),
-                  // _buildInfoRow(Icons.person_outline, professor),
-                  // const SizedBox(height: 8),
-                  // _buildInfoRow(Icons.people_outline, '$studentQuantity alunos'),
+                  _buildInfoRow(Icons.access_time, classSchedule),
+                  const SizedBox(height: 8),
+                  _buildInfoRow(Icons.location_on_outlined, classLocation),
+                  const SizedBox(height: 8),
+                  _buildInfoRow(Icons.person_outline, "Responsável: ${classEntity.professor.professorNickname}"),
+                  const SizedBox(height: 8),
+                  _buildInfoRow(Icons.people_outline, '${classEntity.members.length} alunos'),
                 ],
               ),
             ),

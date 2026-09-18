@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/features/class/data/models/class_professor_entity_model.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_member_entity.dart';
@@ -15,7 +16,7 @@ class ClassEntityModel extends ClassEntity{
     required super.location,
     required super.unitName,
     required super.schedule,
-    required super.professorClassEntity,
+    required super.professor,
     super.members
   }); 
 
@@ -24,10 +25,10 @@ class ClassEntityModel extends ClassEntity{
     
     final data = document.data() as Map<String, dynamic>;
 
-    final classProfessorEntity = ClassProfessorEntityModel.fromMap(data['professorClassEntity']);
+    final classProfessorEntity = ClassProfessorEntityModel.fromMap(data['professor']);
 
     return ClassEntityModel(
-      classId: data['classId'],
+      classId: document.id,
       cep: data['cep'],
       city: data['city'],
       region: data['region'],
@@ -35,7 +36,8 @@ class ClassEntityModel extends ClassEntity{
       location: data['location'],
       unitName: data['unitName'],
       schedule: List.from(data['schedule'] ?? []),
-      professorClassEntity: classProfessorEntity,
+      professor: classProfessorEntity,
+      members: []
     );
 
   }
@@ -52,7 +54,7 @@ class ClassEntityModel extends ClassEntity{
     String? location,
     String? unitName,
     List<String>? schedule,
-    ClassProfessorEntity? professorClassEntity,
+    ClassProfessorEntity? professor,
     List<ClassMemberEntity>? members,
 
   }){
@@ -66,7 +68,7 @@ class ClassEntityModel extends ClassEntity{
       location: location ?? this.location,
       unitName: unitName ?? this.unitName,
       schedule: schedule ?? this.schedule,
-      professorClassEntity: professorClassEntity ?? this.professorClassEntity,
+      professor: professor ?? this.professor, 
       members: members ?? this.members,
     );
 

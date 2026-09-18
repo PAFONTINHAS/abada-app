@@ -31,7 +31,7 @@ class ClassRoutes {
         builder: (context, state) {
           final classEntity = state.extra as ClassEntity;
 
-          return StudentClassPage(classEntity: classEntity);
+          return StudentClassPage(selectedClass: classEntity);
         },
       ),
     ],

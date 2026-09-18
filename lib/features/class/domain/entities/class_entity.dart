@@ -12,7 +12,7 @@ class ClassEntity {
     required this.location,
     required this.unitName,
     required this.schedule,
-    required this.professorClassEntity,
+    required this.professor,
     this.members = const []
   }); 
 
@@ -24,7 +24,7 @@ class ClassEntity {
   final String location;
   final String unitName;
   final List<String> schedule;
-  final ClassProfessorEntity professorClassEntity;
+  final ClassProfessorEntity professor;
   final List<ClassMemberEntity> members;
 
   ClassEntity copyWith({
@@ -37,7 +37,7 @@ class ClassEntity {
     String? location,
     String? unitName,
     List<String>? schedule,
-    ClassProfessorEntity? professorClassEntity,
+    ClassProfessorEntity? professor,
     List<ClassMemberEntity>? members,
 
   }){
@@ -51,7 +51,7 @@ class ClassEntity {
       location: location ?? this.location,
       unitName: unitName ?? this.unitName,
       schedule: schedule ?? this.schedule,
-      professorClassEntity: professorClassEntity ?? this.professorClassEntity,
+      professor: professor ?? this.professor,
       members: members ?? this.members,
     );
 

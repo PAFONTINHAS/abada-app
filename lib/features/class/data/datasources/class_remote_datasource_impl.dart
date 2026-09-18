@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:sistema_abada_capoeira/core/errors/exception_handler.dart';
 import 'package:sistema_abada_capoeira/core/errors/failure.dart';
+import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/features/class/data/datasources/class_remote_datasource.dart';
 import 'package:sistema_abada_capoeira/features/class/data/models/class_entity_model.dart';
 import 'package:sistema_abada_capoeira/features/class/data/models/class_member_entity_model.dart';
@@ -28,7 +29,6 @@ class ClassRemoteDatasourceImpl implements ClassRemoteDatasource{
 
       for(final classDocument in snapshots.docs){
 
-
         ClassEntityModel classEntityModel = ClassEntityModel.fromSnapshot(classDocument);
 
         final membersSnapshots = await _firestore.collection('classes').doc(classDocument.id).collection("students").get();
@@ -37,6 +37,7 @@ class ClassRemoteDatasourceImpl implements ClassRemoteDatasource{
 
 
         for(final memberDocument in membersSnapshots.docs){
+          
 
           final memberEntityModel = ClassMemberEntityModel.fromSnapshot(memberDocument);
 

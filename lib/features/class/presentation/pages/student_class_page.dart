@@ -11,40 +11,12 @@ import 'package:sistema_abada_capoeira/features/class/presentation/widgets/stude
 import 'package:sistema_abada_capoeira/features/class/presentation/widgets/student_page_belt_info_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/widgets/student_page_class_info_card_widget.dart';
 
-class StudentClassPage extends StatefulWidget {
-  const StudentClassPage({super.key, this.classEntity});
 
-  final ClassEntity? classEntity;
+class StudentClassPage extends StatelessWidget {
+  const StudentClassPage({super.key, this.selectedClass});
 
-  @override
-  State<StudentClassPage> createState() => _StudentClassPageState();
-}
+  final ClassEntity? selectedClass;
 
-class _StudentClassPageState extends State<StudentClassPage> {
-
-  @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) async{
-
-      await fetchClassData();
-    });
-  }
-
-  Future<void> fetchClassData() async{
-
-    final classController = context.read<ClassController>();
-    final profileController = context.read<ProfileController>();
-
-    final user = profileController.userProfile;
-
-    if(classController.attendedClasses.isNotEmpty && widget.classEntity != null) return;
-
-    await classController.getAttendedClasses(user.attendedClasses);
-
-  }
-  
   @override
   Widget build(BuildContext context) {
     
@@ -52,11 +24,11 @@ class _StudentClassPageState extends State<StudentClassPage> {
     final classController = context.read<ClassController>();
     final userProfile = profileController.userProfile;
 
-    final ClassEntity classEntity = widget.classEntity ?? classController.attendedClasses.first;
+    final ClassEntity classEntity = selectedClass ?? classController.attendedClasses.first;
 
     final userIsProfessor =
         userProfile.uid ==
-        classEntity.professorClassEntity.professorId;
+        classEntity.professor.professorId;
     
 
     return Scaffold(
@@ -77,53 +49,69 @@ class _StudentClassPageState extends State<StudentClassPage> {
       ),
       body: StandardScaffoldBodyWidget(
         padding: EdgeInsets.all(16),
-        child: Column(
-          children: [
+        child: Consumer<ClassController>(
+          
+          builder: (context, controller, child){
 
-            StudentPageClassInfoCardWidget(classEntity: classEntity),
+            if(controller.isLoading){
 
-            if (!userIsProfessor) ...[
-              const SizedBox(height: 12),
-              StudentPageBeltInfoCardWidget(currentBelt: userProfile.currentBelt),
-            ],
+              return Column(
+                children: [
+                  CircularProgressIndicator(),
 
-            const SizedBox(height: 24),
+                  Text("Carregando os dados da sua turma...")
+                ],
+              );
+            }
 
-            const SectionTitleWidget(sectionTitle: "Alunos"),
-            const SizedBox(height: 8),
+            return Column(
+              children: [
 
-            // O Container agora estica para caber todos os alunos
+                StudentPageClassInfoCardWidget(classEntity: classEntity),
 
-            ClassMembersListWidget(studentsList: classEntity.members),
+                if (!userIsProfessor) ...[
+                  const SizedBox(height: 12),
+                  StudentPageBeltInfoCardWidget(currentBelt: userProfile.currentBelt),
+                ],
 
+                const SizedBox(height: 24),
 
-            if (userIsProfessor)
-              StudentPageButtonWidget(
-                icon: Icons.delete_outline,
-                buttonTitle: "Deletar turma",
-                buttonColor: Colors.red,
-                onPressed: () {},
-              )
-            else ...[
-              StudentPageButtonWidget(
-                icon: Icons.cached_outlined,
-                buttonTitle: "Solicitar entrada em outra turma",
-                buttonColor: ColorConstants.indigoColor,
-                onPressed: () {},
-              ),
+                const SectionTitleWidget(sectionTitle: "Alunos"),
+                const SizedBox(height: 8),
 
-              StudentPageButtonWidget(
-                icon: Icons.logout,
-                buttonTitle: "Solicitar saída da turma",
-                buttonColor: Colors.red,
-                onPressed: () {},
-              ),
-            ],
+                // O Container agora estica para caber todos os alunos
+
+                ClassMembersListWidget(studentsList: classEntity.members),
 
 
-          ],
-        ),
+                if (userIsProfessor)
+                  StudentPageButtonWidget(
+                    icon: Icons.delete_outline,
+                    buttonTitle: "Deletar turma",
+                    buttonColor: Colors.red,
+                    onPressed: () {},
+                  )
+                else ...[
+                  StudentPageButtonWidget(
+                    icon: Icons.cached_outlined,
+                    buttonTitle: "Solicitar entrada em outra turma",
+                    buttonColor: ColorConstants.indigoColor,
+                    onPressed: () {},
+                  ),
+
+                  StudentPageButtonWidget(
+                    icon: Icons.logout,
+                    buttonTitle: "Solicitar saída da turma",
+                    buttonColor: Colors.red,
+                    onPressed: () {},
+                  ),
+                ],
+              ],
+            );
+          },
+        ), 
       ) 
     );
   }
 }
+
