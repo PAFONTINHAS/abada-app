@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
-import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_controller.dart';
 import 'package:sistema_abada_capoeira/shared/clickable/clickable_widget.dart';
 import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
 import 'package:sistema_abada_capoeira/shared/section_widgets/section_title_widget.dart';
-import 'package:sistema_abada_capoeira/features/class/presentation/pages/student_class_page.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/widgets/class_card_widget.dart';
+import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_controller.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/member_entry_request_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/view_more_requests_button_widget.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/widgets/class_local_summary_card_list_widget.dart';
@@ -21,6 +21,8 @@ class ProfessorClassesPage extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final classController = context.read<ClassController>();
+
+    final currentAttendedClass = classController.attendedClasses.first;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -54,35 +56,20 @@ class ProfessorClassesPage extends StatelessWidget {
             const ClassLocalMetricSummaryCardListWidget(),
             
             SectionTitleWidget(sectionTitle: "Turma Atual"),
-            ClassCardWidget(
-              className: "Turma CEU",
-              location: "Rua Luiz Leão, 1 - 91287-873",
-              hour: "Seg, Sex - 19:30 às 21:30\nQua - 17:30 às 19:30",
-              professor: "Brasileiro",
-              studentQuantity: 15,
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => StudentClassPage(),
-                ),
-              ),
-            ),
+
+            ClassCardWidget(classEntity: currentAttendedClass),
 
             SectionTitleWidget(sectionTitle: "Minhas Turmas"),
 
-            ClassCardWidget(
-              className: "Turma CEP",
-              location: "Av. João Gualberto, 250 - Centro, Curitiba - PR, 80030-000",
-              hour: "Qua - 19:30 às 21:30",
-              professor: "Feijó",
-              studentQuantity: 17,
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => StudentClassPage(),
-                ),
-              ),
-            ),            
-            
-        
+            ListView.builder(
+              itemCount: classController.lecturedClasses.length,
+              itemBuilder: (context, index){
+
+                final lecturedClass = classController.lecturedClasses[index];
+
+                return ClassCardWidget(classEntity: lecturedClass);
+              },
+            ),      
           
             SectionTitleWidget(sectionTitle: "Solicitações de Entrada", itemsQuantity: 5),
 

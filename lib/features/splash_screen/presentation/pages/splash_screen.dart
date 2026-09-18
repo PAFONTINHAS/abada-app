@@ -1,8 +1,11 @@
+import 'dart:js_interop';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sistema_abada_capoeira/core/constants/app_spacing.dart';
 import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
+import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_controller.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
@@ -32,6 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     final DataLoadingController dataLoadingController = context.read<DataLoadingController>();
     final AuthController authController = context.read<AuthController>();
+    final ClassController classController = context.read<ClassController>();
     final ProfileController profileController = context.read<ProfileController>();
 
     final User? user = authController.user;
@@ -43,8 +47,11 @@ class _SplashScreenState extends State<SplashScreen> {
     try{ 
 
       await dataLoadingController.fetchUserData(authController, profileController);
+      await dataLoadingController.fetchAttendedClasses(classController, profileController);
 
       final userRole = profileController.userProfile.role;
+
+      if(userRole != UserRole.student) await dataLoadingController.fetchLecturedClasses(classController, profileController);
 
       if(userRole == UserRole.unknown) throw Exception("Papel de Usuário não reconhecido");
 

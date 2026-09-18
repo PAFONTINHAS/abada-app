@@ -1,31 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
+import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
+import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/pages/student_class_page.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 
 class ClassCardWidget extends StatelessWidget {
   const ClassCardWidget({
     super.key,
-    required this.className,
-    required this.hour,
-    required this.location,
-    required this.professor,
-    required this.onPressed,
-    required this.studentQuantity
+    required this.classEntity
   });
 
-  final String className;
-  final String hour;
-  final String location;
-  final String professor;
-  final int studentQuantity;
-  final VoidCallback onPressed;
+  final ClassEntity classEntity;
+  // final String className;
+  // final String hour;
+  // final String location;
+  // final String professor;
+  // final int studentQuantity;
+  // final VoidCallback onPressed;
 
 
   @override
   Widget build(BuildContext context) {
+    
+    final classLocation = "${classEntity.location}, ${classEntity.city} - ${classEntity.state}, ${classEntity.cep}";
+    String classSchedule = "";
 
+    classEntity.schedule.map((schedule) => classSchedule += "$schedule\n");
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
@@ -36,7 +38,7 @@ class ClassCardWidget extends StatelessWidget {
         shadowColor: const Color.fromARGB(253, 0, 0, 0),
         child: InkWell(
           borderRadius: BorderRadius.circular(12),
-          onTap: onPressed,
+          onTap: () => RouteController.redirectToStudentClassPage(context: context, classEntity: classEntity),
           child: Padding(
             padding: const EdgeInsets.all(12),
             child: Row(
@@ -64,7 +66,7 @@ class ClassCardWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        className,
+                        classEntity.unitName,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
@@ -72,7 +74,7 @@ class ClassCardWidget extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        location,
+                        classLocation,
                         style: TextStyle(
                           fontSize: 13,
                           color: Colors.grey.shade700, // Contraste hierárquico
@@ -80,7 +82,7 @@ class ClassCardWidget extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        hour,
+                        classSchedule,
                         style: TextStyle(
                           fontSize: 13,
                           color: Colors.grey.shade700,
@@ -108,7 +110,7 @@ class ClassCardWidget extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "$studentQuantity",
+                            "${classEntity.members.length}",
                             style: TextStyle(
                               color: ColorConstants.indigoColor,
                               fontWeight: FontWeight.bold,
