@@ -11,11 +11,13 @@ class UserEntityModel extends UserEntity {
     required super.nickname,
     required super.professor,
     super.userRole,
+    super.isActive = true,
   });
 
   factory UserEntityModel.fromSnapshot(DocumentSnapshot doc) {
-    if (!doc.exists || doc.data() == null)
+    if (!doc.exists || doc.data() == null) {
       throw Exception("Documento inválido");
+    }
 
     final Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
@@ -28,6 +30,7 @@ class UserEntityModel extends UserEntity {
       userRole: data['userRole'],
       nickname: data['nickname'],
       professor: data['professor'],
+      isActive: data['isActive'] ?? true,
     );
   }
 }
