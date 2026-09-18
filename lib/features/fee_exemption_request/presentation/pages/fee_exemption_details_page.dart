@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:sistema_abada_capoeira/features/fee_exemption_request/presentation/widgets/fee_exemption_no_document_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../controllers/fee_exemption_documents_controller.dart';
 import '../controllers/fee_exemption_request_controller.dart';
@@ -135,7 +136,7 @@ class _FeeExemptionDetailsPageState extends State<FeeExemptionDetailsPage> {
               },
             ),
 
-          if (documentsController.documents.isEmpty) const _NoDocumentWidget(),
+          if (documentsController.documents.isEmpty) const NoDocumentWidget(),
 
           const SizedBox(height: 16),
 
@@ -147,34 +148,6 @@ class _FeeExemptionDetailsPageState extends State<FeeExemptionDetailsPage> {
                 '${request.idExemptionRequest}',
               );
             },
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _NoDocumentWidget extends StatelessWidget {
-  const _NoDocumentWidget();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF7F4FF),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: const Row(
-        children: [
-          Icon(Icons.info_outline, color: Color(0xFF5936C8)),
-          SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              'Nenhum documento foi encontrado para esta solicitação.',
-              style: TextStyle(fontSize: 13, color: Color(0xFF7C7890)),
-            ),
           ),
         ],
       ),
