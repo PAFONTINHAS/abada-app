@@ -3,13 +3,15 @@ import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/shared/clickable/clickable_widget.dart';
 
 class ViewMoreRequestsButtonWidget extends StatelessWidget {
-  const ViewMoreRequestsButtonWidget({super.key});
+  const ViewMoreRequestsButtonWidget({super.key, required this.onPressed});
+
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
     return ClickableWidget(
       padding: EdgeInsetsGeometry.symmetric(vertical: 15),
-      onTap: () {},
+      onTap: onPressed,
       child: Align(
         alignment: AlignmentGeometry.center,
         child: Container(

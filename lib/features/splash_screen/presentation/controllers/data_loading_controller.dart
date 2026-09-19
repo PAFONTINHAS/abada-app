@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_controller.dart';
+import 'package:sistema_abada_capoeira/features/member_validation/presentation/controllers/membership_validation_controller.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 
@@ -54,6 +55,13 @@ class DataLoadingController extends ChangeNotifier{
     final lecturedClassesId = profileController.userProfile.lecturedClasses;
 
     await classController.getLecturedClasses(lecturedClassesId);
+  }
+
+  Future<void> fetchClassEntryRequests(MembershipValidationController membershipValidationController, ProfileController profileController) async{
+
+    final userId = profileController.userProfile.uid;
+
+    await membershipValidationController.loadRequests(userId);
   }
 
   Future<void> finishSplash(AuthController authController, UserRole userRole) async{

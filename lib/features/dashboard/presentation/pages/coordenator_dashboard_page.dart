@@ -40,7 +40,7 @@ class CoordenatorDashboardPage extends StatelessWidget {
             const EventRequestCardWidget(requestType: RequestType.cancellation, eventName: 'Workshop Mestre Bandeira'),
             const EventRequestCardWidget(requestType: RequestType.dateChange, eventName: 'Workshop de Maculelê'),
             
-            const ViewMoreRequestsButtonWidget(),
+            ViewMoreRequestsButtonWidget(onPressed: (){}),
 
             SectionTitleWidget(sectionTitle: "Selo TUSCA"),
             const IrregularTuscaBadgeWidget(),

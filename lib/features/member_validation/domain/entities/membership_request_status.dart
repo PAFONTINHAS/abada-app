@@ -7,3 +7,17 @@ enum MembershipRequestStatus {
   approved, //prof aprovou
   rejected, //prof recusou
 }
+
+extension MembershipRequestStatusExtension on MembershipRequestStatus{
+
+  String get portugueseName {
+
+    switch(this){
+      case MembershipRequestStatus.updated: return 'Atualizado';
+      case MembershipRequestStatus.requested: return 'Solicitado';
+      case MembershipRequestStatus.approved: return 'Aprovado';
+      case MembershipRequestStatus.rejected: return 'Rejeitado';
+      case MembershipRequestStatus.changesRequested: return 'Alterações Solicitadas';
+    }
+  }
+}

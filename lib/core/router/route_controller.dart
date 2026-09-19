@@ -15,4 +15,10 @@ class RouteController {
 
     context.go("/classes/class", extra: classEntity);
   }
+
+  static void redirectoToClassesEntryRequestsPage({required BuildContext context}){
+
+    context.push("classes/entry_requests");
+
+  }
 }

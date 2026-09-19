@@ -5,15 +5,20 @@ import '../../domain/entities/membership_request_status.dart';
 
 class MembershipRequestModel extends MembershipRequest {
   const MembershipRequestModel({
-    required super.id, //super significa = herda da classe pai 
-    required super.memberId,
-    required super.professorId,
-    required super.classId,
-    required super.status,
-    required super.requestedAt,
-    super.rejectionReason,
-    super.changeReason,
     super.updatedAt,
+    super.changeReason,
+    super.rejectionReason,
+
+    required super.id, //super significa = herda da classe pai 
+    required super.status,
+    required super.classId,
+    required super.memberId,
+    required super.className,
+    required super.memberName, 
+    required super.memberBelt,
+    required super.professorId,
+    required super.requestedAt,
+    required super.memberNickname,
   });
 
   factory MembershipRequestModel.fromMap(
@@ -43,12 +48,15 @@ class MembershipRequestModel extends MembershipRequest {
         //values pega o valor e byName procura num enum o nome do atributo
         map['status'], //procura no obj map um valor 'status'
       ),
-
+      className: map['className'],
+      memberName: map['memberName'],
+      memberNickname: map ['memberNickname'],
       rejectionReason: map['rejectionReason'],
       changeReason: map['changeReason'],
       requestedAt: map['requestedAt'].toDate(),
       //converte uma data que veio do Firebase do tipo Timestamp para o tipo DateTime do Dart.
       updatedAt: map['updatedAt']?.toDate(),
+      memberBelt: map['memberBelt'],
       //se updatedAt não for null, execute toDate, se for null deixe como está.
       //pq pode ser que não houve uma correção de apelido ou corda
     );
@@ -71,6 +79,11 @@ class MembershipRequestModel extends MembershipRequest {
       'changeReason': changeReason,
       'requestedAt': requestedAt,
       'updatedAt': updatedAt,
+      'className': className,
+      'memberName': memberName,
+      'memberNickname': memberNickname,
+      'memberBelt': memberBelt
+
     };
   }
 }

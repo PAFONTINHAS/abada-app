@@ -8,6 +8,13 @@ class ClassMembersListWidget extends StatelessWidget {
   final List<ClassMemberEntity> studentsList;
   @override
   Widget build(BuildContext context) {
+
+    final double maxListSize = 500.0;
+
+    final double currentListSize = studentsList.length * 80.0;
+
+    final double listSize = (currentListSize > maxListSize) ? maxListSize : currentListSize;
+
     return Container(
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
@@ -33,7 +40,7 @@ class ClassMembersListWidget extends StatelessWidget {
               ),
             )
           : SizedBox(
-              height: 500,
+              height: listSize,
               child: ListView.separated(
                 shrinkWrap: true,
                 physics: const ScrollPhysics(),

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
-import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
-import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_controller.dart';
-import 'package:sistema_abada_capoeira/features/class/presentation/widgets/class_members_list_widget.dart';
 import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
 import 'package:sistema_abada_capoeira/shared/section_widgets/section_title_widget.dart';
+import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
+import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_controller.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
+import 'package:sistema_abada_capoeira/features/class/presentation/widgets/class_members_list_widget.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/widgets/student_page_button_widget.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/widgets/student_page_belt_info_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/widgets/student_page_class_info_card_widget.dart';
