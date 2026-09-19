@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
-import 'package:sistema_abada_capoeira/features/member_validation/presentation/widgets/membership_requests_empty_state_widget.dart';
+import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
 import 'package:sistema_abada_capoeira/shared/section_widgets/section_title_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
@@ -11,6 +11,7 @@ import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/v
 import 'package:sistema_abada_capoeira/features/member_validation/presentation/widgets/membership_request_item_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/dashboard_local_summary_card_list_widget.dart';
 import 'package:sistema_abada_capoeira/features/member_validation/presentation/controllers/membership_validation_controller.dart';
+import 'package:sistema_abada_capoeira/features/member_validation/presentation/widgets/membership_requests_empty_state_widget.dart';
 
 class ProfessorDashboardPage extends StatelessWidget {
   const ProfessorDashboardPage({super.key});
@@ -21,6 +22,7 @@ class ProfessorDashboardPage extends StatelessWidget {
     final profileController = context.read<ProfileController>();
 
     final memberEntryRequests = membershipController.requests;
+
 
     final memberEntryRequestsQuantity = memberEntryRequests.length;
 
@@ -60,37 +62,35 @@ class ProfessorDashboardPage extends StatelessWidget {
                 ],
               ),
 
-              child: ListView.builder(
-                itemCount: memberEntryRequestsQuantity,
-                shrinkWrap: true,
-                physics: ScrollPhysics(),
-                itemBuilder: (context, index) {
-                  
-                  if(memberEntryRequests.isEmpty) return const MembershipRequestsEmptyStateWidget();
-                  
-                  if (index > 2) return SizedBox.shrink();
+              child: memberEntryRequests.isEmpty
+              ? const MembershipRequestsEmptyStateWidget()
+              : ListView.builder(
+                  itemCount: memberEntryRequests.length,
+                  shrinkWrap: true,
+                  physics: const ScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    
+                    if (index > 2) return const SizedBox.shrink();
 
-                  final request = memberEntryRequests[index];
+                    final request = memberEntryRequests[index];
 
-                  if(index == memberEntryRequestsQuantity - 1){
+                    if(index == memberEntryRequestsQuantity - 1){
+                      return Column(
+                        children: [
+                          MembershipRequestItemWidget(
+                            request: request,
+                            professorId: userId,
+                          ),
+                          ViewMoreRequestsButtonWidget(
+                            onPressed: () => RouteController.redirectoToClassesEntryRequestsPage(context: context),
+                          ),
+                        ],
+                      );
+                    }
 
-                    return Column(
-                      children: [
-                        MembershipRequestItemWidget(
-                          request: request,
-                          professorId: userId,
-                        ),
-
-                        ViewMoreRequestsButtonWidget(
-                          onPressed: () => RouteController.redirectoToClassesEntryRequestsPage(context: context),
-                        ),
-                      ],
-                    );
-                  }
-
-                  return MembershipRequestItemWidget(request: request, professorId: userId);
-                },
-              ),
+                    return MembershipRequestItemWidget(request: request, professorId: userId);
+                  },
+                ),
             ),
 
           ],

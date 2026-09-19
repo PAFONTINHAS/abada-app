@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:dartz/dartz.dart';
 import 'package:sistema_abada_capoeira/core/errors/exception_handler.dart';
 import 'package:sistema_abada_capoeira/core/errors/failure.dart';
@@ -12,6 +13,7 @@ import 'package:sistema_abada_capoeira/features/class/domain/entities/class_memb
 class ClassRemoteDatasourceImpl implements ClassRemoteDatasource{
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFunctions _functions = FirebaseFunctions.instance;
 
   @override
   Future<Either<Failure, List<ClassEntity>>> getClassesByIdList(List<String> classesId) async{
@@ -53,11 +55,30 @@ class ClassRemoteDatasourceImpl implements ClassRemoteDatasource{
     } catch(exception){
       return ExceptionHandler.handleException(exception: exception, contextMessage: "getClassesByIdList");
     }
-
-
-    
-
-
   }  
+
+  @override
+  Future<Either<Failure, void>> addStudentToClass(String studentId, String classId) async{
+
+    try{
+
+      final callable = _functions.httpsCallable("approveMemberRequestAndAddToClass");
+
+      await callable.call({
+        'memberId': studentId,
+        'classId': classId
+      });
+
+      return Right(null);
+
+    }catch(exception){
+
+      return ExceptionHandler.handleException(exception: exception, contextMessage: "addStudentToClass");
+    }
+
+
+
+  }
+
 
 }

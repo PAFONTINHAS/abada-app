@@ -5,5 +5,6 @@ import 'package:sistema_abada_capoeira/features/class/domain/entities/class_enti
 abstract class ClassRemoteDatasource {
 
   Future<Either<Failure, List<ClassEntity>>> getClassesByIdList(List<String> classesId);
+  Future<Either<Failure, void>> addStudentToClass(String studentId, String classId);
 
 }

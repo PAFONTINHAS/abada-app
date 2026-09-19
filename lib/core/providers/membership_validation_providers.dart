@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
+import 'package:sistema_abada_capoeira/core/providers/class_providers.dart';
 import 'package:sistema_abada_capoeira/features/member_validation/domain/repository/membership_validation_repostitory.dart';
 
 import '../../features/member_validation/data/datasource/membership_validation_remote_datasource.dart';
@@ -31,7 +32,7 @@ class MembershipValidationProvider {
   //quando precisar buscar, use esse Repository
 
   static final ApproveMembershipRequestUseCase approveMembershipRequest =
-      ApproveMembershipRequestUseCase(repository);
+      ApproveMembershipRequestUseCase(repository, ClassProviders.classRepository);
   //quando precisar aprovar, use esse Repository
 
   static final RequestMembershipChangesUseCase requestMembershipChanges =
@@ -50,10 +51,10 @@ class MembershipValidationProvider {
         //create é uma função, espera parametro/contexto e retorno, o traço significa "existe, mas nao vou usar"
         //quando precisa criar o Provider, faça o seguinte:
         //crie o controller com o constructor com os useCases parametro:variavel criada
-        getProfessorRequests: getProfessorRequests,
-        approveMembershipRequest: approveMembershipRequest,
-        requestMembershipChanges: requestMembershipChanges,
-        rejectMembershipRequest: rejectMembershipRequest,
+        getProfessorRequestsUsecase: getProfessorRequests,
+        approveMembershipRequestUsecase: approveMembershipRequest,
+        requestMembershipChangesUsecase: requestMembershipChanges,
+        rejectMembershipRequestUsecase: rejectMembershipRequest,
       ),
     ),
   ];

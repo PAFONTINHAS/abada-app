@@ -35,7 +35,7 @@ class MembershipRequestItemWidget extends StatelessWidget {
     MembershipValidationController controller,
   ) async {
     final success = await controller.approve(
-    request.id,
+    request,
     professorId,
   );
 

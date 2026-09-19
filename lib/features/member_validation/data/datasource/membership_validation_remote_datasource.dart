@@ -15,4 +15,5 @@ abstract class MembershipValidationRemoteDataSource {
   Future<Either<Failure, void>> rejectRequest(String requestId, String requestReason,);
 
   Future<Either<Failure, void>> markRequestAsUpdated(String requestId,);
+
 }

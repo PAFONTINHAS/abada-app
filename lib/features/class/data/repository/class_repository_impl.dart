@@ -17,4 +17,11 @@ class ClassRepositoryImpl implements ClassRepository{
 
   }
 
+  @override
+  Future<Either<Failure, void>> addStudentToClass(String studentId, String classId) async{
+
+    return await remoteDatasource.addStudentToClass(studentId, classId);
+  }
+
+
 }
