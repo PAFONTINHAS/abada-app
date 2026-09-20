@@ -1,0 +1,47 @@
+storagePath= fee_exemptions/prof123/request123/1_declaracao_tusca.pdf
+
+FIREBASE STORAGE -> guarda o PDF de verdade:
+1_declaracao_tusca.pdf
+
+FIRESTORE -> guarda informações SOBRE o PDF:
+documents/doc123
+├── fileName: declaracao_tusca.pdf
+├── storagePath: fee_exemptions/.../1_declaracao_tusca.pdf
+├── version: 1
+├── uploadedBy: prof123
+└── uploadedAt: ...
+
+
+Professor escolhe PDF
+        ↓
+arquivo: declaracao.pdf
+bytes: [....] 
+class FeeExemptionFileEntity {
+  final String fileName;
+  final Uint8List bytes;
+}
+        ↓
+DataSource
+        ↓
+faz upload
+        ↓
+gera/conhece storagePath
+        ↓
+cria FeeExemptionDocumentModel
+        ↓
+salva os metadados no Firestore
+
+Essa separação evita tentar criar um DocumentEntity completo antes de termos feito o upload.
+
+PROVIDERS:estrutura do arq
+DataSourceImpl
+     ↓
+RepositoryImpl
+     ↓
+UseCases
+     ↓
+Controller
+     ↓
+ChangeNotifierProvider
+     ↓
+UI
