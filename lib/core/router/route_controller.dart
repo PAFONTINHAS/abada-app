@@ -21,4 +21,9 @@ class RouteController {
     context.push("classes/entry_requests");
 
   }
+
+  static void redirectToProfilePage({required BuildContext context}){
+
+    context.go('/profile');
+  }
 }

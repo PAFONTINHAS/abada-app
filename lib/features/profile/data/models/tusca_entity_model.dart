@@ -8,7 +8,7 @@ class TuscaEntityModel extends TuscaEntity{
     super.validUntil,
     super.validatorId,
     super.validatorName,
-    required super.tuscaStatus,
+    required super.status,
   });
 
   factory TuscaEntityModel.fromSnapshotData(Map<String, dynamic> data){
@@ -17,7 +17,7 @@ class TuscaEntityModel extends TuscaEntity{
     final validUntil = data['validUntil']?.toDate();
 
     return TuscaEntityModel(
-      tuscaStatus: status,
+      status: status,
       validUntil: validUntil,
       protocol: data['protocol'],
       validatorId: data['validatorId'],

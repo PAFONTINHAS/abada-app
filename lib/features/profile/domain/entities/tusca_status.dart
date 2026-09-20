@@ -6,6 +6,20 @@ enum TuscaStatus {
   unknown
 }
 
+extension TuscaStatusExtended on TuscaStatus{
+
+  bool get isValidTusca{
+    
+    return this == TuscaStatus.regular || this == TuscaStatus.exempt;
+  }
+
+  bool get notApplicable{
+
+    return this == TuscaStatus.notApplicable;
+  }
+
+}
+
 class TuscaStatusExtension{
   TuscaStatusExtension._();
 

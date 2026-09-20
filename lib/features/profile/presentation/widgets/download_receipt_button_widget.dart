@@ -28,7 +28,7 @@ class DownloadReceiptButtonWidget extends StatelessWidget {
             SizedBox(width: 6),
             Flexible(
               child: Text(
-                'Baixar meu comprovante de regularidade',
+                'Baixar comprovante',
                 softWrap: true,
                 style: TextStyle(
                   color: _primaryPurple,

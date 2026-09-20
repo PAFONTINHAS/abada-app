@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sistema_abada_capoeira/features/auth/domain/entities/user_registration_params.dart';
+import 'package:sistema_abada_capoeira/features/profile/domain/entities/tusca_entity.dart';
+import 'package:sistema_abada_capoeira/features/profile/domain/entities/tusca_status.dart';
 
 class UserEntity {
+  
   UserEntity({
     required this.uid,
     required this.fullName,
@@ -13,7 +16,8 @@ class UserEntity {
     this.userRole = 'unvalidatedUser',
     this.attendedClassess = const [],
     this.lecturedClasses = const [],
-    this.isActive = true
+    this.isActive = true,
+    this.tuscaEntity = const TuscaEntity(status: TuscaStatus.notApplicable)
   }); 
 
   final String uid;
@@ -24,6 +28,7 @@ class UserEntity {
   final String belt;
   final String professor;
   final String userRole;
+  final TuscaEntity tuscaEntity;
   List<String> attendedClassess;
   List<String> lecturedClasses;
 
@@ -56,6 +61,7 @@ class UserEntity {
       'lecturedClasses': lecturedClasses,
       'attendedClasses': attendedClassess,
       'isActive': isActive,
+      'tusca': tuscaEntity.toMap()
     };
   }
 }
