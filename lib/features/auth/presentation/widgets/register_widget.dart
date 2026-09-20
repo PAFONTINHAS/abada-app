@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
+import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
+import 'package:sistema_abada_capoeira/features/auth/presentation/models/auth_status.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/models/register_phase.dart';
 import 'package:sistema_abada_capoeira/features/home_user/presentation/pages/home_user_page.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/widgets/form_button_widget.dart';
@@ -17,6 +19,7 @@ class RegisterWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    final authController = context.read<AuthController>();
     final formController = context.read<RegisterFormController>();
     return Selector<RegisterFormController, RegisterPhase>(
       selector: (_, controller) => controller.registerPhase,
@@ -57,9 +60,9 @@ class RegisterWidget extends StatelessWidget {
                     return;
                   }
 
-                  MessageHandler.showSuccess(context, "Conta criada com sucesso! Redirecionando...");
+                  authController.setAuthStatus(AuthStatus.initializing);
 
-                  Navigator.of(context).push(MaterialPageRoute(builder:(context) => HomeUserPage()));
+                  MessageHandler.showSuccess(context, "Conta criada com sucesso! Redirecionando...");
 
                 },
               ),

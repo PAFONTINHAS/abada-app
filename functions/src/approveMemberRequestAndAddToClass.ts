@@ -1,5 +1,7 @@
 import * as admin from "firebase-admin";
+import {FieldValue} from "firebase-admin/firestore";
 import * as functions from "firebase-functions/v1";
+
 
 const db = admin.firestore();
 
@@ -79,6 +81,7 @@ export const approveMemberRequestAndAddToClass = functions.https.onCall(
 
       batch.update(memberReference, {
         userRole: "student",
+        attendedClasses: FieldValue.arrayUnion(memberRequestData.classId),
       });
 
       await batch.commit();

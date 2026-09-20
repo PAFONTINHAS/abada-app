@@ -62,6 +62,23 @@ class MembershipRequestModel extends MembershipRequest {
     );
   }
 
+  factory MembershipRequestModel.fromEntity(MembershipRequest request){
+
+    return MembershipRequestModel(
+      id: request.id,
+      status: request.status,
+      classId: request.classId,
+      memberId: request.memberId,
+      className: request.className,
+      memberName: request.memberName,
+      memberBelt: request.memberBelt,
+      professorId: request.professorId,
+      requestedAt: request.requestedAt,
+      memberNickname: request.memberNickname,
+    );
+
+  }
+
   Map<String, dynamic> toMap() {
     //transforma o obj em map para o firebase conseguir entender
     //obj                               em         map

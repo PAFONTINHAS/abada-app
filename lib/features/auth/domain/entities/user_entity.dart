@@ -44,13 +44,13 @@ class UserEntity {
 
   Map<String, dynamic> toMap() {
     return {
-      'email': email,
-      'phone': phone,
-      'belt': belt,
-      'fullName': fullName,
-      'nickname': nickname,
-      'professor': professor,
-      'userRole': userRole,
+      'email': email.trim(),
+      'phone': phone.trim(),
+      'belt': belt.trim(),
+      'fullName': fullName.trim(),
+      'nickname': nickname.trim(),
+      'professor': professor.trim(),
+      'userRole': userRole.trim(),
       'lecturedClasses': lecturedClasses,
       'attendedClasses': attendedClassess,
     };

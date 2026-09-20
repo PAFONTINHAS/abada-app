@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
+import 'package:sistema_abada_capoeira/features/member_validation/domain/entities/membership_request.dart';
 import '../../../../core/errors/failure.dart';
 import '../../../../core/errors/exception_handler.dart';
 import '../../domain/entities/membership_request_status.dart';
@@ -14,6 +15,21 @@ class MembershipValidationRemoteDataSourceImpl         implements MembershipVali
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   // Cria uma instância do Firestore dentro da própria classe.
+
+  @override
+  Future<Either<Failure, void>> createMembershipRequest (MembershipRequest request) async{
+    try {
+
+      final requestModel = MembershipRequestModel.fromEntity(request);
+
+      await firestore.collection("membership_requests").doc().set(requestModel.toMap());
+
+      return Right(null);
+
+    }catch(exception){
+      return ExceptionHandler.handleException(exception: exception, contextMessage: "createMembershipRequest");
+    }
+  }
 
   //esse método é o buscar todas as solicitações updated ou requested do getProfessorRequests
   @override //significa "esse metodo foi declarado na interface e estou impl aqui"

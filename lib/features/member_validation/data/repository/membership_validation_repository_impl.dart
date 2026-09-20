@@ -56,4 +56,12 @@ class MembershipValidationRepositoryImpl
     // Pede ao remoteDataSource para marcar a solicitação como atualizada.
     return await remoteDataSource.markRequestAsUpdated(requestId);
   }
+
+  @override
+  Future<Either<Failure, void>> createMembershipRequest(
+    MembershipRequest request,
+  ) async {
+    return await remoteDataSource.createMembershipRequest(request);
+  }
+
 }

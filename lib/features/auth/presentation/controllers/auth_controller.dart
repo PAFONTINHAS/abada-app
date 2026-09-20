@@ -48,19 +48,10 @@ class AuthController extends ChangeNotifier{
 
     if((!_isRegistering || !_isSigningIn) && _userRole != UserRole.unknown){
 
-      LoggingService.displayInfo('''
-
-        UserRole: $_userRole
-        IsRegistering: $_isRegistering
-        IsSigningIn: $_isSigningIn
-
-      ''');
-
       _status = AuthStatus.authenticated;
   
       notifyListeners();
     }
-
 
   }
 

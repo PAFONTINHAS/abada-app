@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
-import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
 import 'package:sistema_abada_capoeira/shared/section_widgets/section_title_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
@@ -63,36 +62,35 @@ class ProfessorDashboardPage extends StatelessWidget {
               ),
 
               child: memberEntryRequests.isEmpty
-              ? const MembershipRequestsEmptyStateWidget()
-              : ListView.builder(
-                  itemCount: memberEntryRequests.length,
-                  shrinkWrap: true,
-                  physics: const ScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    
-                    if (index > 2) return const SizedBox.shrink();
+                ? const MembershipRequestsEmptyStateWidget()
+                : ListView.builder(
+                    itemCount: memberEntryRequests.length,
+                    shrinkWrap: true,
+                    physics: const ScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      
+                      if (index > 2) return const SizedBox.shrink();
 
-                    final request = memberEntryRequests[index];
+                      final request = memberEntryRequests[index];
 
-                    if(index == memberEntryRequestsQuantity - 1){
-                      return Column(
-                        children: [
-                          MembershipRequestItemWidget(
-                            request: request,
-                            professorId: userId,
-                          ),
-                          ViewMoreRequestsButtonWidget(
-                            onPressed: () => RouteController.redirectoToClassesEntryRequestsPage(context: context),
-                          ),
-                        ],
-                      );
-                    }
+                      if(index == memberEntryRequestsQuantity - 1){
+                        return Column(
+                          children: [
+                            MembershipRequestItemWidget(
+                              request: request,
+                              professorId: userId,
+                            ),
+                            ViewMoreRequestsButtonWidget(
+                              onPressed: () => RouteController.redirectoToClassesEntryRequestsPage(context: context),
+                            ),
+                          ],
+                        );
+                      }
 
-                    return MembershipRequestItemWidget(request: request, professorId: userId);
-                  },
-                ),
+                      return MembershipRequestItemWidget(request: request, professorId: userId);
+                    },
+                  ),
             ),
-
           ],
         ),
       ),

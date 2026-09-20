@@ -24,7 +24,7 @@ class ProvidersInjection {
       ...ClassProviders.providers,
       ...SplashProviders.providers,
       ...ProfileProviders.providers,
-      ...MembershipValidationProvider.providers,
+      ...MembershipValidationProviders.providers,
     ];
   }
 }
