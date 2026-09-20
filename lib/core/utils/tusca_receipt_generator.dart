@@ -2,6 +2,8 @@ import 'package:pdf/pdf.dart';
 import 'package:flutter/services.dart';
 import 'package:printing/printing.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'dart:typed_data';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:sistema_abada_capoeira/core/utils/date_formatter.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/user_profile_entity.dart';
 
@@ -18,9 +20,13 @@ class TuscaReceiptGenerator{
 
     final protocol = profile.tusca.protocol ?? "00000";
 
-    final validatorName = profile.tusca.validatorName ?? 'Diretoria Abadá Capoeira';
     final rawValidatorId = profile.tusca.validatorId ?? '00000';
+    final validatorName = profile.tusca.validatorName ?? 'Diretoria Abadá Capoeira';
     final validatorShortId = rawValidatorId.length > 5 ? rawValidatorId.substring(0, 5).toUpperCase() : rawValidatorId;
+
+    final ByteData imageBytes = await rootBundle.load("assets/images/regular_tusca_badge.png");
+    final Uint8List imageUint8List = imageBytes.buffer.asUint8List();
+    final pdfImage = pw.MemoryImage(imageUint8List);
 
     pdf.addPage(
       
@@ -41,6 +47,11 @@ class TuscaReceiptGenerator{
               crossAxisAlignment: pw.CrossAxisAlignment.start,
               mainAxisAlignment: pw.MainAxisAlignment.center,
               children: [
+                pw.Center(
+                  child: pw.Image(pdfImage, width: 140), 
+                ),
+                pw.SizedBox(height: 20),
+
                 pw.Center(
                   child: pw.Text(
                     'COMPROVANTE DE REGULARIDADE TUSCA',
