@@ -17,6 +17,7 @@ class UserProfileEntity {
   final List<String> attendedClasses;
   final List<String> lecturedClasses;
   final String state;
+  final bool isActive;
 
   const UserProfileEntity({
     required this.uid,
@@ -33,6 +34,7 @@ class UserProfileEntity {
     this.photoUrl,
     this.city = '',
     this.state = '',
+    required this.isActive,
   });
 
   String get displayName {
@@ -44,36 +46,38 @@ class UserProfileEntity {
   }
 
   UserProfileEntity copyWith({
-    String? id,
+    String? uid,
     String? nickname,
     String? fullName,
     String? email,
     String? phoneNumber,
-    String? currentBeltName,
+    String? currentBelt,
     UserRole? role,
     TuscaStatus? tuscaStatus,
     DateTime? tuscaExpirationDate,
     String? photoUrl,
     String? city,
     String? state,
-    List<String>? attendedClassess,
+    List<String>? attendedClasses,
     List<String>? lecturedClasses,
-    
-  }){
-
+    bool? isActive,
+  }) {
     return UserProfileEntity(
-      uid: id ?? this.uid,
-      fullName: fullName ?? this.fullName,
-      email: email ?? this.email,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
-      currentBelt: currentBeltName ?? this.currentBelt,
+      uid: uid ?? this.uid,
+      city: city ?? this.city,
       role: role ?? this.role,
-      tuscaStatus: tuscaStatus ?? this.tuscaStatus,
-      tuscaExpirationDate: tuscaExpirationDate ?? this.tuscaExpirationDate,
+      email: email ?? this.email,
+      state: state ?? this.state,
+      isActive: isActive ?? this.isActive,
       photoUrl: photoUrl ?? this.photoUrl,
-      attendedClasses: attendedClassess ?? this.attendedClasses,
-      lecturedClasses: lecturedClasses ?? this.lecturedClasses
+      nickname: nickname ?? this.nickname,
+      fullName: fullName ?? this.fullName,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      currentBelt: currentBelt ?? this.currentBelt,
+      tuscaStatus: tuscaStatus ?? this.tuscaStatus,
+      attendedClasses: attendedClasses ?? this.attendedClasses,
+      lecturedClasses: lecturedClasses ?? this.lecturedClasses,
+      tuscaExpirationDate: tuscaExpirationDate ?? this.tuscaExpirationDate,
     );
-
   }
 }

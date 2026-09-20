@@ -9,99 +9,109 @@ import 'package:sistema_abada_capoeira/features/auth/domain/entities/user_creden
 import 'package:sistema_abada_capoeira/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:sistema_abada_capoeira/features/auth/domain/entities/user_login_params.dart';
 
-class AuthRemoteDatasourceImpl implements AuthRemoteDatasource{
-
+class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
-  Future<Either<Failure, UserEntity>> registerUser(UserEntity user) async{
-
-    try{
-
+  Future<Either<Failure, UserEntity>> registerUser(UserEntity user) async {
+    try {
       final docRef = _firestore.collection('users').doc(user.uid);
 
       await docRef.set(user.toMap());
 
       return Right(user);
-    } catch(e){
-      return ExceptionHandler.handleException(exception: e, contextMessage: "registerUser");
+    } catch (e) {
+      return ExceptionHandler.handleException(
+        exception: e,
+        contextMessage: "registerUser",
+      );
     }
   }
 
   @override
-  Future<Either<Failure, UserCredential>> createUserCredential(UserCredentialParams userCredentialParams) async{
-
-    try{
-
-
-      final UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-        email: userCredentialParams.email,
-        password: userCredentialParams.password,
-      );
-
+  Future<Either<Failure, UserCredential>> createUserCredential(
+    UserCredentialParams userCredentialParams,
+  ) async {
+    try {
+      final UserCredential userCredential = await _auth
+          .createUserWithEmailAndPassword(
+            email: userCredentialParams.email,
+            password: userCredentialParams.password,
+          );
 
       return Right(userCredential);
-
-    }catch(e){
-
-      return ExceptionHandler.handleException(exception: e, contextMessage: "createUserCredential");
+    } catch (e) {
+      return ExceptionHandler.handleException(
+        exception: e,
+        contextMessage: "createUserCredential",
+      );
     }
-
   }
 
   @override
-  Future<Either<Failure, UserEntity>> getUserDataByUserId(String userId) async{
-
-    try{
-
-      final DocumentSnapshot userDoc = await _firestore.collection('users').doc(userId).get();
+  Future<Either<Failure, UserEntity>> getUserDataByUserId(String userId) async {
+    try {
+      final DocumentSnapshot userDoc = await _firestore
+          .collection('users')
+          .doc(userId)
+          .get();
 
       final UserEntityModel userEntity = UserEntityModel.fromSnapshot(userDoc);
 
       return Right(userEntity);
-
-    } catch(e){
-      return ExceptionHandler.handleException(exception: e, contextMessage: "getUserDataByUserId");
+    } catch (e) {
+      return ExceptionHandler.handleException(
+        exception: e,
+        contextMessage: "getUserDataByUserId",
+      );
     }
-
   }
 
   @override
-  Future<Either<Failure, UserCredential>> authenticateUser(UserLoginParams userLoginParams) async { 
-
-    try{
-
-      final UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-        email: userLoginParams.email,
-        password: userLoginParams.password,
-      );
+  Future<Either<Failure, UserCredential>> authenticateUser(
+    UserLoginParams userLoginParams,
+  ) async {
+    try {
+      final UserCredential userCredential = await _auth
+          .signInWithEmailAndPassword(
+            email: userLoginParams.email,
+            password: userLoginParams.password,
+          );
 
       return Right(userCredential);
-
-    } catch(e){
-
-      return ExceptionHandler.handleException(exception: e, contextMessage: "authenticateUser");
+    } catch (e) {
+      return ExceptionHandler.handleException(
+        exception: e,
+        contextMessage: "authenticateUser",
+      );
     }
-
   }
 
+  @override
+  Future<Either<Failure, void>> deleteUser(User user) async {
+    try {
+      await user.delete();
+      return const Right(null);
+    } catch (exception) {
+      return ExceptionHandler.handleException(
+        exception: exception,
+        contextMessage: 'deleteUser',
+      );
+    }
+  }
 
   @override
-  Future<Either<Failure, void>> logoutUser() async{
-    try{
+  Future<Either<Failure, void>> logoutUser() async {
+    try {
       await _auth.signOut();
 
       return Right(null);
-    } catch(error){
-
-      return ExceptionHandler.handleException(exception: error, contextMessage: 'logoutUser');
+    } catch (error) {
+      return ExceptionHandler.handleException(
+        exception: error,
+        contextMessage: 'logoutUser',
+      );
     }
-
   }
-
-
-
-
-
-} 
+}

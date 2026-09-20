@@ -10,6 +10,7 @@ import 'package:sistema_abada_capoeira/features/profile/domain/usecases/get_curr
 import 'package:sistema_abada_capoeira/features/profile/domain/usecases/request_belt_nickname_change_usecase.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/usecases/update_info_usecase.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/usecases/upload_profile_photo_usecase.dart';
+import 'package:sistema_abada_capoeira/features/profile/domain/usecases/deactivate_account_usecase.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/request_status_controller.dart';
 
@@ -21,6 +22,7 @@ class ProfileProviders {
   static final ProfileRepository profileRepository = ProfileRepositoryImpl(
     profileRemoteDatasource,
   );
+
 
   static final UpdateProfileInfoUseCase updateProfileInfoUseCase =
       UpdateProfileInfoUseCase(profileRepository);
@@ -36,12 +38,15 @@ class ProfileProviders {
   requestBeltNicknameChangeUseCase = RequestBeltNicknameChangeUseCase(
     profileRepository,
   );
+  static final DeactivateAccountUseCase deactivateAccountUseCase =
+      DeactivateAccountUseCase(profileRepository);
 
   static final ProfileController profileController = ProfileController(
     getCurrentUserProfileUsecase,
     updateProfileInfoUseCase,
     uploadProfilePhotoUsecase,
     requestBeltNicknameChangeUseCase,
+    deactivateAccountUseCase,
   );
 
   static final RequestStatusController requestStatusController =
