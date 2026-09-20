@@ -62,16 +62,17 @@ class LoginWidget extends StatelessWidget {
 
               if (!context.mounted) return;
 
-              if (!success && formController.errorMessage != null) {
-                MessageHandler.showError(context, formController.errorMessage!);
+              if(success){
+
+                authController.setAuthStatus(AuthStatus.initializing);
+
+                MessageHandler.showSuccess(context, "Conta criada com sucesso! Redirecionando...");
 
                 return;
               }
 
-              authController.setAuthStatus(AuthStatus.initializing);
-
-              MessageHandler.showSuccess(context, "Usuário autenticado com sucesso! Redirecionando...");
-        
+             
+              MessageHandler.showError(context, formController.errorMessage ?? "Erro");
             }
           ),
 

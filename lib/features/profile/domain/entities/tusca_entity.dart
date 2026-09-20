@@ -20,7 +20,7 @@ class TuscaEntity {
 
     return {
       'protocol': protocol,
-      'status': status,
+      'status': status.name,
       'validUntil': validUntil,
       'validatorId': validatorId,
       'validatorName': validatorName,

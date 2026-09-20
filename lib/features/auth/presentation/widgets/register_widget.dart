@@ -53,16 +53,16 @@ class RegisterWidget extends StatelessWidget {
 
                   if(!context.mounted) return;
 
-                  if(!success && formController.errorMessage != null){
+                  if(success){
 
-                    MessageHandler.showError(context, formController.errorMessage!);
+                    authController.setAuthStatus(AuthStatus.initializing);
+
+                    MessageHandler.showSuccess(context, "Conta criada com sucesso! Redirecionando...");
 
                     return;
                   }
 
-                  authController.setAuthStatus(AuthStatus.initializing);
-
-                  MessageHandler.showSuccess(context, "Conta criada com sucesso! Redirecionando...");
+                  MessageHandler.showError(context, formController.errorMessage ?? "Erro");
 
                 },
               ),
