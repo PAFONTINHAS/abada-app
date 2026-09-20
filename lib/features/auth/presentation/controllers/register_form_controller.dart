@@ -123,7 +123,8 @@ class RegisterFormController extends ChangeNotifier {
       return false;
 
     }, (_){
-
+      
+      cleanControllers();
       return true;
     });
 
@@ -131,7 +132,6 @@ class RegisterFormController extends ChangeNotifier {
 
     notifyListeners();
 
-    cleanControllers();
 
     return success;
     

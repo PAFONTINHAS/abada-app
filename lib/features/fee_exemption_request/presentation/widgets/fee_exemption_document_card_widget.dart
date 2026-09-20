@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sistema_abada_capoeira/core/utils/date_formatter.dart';
 
 import '../../domain/entities/fee_exemption_document_entity.dart';
 
@@ -88,7 +89,7 @@ class FeeExemptionDocumentCardWidget extends StatelessWidget {
                     const SizedBox(height: 2),
 
                     Text(
-                      'Enviado em ${_formatDate(document.uploadedAt)}',
+                      'Enviado em ${DateFormatter.formatDDMMYYYY(document.uploadedAt)}',
                       style: const TextStyle(
                         fontSize: 12,
                         color: secondaryText,
@@ -114,12 +115,5 @@ class FeeExemptionDocumentCardWidget extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  static String _formatDate(DateTime date) {
-    final day = date.day.toString().padLeft(2, '0');
-    final month = date.month.toString().padLeft(2, '0');
-
-    return '$day/$month/${date.year}';
   }
 }
