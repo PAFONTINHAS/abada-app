@@ -13,6 +13,7 @@ import 'package:sistema_abada_capoeira/features/profile/domain/entities/user_pro
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/change_request_status_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/profile_action_button_widget.dart';
+import 'package:go_router/go_router.dart';
 
 /// RF04 - Gerenciar Perfil
 class ProfilePage extends StatelessWidget {
@@ -58,6 +59,12 @@ class ProfilePage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             TuscaSealCardWidget(
+              // TODO:
+              // Substituir TuscaSealCardWidget por card de acompanhamento
+              // quando houver solicitação de isenção ou pagamento ativo.
+              // O card deverá ser clicável e navegar para os detalhes
+              // do processo correspondente.
+              // Depende da consulta de solicitação ativa pelo professorId.
               statusLabel: _tuscaStatusLabel(profile.tuscaStatus),
               expirationDate: _formatDate(profile.tuscaExpirationDate),
               onDownloadReceipt: () {
@@ -67,7 +74,7 @@ class ProfilePage extends StatelessWidget {
             const SizedBox(height: 20),
             QuickActionsSectionWidget(
               onRequestExemption: () {
-                // TODO: Navegar para Solicitar isencao (RF12)
+                context.push('/fee-exemption/request');
               },
               onPayFee: () {
                 // TODO: Navegar para Pagar taxa (RF14)
@@ -80,16 +87,16 @@ class ProfilePage extends StatelessWidget {
               icon: Icons.logout,
               backgroundColor: Colors.red,
               onPressed: () async {
-
                 final authController = context.read<AuthController>();
 
                 final success = await authController.logoutUser();
 
-                if(success && context.mounted){
-
-                  MessageHandler.showSuccess(context, "Saiu da conta com sucesso!");
+                if (success && context.mounted) {
+                  MessageHandler.showSuccess(
+                    context,
+                    "Saiu da conta com sucesso!",
+                  );
                 }
-
               },
             ),
             const SizedBox(height: 24),
@@ -104,7 +111,6 @@ class ProfilePage extends StatelessWidget {
     if (profile.state.isEmpty) return profile.city;
     return '${profile.city} - ${profile.state}';
   }
-
 
   String _tuscaStatusLabel(TuscaStatus status) {
     const labels = {
