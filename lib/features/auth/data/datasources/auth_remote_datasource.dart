@@ -6,12 +6,16 @@ import 'package:sistema_abada_capoeira/features/auth/domain/entities/user_creden
 import 'package:sistema_abada_capoeira/features/auth/domain/entities/user_login_params.dart';
 
 abstract class AuthRemoteDatasource {
-
   Future<Either<Failure, void>> logoutUser();
+  Future<Either<Failure, void>> deleteUser(User user);
   Future<Either<Failure, UserEntity>> getUserDataByUserId(String userId);
-  Future<Either<Failure, UserEntity>> registerUser(UserEntity userRegistrationParams);
-  Future<Either<Failure, UserCredential>> authenticateUser(UserLoginParams userLoginParams); 
-  Future<Either<Failure, UserCredential>> createUserCredential(UserCredentialParams userCredentialParams);
-
-
+  Future<Either<Failure, UserEntity>> registerUser(
+    UserEntity userRegistrationParams,
+  );
+  Future<Either<Failure, UserCredential>> authenticateUser(
+    UserLoginParams userLoginParams,
+  );
+  Future<Either<Failure, UserCredential>> createUserCredential(
+    UserCredentialParams userCredentialParams,
+  );
 }

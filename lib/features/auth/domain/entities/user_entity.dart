@@ -2,9 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sistema_abada_capoeira/features/auth/domain/entities/user_registration_params.dart';
 
 class UserEntity {
-
   UserEntity({
-
     required this.uid,
     required this.fullName,
     required this.email,
@@ -14,7 +12,8 @@ class UserEntity {
     required this.professor,
     this.userRole = 'unvalidatedUser',
     this.attendedClassess = const [],
-    this.lecturedClasses = const []
+    this.lecturedClasses = const [],
+    this.isActive = true
   }); 
 
   final String uid;
@@ -28,9 +27,12 @@ class UserEntity {
   List<String> attendedClassess;
   List<String> lecturedClasses;
 
+  final bool isActive;
 
-  factory UserEntity.fromRegisterParams(UserCredential userCredential, UserRegistrationParams userRegistrationParams){
-
+  factory UserEntity.fromRegisterParams(
+    UserCredential userCredential,
+    UserRegistrationParams userRegistrationParams,
+  ) {
     return UserEntity(
       uid: userCredential.user!.uid,
       fullName: userRegistrationParams.fullName,
@@ -53,9 +55,7 @@ class UserEntity {
       'userRole': userRole.trim(),
       'lecturedClasses': lecturedClasses,
       'attendedClasses': attendedClassess,
+      'isActive': isActive,
     };
   }
-
-
-
 }

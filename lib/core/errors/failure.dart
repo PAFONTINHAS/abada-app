@@ -33,10 +33,14 @@ class UnauthorizedFailure extends Failure {
   const UnauthorizedFailure(super.message);
 }
 
-class ReauthenticateFailure extends Failure{
-  const ReauthenticateFailure(super.message);
+class InactiveAccountFailure extends Failure {
+  const InactiveAccountFailure()
+    : super('Sua conta está inativa. Cadastre-se novamente.');
 }
 
+class ReauthenticateFailure extends Failure {
+  const ReauthenticateFailure(super.message);
+}
 
 class TimeoutFailure extends Failure {
   const TimeoutFailure(super.message);

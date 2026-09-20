@@ -2,21 +2,21 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/features/auth/domain/usecases/logout_user_usecase.dart';
+import 'package:sistema_abada_capoeira/features/auth/domain/usecases/delete_user_usecase.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/models/auth_status.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
 
-class AuthController extends ChangeNotifier{
-
+class AuthController extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final LogoutUserUsecase _logoutUserUsecase;
+  final DeleteUserUseCase _deleteUserUseCase;
 
-  AuthController(this._logoutUserUsecase){
-
+  AuthController(this._logoutUserUsecase, this._deleteUserUseCase) {
     _auth.authStateChanges().listen(_onAuthStateChanged);
   }
 
   User? _user;
-  User? get user => _user; 
+  User? get user => _user;
 
   UserRole _userRole = UserRole.unknown;
   UserRole get userRole => _userRole;
@@ -33,13 +33,10 @@ class AuthController extends ChangeNotifier{
   bool _isSigningIn = false;
   bool get isSigningIn => _isSigningIn;
 
-
-  void _onAuthStateChanged(User? changedUser){
-
+  void _onAuthStateChanged(User? changedUser) {
     _user = changedUser;
 
-    if(_user == null){
-
+    if (_user == null) {
       _status = AuthStatus.unauthenticated;
       notifyListeners();
       return;
@@ -49,36 +46,37 @@ class AuthController extends ChangeNotifier{
     if((!_isRegistering || !_isSigningIn) && _userRole != UserRole.unknown){
 
       _status = AuthStatus.authenticated;
-  
+
       notifyListeners();
     }
 
   }
 
-  Future<bool> logoutUser() async{
-
+  Future<bool> logoutUser() async {
     final result = await _logoutUserUsecase.call();
 
-    return result.fold(
-
-      (failure) => false,
-      (_) => true
-    );
+    return result.fold((failure) => false, (_) => true);
   }
 
-  void setAuthStatus(AuthStatus status){
+  Future<bool> deleteCurrentUser() async {
+    final currentUser = _user;
+    if (currentUser == null) return false;
 
+    final result = await _deleteUserUseCase.execute(currentUser);
+    return result.fold((failure) => false, (_) => true);
+  }
+
+  void setAuthStatus(AuthStatus status) {
     _status = status;
     notifyListeners();
   }
 
-  void setUserRole(UserRole userRole){
+  void setUserRole(UserRole userRole) {
     _userRole = userRole;
     notifyListeners();
   }
 
-  void setAuthenticatedUser({required UserRole role}){
-
+  void setAuthenticatedUser({required UserRole role}) {
     _userRole = role;
     _status = AuthStatus.authenticated;
 
