@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sistema_abada_capoeira/core/utils/date_formatter.dart';
 import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
-import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
+import 'package:sistema_abada_capoeira/features/profile/domain/entities/tusca_status.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
-import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/current_belt_card_widget.dart';
-import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/edit_profile_button_widget.dart';
+import 'package:sistema_abada_capoeira/features/profile/domain/entities/user_profile_entity.dart';
+import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/personal_info_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/profile_header_widget.dart';
-import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/quick_actions_section_widget.dart';
-import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/tusca_seal_card_widget.dart';
-import 'package:sistema_abada_capoeira/features/profile/domain/entities/user_profile_entity.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/tusca_receipt_dialog_widget.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/tusca_seal_card_widget.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/current_belt_card_widget.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/edit_profile_button_widget.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/quick_actions_section_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/change_request_status_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/profile_action_button_widget.dart';
 import 'package:go_router/go_router.dart';
@@ -65,9 +68,18 @@ class ProfilePage extends StatelessWidget {
               // O card deverá ser clicável e navegar para os detalhes
               // do processo correspondente.
               // Depende da consulta de solicitação ativa pelo professorId.
-              statusLabel: _tuscaStatusLabel(profile.tuscaStatus),
-              expirationDate: _formatDate(profile.tuscaExpirationDate),
+              statusLabel: TuscaStatusExtension.toPortuguese(
+                profile.tusca.tuscaStatus,
+              ),
+              expirationDate: DateFormatter.formatDDMMYYYY(
+                profile.tusca.validUntil,
+              ),
               onDownloadReceipt: () {
+
+                showDialog(
+                  context: context,
+                  builder: (context) => TuscaReceiptDialog(profile: profile),
+                );
                 // TODO: Download comprovante de regularidade TUSCA (RF15)
               },
             ),
@@ -110,21 +122,6 @@ class ProfilePage extends StatelessWidget {
     if (profile.city.isEmpty) return profile.state;
     if (profile.state.isEmpty) return profile.city;
     return '${profile.city} - ${profile.state}';
-  }
-
-  String _tuscaStatusLabel(TuscaStatus status) {
-    const labels = {
-      TuscaStatus.regular: 'REGULAR',
-      TuscaStatus.pending: 'PENDENTE',
-      TuscaStatus.exempt: 'ISENTO',
-      TuscaStatus.notApplicable: 'NÃO APLICÁVEL',
-    };
-    return labels[status] ?? 'NÃO APLICÁVEL';
-  }
-
-  String _formatDate(DateTime? date) {
-    if (date == null) return '-';
-    return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
   }
 
   AppBar _buildAppBar(BuildContext context) {
