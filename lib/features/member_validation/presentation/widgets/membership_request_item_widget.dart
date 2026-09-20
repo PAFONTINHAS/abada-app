@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../../domain/entities/membership_request.dart';
-import '../controllers/membership_validation_controller.dart';
+import 'reject_request_dialog_widget.dart';
+import 'request_result_dialog_widget.dart';
+import 'request_changes_dialog_widget.dart';
 import '../models/request_result_type.dart';
 import 'membership_request_card_widget.dart';
-import 'reject_request_dialog_widget.dart';
-import 'request_changes_dialog_widget.dart';
-import 'request_result_dialog_widget.dart';
+import '../../domain/entities/membership_request.dart';
+import '../controllers/membership_validation_controller.dart';
 
 class MembershipRequestItemWidget extends StatelessWidget {
   final MembershipRequest request;
@@ -21,14 +20,12 @@ class MembershipRequestItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller =
-        context.read<MembershipValidationController>();
+    final controller = context.read<MembershipValidationController>();
 
     return MembershipRequestCardWidget (
       request: request,
-      onApprove: () => _approve(context, controller),
-      onRequestChanges: () =>
-          _requestChanges(context, controller),
+      onApprove: () => _approve(context, controller), 
+      onRequestChanges: () => _requestChanges(context, controller),
       onReject: () => _reject(context, controller),
     );
   }
@@ -38,7 +35,7 @@ class MembershipRequestItemWidget extends StatelessWidget {
     MembershipValidationController controller,
   ) async {
     final success = await controller.approve(
-    request.id,
+    request,
     professorId,
   );
 

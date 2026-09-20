@@ -9,9 +9,9 @@ class GetCurrentUserProfileUsecase {
 
   GetCurrentUserProfileUsecase(this.profileRepository);
 
-  Future<Either<Failure, UserProfileEntity>> call() async{
+  Future<Either<Failure, UserProfileEntity>> call(String userId) async{
 
-    return await profileRepository.getCurrentUserProfile();
+    return await profileRepository.fetchUserProfile(userId);
 
   }
 

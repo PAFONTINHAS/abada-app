@@ -1,91 +1,94 @@
 // data/models/user_profile_model.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sistema_abada_capoeira/features/auth/domain/extensions/user_role_extension.dart';
+import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
 import '../../domain/entities/user_profile_entity.dart';
 
 class UserProfileModel extends UserProfileEntity {
   const UserProfileModel({
-    required super.id,
+    required super.uid,
     required super.fullName,
     required super.email,
     required super.phoneNumber,
-    required super.currentBeltName,
+    required super.currentBelt,
     required super.role,
     required super.tuscaStatus,
+    required super.attendedClasses,
+    required super.lecturedClasses,
     super.nickname,
     super.tuscaExpirationDate,
     super.photoUrl,
     super.city,
     super.state,
+    super.isActive = true,
   });
 
   factory UserProfileModel.fromEntity(UserProfileEntity profile) {
     return UserProfileModel(
-      id: profile.id,
+      uid: profile.uid,
       nickname: profile.nickname,
       fullName: profile.fullName,
       email: profile.email,
       phoneNumber: profile.phoneNumber,
-      currentBeltName: profile.currentBeltName,
+      currentBelt: profile.currentBelt,
       role: profile.role,
       tuscaStatus: profile.tuscaStatus,
       tuscaExpirationDate: profile.tuscaExpirationDate,
       photoUrl: profile.photoUrl,
       city: profile.city,
       state: profile.state,
+      attendedClasses: profile.attendedClasses,
+      lecturedClasses: profile.lecturedClasses,
+      isActive: profile.isActive,
     );
   }
 
-  factory UserProfileModel.fromMap(Map<String, dynamic> map, String id) {
+  factory UserProfileModel.fromSnapshot(DocumentSnapshot document) {
+    final data = document.data() as Map<String, dynamic>;
+
+    final UserRole userRole = UserRoleExtension.getFromString(data['userRole']);
+
     return UserProfileModel(
-      id: id,
-      nickname: map['nickname'] ?? '',
-      fullName: map['fullName'] ?? '',
-      email: map['email'] ?? '',
-      phoneNumber: map['phoneNumber'] ?? map['phone'] ?? '',
-      currentBeltName: map['currentBeltName'] ?? map['rope'] ?? '',
-      role: _roleFromString(map['role'] ?? map['userRole']),
-      tuscaStatus: _tuscaStatusFromString(map['tuscaStatus']),
-      tuscaExpirationDate: (map['tuscaExpirationDate'] as Timestamp?)?.toDate(),
-      photoUrl: map['photoUrl'],
-      city: map['city'] ?? map['cidade'] ?? '',
-      state: map['uf'] ?? map['state'] ?? map['estado'] ?? '',
+      uid: document.id,
+      nickname: data['nickname'] ?? '',
+      fullName: data['fullName'] ?? '',
+      email: data['email'] ?? '',
+      phoneNumber: data['phoneNumber'] ?? data['phone'] ?? '',
+      currentBelt: data['currentBeltName'] ?? data['belt'] ?? '',
+      role: userRole,
+      tuscaStatus: _tuscaStatusFromString(data['tuscaStatus']),
+      tuscaExpirationDate: (data['tuscaExpirationDate'] as Timestamp?)
+          ?.toDate(),
+      photoUrl: data['photoUrl'],
+      city: data['city'] ?? data['cidade'] ?? '',
+      state: data['uf'] ?? data['state'] ?? data['estado'] ?? '',
+      attendedClasses: List.from(data['attendedClasses'] ?? []), 
+      lecturedClasses: List.from(data['lecturedClasses'] ?? []),
+      isActive: data['isActive'] ?? true,
     );
   }
 
-  Map<String, dynamic> toMap() => {
-    'nickname': nickname,
-    'fullName': fullName,
-    'email': email,
-    'phoneNumber': phoneNumber,
-    'currentBeltName': currentBeltName,
-    'role': role.name,
-    'tuscaStatus': tuscaStatus.name,
-    'tuscaExpirationDate': tuscaExpirationDate != null
+  Map<String, dynamic> toMap() {
+    final Timestamp? expirationDate = tuscaExpirationDate != null
         ? Timestamp.fromDate(tuscaExpirationDate!)
-        : null,
-    'photoUrl': photoUrl,
-    'city': city,
-    'uf': state,
-  };
+        : null;
 
-  static AccessProfile _roleFromString(String? value) {
-    final normalized = value?.trim().toLowerCase();
-    const aliases = {
-      'usuario': AccessProfile.user,
-      'usuário': AccessProfile.user,
-      'aluno': AccessProfile.student,
-      'aluno(a)': AccessProfile.student,
-      'professor': AccessProfile.teacher,
-      'professor(a)': AccessProfile.teacher,
-      'coordenador': AccessProfile.coordinator,
-      'coordenador(a)': AccessProfile.coordinator,
+    return {
+      'nickname': nickname,
+      'fullName': fullName,
+      'email': email,
+      'phoneNumber': phoneNumber,
+      'currentBeltName': currentBelt,
+      'role': role.name,
+      'tuscaStatus': tuscaStatus.name,
+      'tuscaExpirationDate': expirationDate,
+      'photoUrl': photoUrl,
+      'city': city,
+      'attendedClasses': attendedClasses,
+      'lecturedClasses': lecturedClasses,
+      'uf': state,
+      'isActive': isActive,
     };
-    if (aliases.containsKey(normalized)) return aliases[normalized]!;
-
-    return AccessProfile.values.firstWhere(
-      (e) => e.name == normalized,
-      orElse: () => AccessProfile.unknown,
-    );
   }
 
   static TuscaStatus _tuscaStatusFromString(String? value) {

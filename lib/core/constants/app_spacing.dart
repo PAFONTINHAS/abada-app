@@ -6,6 +6,8 @@ class AppSpacing {
   const AppSpacing._();
 
 
+  static const EdgeInsets symmetricH15V10 = EdgeInsets.symmetric(horizontal: 15, vertical: 10);
+
   // ========== PADDING ==========
 
   // All sides

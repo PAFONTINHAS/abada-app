@@ -1,5 +1,5 @@
 import 'package:go_router/go_router.dart';
-import 'package:sistema_abada_capoeira/core/router/routes/class_routes.dart';
+import 'package:sistema_abada_capoeira/core/router/routes/classes_routes.dart';
 import 'package:sistema_abada_capoeira/core/router/routes/dashboard_routes.dart';
 import 'package:sistema_abada_capoeira/core/router/routes/event_routes.dart';
 import 'package:sistema_abada_capoeira/core/router/routes/profile_routes.dart';

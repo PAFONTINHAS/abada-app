@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/models/request_type.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/models/request_type_extension.dart';
+import 'package:sistema_abada_capoeira/shared/clickable/clickable_widget.dart';
 
 class EventRequestCardWidget extends StatelessWidget {
   const EventRequestCardWidget({
@@ -21,107 +21,111 @@ class EventRequestCardWidget extends StatelessWidget {
     final Color requestTypeColor = RequestTypeExtension.requestTypeColor;
     final Color requestTypeBackgroundColor = RequestTypeExtension.requestTypeBackgroundColor;
 
-    return Padding(
-      padding: EdgeInsetsGeometry.symmetric(vertical: 3, horizontal: 10),
-      child: GestureDetector(
-        onTap: () {},
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-          decoration: BoxDecoration(
-            color: ColorConstants.whiteColor,
-            border: BoxBorder.all(color: Colors.black, width: 0.3),
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              
-              Column(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.amber,
+    return ClickableWidget(
+      onTap: () {},
+      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Coluna Esquerda: Avatar e Badge de Status
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 56,
+                  height: 56,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.amber,
+                  ),
+                  child: Image.asset(
+                    "assets/images/capoeira_member_profile_picture.png",
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 4,
+                    horizontal: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color.fromRGBO(254, 241, 222, 1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Text(
+                    "Em Análise",
+                    style: TextStyle(
+                      color: Color.fromRGBO(243, 136, 46, 1),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 10,
                     ),
+                  ),
+                ),
+              ],
+            ),
 
-                    child: Image.asset(
-                      "assets/images/capoeira_member_profile_picture.png",
-                      width: 70,
+            const SizedBox(width: 14),
+
+            // Coluna Central: Informações do Evento
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    eventName,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
                     ),
                   ),
 
-                  SizedBox(height: 15),
+                  const SizedBox(height: 8),
 
                   Container(
-                    padding: EdgeInsets.symmetric(vertical: 2, horizontal: 10),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 4,
+                      horizontal: 10,
+                    ),
                     decoration: BoxDecoration(
-                      color: Color.fromRGBO(254, 241, 222, 1),
-                      borderRadius: BorderRadius.circular(20),
+                      color: requestTypeBackgroundColor,
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      "Em Análise",
+                      requestTypeText,
                       style: TextStyle(
-                        color: Color.fromRGBO(243, 136, 46, 1),
+                        color: requestTypeColor,
                         fontWeight: FontWeight.bold,
-                        fontSize: 12
+                        fontSize: 11,
                       ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  Text(
+                    "26/06/2026, 10:30",
+                    style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
+                  ),
+                  Text(
+                    "Curitiba/PR",
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey.shade700,
                     ),
                   ),
                 ],
               ),
+            ),
 
-
-              SizedBox(width: 10),
-
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      eventName,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
-                      ),
-                    ),
-
-                    SizedBox(height: 10),
-
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 2,
-                        horizontal: 10,
-                      ),
-                      decoration: BoxDecoration(
-                        color: requestTypeBackgroundColor,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        requestTypeText,
-                        style: TextStyle(
-                          color: requestTypeColor,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-
-                    SizedBox(height: 10),
-
-                    Text(
-                      "26/06/2026, 10:30 - Curitiba/PR",
-                      style: TextStyle(fontSize: 13),
-                    ),
-
-                  ],
-                ),
-              ),
-
-              Icon(Icons.chevron_right, size: 35),
-            ],
-          ),
+            Icon(Icons.chevron_right, size: 28, color: Colors.grey.shade400),
+          ],
         ),
       ),
     );

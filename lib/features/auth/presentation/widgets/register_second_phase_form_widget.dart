@@ -44,7 +44,7 @@ class RegisterSecondPhaseFormWidget extends StatelessWidget {
           label: "Corda",
           prefixIcon: Icon(Icons.linear_scale),
           hintText: "Digite sua corda",
-          controller: formController.ropeController,
+          controller: formController.beltController,
         ),
 
         SizedBox(height: 15),

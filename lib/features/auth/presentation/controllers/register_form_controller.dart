@@ -15,7 +15,7 @@ class RegisterFormController extends ChangeNotifier {
     passwordController.addListener(notifyListeners);
     confirmPasswordController.addListener(notifyListeners);
     nicknameController.addListener(notifyListeners);
-    ropeController.addListener(notifyListeners);
+    beltController.addListener(notifyListeners);
     professorController.addListener(notifyListeners);
   }
 
@@ -27,7 +27,7 @@ class RegisterFormController extends ChangeNotifier {
     passwordController.dispose();
     confirmPasswordController.dispose();
     nicknameController.dispose();
-    ropeController.dispose();
+    beltController.dispose();
     professorController.dispose();
     super.dispose();
   }
@@ -38,7 +38,7 @@ class RegisterFormController extends ChangeNotifier {
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
   TextEditingController nicknameController = TextEditingController();
-  TextEditingController ropeController = TextEditingController();
+  TextEditingController beltController = TextEditingController();
   TextEditingController professorController = TextEditingController();
 
   bool _isLoading = false;
@@ -84,7 +84,7 @@ class RegisterFormController extends ChangeNotifier {
       fullName: fullNameController.text,
       email: emailController.text,
       phone: phoneController.text,
-      rope: ropeController.text,
+      belt: beltController.text,
       nickname: nicknameController.text,
       password: passwordController.text,
       professor: professorController.text,
@@ -98,7 +98,7 @@ class RegisterFormController extends ChangeNotifier {
     fullNameController.clear();
     emailController.clear();
     phoneController.clear();
-    ropeController.clear();
+    beltController.clear();
     nicknameController.clear();
     passwordController.clear();
     professorController.clear();
@@ -124,8 +124,6 @@ class RegisterFormController extends ChangeNotifier {
 
     }, (_){
 
-      LoggingService.displayInfo("Deu boa");
-      
       return true;
     });
 

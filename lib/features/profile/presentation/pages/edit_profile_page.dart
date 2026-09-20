@@ -6,6 +6,9 @@ import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/edi
 import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/profile_header_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_form_controller.dart';
+import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
+import 'package:sistema_abada_capoeira/features/waiting_layer/presentation/widgets/deactivate_account_button_widget.dart';
+import 'package:sistema_abada_capoeira/features/waiting_layer/presentation/widgets/deactivate_account_dialog_widget.dart';
 
 /// Edit Perfil (RF04)
 class EditProfilePage extends StatefulWidget {
@@ -24,7 +27,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     super.initState();
     final profileController = context.read<ProfileController>();
     _formController = ProfileFormController(profileController);
-    _formController.initialize(profileController.profile);
+    _formController.initialize(profileController.userProfile);
     _controllersInitialized = _formController.isInitialized;
   }
 
@@ -76,10 +79,27 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
+  void _showDeactivateAccountDialog() {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => DeactivateAccountDialog(
+        onConfirm: () async {
+          final authController = context.read<AuthController>();
+          final profileController = context.read<ProfileController>();
+          final deactivated = await profileController.deactivateAccount();
+          if (!deactivated || !dialogContext.mounted) return deactivated;
+
+          Navigator.pop(dialogContext);
+          return authController.deleteCurrentUser();
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final profile = context.watch<ProfileController>().profile;
-    if (profile != null && !_controllersInitialized) {
+    final profile = context.watch<ProfileController>().userProfile;
+    if (!_controllersInitialized) {
       _formController.initialize(profile);
       _controllersInitialized = true;
     }
@@ -108,10 +128,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
               Selector<ProfileFormController, bool>(
                 selector: (_, controller) => controller.isUploadingPhoto,
                 builder: (_, isUploadingPhoto, _) => ProfileHeaderWidget(
-                  userName: profile?.displayName ?? '',
-                  roleLabel: profile?.role.name ?? '',
+                  userName: profile.displayName,
+                  roleLabel: profile.role.name,
                   cityLabel: _cityLabel(profile),
-                  photoUrl: profile?.photoUrl ?? '',
+                  photoUrl: profile.photoUrl ?? '',
                   isEditable: true,
                   avatarRadius: 48,
                   isUploadingPhoto: isUploadingPhoto,
@@ -124,6 +144,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 onSave: _handleSave,
                 onRequestChange: _handleRequestChange,
               ),
+              const SizedBox(height: 24),
+              DeactivateAccountButton(onPressed: _showDeactivateAccountDialog),
             ],
           ),
         ),

@@ -7,23 +7,24 @@ import 'package:sistema_abada_capoeira/features/auth/domain/repository/auth_repo
 import 'package:sistema_abada_capoeira/features/auth/domain/entities/user_credential_params.dart';
 import 'package:sistema_abada_capoeira/features/auth/data/datasources/auth_remote_datasource.dart';
 
-class AuthRepositoryImpl implements AuthRepository{
-
+class AuthRepositoryImpl implements AuthRepository {
   AuthRemoteDatasource authRemoteDatasource;
 
   AuthRepositoryImpl(this.authRemoteDatasource);
 
   @override
-  Future<Either<Failure, UserEntity>> registerUser(UserEntity user) async{
+  Future<Either<Failure, UserEntity>> registerUser(UserEntity user) async {
     return await authRemoteDatasource.registerUser(user);
   }
-  
+
   @override
-  Future<Either<Failure, UserCredential>> createUserCredential(UserCredentialParams userCredentialParams) async{
-    return await authRemoteDatasource.createUserCredential(userCredentialParams);
+  Future<Either<Failure, UserCredential>> createUserCredential(
+    UserCredentialParams userCredentialParams,
+  ) async {
+    return await authRemoteDatasource.createUserCredential(
+      userCredentialParams,
+    );
   }
-
-
 
   @override
   Future<Either<Failure, UserEntity>> getUserDataByUserId(String userId) async {
@@ -31,14 +32,19 @@ class AuthRepositoryImpl implements AuthRepository{
   }
 
   @override
-  Future<Either<Failure, UserCredential>> authenticateUser(UserLoginParams userLoginParams) async {
+  Future<Either<Failure, UserCredential>> authenticateUser(
+    UserLoginParams userLoginParams,
+  ) async {
     return await authRemoteDatasource.authenticateUser(userLoginParams);
   }
 
-
   @override
-  Future<Either<Failure, void>> logoutUser() async{
+  Future<Either<Failure, void>> logoutUser() async {
     return await authRemoteDatasource.logoutUser();
   }
 
-} 
+  @override
+  Future<Either<Failure, void>> deleteUser(User user) async {
+    return await authRemoteDatasource.deleteUser(user);
+  }
+}

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
-import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
-import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
+import 'package:sistema_abada_capoeira/features/auth/presentation/models/auth_status.dart';
 import 'package:sistema_abada_capoeira/features/home_user/presentation/pages/home_user_page.dart';
 import 'package:sistema_abada_capoeira/shared/inputs/custom_text_input/custom_text_input.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/widgets/form_button_widget.dart';
@@ -55,7 +54,6 @@ class LoginWidget extends StatelessWidget {
             height: 52,
             buttonCollor: ColorConstants.indigoColor,
             onPressed: () async {
-
               final authController = context.read<AuthController>();
 
               MessageHandler.showInfo(context, "Autenticando...");
@@ -70,24 +68,10 @@ class LoginWidget extends StatelessWidget {
                 return;
               }
 
-              if(formController.authenticatedUserRole != null){
+              authController.setAuthStatus(AuthStatus.initializing);
 
-
-                LoggingService.displayInfo("Papel do usuário: ${formController.authenticatedUserRole!}");
-
-                if(formController.authenticatedUserRole != null){
-
-
-                  LoggingService.displayInfo("Papel do usuário: ${formController.authenticatedUserRole!}");
-
-                  MessageHandler.showSuccess(context, "Usuário autenticado com sucesso! Redirecionando...");
-
-                  authController.setAuthenticatedUser(role: formController.authenticatedUserRole!);
-
-                  RouteController.redirectToDashboardPage(context: context);
-
-                }
-              }
+              MessageHandler.showSuccess(context, "Usuário autenticado com sucesso! Redirecionando...");
+        
             }
           ),
 

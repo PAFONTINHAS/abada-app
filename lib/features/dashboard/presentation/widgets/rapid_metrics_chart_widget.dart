@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/kpi_card_widget.dart';
-import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/ropes_bar_chart.dart';
+import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/belts_bar_chart.dart';
 
 class RapidMetricsChartWidget extends StatelessWidget {
   const RapidMetricsChartWidget({super.key});
@@ -60,7 +60,7 @@ class RapidMetricsChartWidget extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
-              SizedBox(height: 220, child: const RopesBarChart()),
+              SizedBox(height: 220, child: const BeltsBarChart()),
             ],
           ),
         ),

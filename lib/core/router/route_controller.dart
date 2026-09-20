@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
 
 class RouteController {
 
@@ -10,4 +11,14 @@ class RouteController {
     context.go("/dashboard");
   }
 
+  static void redirectToStudentClassPage({required BuildContext context, required ClassEntity classEntity}){
+
+    context.go("/classes/class", extra: classEntity);
+  }
+
+  static void redirectoToClassesEntryRequestsPage({required BuildContext context}){
+
+    context.push("classes/entry_requests");
+
+  }
 }

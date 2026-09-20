@@ -7,9 +7,9 @@ import '../../domain/entities/user_profile_entity.dart';
 import '../models/profile_change_request_model.dart';
 
 abstract class ProfileRemoteDatasource {
-  Future<Either<Failure, UserProfileEntity>> fetchProfile(String userId);
+  Future<Either<Failure, UserProfileEntity>> fetchUserProfile(String userId);
 
-  Future<Either<Failure, void>> updateUserEntity(UserProfileEntity profile);
+  Future<Either<Failure, UserProfileEntity>> updateUserEntity(UserProfileEntity profile);
 
   Future<Either<Failure, String>> uploadProfilePhoto(
     String userId,
@@ -18,9 +18,7 @@ abstract class ProfileRemoteDatasource {
 
   Future<String> profileCollectionFor(String userId);
 
-  Future<Either<Failure, void>> createChangeRequest(
-    ProfileChangeRequestModel request,
-  );
+  Future<Either<Failure, void>> createChangeRequest(ProfileChangeRequestEntity request);
 
   Future<Either<Failure, bool>> hasPendingChangeRequest(String userId);
 

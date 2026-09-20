@@ -4,6 +4,7 @@ import 'package:sistema_abada_capoeira/features/profile/domain/usecases/update_i
 import 'package:sistema_abada_capoeira/features/profile/domain/usecases/upload_profile_photo_usecase.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/usecases/get_current_user_profile_usecase.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/usecases/request_belt_nickname_change_usecase.dart';
+import 'package:sistema_abada_capoeira/features/profile/domain/usecases/deactivate_account_usecase.dart';
 
 enum ProfileLoadStatus { loading, loaded, error }
 
@@ -12,34 +13,39 @@ class ProfileController extends ChangeNotifier {
   final UploadProfilePhotoUsecase _uploadProfilePhotoUsecase;
   final GetCurrentUserProfileUsecase _getCurrentUserProfileUsecase;
   final RequestBeltNicknameChangeUseCase _requestBeltNicknameChangeUseCase;
+  final DeactivateAccountUseCase _deactivateAccountUseCase;
 
   ProfileController(
     this._getCurrentUserProfileUsecase,
     this._updateProfileInfoUseCase,
     this._uploadProfilePhotoUsecase,
     this._requestBeltNicknameChangeUseCase,
-  ) {
-    loadProfile();
-  }
+    this._deactivateAccountUseCase,
+  );
 
   ProfileLoadStatus status = ProfileLoadStatus.loading;
-  UserProfileEntity? profile;
+
+  late UserProfileEntity _userProfile;
+  UserProfileEntity get userProfile => _userProfile;
+
   String? errorMessage;
 
-  Future<void> loadProfile() async {
+  Future<void> getUserProfile(String userId) async {
     status = ProfileLoadStatus.loading;
     notifyListeners();
 
-    final result = await _getCurrentUserProfileUsecase.call();
+    final result = await _getCurrentUserProfileUsecase.call(userId);
 
     result.fold(
       (failure) {
         errorMessage = failure.message;
         status = ProfileLoadStatus.error;
+        return false;
       },
       (loadedProfile) {
-        profile = loadedProfile;
+        _userProfile = loadedProfile;
         status = ProfileLoadStatus.loaded;
+        return true;
       },
     );
 
@@ -52,21 +58,26 @@ class ProfileController extends ChangeNotifier {
     required String phoneNumber,
   }) async {
     final result = await _updateProfileInfoUseCase.execute(
+      userProfileEntity: _userProfile,
       fullName: fullName,
       email: email,
       phoneNumber: phoneNumber,
     );
-    return result.fold(
+
+    final success = result.fold(
       (failure) {
         errorMessage = failure.message;
-        notifyListeners();
         return false;
       },
-      (_) async {
-        await loadProfile();
+      (updatedUser) {
+        _userProfile = updatedUser;
         return true;
       },
     );
+
+    notifyListeners();
+
+    return success;
   }
 
   Future<bool> requestBeltNicknameChange({
@@ -76,11 +87,13 @@ class ProfileController extends ChangeNotifier {
     String? newNickname,
   }) async {
     final result = await _requestBeltNicknameChangeUseCase.execute(
+      userProfile: _userProfile,
       originalBelt: originalBelt,
       originalNickname: originalNickname,
       newBelt: newBelt,
       newNickname: newNickname,
     );
+
     return result.fold((failure) {
       errorMessage = failure.message;
       notifyListeners();
@@ -89,16 +102,43 @@ class ProfileController extends ChangeNotifier {
   }
 
   Future<bool> uploadProfilePhoto(Uint8List imageBytes) async {
-    final result = await _uploadProfilePhotoUsecase.call(imageBytes);
-    final success = result.fold((failure) {
-      errorMessage = failure.message;
-      return false;
-    }, (_) => true);
-    if (!success) {
-      notifyListeners();
-      return false;
-    }
-    await loadProfile();
-    return true;
+    final result = await _uploadProfilePhotoUsecase.call(
+      _userProfile,
+      imageBytes,
+    );
+
+    final success = result.fold(
+      (failure) {
+        errorMessage = failure.message;
+        return false;
+      },
+      (updatedUser) {
+        _userProfile = updatedUser;
+
+        return true;
+      },
+    );
+
+    notifyListeners();
+
+    return success;
+  }
+
+  Future<bool> deactivateAccount() async {
+    final result = await _deactivateAccountUseCase.execute(_userProfile);
+
+    final success = result.fold(
+      (failure) {
+        errorMessage = failure.message;
+        return false;
+      },
+      (updatedProfile) {
+        _userProfile = updatedProfile;
+        return true;
+      },
+    );
+
+    notifyListeners();
+    return success;
   }
 }

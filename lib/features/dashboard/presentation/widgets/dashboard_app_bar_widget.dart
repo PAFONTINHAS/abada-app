@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sistema_abada_capoeira/features/auth/domain/extensions/user_role_extension.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 
 class DashboardAppBarWidget extends StatelessWidget implements PreferredSizeWidget {
-  final String name;
-  final String roleOrGraduation;
-  final String? avatarUrl;
   final VoidCallback? onNotificationTap;
 
   const DashboardAppBarWidget({
     super.key,
-    required this.name,
-    required this.roleOrGraduation,
-    this.avatarUrl,
-    this.onNotificationTap,
+    required this.onNotificationTap,
   });
 
   @override
   Widget build(BuildContext context) {
+
+    final profileController = context.read<ProfileController>();
+
+    final userProfile = profileController.userProfile;
+
+    final userRole = UserRoleExtension.convertToUIText(userProfile.role);
+    final userProfilePicture = userProfile.photoUrl;
+
     return AppBar(
       automaticallyImplyLeading: false,
       elevation: 0,
@@ -27,8 +32,8 @@ class DashboardAppBarWidget extends StatelessWidget implements PreferredSizeWidg
           CircleAvatar(
             radius: 20,
             backgroundColor: const Color(0xFF1F18AB).withValues(alpha: 0.1),
-            backgroundImage: avatarUrl != null ? NetworkImage(avatarUrl!) : null,
-            child: avatarUrl == null
+            backgroundImage: userProfilePicture != null ? NetworkImage(userProfilePicture) : null,
+            child: userProfilePicture == null
                 ? const Icon(Icons.person, color: Color(0xFF1F18AB))
                 : null,
           ),
@@ -37,7 +42,7 @@ class DashboardAppBarWidget extends StatelessWidget implements PreferredSizeWidg
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Olá, $name',
+                'Olá, ${userProfile.nickname}',
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -45,7 +50,7 @@ class DashboardAppBarWidget extends StatelessWidget implements PreferredSizeWidg
                 ),
               ),
               Text(
-                roleOrGraduation,
+                '$userRole • Corda ${userProfile.currentBelt}',
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
