@@ -14,7 +14,7 @@ class AuthController extends ChangeNotifier {
   AuthController(this._logoutUserUsecase, this._deleteUserUseCase) {
     _auth.authStateChanges().listen(_onAuthStateChanged);
   }
-
+  
   User? _user;
   User? get user => _user;
 

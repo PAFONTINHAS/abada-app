@@ -24,7 +24,7 @@ class ProfileController extends ChangeNotifier {
   );
 
   ProfileLoadStatus status = ProfileLoadStatus.loading;
-
+  
   late UserProfileEntity _userProfile;
   UserProfileEntity get userProfile => _userProfile;
 

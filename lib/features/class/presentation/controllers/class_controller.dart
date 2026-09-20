@@ -39,7 +39,7 @@ class ClassController extends ChangeNotifier{
         return false;
       }, (fetchedAttendedClasses){
 
-        _attendedClasses = List.from(_attendedClasses)..addAll(fetchedAttendedClasses);
+        _attendedClasses = List.from(fetchedAttendedClasses);
 
         return true;
         
