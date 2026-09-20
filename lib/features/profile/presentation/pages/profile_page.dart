@@ -51,7 +51,7 @@ class ProfilePage extends StatelessWidget {
             const ChangeRequestStatusWidget(),
             const SizedBox(height: 16),
             CurrentBeltCardWidget(
-              currentBeltName: profile.currentBeltName,
+              currentBeltName: profile.currentBelt,
               onViewHistory: () {
                 // TODO: histórico de graduação (RF03)
               },

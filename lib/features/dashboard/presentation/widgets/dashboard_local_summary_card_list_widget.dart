@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/summary_card_widget.dart';
 
-class LocalMetricSummaryCardListWidget extends StatelessWidget {
-  const LocalMetricSummaryCardListWidget({super.key});
+class DashboardLocalMetricSummaryCardListWidget extends StatelessWidget {
+  const DashboardLocalMetricSummaryCardListWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

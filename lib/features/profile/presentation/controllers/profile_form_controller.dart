@@ -108,7 +108,7 @@ class ProfileFormController extends ChangeNotifier {
     notifyListeners();
     try {
       final success = await _profileController.requestBeltNicknameChange(
-        originalBelt: profile.currentBeltName,
+        originalBelt: profile.currentBelt,
         originalNickname: profile.nickname,
         newNickname: newNickname.isEmpty ? null : newNickname,
         newBelt: newBelt.isEmpty ? null : newBelt,

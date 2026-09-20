@@ -50,7 +50,7 @@ class DashboardAppBarWidget extends StatelessWidget implements PreferredSizeWidg
                 ),
               ),
               Text(
-                '$userRole • Corda ${userProfile.currentBeltName}',
+                '$userRole • Corda ${userProfile.currentBelt}',
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,

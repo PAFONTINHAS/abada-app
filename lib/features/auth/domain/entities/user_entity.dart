@@ -12,8 +12,9 @@ class UserEntity {
     required this.belt,
     required this.nickname,
     required this.professor,
-    this.userRole = 'unvalidatedUser'
-
+    this.userRole = 'unvalidatedUser',
+    this.attendedClassess = const [],
+    this.lecturedClasses = const []
   }); 
 
   final String uid;
@@ -24,6 +25,9 @@ class UserEntity {
   final String belt;
   final String professor;
   final String userRole;
+  List<String> attendedClassess;
+  List<String> lecturedClasses;
+
 
   factory UserEntity.fromRegisterParams(UserCredential userCredential, UserRegistrationParams userRegistrationParams){
 
@@ -40,13 +44,15 @@ class UserEntity {
 
   Map<String, dynamic> toMap() {
     return {
-      'email': email,
-      'phone': phone,
-      'belt': belt,
-      'fullName': fullName,
-      'nickname': nickname,
-      'professor': professor,
-      'userRole': userRole
+      'email': email.trim(),
+      'phone': phone.trim(),
+      'belt': belt.trim(),
+      'fullName': fullName.trim(),
+      'nickname': nickname.trim(),
+      'professor': professor.trim(),
+      'userRole': userRole.trim(),
+      'lecturedClasses': lecturedClasses,
+      'attendedClasses': attendedClassess,
     };
   }
 

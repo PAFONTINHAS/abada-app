@@ -74,25 +74,7 @@ class LoginWidget extends StatelessWidget {
               authController.setAuthStatus(AuthStatus.initializing);
 
               MessageHandler.showSuccess(context, "Usuário autenticado com sucesso! Redirecionando...");
-
-
-              // if(formController.authenticatedUserRole != null){
-
-
-              //   LoggingService.displayInfo("Papel do usuário: ${formController.authenticatedUserRole!}");
-
-              //   if(formController.authenticatedUserRole != null){
-
-
-              //     LoggingService.displayInfo("Papel do usuário: ${formController.authenticatedUserRole!}");
-
-
-              //     authController.setAuthStatus(AuthStatus.initializing);
-
-              //     RouteController.redirectToDashboardPage(context: context);
-
-              //   }
-              // }
+        
             }
           ),
 

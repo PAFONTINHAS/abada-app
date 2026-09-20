@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/models/request_type.dart';
-import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/dahsboard_section_title_widget.dart';
+import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
+import 'package:sistema_abada_capoeira/shared/section_widgets/section_title_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/dashboard_app_bar_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/event_request_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/irregular_tusca_badge_widget.dart';
@@ -18,35 +19,32 @@ class CoordenatorDashboardPage extends StatelessWidget {
         onNotificationTap: (){} ,
       ),
 
-      body: SafeArea(
-        child: SingleChildScrollView(
-            padding: EdgeInsetsGeometry.symmetric(horizontal: 15, vertical: 10),
-            child: Column(
-              children: [
+      body: StandardScaffoldBodyWidget(
+        child: Column(
+          children: [
 
-                DahsboardSectionTitleWidget(sectionTitle: "Resumo da região"),
+            SectionTitleWidget(sectionTitle: "Resumo da região"),
 
-                const RegionalMetricSummaryCardListWidget(),
+            const RegionalMetricSummaryCardListWidget(),
 
-                DahsboardSectionTitleWidget(sectionTitle: "Métricas Rápidas"),
+            SectionTitleWidget(sectionTitle: "Métricas Rápidas"),
 
-                const RapidMetricsChartWidget(),
+            const RapidMetricsChartWidget(),
 
-                DahsboardSectionTitleWidget(
-                  sectionTitle: "Solicitações de evento",
-                  itemsQuantity: 3,
-                ),
-
-                const EventRequestCardWidget(requestType: RequestType.event, eventName: 'Batizado e Troca de Cordas 2026'),
-                const EventRequestCardWidget(requestType: RequestType.cancellation, eventName: 'Workshop Mestre Bandeira'),
-                const EventRequestCardWidget(requestType: RequestType.dateChange, eventName: 'Workshop de Maculelê'),
-                
-                const ViewMoreRequestsButtonWidget(),
-
-                DahsboardSectionTitleWidget(sectionTitle: "Selo TUSCA"),
-                const IrregularTuscaBadgeWidget(),
-              ],
+            SectionTitleWidget(
+              sectionTitle: "Solicitações de evento",
+              itemsQuantity: 3,
             ),
+
+            const EventRequestCardWidget(requestType: RequestType.event, eventName: 'Batizado e Troca de Cordas 2026'),
+            const EventRequestCardWidget(requestType: RequestType.cancellation, eventName: 'Workshop Mestre Bandeira'),
+            const EventRequestCardWidget(requestType: RequestType.dateChange, eventName: 'Workshop de Maculelê'),
+            
+            ViewMoreRequestsButtonWidget(onPressed: (){}),
+
+            SectionTitleWidget(sectionTitle: "Selo TUSCA"),
+            const IrregularTuscaBadgeWidget(),
+          ],
         ),
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
+import 'package:sistema_abada_capoeira/core/providers/membership_validation_providers.dart';
 import 'package:sistema_abada_capoeira/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:sistema_abada_capoeira/features/auth/data/datasources/auth_remote_datasource_impl.dart';
 import 'package:sistema_abada_capoeira/features/auth/data/repository/auth_repository_impl.dart';
@@ -24,7 +25,10 @@ class AuthProviders {
 
   static final LogoutUserUsecase logoutUserUsecase = LogoutUserUsecase(authRepository);
   static final LoginUserUsecase loginUserUsecase = LoginUserUsecase(authRepository);
-  static final RegisterUserUsecase registerUserUsecase = RegisterUserUsecase(authRepository);
+  static final RegisterUserUsecase registerUserUsecase = RegisterUserUsecase(
+    authRepository,
+    MembershipValidationProviders.repository,
+  );
 
   static final AuthController authController = AuthController(logoutUserUsecase);
   

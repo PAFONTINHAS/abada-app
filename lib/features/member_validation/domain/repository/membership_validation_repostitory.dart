@@ -26,5 +26,5 @@ abstract class MembershipValidationRepository {
   Future<Either<Failure, void>> markRequestAsUpdated(String requestId,);
     //ação que informa que o membro fez as correções
     //e que a solicitação deve voltar para o prof
-    
+  Future<Either<Failure, void>> createMembershipRequest (MembershipRequest request);
 }

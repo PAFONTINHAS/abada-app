@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sistema_abada_capoeira/core/constants/app_spacing.dart';
 
 class MembershipRequestsInfoCardWidget extends StatelessWidget {
   const MembershipRequestsInfoCardWidget({
@@ -8,7 +9,7 @@ class MembershipRequestsInfoCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: AppSpacing.symmetricH15V10,
       decoration: BoxDecoration(
         color: const Color(0xFFF4F1FF),
         borderRadius: BorderRadius.circular(16),

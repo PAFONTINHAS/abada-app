@@ -10,9 +10,11 @@ class UserProfileModel extends UserProfileEntity {
     required super.fullName,
     required super.email,
     required super.phoneNumber,
-    required super.currentBeltName,
+    required super.currentBelt,
     required super.role,
     required super.tuscaStatus,
+    required super.attendedClasses,
+    required super.lecturedClasses,
     super.nickname,
     super.tuscaExpirationDate,
     super.photoUrl,
@@ -27,13 +29,15 @@ class UserProfileModel extends UserProfileEntity {
       fullName: profile.fullName,
       email: profile.email,
       phoneNumber: profile.phoneNumber,
-      currentBeltName: profile.currentBeltName,
+      currentBelt: profile.currentBelt,
       role: profile.role,
       tuscaStatus: profile.tuscaStatus,
       tuscaExpirationDate: profile.tuscaExpirationDate,
       photoUrl: profile.photoUrl,
       city: profile.city,
       state: profile.state,
+      attendedClasses: profile.attendedClasses,
+      lecturedClasses: profile.lecturedClasses
     );
   }
 
@@ -50,13 +54,15 @@ class UserProfileModel extends UserProfileEntity {
       fullName: data['fullName'] ?? '',
       email: data['email'] ?? '',
       phoneNumber: data['phoneNumber'] ?? data['phone'] ?? '',
-      currentBeltName: data['currentBeltName'] ?? data['belt'] ?? '',
+      currentBelt: data['currentBeltName'] ?? data['belt'] ?? '',
       role: userRole,
       tuscaStatus: _tuscaStatusFromString(data['tuscaStatus']),
       tuscaExpirationDate: (data['tuscaExpirationDate'] as Timestamp?)?.toDate(),
       photoUrl: data['photoUrl'],
       city: data['city'] ?? data['cidade'] ?? '',
       state: data['uf'] ?? data['state'] ?? data['estado'] ?? '',
+      attendedClasses: List.from(data['attendedClasses'] ?? []), 
+      lecturedClasses: List.from(data['lecturedClasses'] ?? []) 
     );
   }
 
@@ -71,12 +77,14 @@ class UserProfileModel extends UserProfileEntity {
       'fullName': fullName,
       'email': email,
       'phoneNumber': phoneNumber,
-      'currentBeltName': currentBeltName,
+      'currentBeltName': currentBelt,
       'role': role.name,
       'tuscaStatus': tuscaStatus.name,
       'tuscaExpirationDate': expirationDate  ,
       'photoUrl': photoUrl,
       'city': city,
+      'attendedClasses': attendedClasses,
+      'lecturedClasses': lecturedClasses,
       'uf': state,
     };
   }

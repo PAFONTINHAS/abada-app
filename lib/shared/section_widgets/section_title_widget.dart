@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 
-class DahsboardSectionTitleWidget extends StatelessWidget {
-  const DahsboardSectionTitleWidget({
+class SectionTitleWidget extends StatelessWidget {
+  const SectionTitleWidget({
     super.key,
     required this.sectionTitle,
     this.onPressed,

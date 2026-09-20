@@ -124,8 +124,6 @@ class RegisterFormController extends ChangeNotifier {
 
     }, (_){
 
-      LoggingService.displayInfo("Deu boa");
-      
       return true;
     });
 
