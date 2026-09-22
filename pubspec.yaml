@@ -55,6 +55,9 @@ dependencies:
   open_filex: ^4.7.0
   pdf: ^3.12.0
   printing: ^5.14.3
+  geolocator: ^14.0.3
+  http: ^1.6.0
+  geoflutterfire_plus: ^0.0.34
 
 dev_dependencies:
   flutter_test:

@@ -1,19 +1,82 @@
+import 'package:dartz/dartz.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:dartz/dartz.dart';
-import 'package:sistema_abada_capoeira/core/errors/exception_handler.dart';
+import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:sistema_abada_capoeira/core/errors/failure.dart';
-import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
-import 'package:sistema_abada_capoeira/features/class/data/datasources/class_remote_datasource.dart';
-import 'package:sistema_abada_capoeira/features/class/data/models/class_entity_model.dart';
-import 'package:sistema_abada_capoeira/features/class/data/models/class_member_entity_model.dart';
+import 'package:sistema_abada_capoeira/core/errors/exception_handler.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
+import 'package:sistema_abada_capoeira/features/class/data/models/class_entity_model.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_member_entity.dart';
+import 'package:sistema_abada_capoeira/features/class/data/models/class_member_entity_model.dart';
+import 'package:sistema_abada_capoeira/features/class/data/datasources/class_remote_datasource.dart';
 
 class ClassRemoteDatasourceImpl implements ClassRemoteDatasource{
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseFunctions _functions = FirebaseFunctions.instance;
+
+  @override
+  Stream<QuerySnapshot> getClassesForLocation(String locationId){
+
+    return _firestore
+        .collection('classes')
+        .where('locationId', isEqualTo: locationId)
+        .where('active', isEqualTo: true)
+        .snapshots();
+  }
+
+  @override 
+  Future<Either<Failure, void>> saveClassLocation({
+    required String name,
+    required String address,
+    required double latitude,
+    required double longitude,
+    required String userId,
+  }) async{
+
+    final GeoFirePoint myLocation = GeoFirePoint(GeoPoint(latitude, longitude));
+
+    await _firestore.collection('locations').add({
+      'name': name,
+      'address': address,
+      'position': myLocation.data, // Salva geohash e geopoint juntos
+      'createdBy': userId,
+      'isVisible': true,
+      'createdAt': FieldValue.serverTimestamp(),
+    });
+
+    return Right(null);
+  }
+
+  @override
+  Future<Stream<List<DocumentSnapshot>>> getNearbyLocationsStream(double radiusInKm) async {
+    // 1. Pega a localização atual do celular do aluno
+    Position position = await Geolocator.getCurrentPosition();
+
+    GeoFirePoint center = GeoFirePoint(
+      GeoPoint(
+        position.latitude,
+        position.longitude,
+      )
+    );
+
+    // 2. Consulta no Firestore em tempo real todas as academias no raio definido (ex: 10km)
+    var collectionRef = _firestore.collection('locations');
+
+    GeoPoint geoPointFrom(Map<String, dynamic> data) => (data['geo'] as Map<String, dynamic>)['geopoint'] as GeoPoint;
+
+    final Stream<List<DocumentSnapshot<Map<String,dynamic>>>> stream = GeoCollectionReference(collectionRef).subscribeWithin(
+      center: center,
+      radiusInKm: radiusInKm,
+      field: 'position',
+      strictMode: true,
+      geopointFrom: geoPointFrom
+    );
+
+    return stream;
+  }
+
 
   @override
   Future<Either<Failure, List<ClassEntity>>> getClassesByIdList(List<String> classesId) async{
