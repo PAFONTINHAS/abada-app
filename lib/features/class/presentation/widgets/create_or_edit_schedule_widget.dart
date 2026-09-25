@@ -4,8 +4,8 @@ import 'package:sistema_abada_capoeira/core/constants/app_spacing.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
 import 'package:sistema_abada_capoeira/core/utils/time_picker_helper.dart';
+import 'package:sistema_abada_capoeira/features/class/presentation/widgets/schedule_view_list_widget.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/widgets/student_page_button_widget.dart';
-import 'package:sistema_abada_capoeira/shared/inputs/custom_text_input/custom_text_input.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/widgets/weekdays_checkbox_list_widget.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/create_or_edit_class_controller.dart';
 
@@ -19,6 +19,8 @@ class CreateOrEditScheduleWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+
+
         
         Container(
           width: double.infinity,
@@ -30,6 +32,7 @@ class CreateOrEditScheduleWidget extends StatelessWidget {
             padding: AppSpacing.symmetricH12V6,
             child: Column(
               children: [
+
                 Text(
                   "Agenda",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
@@ -38,10 +41,21 @@ class CreateOrEditScheduleWidget extends StatelessWidget {
                   "Selecione os dias da semana e os horários da turma",
                   style: TextStyle(fontSize: 15),
                 ),
+                                
+                StudentPageButtonWidget(
+                  icon: Icons.add,
+                  onPressed: () => controller.addNewSchedule(context),
+                  buttonTitle: "Adicionar outro horário",
+                  buttonColor: ColorConstants.indigoColor,
+                ),
               ],
             ),
           ),
         ),
+
+        SizedBox(height: 20,),       
+
+        const ScheduleViewListWidget(),
 
         SizedBox(height: 20,),       
 
@@ -59,6 +73,8 @@ class CreateOrEditScheduleWidget extends StatelessWidget {
                 child: InputDecorator(
                   decoration: const InputDecoration(
                     labelText: "Horário de Início", 
+                    hintText: "14:30",
+                    labelStyle: TextStyle(fontSize: 18),
                     border: OutlineInputBorder(),
                     contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5), // Deixa menorzinho
                   ),
@@ -102,6 +118,8 @@ class CreateOrEditScheduleWidget extends StatelessWidget {
                 child: InputDecorator(
                   decoration: const InputDecoration(
                     labelText: "Horário de Término", 
+                    hintText: "19:30",
+                    labelStyle: TextStyle(fontSize: 18),
                     border: OutlineInputBorder(),
                     contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5), // Deixa menorzinho
                   ),
@@ -123,13 +141,6 @@ class CreateOrEditScheduleWidget extends StatelessWidget {
           child: WeekdaysCheckboxListWidget() ,
         ),
         
-
-        StudentPageButtonWidget(
-          icon: Icons.add,
-          onPressed: () => controller.addNewSchedule(context),
-          buttonTitle: "Adicionar outro horário",
-          buttonColor: ColorConstants.indigoColor,
-        ),
 
       ],
     );
