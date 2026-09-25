@@ -7,6 +7,7 @@ import 'package:sistema_abada_capoeira/features/class/domain/repository/class_re
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/get_attended_classes_usecase.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/get_lectured_classes_usecase.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_controller.dart';
+import 'package:sistema_abada_capoeira/features/class/presentation/controllers/create_or_edit_class_controller.dart';
 
 class ClassProviders {
 
@@ -22,6 +23,7 @@ class ClassProviders {
   static final List<SingleChildWidget> providers = [
 
     ChangeNotifierProvider(create: (_) => ClassController(getAttendedClassesUsecase, getLecturedClassesUsecase)),
+    ChangeNotifierProvider(create: (_) => CreateOrEditClassController())
 
   ];
 

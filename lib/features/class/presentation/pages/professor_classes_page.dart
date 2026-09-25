@@ -60,7 +60,11 @@ class ProfessorClassesPage extends StatelessWidget {
 
             ClassCardWidget(classEntity: currentAttendedClass),
 
-            SectionTitleWidget(sectionTitle: "Minhas Turmas", onPressed: (){}, onPressedTitle: "+ Criar Turma",),
+            SectionTitleWidget(
+              sectionTitle: "Minhas Turmas",
+              onPressedTitle: "+ Criar Turma",
+              onPressed: () => RouteController.redirectToCreateClassPage(context: context),
+            ),
 
             SizedBox(
               height: listSize,// classController.lecturedClasses.length * 170,

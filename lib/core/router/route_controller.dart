@@ -19,11 +19,20 @@ class RouteController {
   static void redirectoToClassesEntryRequestsPage({required BuildContext context}){
 
     context.push("classes/entry_requests");
-
   }
 
   static void redirectToProfilePage({required BuildContext context}){
 
     context.go('/profile');
+  }
+
+  static void redirectToCreateClassPage({required BuildContext context}){
+
+    context.push('/classes/create');
+  }
+
+  static void redirectToEditClassPage({required BuildContext context, required ClassEntity classEntity}){
+
+    context.push('/classes/edit', extra: classEntity);
   }
 }
