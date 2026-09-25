@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/schedule_entity.dart';
 
@@ -21,7 +20,7 @@ class CreateOrEditClassController extends ChangeNotifier{
   ScheduleEntity? get currentScheduleEntity => _currentScheduleEntity;
 
   final List<Color> scheduleColors = const [
-   Colors.orange,
+    Colors.orange,
     Colors.blue,
     Colors.purple,
     Colors.teal,
@@ -66,7 +65,7 @@ class CreateOrEditClassController extends ChangeNotifier{
 
   void setClassUnitController (String value){
 
-    if(value.isEmpty) return; 
+    // if(value.isEmpty) return; 
 
     classUnitController.text = value;
 
