@@ -6,7 +6,7 @@ import 'package:sistema_abada_capoeira/features/class/presentation/widgets/heade
 import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
 import 'package:sistema_abada_capoeira/shared/inputs/custom_text_input/custom_text_input.dart';
-import 'package:sistema_abada_capoeira/features/class/presentation/widgets/schedule_view_list.dart';
+import 'package:sistema_abada_capoeira/features/class/presentation/widgets/schedule_view_list_widget.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/widgets/create_or_edit_schedule_widget.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/create_or_edit_class_controller.dart';
 
@@ -43,6 +43,8 @@ class _CreateOrEditClassPageState extends State<CreateOrEditClassPage> {
           children: [
             
             const HeaderUnitNameWidget(),
+
+            SizedBox(height: 20),
           
             CustomTextInput(
               label: "Nome da Turma / Unidade",
@@ -51,6 +53,9 @@ class _CreateOrEditClassPageState extends State<CreateOrEditClassPage> {
               onChanged: (value) => controller.setClassUnitController(value),
 
             ),
+
+            SizedBox(height: 20),
+
             CustomTextInput(
               label: "Endereço",
               hintText: "Rua das Lindoflorestas, 879",
@@ -59,8 +64,9 @@ class _CreateOrEditClassPageState extends State<CreateOrEditClassPage> {
               onChanged: (value) => controller.setLocationController(value),
             ),
 
+            SizedBox(height: 20),
 
-            const ScheduleViewList(),
+            const ScheduleViewListWidget(),
 
             const CreateOrEditScheduleWidget(),
 

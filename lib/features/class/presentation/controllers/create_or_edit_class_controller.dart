@@ -102,7 +102,10 @@ class CreateOrEditClassController extends ChangeNotifier{
 
   void addNewSchedule(BuildContext context) {
 
-    if (openingHourController.text.isEmpty || closingHourController.text.isEmpty) return;
+    if (openingHourController.text.isEmpty || closingHourController.text.isEmpty){
+
+      return MessageHandler.showWarning(context, "Preencha os campos de horário");
+    }
 
     for(final schedule in _scheduleList){
 
@@ -123,7 +126,9 @@ class CreateOrEditClassController extends ChangeNotifier{
       }
     }
 
-    if (scheduleDays.isEmpty) return; // Evita salvar sem nenhum dia selecionado
+    if (scheduleDays.isEmpty){
+      return MessageHandler.showWarning(context, "Selecione ao menos um dia");
+    } // Evita salvar sem nenhum dia selecionado
 
     _currentScheduleEntity = ScheduleEntity(
       id: "schedule_${_scheduleList.length}_${DateTime.now().millisecondsSinceEpoch}",

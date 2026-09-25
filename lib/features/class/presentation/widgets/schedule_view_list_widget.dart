@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/schedule_entity.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/create_or_edit_class_controller.dart';
 
-class ScheduleViewList extends StatelessWidget {
-  const ScheduleViewList({super.key});
+class ScheduleViewListWidget extends StatelessWidget {
+  const ScheduleViewListWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
-import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
-import 'package:sistema_abada_capoeira/features/class/presentation/pages/student_class_page.dart';
-import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 
 class ClassCardWidget extends StatelessWidget {
   const ClassCardWidget({
