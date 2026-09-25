@@ -53,4 +53,16 @@ class ClassRepositoryImpl implements ClassRepository {
   ) async {
     return await remoteDatasource.getNearbyLocationsStream(radiusInKm);
   }
+
+  @override
+  Future<Either<Failure, ClassEntity>> createClass(ClassEntity classEntity) async{
+
+    return await remoteDatasource.createClass(classEntity);
+
+  }
+  @override
+  Future<Either<Failure, ClassEntity>> updateClass(ClassEntity classEntity) async{
+
+    return await remoteDatasource.updateClass(classEntity);
+  }
 }

@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/schedule_entity.dart';
-import 'package:sistema_abada_capoeira/features/class/presentation/controllers/create_or_edit_class_controller.dart';
+import 'package:sistema_abada_capoeira/features/class/presentation/controllers/schedule_controller.dart';
 
 class ScheduleViewListWidget extends StatelessWidget {
   const ScheduleViewListWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = context.read<CreateOrEditClassController>();
+    final controller = context.read<ScheduleController>();
 
     final List<String> days = const [
       'Seg', 'Ter', 'Qua', 
       'Qui', 'Sex', 'Sáb', 'Dom'
     ];
 
-    return Selector<CreateOrEditClassController, List<ScheduleEntity>>(
+    return Selector<ScheduleController, List<ScheduleEntity>>(
       selector: (_, controller) => controller.scheduleList,
       builder: (context, scheduleList, child) {
         if (scheduleList.isEmpty) return const SizedBox.shrink();

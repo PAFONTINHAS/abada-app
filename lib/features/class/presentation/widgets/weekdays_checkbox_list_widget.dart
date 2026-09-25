@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
-import 'package:sistema_abada_capoeira/features/class/presentation/controllers/create_or_edit_class_controller.dart';
+import 'package:sistema_abada_capoeira/features/class/presentation/controllers/schedule_controller.dart';
 
 class WeekdaysCheckboxListWidget extends StatelessWidget {
   const WeekdaysCheckboxListWidget({super.key});
@@ -14,7 +14,7 @@ class WeekdaysCheckboxListWidget extends StatelessWidget {
       'Qui', 'Sex', 'Sáb', 'Dom'
     ];
 
-    return Consumer<CreateOrEditClassController>(
+    return Consumer<ScheduleController>(
       builder: (context, controller, child) {
         final weekdays = controller.weekDays;
 

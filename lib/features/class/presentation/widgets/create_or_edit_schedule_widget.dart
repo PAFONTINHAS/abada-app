@@ -4,6 +4,7 @@ import 'package:sistema_abada_capoeira/core/constants/app_spacing.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
 import 'package:sistema_abada_capoeira/core/utils/time_picker_helper.dart';
+import 'package:sistema_abada_capoeira/features/class/presentation/controllers/schedule_controller.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/widgets/schedule_view_list_widget.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/widgets/student_page_button_widget.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/widgets/weekdays_checkbox_list_widget.dart';
@@ -15,7 +16,9 @@ class CreateOrEditScheduleWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final controller = context.read<CreateOrEditClassController>();
+    final scheduleController = context.read<ScheduleController>();
+    final createOrEditClassController = context.read<CreateOrEditClassController>();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -44,8 +47,12 @@ class CreateOrEditScheduleWidget extends StatelessWidget {
                                 
                 StudentPageButtonWidget(
                   icon: Icons.add,
-                  onPressed: () => controller.addNewSchedule(context),
-                  buttonTitle: "Adicionar outro horário",
+                  onPressed: () => scheduleController.addNewSchedule(
+                    context: context,
+                    openingHourController: createOrEditClassController.openingHourController,
+                    closingHourController: createOrEditClassController.closingHourController,
+                  ),
+                  buttonTitle: "Adicionar horário",
                   buttonColor: ColorConstants.indigoColor,
                 ),
               ],
@@ -67,7 +74,7 @@ class CreateOrEditScheduleWidget extends StatelessWidget {
                   String? pickedTime = await TimePickerHelper.selectTime(context,);
                   if (pickedTime != null) {
                     // controller.updateInterval(controller.selectedDiaTrabalho.diaSemana, pausa.intervalId, novoInicio: pickedTime);
-                    controller.setOpeningHourController(pickedTime);
+                    createOrEditClassController.setOpeningHourController(pickedTime);
                   }
                 },
                 child: InputDecorator(
@@ -96,7 +103,7 @@ class CreateOrEditScheduleWidget extends StatelessWidget {
                   
                   if (pickedTime != null && context.mounted) {
 
-                    final openingHour = TimePickerHelper.getTimeFromString(controller.openingHourController.text);
+                    final openingHour = TimePickerHelper.getTimeFromString(createOrEditClassController.openingHourController.text);
                     final closingHour = TimePickerHelper.getTimeFromString(pickedTime);
 
                     final closingHourIsGreaterThanOpeningHour = TimePickerHelper.compareTimes(openingHour, closingHour) == 0;
@@ -112,7 +119,7 @@ class CreateOrEditScheduleWidget extends StatelessWidget {
                       return;
                     }
 
-                    controller.setClosingHourController(pickedTime);
+                    createOrEditClassController.setClosingHourController(pickedTime);
                   }
                 },
                 child: InputDecorator(

@@ -17,5 +17,8 @@ abstract class ClassRemoteDatasource {
   });
 
   Future<Stream<List<DocumentSnapshot>>> getNearbyLocationsStream(double radiusInKm);
+  Future<Either<Failure, ClassEntity>> createClass(ClassEntity classEntity);
+  Future<Either<Failure, ClassEntity>> updateClass(ClassEntity classEntity);
+
 
 }

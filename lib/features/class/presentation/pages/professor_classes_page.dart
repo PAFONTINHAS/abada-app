@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
+import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/features/member_validation/presentation/controllers/membership_validation_controller.dart';
 import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
 import 'package:sistema_abada_capoeira/shared/section_widgets/section_title_widget.dart';
@@ -17,6 +18,7 @@ class ProfessorClassesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+
     final classController = context.read<ClassController>();
     final membershipController = context.read<MembershipValidationController>();
 
@@ -29,6 +31,10 @@ class ProfessorClassesPage extends StatelessWidget {
     final double currentListSize = classController.lecturedClasses.length * 170.0;
 
     final double listSize = (currentListSize > maxListSize) ? maxListSize : currentListSize;
+
+
+    LoggingService.displayInfo("Attended Class: ${classController.attendedClasses.first.toMap()}");
+
 
     return Scaffold(
       backgroundColor: Colors.white,

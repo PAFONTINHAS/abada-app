@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:sistema_abada_capoeira/core/constants/database_constants.dart';
 import 'package:sistema_abada_capoeira/core/errors/failure.dart';
 import 'package:sistema_abada_capoeira/core/errors/exception_handler.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
@@ -24,6 +25,44 @@ class ClassRemoteDatasourceImpl implements ClassRemoteDatasource{
         .where('locationId', isEqualTo: locationId)
         .where('active', isEqualTo: true)
         .snapshots();
+  }
+
+  @override
+  Future<Either<Failure, ClassEntity>> createClass(ClassEntity classEntity) async{
+
+    try{
+
+      final model = ClassEntityModel.fromEntity(classEntity);
+
+      final documentReference = _firestore.collection(DBCollections.classesCollection).doc();
+
+      await documentReference.set(model.toMap());
+
+      return Right(model.copyWith(classId: documentReference.id));
+
+    } catch(exception){
+
+      return ExceptionHandler.handleException(exception: exception, contextMessage: "createClass");
+    }
+  }
+
+  @override
+  Future<Either<Failure, ClassEntity>> updateClass(ClassEntity classEntity) async{
+
+    try{
+
+      final model = ClassEntityModel.fromEntity(classEntity);
+
+      final documentReference = _firestore.collection(DBCollections.classesCollection).doc(model.classId);
+
+      await documentReference.update(model.toMap());
+
+      return Right(model);
+
+    } catch(exception){
+
+      return ExceptionHandler.handleException(exception: exception, contextMessage: "createClass");
+    }
   }
 
   @override 
@@ -138,8 +177,6 @@ class ClassRemoteDatasourceImpl implements ClassRemoteDatasource{
 
       return ExceptionHandler.handleException(exception: exception, contextMessage: "addStudentToClass");
     }
-
-
 
   }
 

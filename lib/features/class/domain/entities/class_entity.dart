@@ -1,5 +1,6 @@
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_member_entity.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_professor_entity.dart';
+import 'package:sistema_abada_capoeira/features/class/domain/entities/schedule_entity.dart';
 
 class ClassEntity {
 
@@ -23,7 +24,7 @@ class ClassEntity {
   final String region;
   final String location;
   final String unitName;
-  final List<String> schedule;
+  final List<ScheduleEntity> schedule;
   final ClassProfessorEntity professor;
   final List<ClassMemberEntity> members;
 
@@ -36,7 +37,7 @@ class ClassEntity {
     String? region,
     String? location,
     String? unitName,
-    List<String>? schedule,
+    List<ScheduleEntity>? schedule,
     ClassProfessorEntity? professor,
     List<ClassMemberEntity>? members,
 
@@ -55,6 +56,21 @@ class ClassEntity {
       members: members ?? this.members,
     );
 
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'classId': classId,
+      'cep': cep,
+      'city': city,
+      'region': state,
+      'state': region,
+      'location': location,
+      'unitName': unitName,
+      'schedule': schedule.map((data) => data.toMap()),
+      'professor': professor.toMap(),
+      'members': members,
+    };
   }
 
 
