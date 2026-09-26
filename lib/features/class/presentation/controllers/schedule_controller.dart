@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
+import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/schedule_entity.dart';
+import 'package:sistema_abada_capoeira/features/class/presentation/controllers/schedule_color_controller.dart';
 
 class ScheduleController extends ChangeNotifier{
-
 
   List<bool> _weekDays = List.generate(7, (index) => false);
   List<bool> get weekDays => _weekDays; 
@@ -16,6 +17,15 @@ class ScheduleController extends ChangeNotifier{
 
   TextEditingController openingHourController = TextEditingController();
   TextEditingController closingHourController= TextEditingController();
+
+  ScheduleColorController scheduleColorController = ScheduleColorController();
+
+  void beginEditing(List<ScheduleEntity> scheduleListToEdit){
+
+    _scheduleList = List.from(scheduleListToEdit);
+
+    notifyListeners();
+  }
 
   void setOpeningHourController(String value){
 
@@ -34,7 +44,7 @@ class ScheduleController extends ChangeNotifier{
     closingHourController.clear();
     notifyListeners();
   }  
-  
+
   void setClosingHourController(String value){
 
     if(value.isEmpty) return;
@@ -44,39 +54,12 @@ class ScheduleController extends ChangeNotifier{
     notifyListeners();
   }
 
-  final List<Color> scheduleColors = const [
-    Colors.orange,
-    Colors.blue,
-    Colors.purple,
-    Colors.teal,
-    Colors.redAccent,
-    Colors.indigo,
-    Colors.amber,
-  ];
-
-
-  Color getColorForSchedule(ScheduleEntity schedule){
-    final index = _scheduleList.indexOf(schedule);
-
-    if(index == -1) return Colors.grey;
-
-    return scheduleColors[index % scheduleColors.length];
-  }
-
-  ScheduleEntity? getScheduleForDay(int dayIndex) {
-    for (final schedule in _scheduleList) {
-      if (schedule.scheduleDays.contains(dayIndex)) {
-        return schedule;
-      }
-    }
-    return null;
-  }
-
+ 
   void setWeekday(int day, bool? value){
 
     if(value == null) return;
 
-    if(getScheduleForDay(day) != null) return;
+    if(scheduleColorController.getScheduleForDay(day, _scheduleList) != null) return;
 
     final currentWeekdays = List<bool>.from(_weekDays);
 
@@ -158,5 +141,7 @@ class ScheduleController extends ChangeNotifier{
 
     return scheduleDays;
   }
+
+
 
 } 

@@ -47,10 +47,7 @@ class ClassController extends ChangeNotifier{
         return false;
       }, (createdClass){
 
-        LoggingService.displayInfo("Created Class: ${createdClass.toMap()}");
-
         final List<ClassEntity> currentLecturedClasses = List.from(_lecturedClasses);
-
 
         currentLecturedClasses.add(createdClass);
 

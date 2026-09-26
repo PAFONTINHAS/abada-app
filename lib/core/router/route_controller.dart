@@ -35,4 +35,8 @@ class RouteController {
 
     context.push('/classes/edit', extra: classEntity);
   }
+
+  static void pushReplacementClassPage({required BuildContext context, required ClassEntity classEntity}){
+    context.pushReplacement('/classes/class', extra: classEntity);
+  }
 }

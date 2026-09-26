@@ -9,7 +9,7 @@ class ClassMembersListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final double maxListSize = 500.0;
+    final double maxListSize = 300.0;
 
     final double currentListSize = studentsList.length * 80.0;
 

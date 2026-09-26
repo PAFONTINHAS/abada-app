@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
-import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
 import 'package:sistema_abada_capoeira/features/member_validation/presentation/controllers/membership_validation_controller.dart';
 import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
@@ -17,7 +16,6 @@ class ProfessorClassesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    
     final classController = context.read<ClassController>();
     final membershipController = context.read<MembershipValidationController>();
 

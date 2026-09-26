@@ -51,7 +51,7 @@ class ClassEntity {
       state: state ?? this.state,
       location: location ?? this.location,
       unitName: unitName ?? this.unitName,
-      schedule: schedule ?? this.schedule,
+      schedule: List<ScheduleEntity>.from(schedule ?? this.schedule),
       professor: professor ?? this.professor,
       members: members ?? this.members,
     );

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/constants/app_spacing.dart';
-import 'package:sistema_abada_capoeira/features/class/presentation/controllers/create_or_edit_class_controller.dart';
+import 'package:sistema_abada_capoeira/features/class/presentation/controllers/create_form_controller.dart';
 
 class HeaderUnitNameWidget extends StatelessWidget {
   const HeaderUnitNameWidget({super.key});
@@ -25,7 +25,7 @@ class HeaderUnitNameWidget extends StatelessWidget {
             ),
 
             Expanded(
-              child: Selector<CreateOrEditClassController, String>(
+              child: Selector<ClassFormController, String>(
                 selector: (_, controller) => controller.classUnitController.text,
                 builder: (_, unitName, _) {
                   if (unitName.isEmpty) {

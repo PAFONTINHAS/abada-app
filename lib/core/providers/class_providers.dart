@@ -9,7 +9,7 @@ import 'package:sistema_abada_capoeira/features/class/domain/usecases/get_attend
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/get_lectured_classes_usecase.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/update_class_usecase.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_controller.dart';
-import 'package:sistema_abada_capoeira/features/class/presentation/controllers/create_or_edit_class_controller.dart';
+import 'package:sistema_abada_capoeira/features/class/presentation/controllers/create_form_controller.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/schedule_controller.dart';
 
 class ClassProviders {
@@ -35,7 +35,7 @@ class ClassProviders {
         getLecturedClassesUsecase,
       ),
     ),
-    ChangeNotifierProvider(create: (_) => CreateOrEditClassController()),
+    ChangeNotifierProvider(create: (_) => ClassFormController()),
     ChangeNotifierProvider(create: (_) => ScheduleController())
 
   ];

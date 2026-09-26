@@ -64,7 +64,7 @@ class ClassRemoteDatasourceImpl implements ClassRemoteDatasource{
 
     } catch(exception){
 
-      return ExceptionHandler.handleException(exception: exception, contextMessage: "createClass");
+      return ExceptionHandler.handleException(exception: exception, contextMessage: "updateClass");
     }
   }
 

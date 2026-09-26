@@ -16,7 +16,7 @@ class UpdateClassUsecase {
 
     if(validator != null) return Left(ValidationFailure(validator));
 
-    return await classRepository.createClass(classEntity);
+    return await classRepository.updateClass(classEntity);
 
   }
 

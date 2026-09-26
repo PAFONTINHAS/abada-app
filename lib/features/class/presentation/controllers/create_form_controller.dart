@@ -4,14 +4,30 @@ import 'package:sistema_abada_capoeira/features/class/domain/entities/schedule_e
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/user_profile_entity.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_professor_entity.dart';
 
-class CreateOrEditClassController extends ChangeNotifier{
+class ClassFormController extends ChangeNotifier{
 
   TextEditingController classUnitController = TextEditingController();
   TextEditingController locationController = TextEditingController();
 
-  void setClassUnitController (String value){
+  bool _isEditing = false;
+  bool get isEditing => _isEditing;
 
-    // if(value.isEmpty) return; 
+  ClassEntity? _classForEdit;
+  ClassEntity? get classForEdit => _classForEdit;
+  
+
+  void beginEditing(ClassEntity classEntity){
+
+    _isEditing = true;
+    _classForEdit = classEntity;
+
+    classUnitController.text = classEntity.unitName;
+    locationController.text = classEntity.location;
+
+    notifyListeners();
+  }
+
+  void setClassUnitController (String value){
 
     classUnitController.text = value;
 
@@ -44,7 +60,6 @@ class CreateOrEditClassController extends ChangeNotifier{
   }
 
   ClassEntity buildClassEntity(
-    BuildContext context,
     List<ScheduleEntity> scheduleList,
     UserProfileEntity userProfileEntity,
   ){
@@ -65,6 +80,20 @@ class CreateOrEditClassController extends ChangeNotifier{
       schedule: List<ScheduleEntity>.from(scheduleList),
       professor: classProfessorEntity,
     );
+  }
+
+  ClassEntity? buildUpdatedClassEntity(List<ScheduleEntity> scheduleList){
+
+    if(_classForEdit == null) return null;
+
+    final updatedClass = _classForEdit!.copyWith(
+      unitName: classUnitController.text,
+      location: locationController.text,
+      schedule: List<ScheduleEntity>.from(scheduleList)
+    );
+
+    return updatedClass;
+
   }
 
 }

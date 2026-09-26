@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
+import 'package:sistema_abada_capoeira/features/class/presentation/controllers/schedule_color_controller.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/schedule_controller.dart';
 
 class WeekdaysCheckboxListWidget extends StatelessWidget {
@@ -10,30 +11,40 @@ class WeekdaysCheckboxListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final List<String> days = const [
-      'Seg', 'Ter', 'Qua', 
-      'Qui', 'Sex', 'Sáb', 'Dom'
+      'Seg', 'Ter', 'Qua', 'Qui', 
+      'Sex', 'Sáb', 'Dom'
     ];
 
+    final ScheduleColorController scheduleColorController = ScheduleColorController();
     return Consumer<ScheduleController>(
       builder: (context, controller, child) {
         final weekdays = controller.weekDays;
+
 
         return Wrap(
           spacing: 6,
           runSpacing: 8.0,
           children: List.generate(7, (index) {
-            final blockingSchedule = controller.getScheduleForDay(index);
+            final blockingSchedule = scheduleColorController.getScheduleForDay(
+              index,
+              controller.scheduleList,
+            );
             final isBlocked = blockingSchedule != null;
             final isChecked = weekdays[index];
 
             // Define a cor de destaque (Cor do horário bloqueador ou neutra)
             Color? cardColor;
             if (isBlocked) {
-              cardColor = controller.getColorForSchedule(blockingSchedule).withAlpha(40);
+              cardColor = scheduleColorController
+                  .getColorForSchedule(
+                    blockingSchedule,
+                    controller.scheduleList,
+                  )
+                  .withAlpha(40);
             }
 
             Color activeColor = isBlocked
-                ? controller.getColorForSchedule(blockingSchedule)
+                ? scheduleColorController.getColorForSchedule(blockingSchedule, controller.scheduleList)
                 : ColorConstants.indigoColor;
 
             return Column(
@@ -42,7 +53,12 @@ class WeekdaysCheckboxListWidget extends StatelessWidget {
                   days[index],
                   style: TextStyle(
                     fontWeight: isBlocked ? FontWeight.bold : FontWeight.normal,
-                    color: isBlocked ? controller.getColorForSchedule(blockingSchedule) : null,
+                    color: isBlocked
+                        ? scheduleColorController.getColorForSchedule(
+                            blockingSchedule,
+                            controller.scheduleList,
+                          )
+                        : null,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -51,7 +67,13 @@ class WeekdaysCheckboxListWidget extends StatelessWidget {
                     color: cardColor,
                     borderRadius: BorderRadius.circular(8),
                     border: isBlocked
-                        ? Border.all(color: controller.getColorForSchedule(blockingSchedule), width: 1.5)
+                        ? Border.all(
+                            color: scheduleColorController.getColorForSchedule(
+                              blockingSchedule,
+                              controller.scheduleList,
+                            ),
+                            width: 1.5,
+                          )
                         : null,
                   ),
                   child: Checkbox(
