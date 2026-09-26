@@ -11,16 +11,15 @@ class ClassCardWidget extends StatelessWidget {
 
   final ClassEntity classEntity;
 
-
   @override
   Widget build(BuildContext context) {
+
+    final List<String> weekDays = const [
+      'Seg', 'Ter', 'Qua', 
+      'Qui', 'Sex', 'Sáb', 'Dom'
+    ];
     
     final classLocation = "${classEntity.location}, ${classEntity.city} - ${classEntity.state}, ${classEntity.cep}";
-    String classSchedule = "";
-
-    for (final schedule in classEntity.schedule){
-      classSchedule += "$schedule\n";
-    }
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
@@ -73,14 +72,36 @@ class ClassCardWidget extends StatelessWidget {
                           color: Colors.grey.shade700, // Contraste hierárquico
                         ),
                       ),
-                      const SizedBox(height: 2),
-                      Text(
-                        classSchedule,
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.grey.shade700,
+                      SizedBox(
+                        height: classEntity.schedule.length * 20,
+                        child: ListView.builder(
+                          itemCount: classEntity.schedule.length,
+                          itemBuilder: (context, index) {
+                            final schedule = classEntity.schedule[index];
+
+                            final openingHour = schedule.openingHour;
+                            final closingHour = schedule.closingHour;
+                            String days = "";
+
+                            for (int i = 0; i < schedule.scheduleDays.length; i++) {
+                              days += weekDays[schedule.scheduleDays[i]];
+
+                              if (i != schedule.scheduleDays.length - 1) {
+                                days += ", ";
+                              }
+                            }
+
+                            return Text(
+                              "$days - $openingHour às $closingHour",
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: Colors.grey.shade700,
+                              ),
+                            );
+                          },
                         ),
                       ),
+
                     ],
                   ),
                 ),

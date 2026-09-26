@@ -67,7 +67,7 @@ class ClassEntity {
       'state': region,
       'location': location,
       'unitName': unitName,
-      'schedule': schedule.map((data) => data.toMap()),
+      'schedule': schedule.map((data) => data.toMap()).toList(),
       'professor': professor.toMap(),
       'members': members,
     };

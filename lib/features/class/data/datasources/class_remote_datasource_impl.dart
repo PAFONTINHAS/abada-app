@@ -6,6 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:sistema_abada_capoeira/core/constants/database_constants.dart';
 import 'package:sistema_abada_capoeira/core/errors/failure.dart';
 import 'package:sistema_abada_capoeira/core/errors/exception_handler.dart';
+import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
 import 'package:sistema_abada_capoeira/features/class/data/models/class_entity_model.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_member_entity.dart';
@@ -37,6 +38,8 @@ class ClassRemoteDatasourceImpl implements ClassRemoteDatasource{
       final documentReference = _firestore.collection(DBCollections.classesCollection).doc();
 
       await documentReference.set(model.toMap());
+
+      LoggingService.displayInfo(model.toMap());
 
       return Right(model.copyWith(classId: documentReference.id));
 

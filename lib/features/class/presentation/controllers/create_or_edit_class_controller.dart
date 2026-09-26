@@ -1,20 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
-import 'package:sistema_abada_capoeira/features/class/domain/entities/class_professor_entity.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/schedule_entity.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/user_profile_entity.dart';
+import 'package:sistema_abada_capoeira/features/class/domain/entities/class_professor_entity.dart';
 
 class CreateOrEditClassController extends ChangeNotifier{
 
   TextEditingController classUnitController = TextEditingController();
   TextEditingController locationController = TextEditingController();
-  
-  TextEditingController openingHourController = TextEditingController();
-  TextEditingController closingHourController= TextEditingController();
-
-  
-
 
   void setClassUnitController (String value){
 
@@ -34,31 +27,27 @@ class CreateOrEditClassController extends ChangeNotifier{
     notifyListeners();
   }
 
-  void setOpeningHourController(String value){
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
 
-    if(value.isEmpty) return;
-
-    openingHourController.text = value;
-
-    notifyListeners();
-
+    classUnitController.dispose();
+    locationController.dispose();
   }
-  
-  void setClosingHourController(String value){
 
-    if(value.isEmpty) return;
-
-    closingHourController.text = value;
+  void clearControllers(){
+    classUnitController.clear();
+    locationController.clear();
 
     notifyListeners();
   }
 
-
-  Future<ClassEntity?> buildClassEntity(
+  ClassEntity buildClassEntity(
     BuildContext context,
     List<ScheduleEntity> scheduleList,
     UserProfileEntity userProfileEntity,
-  ) async {
+  ){
 
     final ClassProfessorEntity classProfessorEntity = ClassProfessorEntity(
       professorId: userProfileEntity.uid,
@@ -73,12 +62,9 @@ class CreateOrEditClassController extends ChangeNotifier{
       state: '',
       location: locationController.text,
       unitName: classUnitController.text,
-      schedule: scheduleList,
+      schedule: List<ScheduleEntity>.from(scheduleList),
       professor: classProfessorEntity,
     );
-
-
-
   }
 
 }

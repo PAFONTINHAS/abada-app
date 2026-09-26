@@ -14,6 +14,36 @@ class ScheduleController extends ChangeNotifier{
   ScheduleEntity? _currentScheduleEntity;
   ScheduleEntity? get currentScheduleEntity => _currentScheduleEntity;
 
+  TextEditingController openingHourController = TextEditingController();
+  TextEditingController closingHourController= TextEditingController();
+
+  void setOpeningHourController(String value){
+
+    if(value.isEmpty) return;
+
+    openingHourController.text = value;
+
+    notifyListeners();
+
+  }
+
+  void clearFields(){
+    _currentScheduleEntity = null;
+    _scheduleList.clear();
+    openingHourController.clear();
+    closingHourController.clear();
+    notifyListeners();
+  }  
+  
+  void setClosingHourController(String value){
+
+    if(value.isEmpty) return;
+
+    closingHourController.text = value;
+
+    notifyListeners();
+  }
+
   final List<Color> scheduleColors = const [
     Colors.orange,
     Colors.blue,
@@ -57,16 +87,13 @@ class ScheduleController extends ChangeNotifier{
     notifyListeners();
   }
 
-  Future<void> addNewSchedule({
-    required BuildContext context,
-    required TextEditingController openingHourController,
-    required TextEditingController closingHourController,
-  }) async {
+  Future<bool> addNewSchedule(BuildContext context) async {
 
     if (openingHourController.text.isEmpty || closingHourController.text.isEmpty){
-
-      return MessageHandler.showWarning(context, "Preencha os campos de horário");
       
+      MessageHandler.showWarning(context, "Preencha os campos de horário");
+
+      return false; 
     }
 
     for(final schedule in _scheduleList){
@@ -75,7 +102,10 @@ class ScheduleController extends ChangeNotifier{
       final bool isSameClosingHour = closingHourController.text == schedule.closingHour;
 
       if(isSameClosingHour && isSameOpeningHour){
-        return MessageHandler.showWarning(context, "Horários de início e de término já selecionados");
+
+        MessageHandler.showWarning(context, "Horários de início e de término já selecionados");
+
+        return false;
       }
 
     }
@@ -83,7 +113,9 @@ class ScheduleController extends ChangeNotifier{
     List<int> scheduleDays = _fetchScheduleDays();
 
     if (scheduleDays.isEmpty){
-      return MessageHandler.showWarning(context, "Selecione ao menos um dia");
+      MessageHandler.showWarning(context, "Selecione ao menos um dia");
+
+      return false;
     } // Evita salvar sem nenhum dia selecionado
 
     _currentScheduleEntity = ScheduleEntity(
@@ -97,10 +129,12 @@ class ScheduleController extends ChangeNotifier{
 
     // Reseta o formulário para o próximo horário
     _weekDays = List.generate(7, (index) => false);
+
     openingHourController.clear();
     closingHourController.clear();
-
     notifyListeners();
+
+    return true;
   }
 
 
@@ -109,41 +143,6 @@ class ScheduleController extends ChangeNotifier{
     notifyListeners();
   }
 
-  List<ScheduleEntity>? buildScheduleController({
-    required BuildContext context,
-    required TextEditingController openingHourController,
-    required TextEditingController closingHourController,
-  }) {
-
-    final bool openingHourNotEmpty = openingHourController.text.isNotEmpty;
-    final bool closingHourNotEmpty = closingHourController.text.isNotEmpty;
-
-    if(openingHourNotEmpty || closingHourNotEmpty){
-
-      if (weekDays.isNotEmpty){
-        
-        MessageHandler.showWarning(
-          context,
-          "Selecione os dias para o horário selecionado",
-        );
-
-        return null;
-      }
-
-      final List<int> scheduleDays = _fetchScheduleDays();
-
-      final currentScheduleEntity = ScheduleEntity(
-        scheduleId: "schedule_${_scheduleList.length}_${DateTime.now().millisecondsSinceEpoch}",
-        openingHour: openingHourController.text,
-        closingHour: closingHourController.text,
-        scheduleDays: scheduleDays,
-      );
-
-      _scheduleList.add(currentScheduleEntity);
-    }
-
-    return _scheduleList;
-  }
 
   List<int> _fetchScheduleDays(){
 

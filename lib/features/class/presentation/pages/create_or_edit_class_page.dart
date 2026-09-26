@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:sistema_abada_capoeira/core/constants/app_spacing.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
-import 'package:sistema_abada_capoeira/features/class/presentation/widgets/header_unit_name_widget.dart';
+import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
+import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_controller.dart';
+import 'package:sistema_abada_capoeira/features/class/presentation/controllers/schedule_controller.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
+import 'package:sistema_abada_capoeira/shared/buttons/custom_text_button.dart';
 import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
-import 'package:sistema_abada_capoeira/shared/buttons/custom_text_button.dart';
 import 'package:sistema_abada_capoeira/shared/inputs/custom_text_input/custom_text_input.dart';
-import 'package:sistema_abada_capoeira/features/class/presentation/widgets/schedule_view_list_widget.dart';
+import 'package:sistema_abada_capoeira/features/class/presentation/widgets/header_unit_name_widget.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/widgets/create_or_edit_schedule_widget.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/create_or_edit_class_controller.dart';
 
@@ -25,7 +28,12 @@ class _CreateOrEditClassPageState extends State<CreateOrEditClassPage> {
   Widget build(BuildContext context) {
 
 
-    final controller = context.read<CreateOrEditClassController>();
+    final classController = context.read<ClassController>();
+    final profileController = context.read<ProfileController>();
+    final scheduleController = context.read<ScheduleController>();
+    final createOrEditClassController = context.read<CreateOrEditClassController>(); 
+
+    final user = profileController.userProfile;
 
     return Scaffold(
       appBar: AppBar(
@@ -49,9 +57,9 @@ class _CreateOrEditClassPageState extends State<CreateOrEditClassPage> {
           
             CustomTextInput(
               label: "Nome da Turma / Unidade",
-              controller: controller.classUnitController,
+              controller: createOrEditClassController.classUnitController,
               hintText: "Turma Santo Amaro / Unidade Batel",
-              onChanged: (value) => controller.setClassUnitController(value),
+              onChanged: (value) => createOrEditClassController.setClassUnitController(value),
 
             ),
 
@@ -60,9 +68,9 @@ class _CreateOrEditClassPageState extends State<CreateOrEditClassPage> {
             CustomTextInput(
               label: "Endereço",
               hintText: "Rua das Lindoflorestas, 879",
-              controller: controller.locationController,
+              controller: createOrEditClassController.locationController,
               prefixIcon: Icon(Icons.location_on_outlined),
-              onChanged: (value) => controller.setLocationController(value),
+              onChanged: (value) => createOrEditClassController.setLocationController(value),
             ),
 
             SizedBox(height: 20),
@@ -73,7 +81,37 @@ class _CreateOrEditClassPageState extends State<CreateOrEditClassPage> {
             SizedBox(height: 30,),
             CustomTextButton(
               text: "Criar Turma",
-              onPressed: () {},
+              onPressed: () async{
+
+                final scheduleList = scheduleController.scheduleList;
+
+                if (scheduleList.isEmpty){
+                  return MessageHandler.showWarning(
+                    context,
+                    "Adicione ao menos um dia de aula com seu respectivo horário",
+                  );
+                }
+
+                final classEntity = createOrEditClassController.buildClassEntity(context, scheduleList, user);
+
+                
+                final success = await classController.createClassUsecase(classEntity);
+
+                if(!context.mounted) return;
+
+                if(success){
+                  MessageHandler.showSuccess(context, "Turma criada com sucesso!");
+
+                  createOrEditClassController.clearControllers();
+                  scheduleController.clearFields();
+                  context.pop();
+
+                  return;
+                }
+
+                MessageHandler.showError(context, "Erro: ${classController.errorMessage}");
+
+              },
               color: ColorConstants.indigoColor,
               textColor: ColorConstants.whiteColor,
               alignment: Alignment.center

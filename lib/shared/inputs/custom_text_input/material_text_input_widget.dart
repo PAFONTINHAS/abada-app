@@ -39,6 +39,9 @@ class MaterialTextInputWidget extends StatelessWidget {
           validator: widgetProps.validator,
           keyboardType: widgetProps.keyboardType,
           enableSuggestions: true,
+          onTapOutside: (event){
+            FocusManager.instance.primaryFocus?.unfocus();
+          },
           obscureText:
               widgetProps.isPasswordField
                   ? !passwordVisible

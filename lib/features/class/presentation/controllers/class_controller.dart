@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/create_class_usecase.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/get_attended_classes_usecase.dart';
@@ -46,12 +47,15 @@ class ClassController extends ChangeNotifier{
         return false;
       }, (createdClass){
 
+        LoggingService.displayInfo("Created Class: ${createdClass.toMap()}");
+
         final List<ClassEntity> currentLecturedClasses = List.from(_lecturedClasses);
 
 
         currentLecturedClasses.add(createdClass);
 
         _lecturedClasses = List.from(currentLecturedClasses);
+
 
         return true;
       });
@@ -60,6 +64,11 @@ class ClassController extends ChangeNotifier{
 
     notifyListeners();
 
+    for(final classEntity in _lecturedClasses){
+
+
+      LoggingService.displayInfo("Class: ${classEntity.toMap()} ");
+    }
     return success;
   }
 
@@ -128,7 +137,7 @@ class ClassController extends ChangeNotifier{
     _errorMessage = null;
     notifyListeners();
 
-    final result = await _getAttendedClassesUsecase.call(lecturedClassesId);
+    final result = await _getLecturedClassesUsecase.call(lecturedClassesId);
 
     final success = result.fold(
       (failure){

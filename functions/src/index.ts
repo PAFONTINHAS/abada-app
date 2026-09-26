@@ -4,3 +4,9 @@ admin.initializeApp();
 
 export {approveMemberRequestAndAddToClass}
   from "./approveMemberRequestAndAddToClass";
+
+export {updateProfessorLecturedClasses}
+  from "./updateProfessorLecturedClasses";
+
+export {removeProfessorLecturedClasses}
+  from "./removeProfessorLecturedClasses";
