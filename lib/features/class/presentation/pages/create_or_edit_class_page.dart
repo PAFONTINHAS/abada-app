@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
 import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
+import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/shared/buttons/custom_text_button.dart';
 import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
@@ -12,8 +12,9 @@ import 'package:sistema_abada_capoeira/features/class/presentation/controllers/c
 import 'package:sistema_abada_capoeira/features/class/presentation/widgets/header_unit_name_widget.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/schedule_controller.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
-import 'package:sistema_abada_capoeira/features/class/presentation/controllers/create_form_controller.dart';
+import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_form_controller.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/widgets/create_or_edit_schedule_widget.dart';
+import 'package:sistema_abada_capoeira/features/class/presentation/controllers/create_location_controller.dart';
 
 class CreateOrEditClassPage extends StatefulWidget {
   const CreateOrEditClassPage({super.key, this.classEntity});
@@ -53,11 +54,12 @@ class _CreateOrEditClassPageState extends State<CreateOrEditClassPage> {
     final profileController = context.read<ProfileController>();
     final scheduleController = context.read<ScheduleController>();
     final formController = context.watch<ClassFormController>(); 
+    final createLocationController = context.watch<CreateLocationController>();
     final user = profileController.userProfile;
 
     final bool isEditing = formController.isEditing;
 
-    final pageTitle = isEditing ? "Criar Turma" : "Editar Turma";
+    final pageTitle = !isEditing ? "Criar Turma" : "Editar Turma";
 
     return Scaffold(
       appBar: AppBar(
@@ -86,14 +88,57 @@ class _CreateOrEditClassPageState extends State<CreateOrEditClassPage> {
 
             SizedBox(height: 20),
 
-            CustomTextInput(
-              label: "Endereço",
-              hintText: "Rua das Lindoflorestas, 879",
-              controller: formController.locationController,
-              prefixIcon: Icon(Icons.location_on_outlined),
-              onChanged: (value) => formController.setLocationController(value),
-            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CustomTextInput(
+                  label: "Endereço",
+                  hintText: "Digite para buscar o endereço...",
+                  controller: formController.locationController,
+                  prefixIcon: const Icon(Icons.location_on_outlined),
+                  onChanged: (value) {
+                    formController.setLocationController(value);
+                    // Dispara a busca no Photon via API
+                    createLocationController.onSearchChanged(value); 
+                  },
+                ),
 
+                // Exibe o indicador de carregamento
+                if (createLocationController.isSearching)
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8.0),
+                    child: LinearProgressIndicator(),
+                  ),
+
+                // Exibe a lista de sugestões retornadas pelo Photon
+                if (createLocationController.suggestions.isNotEmpty)
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(color: Colors.grey.shade300),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: createLocationController.suggestions.length,
+                      itemBuilder: (context, index) {
+                        final suggestion = createLocationController.suggestions[index];
+                        return ListTile(
+                          leading: const Icon(Icons.place, color: ColorConstants.indigoColor),
+                          title: Text(suggestion.description),
+                          onTap: () {
+                            // 1. Guarda a sugestão selecionada (contendo lat/lng) no controller
+                            createLocationController.selectSuggestion(suggestion);
+                            // 2. Atualiza o texto do input
+                            formController.locationController.text = suggestion.description;
+                          },
+                        );
+                      },
+                    ),
+                  ),
+              ],
+            ),
+            
             SizedBox(height: 20),
 
             const CreateOrEditScheduleWidget(),
@@ -103,6 +148,15 @@ class _CreateOrEditClassPageState extends State<CreateOrEditClassPage> {
             CustomTextButton(
               text: pageTitle,
               onPressed: () async{
+
+                final locationSaved = await createLocationController.saveLocation(
+                  name: formController.classUnitController.text,
+                  userId: user.uid,
+                );
+
+                final selectedLocationId = createLocationController.selectedLocationId;
+
+                if(!context.mounted || !locationSaved || selectedLocationId == null) return;
 
                 final scheduleList = scheduleController.scheduleList;
 
@@ -114,7 +168,7 @@ class _CreateOrEditClassPageState extends State<CreateOrEditClassPage> {
                 }
 
                 final classEntity = !isEditing
-                    ? formController.buildClassEntity(scheduleList, user)
+                    ? formController.buildClassEntity(scheduleList, user, selectedLocationId)
                     : formController.buildUpdatedClassEntity(scheduleList);
 
                 if(classEntity == null) return;

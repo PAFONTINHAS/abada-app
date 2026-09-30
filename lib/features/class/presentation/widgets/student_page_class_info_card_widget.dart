@@ -17,7 +17,6 @@ class StudentPageClassInfoCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final classLocation = "${classEntity.location}, ${classEntity.city} - ${classEntity.state}, ${classEntity.cep}";
 
     final profileController = context.read<ProfileController>();
     final bool userIsProfessor =
@@ -105,7 +104,7 @@ class StudentPageClassInfoCardWidget extends StatelessWidget {
                   // Informações em lista
                   _buildScheduleWidget(Icons.access_time, classEntity.schedule),
                   const SizedBox(height: 8),
-                  _buildInfoRow(Icons.location_on_outlined, classLocation),
+                  _buildInfoRow(Icons.location_on_outlined, "MUDAR A LOCALIZAÇÃO AQUI!"),
                   const SizedBox(height: 8),
                   _buildInfoRow(Icons.person_outline, "Responsável: ${classEntity.professor.professorNickname}"),
                   const SizedBox(height: 8),

@@ -8,7 +8,7 @@ abstract class ClassRemoteDatasource {
   Future<Either<Failure, List<ClassEntity>>> getClassesByIdList(List<String> classesId);
   Future<Either<Failure, void>> addStudentToClass(String studentId, String classId);
   Stream<QuerySnapshot> getClassesForLocation(String locationId);
-  Future<Either<Failure, void>> saveClassLocation({
+  Future<Either<Failure, String>> saveClassLocation({
       required String name,
       required String address,
       required double latitude,

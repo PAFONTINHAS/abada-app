@@ -9,16 +9,12 @@ import 'package:sistema_abada_capoeira/features/class/data/models/class_professo
 class ClassEntityModel extends ClassEntity{
 
   const ClassEntityModel({
+    super.members,
     required super.classId,
-    required super.cep,
-    required super.city,
-    required super.region,
-    required super.state,
-    required super.location,
     required super.unitName,
     required super.schedule,
     required super.professor,
-    super.members
+    required super.locationId,
   }); 
 
 
@@ -38,11 +34,7 @@ class ClassEntityModel extends ClassEntity{
 
     return ClassEntityModel(
       classId: document.id,
-      cep: data['cep'],
-      city: data['city'],
-      region: data['region'],
-      state: data['state'],
-      location: data['location'],
+      locationId: data['locationId'],
       unitName: data['unitName'],
       schedule: schedule,
       professor: classProfessorEntity,
@@ -54,27 +46,18 @@ class ClassEntityModel extends ClassEntity{
   factory ClassEntityModel.fromEntity(ClassEntity entity){
     return ClassEntityModel(
       classId: entity.classId,
-      cep: entity.cep,
-      city: entity.city,
-      region: entity.region,
-      state: entity.state,
-      location: entity.location,
       unitName: entity.unitName,
       schedule: entity.schedule,
       professor: entity.professor,
+      locationId: entity.locationId,
     );
   }
 
   @override
   Map<String, dynamic> toMap() {
     return {
-      'classId': classId,
-      'cep': cep,
-      'city': city,
-      'region': state,
-      'state': region,
-      'location': location,
       'unitName': unitName,
+      'locationId': locationId,
       'schedule': schedule.map((data) => data.toMap()).toList(),
       'professor': professor.toMap(),
     };
@@ -82,13 +65,8 @@ class ClassEntityModel extends ClassEntity{
 
   @override
   ClassEntityModel copyWith({
-
     String? classId,
-    String? cep,
-    String? city,
-    String? state,
-    String? region,
-    String? location,
+    String? locationId,
     String? unitName,
     List<ScheduleEntity>? schedule,
     ClassProfessorEntity? professor,
@@ -98,11 +76,7 @@ class ClassEntityModel extends ClassEntity{
 
     return ClassEntityModel(
       classId: classId ?? this.classId,
-      cep: cep ?? this.cep,
-      city: city ?? this.city,
-      region: region ?? this.region,
-      state: state ?? this.state,
-      location: location ?? this.location,
+      locationId: locationId ?? this.locationId,
       unitName: unitName ?? this.unitName,
       schedule: schedule ?? this.schedule,
       professor: professor ?? this.professor, 
@@ -110,6 +84,4 @@ class ClassEntityModel extends ClassEntity{
     );
 
   }
-
-
 }

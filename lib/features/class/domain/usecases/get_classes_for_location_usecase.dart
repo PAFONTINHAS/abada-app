@@ -7,7 +7,7 @@ class GetClassesForLocationUsecase extends StandardClassUsecase{
   GetClassesForLocationUsecase(super.classRepository);
 
 
-  Stream<QuerySnapshot> getClassesForLocation(String locationId) {
+  Stream<QuerySnapshot> call(String locationId) {
     return classRepository.getClassesForLocation(locationId);
   }
 

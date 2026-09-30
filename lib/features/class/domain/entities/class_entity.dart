@@ -6,11 +6,7 @@ class ClassEntity {
 
   const ClassEntity({
     required this.classId,
-    required this.cep,
-    required this.city,
-    required this.region,
-    required this.state,
-    required this.location,
+    required this.locationId,
     required this.unitName,
     required this.schedule,
     required this.professor,
@@ -18,11 +14,7 @@ class ClassEntity {
   }); 
 
   final String classId;
-  final String cep;
-  final String city;
-  final String state;
-  final String region;
-  final String location;
+  final String locationId;
   final String unitName;
   final List<ScheduleEntity> schedule;
   final ClassProfessorEntity professor;
@@ -31,11 +23,7 @@ class ClassEntity {
   ClassEntity copyWith({
 
     String? classId,
-    String? cep,
-    String? city,
-    String? state,
-    String? region,
-    String? location,
+    String? locationId,
     String? unitName,
     List<ScheduleEntity>? schedule,
     ClassProfessorEntity? professor,
@@ -45,11 +33,7 @@ class ClassEntity {
 
     return ClassEntity(
       classId: classId ?? this.classId,
-      cep: cep ?? this.cep,
-      city: city ?? this.city,
-      region: region ?? this.region,
-      state: state ?? this.state,
-      location: location ?? this.location,
+      locationId: locationId ?? this.locationId,
       unitName: unitName ?? this.unitName,
       schedule: List<ScheduleEntity>.from(schedule ?? this.schedule),
       professor: professor ?? this.professor,
@@ -61,11 +45,7 @@ class ClassEntity {
   Map<String, dynamic> toMap() {
     return {
       'classId': classId,
-      'cep': cep,
-      'city': city,
-      'region': state,
-      'state': region,
-      'location': location,
+      'locationId': locationId,
       'unitName': unitName,
       'schedule': schedule.map((data) => data.toMap()).toList(),
       'professor': professor.toMap(),

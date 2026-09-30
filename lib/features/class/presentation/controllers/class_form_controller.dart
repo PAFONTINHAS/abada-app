@@ -22,7 +22,7 @@ class ClassFormController extends ChangeNotifier{
     _classForEdit = classEntity;
 
     classUnitController.text = classEntity.unitName;
-    locationController.text = classEntity.location;
+    locationController.text = classEntity.locationId;
 
     notifyListeners();
   }
@@ -45,7 +45,6 @@ class ClassFormController extends ChangeNotifier{
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
 
     classUnitController.dispose();
@@ -62,6 +61,7 @@ class ClassFormController extends ChangeNotifier{
   ClassEntity buildClassEntity(
     List<ScheduleEntity> scheduleList,
     UserProfileEntity userProfileEntity,
+    String locationId,
   ){
 
     final ClassProfessorEntity classProfessorEntity = ClassProfessorEntity(
@@ -71,11 +71,7 @@ class ClassFormController extends ChangeNotifier{
 
     return ClassEntity(
       classId: '',
-      cep: '',
-      city: '',
-      region: '',
-      state: '',
-      location: locationController.text,
+      locationId: locationId,
       unitName: classUnitController.text,
       schedule: List<ScheduleEntity>.from(scheduleList),
       professor: classProfessorEntity,
@@ -88,7 +84,7 @@ class ClassFormController extends ChangeNotifier{
 
     final updatedClass = _classForEdit!.copyWith(
       unitName: classUnitController.text,
-      location: locationController.text,
+      locationId: locationController.text,
       schedule: List<ScheduleEntity>.from(scheduleList)
     );
 

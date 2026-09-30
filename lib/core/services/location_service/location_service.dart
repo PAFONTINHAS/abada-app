@@ -1,43 +1,111 @@
 import 'dart:convert';
-
-import 'package:sistema_abada_capoeira/core/services/location_service/place_suggestion.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'package:sistema_abada_capoeira/core/services/location_service/place_suggestion.dart';
+import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 
 class LocationService {
 
-  static Future<List<PlaceSuggestion>> searchAddress(String query) async{
+  Future<void> requestLocationPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
 
-    if(query.length < 3) return [];
+    // 1. Check if location services are enabled on the device
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      LoggingService.displayInfo('Location services are disabled.');
+      return;
+    }
+
+    // 2. Check current permission status
+    permission = await Geolocator.checkPermission();
+    
+    if (permission == LocationPermission.denied) {
+      // 3. Request permission if it was previously denied
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        LoggingService.displayInfo('Location permissions are denied.');
+        return;
+      }
+    }
+    
+    if (permission == LocationPermission.deniedForever) {
+      // The user permanently denied permissions; prompt them to open settings
+      LoggingService.displayInfo('Location permissions are permanently denied.');
+      // Optional: await Geolocator.openAppSettings();
+      return;
+    } 
+
+  }
+
+  
+  final http.Client client;
+
+  LocationService({http.Client? client}) 
+      : client = client ?? http.Client();
+
+  Future<List<PlaceSuggestion>> searchAddress(String query) async {
+
+    LoggingService.displayInfo("[SERVICE] Searching for $query");
+    if (query.trim().length < 3) return [];
 
     final url = Uri.parse(
       'https://photon.komoot.io/api/?q=${Uri.encodeComponent(query)}&lang=en&limit=5',
     );
 
-    final response = await http.get(url);
+    LoggingService.displayInfo("URL: $url");
 
-    if(response.statusCode != 200) return [];
 
-    final data = json.decode(response.body);
-    final features = data['features'] as List;
+    try {
+      final response = await client.get(
+        
+        url,
+        headers: {
+          'User-Agent': 'AppAbadaCapoeiraTCC/1.0 (petersonfontinhas@gmail.com)',
+          'Accept': 'application/json',
+        }
+      );
+      
 
-    return features.map((feature){
+      LoggingService.displayInfo("[SERVICE] Response Status: ${response.statusCode}");
 
-      final properties = feature['properties'];
-      final geometry = feature['geometry']['coordinates'];
+      if (response.statusCode == 200) {
+        LoggingService.displayInfo("[SERVICE] Address found");
 
-      final double longitude = geometry[0];
-      final double latitude = geometry[1];
+        final data = json.decode(utf8.decode(response.bodyBytes));
+        final features = data['features'] as List;
 
-      final name = properties['name'] ?? '';
-      final street = properties['street'] ?? '';
-      final city = properties['city'] ?? '';
-      final state = properties['state'] ?? '';
+        return features.map((feature) {
+          final props = feature['properties'];
+          final geometry = feature['geometry']['coordinates'];
 
-      final fullAddress = [name, street, city, state]
-        .where((element) => element.toString().isNotEmpty)
-        .join(', ');
+          // Photon retorna GeoJSON no padrão [longitude, latitude]
+          final double lng = (geometry[0] as num).toDouble();
+          final double lat = (geometry[1] as num).toDouble();
 
-      return PlaceSuggestion(description: fullAddress, latitude: latitude, longitude: longitude);  
-    }).toList();
+          final name = props['name'] ?? '';
+          final street = props['street'] ?? '';
+          final city = props['city'] ?? '';
+          final state = props['state'] ?? '';
+          final district = props['district'] ?? '';
+          final houseNumber = props['housenumber'] ?? '';
+          final postCode = props['postCode'] ?? '';
+        
+
+          final fullAddress = [name, street, houseNumber, district, city, state, postCode]
+              .where((element) => element.toString().isNotEmpty)
+              .join(', ');
+
+          return PlaceSuggestion(
+            description: fullAddress,
+            latitude: lat,
+            longitude: lng,
+          );
+        }).toList();
+      }
+      return [];
+    } catch (_) {
+      return [];
+    }
   }
 }

@@ -16,7 +16,10 @@ class RegisterFormController extends ChangeNotifier {
     confirmPasswordController.addListener(notifyListeners);
     nicknameController.addListener(notifyListeners);
     beltController.addListener(notifyListeners);
-    professorController.addListener(notifyListeners);
+    locationIdController.addListener(notifyListeners);
+    locationIdController.addListener(notifyListeners);
+    professorIdController.addListener(notifyListeners);
+    classNameController.addListener(notifyListeners);
   }
 
   @override
@@ -28,7 +31,10 @@ class RegisterFormController extends ChangeNotifier {
     confirmPasswordController.dispose();
     nicknameController.dispose();
     beltController.dispose();
-    professorController.dispose();
+    locationIdController.dispose();
+    professorIdController.dispose();
+    classNameController.dispose();
+
     super.dispose();
   }
 
@@ -39,7 +45,10 @@ class RegisterFormController extends ChangeNotifier {
   TextEditingController confirmPasswordController = TextEditingController();
   TextEditingController nicknameController = TextEditingController();
   TextEditingController beltController = TextEditingController();
-  TextEditingController professorController = TextEditingController();
+  TextEditingController locationIdController = TextEditingController();
+  TextEditingController professorIdController = TextEditingController();
+  TextEditingController classNameController = TextEditingController();
+
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -56,6 +65,27 @@ class RegisterFormController extends ChangeNotifier {
     if(confirmPasswordController.text.isEmpty) return false;
 
     return true;
+  }
+
+  void setLocationController (String value){
+
+    locationIdController.text = value;
+
+    notifyListeners();
+    
+  }
+
+  void setProfessorIdController(String value){
+    professorIdController.text = value;
+
+    notifyListeners();
+  }
+
+  void setClassNameController(String value){
+
+    classNameController.text = value;
+
+    notifyListeners();
   }
 
   RegisterPhase _registerPhase = RegisterPhase.firstPhase;
@@ -87,7 +117,9 @@ class RegisterFormController extends ChangeNotifier {
       belt: beltController.text,
       nickname: nicknameController.text,
       password: passwordController.text,
-      professor: professorController.text,
+      professorId: professorIdController.text,
+      classId: locationIdController.text,
+      className: classNameController.text,
       confirmPassword: confirmPasswordController.text,
     );
     
@@ -101,9 +133,11 @@ class RegisterFormController extends ChangeNotifier {
     beltController.clear();
     nicknameController.clear();
     passwordController.clear();
-    professorController.clear();
+    locationIdController.clear();
     confirmPasswordController.clear();
-
+    locationIdController.clear();
+    professorIdController.clear();
+    classNameController.clear();
   }
 
   Future<bool> registerUser() async{

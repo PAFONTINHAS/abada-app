@@ -10,7 +10,7 @@ class CreateClassUsecaseValidator {
 
     if(classEntity.unitName.isEmpty) return "Nome da unidade não pode ser vazio";
 
-    if(classEntity.location.isEmpty) return "Endereço da unidade não pode ser vazio";
+    if(classEntity.locationId.isEmpty) return "Endereço da unidade não pode ser vazio";
 
     if(classEntity.schedule.isEmpty) return "Agenda não pode ser vazia";
     

@@ -8,7 +8,7 @@ import 'package:sistema_abada_capoeira/features/class/presentation/controllers/s
 import 'package:sistema_abada_capoeira/features/class/presentation/widgets/schedule_view_list_widget.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/widgets/student_page_button_widget.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/widgets/weekdays_checkbox_list_widget.dart';
-import 'package:sistema_abada_capoeira/features/class/presentation/controllers/create_form_controller.dart';
+import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_form_controller.dart';
 
 class CreateOrEditScheduleWidget extends StatelessWidget {
   const CreateOrEditScheduleWidget({super.key});

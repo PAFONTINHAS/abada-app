@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
-import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/models/auth_status.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/models/register_phase.dart';
-import 'package:sistema_abada_capoeira/features/home_user/presentation/pages/home_user_page.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/widgets/form_button_widget.dart';
+import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/register_form_controller.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/widgets/register_phase_based_button.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/widgets/register_phase_progress_widget.dart';
@@ -33,7 +32,7 @@ class RegisterWidget extends StatelessWidget {
               RegisterPhaseProgressWidget(registerPhase: registerPhase),
 
               SizedBox(height: 15),
-
+              
               if(registerPhase == RegisterPhase.firstPhase) RegisterFirstPhaseFormWidget(),
 
               if(registerPhase == RegisterPhase.secondPhase) RegisterSecondPhaseFormWidget(),

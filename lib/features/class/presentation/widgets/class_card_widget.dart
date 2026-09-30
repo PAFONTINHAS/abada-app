@@ -19,7 +19,7 @@ class ClassCardWidget extends StatelessWidget {
       'Qui', 'Sex', 'Sáb', 'Dom'
     ];
     
-    final classLocation = "${classEntity.location}, ${classEntity.city} - ${classEntity.state}, ${classEntity.cep}";
+    // final classLocation = "${classEntity.locationId}, ${classEntity.city} - ${classEntity.state}, ${classEntity.cep}";
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
@@ -66,7 +66,7 @@ class ClassCardWidget extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        classLocation,
+                        "MUDAR A LOCALIZAÇÃO AQUI!",
                         style: TextStyle(
                           fontSize: 13,
                           color: Colors.grey.shade700, // Contraste hierárquico

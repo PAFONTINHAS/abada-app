@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/standard_class_usecase.dart';
 
-class GetNearbyLocationsStream extends StandardClassUsecase{
+class GetNearbyLocationsStreamUsecase extends StandardClassUsecase{
 
-  GetNearbyLocationsStream(super.classRepository);
+  GetNearbyLocationsStreamUsecase(super.classRepository);
 
 
-  Future<Stream<List<DocumentSnapshot>>> getNearbyLocationsStream(
+  Future<Stream<List<DocumentSnapshot>>> call(
     double radiusInKm,
   ) async {
     return await classRepository.getNearbyLocationsStream(radiusInKm);

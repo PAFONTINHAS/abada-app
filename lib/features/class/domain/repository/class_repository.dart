@@ -8,7 +8,7 @@ abstract class ClassRepository {
   Future<Either<Failure, void>> addStudentToClass(String studentId, String classId);
   Future<Either<Failure, List<ClassEntity>>> getClassesByIdList(List<String> classesId);
   Stream<QuerySnapshot> getClassesForLocation(String locationId);
-  Future<Either<Failure, void>> saveClassLocation({
+  Future<Either<Failure, String>> saveClassLocation({
       required String name,
       required String address,
       required double latitude,

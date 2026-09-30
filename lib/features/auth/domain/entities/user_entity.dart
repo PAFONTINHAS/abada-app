@@ -45,7 +45,7 @@ class UserEntity {
       phone: userRegistrationParams.phone,
       belt: userRegistrationParams.belt,
       nickname: userRegistrationParams.nickname,
-      professor: userRegistrationParams.professor,
+      professor: userRegistrationParams.professorId,
     );
   }
 

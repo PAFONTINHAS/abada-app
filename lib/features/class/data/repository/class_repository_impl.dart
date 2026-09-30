@@ -31,7 +31,7 @@ class ClassRepositoryImpl implements ClassRepository {
   }
 
   @override
-  Future<Either<Failure, void>> saveClassLocation({
+  Future<Either<Failure, String>> saveClassLocation({
     required String name,
     required String address,
     required double latitude,
