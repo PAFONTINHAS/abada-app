@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:sistema_abada_capoeira/features/dashboard/presentation/models/request_type.dart';
+import 'package:provider/provider.dart';
+import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/tusca_badge_card_widget.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
 import 'package:sistema_abada_capoeira/shared/section_widgets/section_title_widget.dart';
+import 'package:sistema_abada_capoeira/features/dashboard/presentation/models/request_type.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/dashboard_app_bar_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/event_request_card_widget.dart';
-import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/irregular_tusca_badge_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/rapid_metrics_chart_widget.dart';
-import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/regional_metric_summary_card_list_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/view_more_requests_button_widget.dart';
+import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/regional_metric_summary_card_list_widget.dart';
 
 class CoordenatorDashboardPage extends StatelessWidget {
   const CoordenatorDashboardPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+
+    final profileController = context.read<ProfileController>();
+    final userProfile = profileController.userProfile;
+    
     return Scaffold(
       appBar: DashboardAppBarWidget(
         onNotificationTap: (){} ,
@@ -43,7 +49,8 @@ class CoordenatorDashboardPage extends StatelessWidget {
             ViewMoreRequestsButtonWidget(onPressed: (){}),
 
             SectionTitleWidget(sectionTitle: "Selo TUSCA"),
-            const IrregularTuscaBadgeWidget(),
+
+            TuscaBadgeCardWidget(tuscaEntity: userProfile.tusca)
           ],
         ),
       ),

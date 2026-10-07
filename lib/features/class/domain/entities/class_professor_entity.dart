@@ -8,4 +8,11 @@ class ClassProfessorEntity {
   final String professorId;
   final String professorNickname;
 
+  Map<String, dynamic> toMap(){
+    return {
+
+      'professorId': professorId,
+      'professorNickname': professorNickname
+    };
+  }
 }

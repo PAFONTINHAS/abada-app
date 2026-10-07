@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
+import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
 import 'package:sistema_abada_capoeira/features/member_validation/presentation/controllers/membership_validation_controller.dart';
 import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
 import 'package:sistema_abada_capoeira/shared/section_widgets/section_title_widget.dart';
@@ -8,8 +9,6 @@ import 'package:sistema_abada_capoeira/features/class/presentation/widgets/class
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_controller.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/widgets/class_entry_requests_button_widget.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/widgets/class_local_summary_card_list_widget.dart';
-
-
 
 class ProfessorClassesPage extends StatelessWidget {
   const ProfessorClassesPage({super.key});
@@ -23,12 +22,6 @@ class ProfessorClassesPage extends StatelessWidget {
     final membershipRequests = membershipController.requests;
 
     final currentAttendedClass = classController.attendedClasses.first;
-
-    final double maxListSize = 500.0;
-
-    final double currentListSize = classController.lecturedClasses.length * 170.0;
-
-    final double listSize = (currentListSize > maxListSize) ? maxListSize : currentListSize;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -60,20 +53,37 @@ class ProfessorClassesPage extends StatelessWidget {
 
             ClassCardWidget(classEntity: currentAttendedClass),
 
-            SectionTitleWidget(sectionTitle: "Minhas Turmas", onPressed: (){}, onPressedTitle: "+ Criar Turma",),
-
-            SizedBox(
-              height: listSize,// classController.lecturedClasses.length * 170,
-              child: ListView.builder(
-                physics: const  ScrollPhysics(),
-                itemCount: classController.lecturedClasses.length,
-                itemBuilder: (context, index) {
-                  final lecturedClass = classController.lecturedClasses[index];
-
-                  return ClassCardWidget(classEntity: lecturedClass);
-                },
-              ),
+            SectionTitleWidget(
+              sectionTitle: "Minhas Turmas",
+              onPressedTitle: "+ Criar Turma",
+              onPressed: () => RouteController.redirectToCreateClassPage(context: context),
             ),
+
+            Selector<ClassController, List<ClassEntity>>(
+              selector: (_, controller) => controller.lecturedClasses,
+              builder: (_, lecturedClasses, _) {
+
+                final double maxListSize = 500.0 + classController.lecturedClasses.length + 180;
+
+                final double currentListSize = classController.lecturedClasses.length * 180.0;
+
+                final double listSize = (currentListSize > maxListSize) ? maxListSize : currentListSize;
+
+                return SizedBox(
+                  height: listSize,
+                  child: ListView.builder(
+                    physics: const ScrollPhysics(),
+                    itemCount: classController.lecturedClasses.length,
+                    itemBuilder: (context, index) {
+                      final lecturedClass =
+                          classController.lecturedClasses[index];
+
+                      return ClassCardWidget(classEntity: lecturedClass);
+                    },
+                  ),
+                );
+              },
+            )
                 
           ],
         ),

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/user_profile_entity.dart';
-import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/edit_profile_form_widget.dart';
+import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/profile_header_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/edit_profile_form_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_form_controller.dart';
-import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:sistema_abada_capoeira/features/waiting_layer/presentation/widgets/deactivate_account_button_widget.dart';
 import 'package:sistema_abada_capoeira/features/waiting_layer/presentation/widgets/deactivate_account_dialog_widget.dart';
 

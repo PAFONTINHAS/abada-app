@@ -1,23 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
-import 'package:sistema_abada_capoeira/features/class/data/models/class_professor_entity_model.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
+import 'package:sistema_abada_capoeira/features/class/domain/entities/schedule_entity.dart';
+import 'package:sistema_abada_capoeira/features/class/data/models/schedule_entity_model.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_member_entity.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_professor_entity.dart';
+import 'package:sistema_abada_capoeira/features/class/data/models/class_professor_entity_model.dart';
 
 class ClassEntityModel extends ClassEntity{
 
   const ClassEntityModel({
+    super.members,
     required super.classId,
-    required super.cep,
-    required super.city,
-    required super.region,
-    required super.state,
-    required super.location,
     required super.unitName,
     required super.schedule,
     required super.professor,
-    super.members
+    required super.locationId,
+    required super.locationAddress
   }); 
 
 
@@ -27,33 +25,54 @@ class ClassEntityModel extends ClassEntity{
 
     final classProfessorEntity = ClassProfessorEntityModel.fromMap(data['professor']);
 
+    final List<dynamic> scheduleList = data['schedule'] as List<dynamic>;
+
+    final List<Map<String, dynamic>> typedList = List<Map<String, dynamic>>.from(scheduleList);
+
+    final List<ScheduleEntity> schedule = typedList
+        .map((data) => ScheduleEntityModel.fromSnapshot(data))
+        .toList();
+
     return ClassEntityModel(
       classId: document.id,
-      cep: data['cep'],
-      city: data['city'],
-      region: data['region'],
-      state: data['state'],
-      location: data['location'],
+      locationId: data['locationId'],
       unitName: data['unitName'],
-      schedule: List.from(data['schedule'] ?? []),
+      schedule: schedule,
       professor: classProfessorEntity,
+      locationAddress: data['locationAddress'],
       members: []
     );
-
   }
 
+  factory ClassEntityModel.fromEntity(ClassEntity entity){
+    return ClassEntityModel(
+      classId: entity.classId,
+      unitName: entity.unitName,
+      schedule: entity.schedule,
+      professor: entity.professor,
+      locationId: entity.locationId,
+      locationAddress: entity.locationAddress
+    );
+  }
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'unitName': unitName,
+      'locationId': locationId,
+      'schedule': schedule.map((data) => data.toMap()).toList(),
+      'professor': professor.toMap(),
+      'locationAddress': locationAddress
+    };
+  }
 
   @override
   ClassEntityModel copyWith({
-
     String? classId,
-    String? cep,
-    String? city,
-    String? state,
-    String? region,
-    String? location,
+    String? locationId,
     String? unitName,
-    List<String>? schedule,
+    String? locationAddress,
+    List<ScheduleEntity>? schedule,
     ClassProfessorEntity? professor,
     List<ClassMemberEntity>? members,
 
@@ -61,18 +80,13 @@ class ClassEntityModel extends ClassEntity{
 
     return ClassEntityModel(
       classId: classId ?? this.classId,
-      cep: cep ?? this.cep,
-      city: city ?? this.city,
-      region: region ?? this.region,
-      state: state ?? this.state,
-      location: location ?? this.location,
+      members: members ?? this.members,
       unitName: unitName ?? this.unitName,
       schedule: schedule ?? this.schedule,
       professor: professor ?? this.professor, 
-      members: members ?? this.members,
+      locationId: locationId ?? this.locationId,
+      locationAddress: locationAddress ?? this.locationAddress
     );
 
   }
-
-
 }

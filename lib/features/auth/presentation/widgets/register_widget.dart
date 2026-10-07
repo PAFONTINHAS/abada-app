@@ -2,25 +2,45 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
-import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/models/auth_status.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/models/register_phase.dart';
-import 'package:sistema_abada_capoeira/features/home_user/presentation/pages/home_user_page.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/widgets/form_button_widget.dart';
-import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/register_form_controller.dart';
+import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/widgets/register_phase_based_button.dart';
+import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/register_form_controller.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/widgets/register_phase_progress_widget.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/widgets/register_first_phase_form_widget.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/widgets/register_second_phase_form_widget.dart';
+import 'package:sistema_abada_capoeira/features/location/presentation/controllers/student_class_selection_controller.dart';
 
-class RegisterWidget extends StatelessWidget {
+
+class RegisterWidget extends StatefulWidget {
   const RegisterWidget({super.key});
+
+  @override
+  State<RegisterWidget> createState() => _RegisterWidgetState();
+}
+
+class _RegisterWidgetState extends State<RegisterWidget> {
+  
+  @override
+  void initState(){
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_){
+
+      final controller = context.read<StudentClassSelectionController>();
+
+      controller.initNearbyLocations();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
 
     final authController = context.read<AuthController>();
     final formController = context.read<RegisterFormController>();
+    final locationController = context.read<StudentClassSelectionController>();
     return Selector<RegisterFormController, RegisterPhase>(
       selector: (_, controller) => controller.registerPhase,
       builder: (context, registerPhase, child){
@@ -33,7 +53,7 @@ class RegisterWidget extends StatelessWidget {
               RegisterPhaseProgressWidget(registerPhase: registerPhase),
 
               SizedBox(height: 15),
-
+              
               if(registerPhase == RegisterPhase.firstPhase) RegisterFirstPhaseFormWidget(),
 
               if(registerPhase == RegisterPhase.secondPhase) RegisterSecondPhaseFormWidget(),
@@ -49,7 +69,9 @@ class RegisterWidget extends StatelessWidget {
 
                   MessageHandler.showInfo(context, "Criando sua conta");
 
-                  final success = await formController.registerUser();
+                  if(locationController.classRequestEntryEntity == null) return;
+
+                  final success = await formController.registerUser(locationController.classRequestEntryEntity!);
 
                   if(!context.mounted) return;
 
@@ -86,3 +108,4 @@ class RegisterWidget extends StatelessWidget {
     );
   }
 }
+
