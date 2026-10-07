@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sistema_abada_capoeira/features/dashboard/presentation/models/location.dart';
 import 'package:sistema_abada_capoeira/features/location/domain/entities/location_entity.dart';
 
 class LocationEntityModel extends LocationEntity{

@@ -116,6 +116,7 @@ void reset() {
 
       _nearbyLocationsStream = null;
     }
+
   }
 
   Future<void> listenToNearbyLocations() async{
@@ -124,12 +125,13 @@ void reset() {
 
     if(_nearbyLocationsStream == null) return;
 
-
-    _locationStreamSubscription = _nearbyLocationsStream!.listen((fetchedLocations) {
+    _locationStreamSubscription = _nearbyLocationsStream!.listen((fetchedLocations){
 
       LoggingService.displayInfo("Locations found: ${fetchedLocations.length}");
 
       _locations = fetchedLocations;
+
+      _isLoadingLocations = false;
 
       notifyListeners();
     });

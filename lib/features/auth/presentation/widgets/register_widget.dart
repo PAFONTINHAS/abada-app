@@ -54,9 +54,10 @@ class _RegisterWidgetState extends State<RegisterWidget> {
 
               SizedBox(height: 15),
               
-              if(registerPhase == RegisterPhase.firstPhase) RegisterFirstPhaseFormWidget(),
+              // if(registerPhase == RegisterPhase.firstPhase) RegisterFirstPhaseFormWidget(),
 
-              if(registerPhase == RegisterPhase.secondPhase) RegisterSecondPhaseFormWidget(),
+              // if(registerPhase == RegisterPhase.secondPhase) RegisterSecondPhaseFormWidget(),
+              RegisterSecondPhaseFormWidget(),
 
               SizedBox(height: 20),
 

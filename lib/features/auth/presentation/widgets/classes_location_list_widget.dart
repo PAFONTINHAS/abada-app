@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
+import 'package:sistema_abada_capoeira/features/auth/presentation/widgets/class_location_card_widget.dart';
+import 'package:sistema_abada_capoeira/features/auth/presentation/widgets/location_radius_selection_widget.dart';
 import 'package:sistema_abada_capoeira/features/location/presentation/controllers/student_class_selection_controller.dart';
 
 class ClassesLocationListWidget extends StatelessWidget {
@@ -8,99 +9,49 @@ class ClassesLocationListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 300,
-      child: Consumer<StudentClassSelectionController>(
-        builder: (context, controller, child) {
 
-          if(controller.isLoadingLocations){
-            const Center(child: CircularProgressIndicator());
-          }
+    return Column(
 
-          if (controller.locations.isEmpty) {
-            return const Center(
-              child: Text("Nenhuma unidade encontrada no raio selecionado."),
-            );
-          }
+      children: [
 
-          return ListView.builder(
-            shrinkWrap: true,
-            itemCount: controller.locations.length,
-            itemBuilder: (context, index) {
-              final location = controller.locations[index];
-              final locationDoc = controller.locations[index];
+        const LocationRadiusSelectionWidget(),
+        SizedBox(
+          height: 300,
+          child: Consumer<StudentClassSelectionController>(
+            builder: (context, controller, child) {
+              if (controller.isLoadingLocations) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-              final isSelected = controller.selectedLocationId == locationDoc.id;
-
-              return Card(
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                color: isSelected ? Colors.indigo.shade50 : Colors.white,
-                child: ExpansionTile(
-                  title: Text(
-                    location.name,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+              if (controller.locations.isEmpty) {
+                return const Center(
+                  child: Text(
+                    "Nenhuma unidade encontrada no raio selecionado.",
                   ),
-                  subtitle: Text(location.address),
-                  onExpansionChanged: (expanded) {
-                    if (expanded) {
-                      controller.selectLocation(locationDoc.id);
-                    }
-                  },
-                  children: [
+                );
+              }
 
-                    if (isSelected)
-                      if(controller.isLoadingClasses) 
-                        const Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: CircularProgressIndicator(),
-                        )
+              return ListView.builder(
+                shrinkWrap: true,
+                itemCount: controller.locations.length,
+                itemBuilder: (context, index) {
+                  final location = controller.locations[index];
 
-                      else if(controller.classesForLocation.isEmpty)...[
+                  final isSelected =
+                      controller.selectedLocationId == location.id;
 
-                        const Center(
-                          child: Text("Nenhuma turma encontrada para essa unidade."),
-                        )
-                      ]  
-
-                      else
-                        Column(
-                          children: controller.classesForLocation.map((classEntity) {
-                            return ListTile(
-                              title: Text(classEntity.unitName),
-                              subtitle: Text(
-                                "Prof: ${classEntity.professor.professorNickname}",
-                              ),
-                              trailing: ElevatedButton(
-                                onPressed: () {
-                                  controller.setLocationIdController(
-                                    classEntity.classId,
-                                  );
-                                  controller.setClassNameController(
-                                    classEntity.unitName,
-                                  );
-                                  controller.setProfessorIdController(
-                                    classEntity.professor.professorId,
-                                  );
-
-                                  controller.buildClassRequestEntry();
-                                },
-                                child: Text(
-                                  controller.classRequestEntryEntity != null &&
-                                  controller.classRequestEntryEntity!.classId == classEntity.classId
-                                    ? "Turma Selecionada"
-                                    : "Selecionar Turma",
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                        )
-                  ],
-                ),
+                  return ClassLocationCardWidget(
+                    isSelected: isSelected,
+                    location: location,
+                    controller: controller,
+                  );
+                },
               );
             },
-          );
-        },
-      ),
+          ),
+        )
+      ],
     );
+    
   }
 }

@@ -13,17 +13,6 @@ class RegisterSecondPhaseFormWidget extends StatefulWidget {
 }
 
 class _RegisterSecondPhaseFormWidgetState extends State<RegisterSecondPhaseFormWidget> {
-  // @override
-  // void initState() {
-  //   super.initState();
-
-  //   WidgetsBinding.instance.addPostFrameCallback((_) {
-  //     final controller = context.read<StudentClassSelectionController>();
-
-  //     controller.initNearbyLocations();
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     final formController = context.watch<RegisterFormController>();
@@ -69,31 +58,10 @@ class _RegisterSecondPhaseFormWidgetState extends State<RegisterSecondPhaseFormW
 
         SizedBox(height: 15),
 
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            children: [
-              const Text("Raio de busca: "),
-              DropdownButton<int>(
-                value: locationController.searchRadiusKm,
-                items: const [
-                  DropdownMenuItem(value: 5, child: Text("5 km")),
-                  DropdownMenuItem(value: 10, child: Text("10 km")),
-                  DropdownMenuItem(value: 20, child: Text("20 km")),
-                  DropdownMenuItem(value: 50, child: Text("50 km")),
-                ],
-                onChanged: (radius) {
-                  if (radius != null) locationController.updateRadius(radius);
-                },
-              ),
-            ],
-          ),
-        ),
 
-        ClassesLocationListWidget(),
+
+        const ClassesLocationListWidget(),
       ],
     );
   }
-
-
 }
