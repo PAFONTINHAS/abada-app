@@ -89,16 +89,13 @@ class LocationService {
           final state = props['state'] ?? '';
           final district = props['district'] ?? '';
           final houseNumber = props['housenumber'] ?? '';
-          final postCode = props['postCode'] ?? '';
+          final postCode = props['postcode'] ?? '';
           final osmType = props['osm_type'] ?? '';
           final osmId = props['osm_id'] ?? '';
 
           final osmKey = "${osmType}_$osmId";
-        
 
-          final fullAddress = [name, street, houseNumber, district, city, state, postCode]
-              .where((element) => element.toString().isNotEmpty)
-              .join(', ');
+          final fullAddress = "$name - $street, $houseNumber - $district, $city - $state, $postCode";
 
           return PlaceSuggestion(
             latitude: lat,

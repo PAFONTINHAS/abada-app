@@ -30,6 +30,9 @@ class CreateLocationController extends ChangeNotifier{
   PlaceSuggestion? _selectedSuggestion;
   PlaceSuggestion? get selectedSuggestion => _selectedSuggestion;
 
+  TextEditingController _fullAddress = TextEditingController();
+  TextEditingController get fullAddress => _fullAddress;
+
   String? _selectedLocationId;
   String? get selectedLocationId => _selectedLocationId; 
 
@@ -70,6 +73,10 @@ class CreateLocationController extends ChangeNotifier{
 
     _selectedSuggestion = suggestion;
     _suggestions = [];
+
+    if(_selectedSuggestion != null){
+      _fullAddress.text = _selectedSuggestion!.fullAddress;
+    }
     notifyListeners();
   }
 
