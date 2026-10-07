@@ -62,6 +62,7 @@ class ClassFormController extends ChangeNotifier{
     List<ScheduleEntity> scheduleList,
     UserProfileEntity userProfileEntity,
     String locationId,
+    String locationAddress,
   ){
 
     final ClassProfessorEntity classProfessorEntity = ClassProfessorEntity(
@@ -72,9 +73,10 @@ class ClassFormController extends ChangeNotifier{
     return ClassEntity(
       classId: '',
       locationId: locationId,
+      professor: classProfessorEntity,
+      locationAddress:locationAddress,
       unitName: classUnitController.text,
       schedule: List<ScheduleEntity>.from(scheduleList),
-      professor: classProfessorEntity,
     );
   }
 

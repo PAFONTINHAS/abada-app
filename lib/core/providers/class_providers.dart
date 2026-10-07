@@ -4,18 +4,15 @@ import 'package:sistema_abada_capoeira/features/class/domain/repository/class_re
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/update_class_usecase.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/create_class_usecase.dart';
 import 'package:sistema_abada_capoeira/features/class/data/repository/class_repository_impl.dart';
-import 'package:sistema_abada_capoeira/features/class/data/datasources/class_remote_datasource.dart';
+import 'package:sistema_abada_capoeira/features/class/data/datasources/class_remote_datasource/class_remote_datasource.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_controller.dart';
-import 'package:sistema_abada_capoeira/features/class/domain/usecases/save_class_location_usecase.dart';
+import 'package:sistema_abada_capoeira/features/location/domain/usecases/save_class_location_usecase.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/get_attended_classes_usecase.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/get_lectured_classes_usecase.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/schedule_controller.dart';
-import 'package:sistema_abada_capoeira/features/class/data/datasources/class_remote_datasource_impl.dart';
+import 'package:sistema_abada_capoeira/features/class/data/datasources/class_remote_datasource/class_remote_datasource_impl.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_form_controller.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/get_classes_for_location_usecase.dart';
-import 'package:sistema_abada_capoeira/features/class/domain/usecases/get_nearby_locations_stream_usecase.dart';
-import 'package:sistema_abada_capoeira/features/class/presentation/controllers/create_location_controller.dart';
-import 'package:sistema_abada_capoeira/features/class/presentation/controllers/student_class_selection_controller.dart';
 
 class ClassProviders {
 
@@ -26,11 +23,9 @@ class ClassProviders {
 
   static final CreateClassUsecase createClassUsecase = CreateClassUsecase(classRepository);
   static final UpdateClassUsecase updateClassUsecase = UpdateClassUsecase(classRepository);
-  static final SaveClassLocationUsecase saveClassLocationUsecase = SaveClassLocationUsecase(classRepository);
   static final GetAttendedClassesUsecase getAttendedClassesUsecase = GetAttendedClassesUsecase(classRepository);
   static final GetLecturedClassesUsecase getLecturedClassesUsecase = GetLecturedClassesUsecase(classRepository);
   static final GetClassesForLocationUsecase getClassesForLocationUsecase = GetClassesForLocationUsecase(classRepository);
-  static final GetNearbyLocationsStreamUsecase getNearbyLocationsStreamUsecase = GetNearbyLocationsStreamUsecase(classRepository);
 
   static final List<SingleChildWidget> providers = [
 
@@ -44,13 +39,7 @@ class ClassProviders {
     ),
     ChangeNotifierProvider(create: (_) => ClassFormController()),
     ChangeNotifierProvider(create: (_) => ScheduleController()),
-    ChangeNotifierProvider(create: (_) => CreateLocationController(saveClassLocationUsecase)),
-    ChangeNotifierProvider(
-      create: (_) => StudentClassSelectionController(
-        getClassesForLocationUsecase,
-        getNearbyLocationsStreamUsecase,
-      ),
-    )
+
 
   ];
 

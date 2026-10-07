@@ -7,11 +7,13 @@ class LocationEntity {
   final double longitude;
   final String createdBy;
   final DateTime createdAt;
+  final String osmKey;
   final bool isVisible;
 
   const LocationEntity({
     required this.id,
     required this.name,
+    required this.osmKey,
     required this.createdBy,
     required this.address,
     required this.latitude,

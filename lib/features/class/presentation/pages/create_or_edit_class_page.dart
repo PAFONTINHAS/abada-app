@@ -14,7 +14,7 @@ import 'package:sistema_abada_capoeira/features/class/presentation/controllers/s
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_form_controller.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/widgets/create_or_edit_schedule_widget.dart';
-import 'package:sistema_abada_capoeira/features/class/presentation/controllers/create_location_controller.dart';
+import 'package:sistema_abada_capoeira/features/location/presentation/controllers/create_location_controller.dart';
 
 class CreateOrEditClassPage extends StatefulWidget {
   const CreateOrEditClassPage({super.key, this.classEntity});
@@ -168,7 +168,7 @@ class _CreateOrEditClassPageState extends State<CreateOrEditClassPage> {
                 }
 
                 final classEntity = !isEditing
-                    ? formController.buildClassEntity(scheduleList, user, selectedLocationId)
+                    ? formController.buildClassEntity(scheduleList, user, selectedLocationId, formController.classUnitController.text)
                     : formController.buildUpdatedClassEntity(scheduleList);
 
                 if(classEntity == null) return;

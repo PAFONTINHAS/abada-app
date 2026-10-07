@@ -16,7 +16,7 @@ import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/tus
 import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/quick_actions_section_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/change_request_status_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/profile_action_button_widget.dart';
-import 'package:sistema_abada_capoeira/features/class/presentation/controllers/student_class_selection_controller.dart';
+import 'package:sistema_abada_capoeira/features/location/presentation/controllers/student_class_selection_controller.dart';
 
 /// RF04 - Gerenciar Perfil
 class ProfilePage extends StatelessWidget {

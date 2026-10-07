@@ -7,10 +7,11 @@ import 'package:sistema_abada_capoeira/features/auth/presentation/models/registe
 import 'package:sistema_abada_capoeira/features/auth/presentation/widgets/form_button_widget.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/register_form_controller.dart';
+import 'package:sistema_abada_capoeira/features/auth/presentation/widgets/register_first_phase_form_widget.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/widgets/register_phase_based_button.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/widgets/register_phase_progress_widget.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/widgets/register_second_phase_form_widget.dart';
-import 'package:sistema_abada_capoeira/features/class/presentation/controllers/student_class_selection_controller.dart';
+import 'package:sistema_abada_capoeira/features/location/presentation/controllers/student_class_selection_controller.dart';
 
 
 class RegisterWidget extends StatefulWidget {
@@ -53,10 +54,9 @@ class _RegisterWidgetState extends State<RegisterWidget> {
 
               SizedBox(height: 15),
               
-              // if(registerPhase == RegisterPhase.firstPhase) RegisterFirstPhaseFormWidget(),
+              if(registerPhase == RegisterPhase.firstPhase) RegisterFirstPhaseFormWidget(),
 
-              // if(registerPhase == RegisterPhase.secondPhase) RegisterSecondPhaseFormWidget(),
-              RegisterSecondPhaseFormWidget(),
+              if(registerPhase == RegisterPhase.secondPhase) RegisterSecondPhaseFormWidget(),
 
               SizedBox(height: 20),
 

@@ -15,6 +15,7 @@ class ClassEntityModel extends ClassEntity{
     required super.schedule,
     required super.professor,
     required super.locationId,
+    required super.locationAddress
   }); 
 
 
@@ -38,9 +39,9 @@ class ClassEntityModel extends ClassEntity{
       unitName: data['unitName'],
       schedule: schedule,
       professor: classProfessorEntity,
+      locationAddress: data['locationAddress'],
       members: []
     );
-
   }
 
   factory ClassEntityModel.fromEntity(ClassEntity entity){
@@ -50,6 +51,7 @@ class ClassEntityModel extends ClassEntity{
       schedule: entity.schedule,
       professor: entity.professor,
       locationId: entity.locationId,
+      locationAddress: entity.locationAddress
     );
   }
 
@@ -60,6 +62,7 @@ class ClassEntityModel extends ClassEntity{
       'locationId': locationId,
       'schedule': schedule.map((data) => data.toMap()).toList(),
       'professor': professor.toMap(),
+      'locationAddress': locationAddress
     };
   }
 
@@ -68,6 +71,7 @@ class ClassEntityModel extends ClassEntity{
     String? classId,
     String? locationId,
     String? unitName,
+    String? locationAddress,
     List<ScheduleEntity>? schedule,
     ClassProfessorEntity? professor,
     List<ClassMemberEntity>? members,
@@ -76,11 +80,12 @@ class ClassEntityModel extends ClassEntity{
 
     return ClassEntityModel(
       classId: classId ?? this.classId,
-      locationId: locationId ?? this.locationId,
+      members: members ?? this.members,
       unitName: unitName ?? this.unitName,
       schedule: schedule ?? this.schedule,
       professor: professor ?? this.professor, 
-      members: members ?? this.members,
+      locationId: locationId ?? this.locationId,
+      locationAddress: locationAddress ?? this.locationAddress
     );
 
   }

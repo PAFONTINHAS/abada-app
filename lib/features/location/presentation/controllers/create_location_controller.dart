@@ -2,11 +2,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/core/services/location_service/location_service.dart';
 import 'package:sistema_abada_capoeira/core/services/location_service/place_suggestion.dart';
-import 'package:sistema_abada_capoeira/features/class/domain/entities/location_entity.dart';
-import 'package:sistema_abada_capoeira/features/class/domain/usecases/save_class_location_usecase.dart';
+import 'package:sistema_abada_capoeira/features/location/domain/entities/location_entity.dart';
+import 'package:sistema_abada_capoeira/features/location/domain/usecases/save_class_location_usecase.dart';
 
 
 enum LocationFormState{ initial, loading, success, error }
+
 class CreateLocationController extends ChangeNotifier{
 
   SaveClassLocationUsecase _saveClassLocationUsecase;
@@ -99,6 +100,7 @@ class CreateLocationController extends ChangeNotifier{
       latitude: _selectedSuggestion!.latitude,
       district: _selectedSuggestion!.district,
       longitude: _selectedSuggestion!.longitude,
+      osmKey:  _selectedSuggestion!.osmKey,
       createdAt: DateTime.now(),
     );
 

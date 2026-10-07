@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sistema_abada_capoeira/features/class/domain/entities/location_entity.dart';
+import 'package:sistema_abada_capoeira/features/location/domain/entities/location_entity.dart';
 
 class LocationEntityModel extends LocationEntity{
 
@@ -12,6 +12,7 @@ class LocationEntityModel extends LocationEntity{
     required super.district,
     required super.longitude,
     required super.createdAt,
+    required super.osmKey,
     super.isVisible
   });
 
@@ -35,6 +36,7 @@ class LocationEntityModel extends LocationEntity{
       createdBy: data['createdBy'],
       latitude: geoPoint.latitude,
       longitude: geoPoint.longitude,
+      osmKey: data['osmKey'] ?? '',
       isVisible: data['isVisible']
     );
   }

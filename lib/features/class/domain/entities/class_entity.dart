@@ -10,12 +10,14 @@ class ClassEntity {
     required this.unitName,
     required this.schedule,
     required this.professor,
-    this.members = const []
+    this.members = const [],
+    required this.locationAddress,
   }); 
 
   final String classId;
-  final String locationId;
   final String unitName;
+  final String locationId;
+  final String locationAddress;
   final List<ScheduleEntity> schedule;
   final ClassProfessorEntity professor;
   final List<ClassMemberEntity> members;
@@ -25,6 +27,7 @@ class ClassEntity {
     String? classId,
     String? locationId,
     String? unitName,
+    String? locationAddress,
     List<ScheduleEntity>? schedule,
     ClassProfessorEntity? professor,
     List<ClassMemberEntity>? members,
@@ -33,11 +36,12 @@ class ClassEntity {
 
     return ClassEntity(
       classId: classId ?? this.classId,
-      locationId: locationId ?? this.locationId,
-      unitName: unitName ?? this.unitName,
-      schedule: List<ScheduleEntity>.from(schedule ?? this.schedule),
-      professor: professor ?? this.professor,
       members: members ?? this.members,
+      unitName: unitName ?? this.unitName,
+      professor: professor ?? this.professor,
+      locationId: locationId ?? this.locationId,
+      locationAddress: locationAddress ?? this.locationAddress,
+      schedule: List<ScheduleEntity>.from(schedule ?? this.schedule),
     );
 
   }

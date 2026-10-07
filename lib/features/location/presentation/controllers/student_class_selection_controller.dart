@@ -2,10 +2,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
-import 'package:sistema_abada_capoeira/features/class/domain/entities/location_entity.dart';
+import 'package:sistema_abada_capoeira/features/location/domain/entities/location_entity.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_request_entry_entity.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/get_classes_for_location_usecase.dart';
-import 'package:sistema_abada_capoeira/features/class/domain/usecases/get_nearby_locations_stream_usecase.dart';
+import 'package:sistema_abada_capoeira/features/location/domain/usecases/get_nearby_locations_stream_usecase.dart';
 
 class StudentClassSelectionController extends ChangeNotifier {
   final GetNearbyLocationsStreamUsecase _getNearbyLocationsStreamUsecase;

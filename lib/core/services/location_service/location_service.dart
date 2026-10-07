@@ -90,6 +90,10 @@ class LocationService {
           final district = props['district'] ?? '';
           final houseNumber = props['housenumber'] ?? '';
           final postCode = props['postCode'] ?? '';
+          final osmType = props['osm_type'] ?? '';
+          final osmId = props['osm_id'] ?? '';
+
+          final osmKey = "${osmType}_$osmId";
         
 
           final fullAddress = [name, street, houseNumber, district, city, state, postCode]
@@ -98,6 +102,7 @@ class LocationService {
 
           return PlaceSuggestion(
             latitude: lat,
+            osmKey: osmKey,
             longitude: lng,
             district: district,
             fullAddress: fullAddress,

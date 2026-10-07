@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
-import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
-import 'package:sistema_abada_capoeira/features/class/domain/entities/location_entity.dart';
-import 'package:sistema_abada_capoeira/features/class/presentation/controllers/student_class_selection_controller.dart';
+import 'package:sistema_abada_capoeira/features/location/presentation/controllers/student_class_selection_controller.dart';
 
 class ClassesLocationListWidget extends StatelessWidget {
   const ClassesLocationListWidget({super.key});
@@ -14,8 +12,6 @@ class ClassesLocationListWidget extends StatelessWidget {
       height: 300,
       child: Consumer<StudentClassSelectionController>(
         builder: (context, controller, child) {
-
-          LoggingService.displayInfo("Mudança aqui hein!");
 
           if(controller.isLoadingLocations){
             const Center(child: CircularProgressIndicator());
@@ -52,12 +48,19 @@ class ClassesLocationListWidget extends StatelessWidget {
                   },
                   children: [
 
-                    if (isSelected && controller.classesStream != null)
+                    if (isSelected)
                       if(controller.isLoadingClasses) 
                         const Padding(
                           padding: EdgeInsets.all(16.0),
                           child: CircularProgressIndicator(),
                         )
+
+                      else if(controller.classesForLocation.isEmpty)...[
+
+                        const Center(
+                          child: Text("Nenhuma turma encontrada para essa unidade."),
+                        )
+                      ]  
 
                       else
                         Column(
@@ -82,7 +85,8 @@ class ClassesLocationListWidget extends StatelessWidget {
                                   controller.buildClassRequestEntry();
                                 },
                                 child: Text(
-                                  controller.classRequestEntryEntity != null
+                                  controller.classRequestEntryEntity != null &&
+                                  controller.classRequestEntryEntity!.classId == classEntity.classId
                                     ? "Turma Selecionada"
                                     : "Selecionar Turma",
                                 ),
@@ -90,7 +94,6 @@ class ClassesLocationListWidget extends StatelessWidget {
                             );
                           }).toList(),
                         )
-
                   ],
                 ),
               );
