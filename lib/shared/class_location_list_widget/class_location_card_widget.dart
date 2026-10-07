@@ -116,6 +116,7 @@ class ClassLocationCardWidget extends StatelessWidget {
                     color: theme.colorScheme.outlineVariant.withOpacity(0.2),
                   ),
                   itemBuilder: (context, index) {
+                    
                     final classEntity = controller.classesForLocation[index];
                     final isClassSelected =
                         controller.classRequestEntryEntity != null &&
