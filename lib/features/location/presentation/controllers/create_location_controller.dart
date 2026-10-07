@@ -10,7 +10,7 @@ enum LocationFormState{ initial, loading, success, error }
 
 class CreateLocationController extends ChangeNotifier{
 
-  SaveClassLocationUsecase _saveClassLocationUsecase;
+  final SaveClassLocationUsecase _saveClassLocationUsecase;
 
   LocationService locationService = LocationService();
 
@@ -32,6 +32,9 @@ class CreateLocationController extends ChangeNotifier{
 
   String? _selectedLocationId;
   String? get selectedLocationId => _selectedLocationId; 
+
+  String? _selectedLocationAddress;
+  String? get selectedLocationAddress => _selectedLocationAddress;
 
   bool _isSearching = false;
   bool get isSearching => _isSearching;
@@ -83,7 +86,7 @@ class CreateLocationController extends ChangeNotifier{
 
     if(_selectedSuggestion == null){
 
-      _errorMessage = "Selecion um endereço da lista";
+      _errorMessage = "Selecione um endereço da lista";
       notifyListeners();
       return false;
     }
@@ -110,10 +113,12 @@ class CreateLocationController extends ChangeNotifier{
       _state = LocationFormState.error;
       _errorMessage = failure.message;
       return false;
-    }, (locationId){
+    }, (location){
+
       _selectedSuggestion = null;
       _state = LocationFormState.success;
-      _selectedLocationId = locationId;
+      _selectedLocationId = location.id;
+      _selectedLocationAddress = location.address;
       notifyListeners();
       return true;
     });

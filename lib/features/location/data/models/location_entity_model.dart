@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sistema_abada_capoeira/features/dashboard/presentation/models/location.dart';
 import 'package:sistema_abada_capoeira/features/location/domain/entities/location_entity.dart';
 
 class LocationEntityModel extends LocationEntity{
@@ -39,6 +40,34 @@ class LocationEntityModel extends LocationEntity{
       osmKey: data['osmKey'] ?? '',
       isVisible: data['isVisible']
     );
+  }
+
+  factory LocationEntityModel.fromEntity(LocationEntity entity){
+
+    return LocationEntityModel(
+      id: entity.id,
+      name: entity.name,
+      createdBy: entity.createdBy,
+      address: entity.address,
+      latitude: entity.latitude,
+      district: entity.district,
+      longitude: entity.longitude,
+      createdAt: entity.createdAt,
+      osmKey: entity.osmKey,
+    );
+  }
+
+  Map<String, dynamic> toMap(){
+
+    return {
+      'name': name,
+      'createdBy': createdBy,
+      'address': address,
+      'district': district,
+      'createdAt': createdAt,
+      'osmKey': osmKey,
+      'isVisible': isVisible
+    };
   }
 
 }

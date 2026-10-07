@@ -5,7 +5,9 @@ import 'package:sistema_abada_capoeira/features/location/domain/entities/locatio
 abstract class LocationRepository {
 
 
-  Future<Either<Failure, String>> saveClassLocation(LocationEntity locationEntity);
+  Future<Either<Failure, LocationEntity>> saveClassLocation(LocationEntity locationEntity);
   Future<Stream<List<LocationEntity>>> getNearbyLocationsStream(double radiusInKm);
+  Future<Either<Failure, LocationEntity?>> findExistingLocationByOsmKey(String osmKey);
+
 
 }

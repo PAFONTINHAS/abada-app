@@ -14,7 +14,7 @@ class LocationRemoteDatasourceImpl implements LocationRemoteDatasource{
   final _firestore = FirebaseFirestore.instance;
 
   @override 
-  Future<Either<Failure, String>> saveClassLocation(LocationEntity locationEntity) async{
+  Future<Either<Failure, LocationEntity>> saveClassLocation(LocationEntity locationEntity) async{
 
     try{
 
@@ -22,18 +22,16 @@ class LocationRemoteDatasourceImpl implements LocationRemoteDatasource{
         GeoPoint(locationEntity.latitude, locationEntity.longitude),
       );
 
-      final collectionReference = _firestore.collection(DBCollections.locationsCollection);
-      
-      final document = await collectionReference.add({
-        'name': locationEntity.name,
-        'address': locationEntity.address,
-        'position': myLocation.data, 
-        'createdBy': locationEntity.createdBy,
-        'isVisible': true,
-        'createdAt': FieldValue.serverTimestamp(),
+      final documentReference = _firestore.collection(DBCollections.locationsCollection).doc(locationEntity.osmKey);
+
+      final entityModel = LocationEntityModel.fromEntity(locationEntity);
+
+      await documentReference.set({
+        ...entityModel.toMap(),
+        'position': myLocation.data,
       });
 
-      return Right(document.id);
+      return Right(entityModel.copyWith(id: documentReference.id));
 
     }catch(exception){
       return ExceptionHandler.handleException(exception: exception, contextMessage: "saveClassLocation");
@@ -83,6 +81,26 @@ class LocationRemoteDatasourceImpl implements LocationRemoteDatasource{
 
       return Stream.error(exception);
 
+    }
+  }
+
+  @override
+  Future<Either<Failure, LocationEntity?>> findExistingLocationByOsmKey(String osmKey) async{
+
+    try{
+
+      final documentSnapshot = await _firestore.collection(DBCollections.locationsCollection).doc(osmKey).get();
+
+
+      if(!documentSnapshot.exists) return Right(null);
+
+      final locationModel = LocationEntityModel.fromSnapshot(documentSnapshot);
+
+      return Right(locationModel);
+
+    }catch(exception){
+
+      return ExceptionHandler.handleException(exception: exception, contextMessage: "findExistingLocationByOsmKey");
     }
   }
 

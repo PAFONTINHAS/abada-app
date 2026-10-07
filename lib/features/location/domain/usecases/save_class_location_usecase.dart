@@ -7,7 +7,15 @@ class SaveClassLocationUsecase extends StandardLocationUsecase{
 
   SaveClassLocationUsecase(super.locationRepository);
 
-  Future<Either<Failure, String>> call(LocationEntity locationEntity) async {
-    return await locationRepository.saveClassLocation(locationEntity);
+  Future<Either<Failure, LocationEntity>> call(LocationEntity locationEntity) async {
+
+    final checkIfAddressAlreadyExisits = await locationRepository.findExistingLocationByOsmKey(locationEntity.osmKey);
+
+    return checkIfAddressAlreadyExisits.fold((failure) => Left(failure), (response) async{
+
+      if(response == null) return await locationRepository.saveClassLocation(locationEntity);
+
+      return Right(response);
+    });
   }
 }

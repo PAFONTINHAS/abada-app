@@ -11,13 +11,18 @@ class LocationRepositoryImpl implements LocationRepository{
   LocationRepositoryImpl(this.locationRemoteDatasource);
   
   @override
-  Future<Either<Failure, String>> saveClassLocation(LocationEntity locationEntity) async{
+  Future<Either<Failure, LocationEntity>> saveClassLocation(LocationEntity locationEntity) async{
     return await locationRemoteDatasource.saveClassLocation(locationEntity);  
   }
 
   @override
   Future<Stream<List<LocationEntity>>> getNearbyLocationsStream(double radiusInKm) async{
     return await locationRemoteDatasource.getNearbyLocationsStream(radiusInKm); 
+  }
+
+  @override
+  Future<Either<Failure, LocationEntity?>> findExistingLocationByOsmKey(String osmKey) async{
+    return await locationRemoteDatasource.findExistingLocationByOsmKey(osmKey);
   }
 
 }

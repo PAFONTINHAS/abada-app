@@ -96,6 +96,7 @@ class _CreateOrEditClassPageState extends State<CreateOrEditClassPage> {
                   hintText: "Digite para buscar o endereço...",
                   controller: formController.locationController,
                   prefixIcon: const Icon(Icons.location_on_outlined),
+                  maxLines: 2,
                   onChanged: (value) {
                     formController.setLocationController(value);
                     // Dispara a busca no Photon via API
