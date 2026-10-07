@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sistema_abada_capoeira/features/auth/presentation/widgets/class_location_card_widget.dart';
-import 'package:sistema_abada_capoeira/features/auth/presentation/widgets/location_radius_selection_widget.dart';
+import 'package:sistema_abada_capoeira/shared/class_location_list_widget/class_location_card_widget.dart';
+import 'package:sistema_abada_capoeira/shared/class_location_list_widget/location_radius_selection_widget.dart';
 import 'package:sistema_abada_capoeira/features/location/presentation/controllers/student_class_selection_controller.dart';
 
 class ClassesLocationListWidget extends StatelessWidget {

@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/shared/inputs/custom_text_input/custom_text_input.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/register_form_controller.dart';
-import 'package:sistema_abada_capoeira/features/auth/presentation/widgets/classes_location_list_widget.dart';
-import 'package:sistema_abada_capoeira/features/location/presentation/controllers/student_class_selection_controller.dart';
+import 'package:sistema_abada_capoeira/shared/class_location_list_widget/classes_location_list_widget.dart';
 
 class RegisterSecondPhaseFormWidget extends StatefulWidget {
-  const RegisterSecondPhaseFormWidget({super.key});
+  const  RegisterSecondPhaseFormWidget({super.key});
 
   @override
   State<RegisterSecondPhaseFormWidget> createState() => _RegisterSecondPhaseFormWidgetState();
@@ -16,7 +15,6 @@ class _RegisterSecondPhaseFormWidgetState extends State<RegisterSecondPhaseFormW
   @override
   Widget build(BuildContext context) {
     final formController = context.watch<RegisterFormController>();
-    final locationController = context.watch<StudentClassSelectionController>();
 
     return Column(
       children: [
