@@ -19,13 +19,8 @@ class StudentPageClassInfoCardWidget extends StatelessWidget {
 
 
     final profileController = context.read<ProfileController>();
-    final bool userIsProfessor =
-        profileController.userProfile.uid == classEntity.professor.professorId;
+    final bool userIsProfessor =  profileController.userProfile.uid == classEntity.professor.professorId;
 
-    String classSchedule = "";
-    for (final schedule in classEntity.schedule){
-      classSchedule += "$schedule\n";
-    }
 
     return Container(
       decoration: BoxDecoration(
@@ -70,21 +65,7 @@ class StudentPageClassInfoCardWidget extends StatelessWidget {
                           ),
                         ),
                       ),
-                      // Container(
-                      //   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                      //   decoration: BoxDecoration(
-                      //     color: Colors.green.shade50,
-                      //     borderRadius: BorderRadius.circular(16),
-                      //   ),
-                      //   child: const Text(
-                      //     'Ativa',
-                      //     style: TextStyle(
-                      //       color: Colors.green,
-                      //       fontWeight: FontWeight.bold,
-                      //       fontSize: 12,
-                      //     ),
-                      //   ),
-                      // ),
+                      
 
                       if (userIsProfessor)
                         TextButton(
@@ -104,7 +85,7 @@ class StudentPageClassInfoCardWidget extends StatelessWidget {
                   // Informações em lista
                   _buildScheduleWidget(Icons.access_time, classEntity.schedule),
                   const SizedBox(height: 8),
-                  _buildInfoRow(Icons.location_on_outlined, "MUDAR A LOCALIZAÇÃO AQUI!"),
+                  _buildInfoRow(Icons.location_on_outlined, classEntity.locationAddress),
                   const SizedBox(height: 8),
                   _buildInfoRow(Icons.person_outline, "Responsável: ${classEntity.professor.professorNickname}"),
                   const SizedBox(height: 8),

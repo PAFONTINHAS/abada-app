@@ -63,9 +63,9 @@ class ProfessorClassesPage extends StatelessWidget {
               selector: (_, controller) => controller.lecturedClasses,
               builder: (_, lecturedClasses, _) {
 
-                final double maxListSize = 500.0 + classController.lecturedClasses.length + 170;
+                final double maxListSize = 500.0 + classController.lecturedClasses.length + 180;
 
-                final double currentListSize = classController.lecturedClasses.length * 170.0;
+                final double currentListSize = classController.lecturedClasses.length * 180.0;
 
                 final double listSize = (currentListSize > maxListSize) ? maxListSize : currentListSize;
 

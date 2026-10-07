@@ -169,7 +169,7 @@ class _CreateOrEditClassPageState extends State<CreateOrEditClassPage> {
                 }
 
                 final classEntity = !isEditing
-                    ? formController.buildClassEntity(scheduleList, user, selectedLocationId, formController.classUnitController.text)
+                    ? formController.buildClassEntity(scheduleList, user, selectedLocationId, createLocationController.fullAddress.text)
                     : formController.buildUpdatedClassEntity(scheduleList);
 
                 if(classEntity == null) return;
