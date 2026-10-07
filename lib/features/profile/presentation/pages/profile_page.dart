@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
-import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_controller.dart';
-import 'package:sistema_abada_capoeira/features/class/presentation/controllers/student_class_selection_controller.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/tusca_entity.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/user_profile_entity.dart';
@@ -18,6 +16,7 @@ import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/tus
 import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/quick_actions_section_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/change_request_status_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/profile_action_button_widget.dart';
+import 'package:sistema_abada_capoeira/features/class/presentation/controllers/student_class_selection_controller.dart';
 
 /// RF04 - Gerenciar Perfil
 class ProfilePage extends StatelessWidget {

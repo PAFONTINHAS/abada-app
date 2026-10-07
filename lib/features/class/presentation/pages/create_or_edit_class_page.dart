@@ -125,12 +125,12 @@ class _CreateOrEditClassPageState extends State<CreateOrEditClassPage> {
                         final suggestion = createLocationController.suggestions[index];
                         return ListTile(
                           leading: const Icon(Icons.place, color: ColorConstants.indigoColor),
-                          title: Text(suggestion.description),
+                          title: Text(suggestion.fullAddress),
                           onTap: () {
                             // 1. Guarda a sugestão selecionada (contendo lat/lng) no controller
                             createLocationController.selectSuggestion(suggestion);
                             // 2. Atualiza o texto do input
-                            formController.locationController.text = suggestion.description;
+                            formController.locationController.text = suggestion.fullAddress;
                           },
                         );
                       },

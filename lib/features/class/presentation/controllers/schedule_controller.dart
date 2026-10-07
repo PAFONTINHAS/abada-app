@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
-import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/schedule_entity.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/schedule_color_controller.dart';
 

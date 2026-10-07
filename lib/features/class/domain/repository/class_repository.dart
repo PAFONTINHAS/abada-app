@@ -2,21 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:sistema_abada_capoeira/core/errors/failure.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
+import 'package:sistema_abada_capoeira/features/class/domain/entities/location_entity.dart';
 
 abstract class ClassRepository {
 
   Future<Either<Failure, void>> addStudentToClass(String studentId, String classId);
   Future<Either<Failure, List<ClassEntity>>> getClassesByIdList(List<String> classesId);
-  Stream<QuerySnapshot> getClassesForLocation(String locationId);
-  Future<Either<Failure, String>> saveClassLocation({
-      required String name,
-      required String address,
-      required double latitude,
-      required double longitude,
-      required String userId,
-  });
+  Stream<List<ClassEntity>> getClassesForLocation(String locationId);
+  Future<Either<Failure, String>> saveClassLocation(LocationEntity locationEntity);
 
-  Future<Stream<List<DocumentSnapshot>>> getNearbyLocationsStream(double radiusInKm);
+  Future<Stream<List<LocationEntity>>> getNearbyLocationsStream(double radiusInKm);
   Future<Either<Failure, ClassEntity>> createClass(ClassEntity classEntity);
   Future<Either<Failure, ClassEntity>> updateClass(ClassEntity classEntity);
 }

@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:sistema_abada_capoeira/core/errors/failure.dart';
 import 'package:sistema_abada_capoeira/features/class/data/datasources/class_remote_datasource.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
+import 'package:sistema_abada_capoeira/features/class/domain/entities/location_entity.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/repository/class_repository.dart';
 
 class ClassRepositoryImpl implements ClassRepository {
@@ -26,29 +27,17 @@ class ClassRepositoryImpl implements ClassRepository {
   }
 
   @override
-  Stream<QuerySnapshot> getClassesForLocation(String locationId) {
+  Stream<List<ClassEntity>> getClassesForLocation(String locationId) {
     return remoteDatasource.getClassesForLocation(locationId);
   }
 
   @override
-  Future<Either<Failure, String>> saveClassLocation({
-    required String name,
-    required String address,
-    required double latitude,
-    required double longitude,
-    required String userId,
-  }) async {
-    return await remoteDatasource.saveClassLocation(
-      name: name,
-      address: address,
-      latitude: latitude,
-      longitude: longitude,
-      userId: userId,
-    );
+  Future<Either<Failure, String>> saveClassLocation(LocationEntity locationEntity) async {
+    return await remoteDatasource.saveClassLocation(locationEntity);
   }
 
   @override
-  Future<Stream<List<DocumentSnapshot>>> getNearbyLocationsStream(
+  Future<Stream<List<LocationEntity>>> getNearbyLocationsStream(
     double radiusInKm,
   ) async {
     return await remoteDatasource.getNearbyLocationsStream(radiusInKm);

@@ -1,6 +1,9 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
+import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
+import 'package:sistema_abada_capoeira/features/class/domain/entities/location_entity.dart';
+import 'package:sistema_abada_capoeira/features/class/domain/entities/class_request_entry_entity.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/get_classes_for_location_usecase.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/get_nearby_locations_stream_usecase.dart';
 
@@ -19,23 +22,74 @@ class StudentClassSelectionController extends ChangeNotifier {
   String? _selectedLocationId;
   String? get selectedLocationId => _selectedLocationId;
 
-  Stream<List<DocumentSnapshot>>? _nearbyLocationsStream;
-  Stream<List<DocumentSnapshot>>? get nearbyLocationsStream => _nearbyLocationsStream;
+  List<LocationEntity> _locations = [];
+  List<LocationEntity> get locations => _locations;
 
-  Stream<QuerySnapshot>? _classesStream;
-  Stream<QuerySnapshot>? get classesStream => _classesStream;
+  List<ClassEntity> _classesForLocation = [];
+  List<ClassEntity> get classesForLocation => _classesForLocation;
+
+  ClassRequestEntryEntity? _classRequestEntryEntity;
+  ClassRequestEntryEntity? get classRequestEntryEntity => _classRequestEntryEntity;
+
+  Stream<List<LocationEntity>>? _nearbyLocationsStream;
+  Stream<List<LocationEntity>>? get nearbyLocationsStream => _nearbyLocationsStream;
+
+  StreamSubscription<List<LocationEntity>>? _locationStreamSubscription;
+  StreamSubscription<List<LocationEntity>>? get locationStreamSubscription => _locationStreamSubscription;
+
+  StreamSubscription<List<ClassEntity>>? _classesForLocationSubscription;
+  StreamSubscription<List<ClassEntity>>? get clasessForLocationSubscription => _classesForLocationSubscription;
+
+  TextEditingController locationIdController = TextEditingController();
+  TextEditingController professorIdController = TextEditingController();
+  TextEditingController classNameController = TextEditingController();
+
+  Stream<List<ClassEntity>>? _classesStream;
+  Stream<List<ClassEntity>>? get classesStream => _classesStream;
 
   bool _isLoadingLocations = false;
   bool get isLoadingLocations => _isLoadingLocations;
+  
+  bool _isLoadingClasses = false;
+  bool get isLoadingClasses => _isLoadingClasses;
 
-  void reset() {
-    _searchRadiusKm = 10;
-    _selectedLocationId = null;
-    _nearbyLocationsStream = null;
-    _classesStream = null;
-    _isLoadingLocations = false;
+  void setLocationIdController (String value){
+
+    locationIdController.text = value;
+
+    notifyListeners();
+    
+  }
+
+  void setProfessorIdController(String value){
+    professorIdController.text = value;
+
     notifyListeners();
   }
+
+  void setClassNameController(String value){
+
+    classNameController.text = value;
+
+    notifyListeners();
+  }
+
+
+void reset() {
+  _locationStreamSubscription?.cancel();      
+  _classesForLocationSubscription?.cancel();  
+  _locationStreamSubscription = null;
+  _classesForLocationSubscription = null;
+  _locations = [];
+  _classesForLocation = [];
+  _searchRadiusKm = 10;
+  _selectedLocationId = null;
+  _nearbyLocationsStream = null;
+  _classesStream = null;
+  _isLoadingLocations = false;
+  _isLoadingClasses = false;
+  notifyListeners();
+}
 
   @override
   void dispose() {
@@ -52,20 +106,48 @@ class StudentClassSelectionController extends ChangeNotifier {
 
     try {
       
-      LoggingService.displayInfo("Getting nearby locations");
       _nearbyLocationsStream = await _getNearbyLocationsStreamUsecase.call(_searchRadiusKm.toDouble());
-      
-      LoggingService.displayInfo("NearbyLocations: $_nearbyLocationsStream");
+
+      await listenToNearbyLocations();
 
     } catch (_) {
 
       LoggingService.displayInfo("Error getting nearby locations");
 
       _nearbyLocationsStream = null;
-    } finally {
-      _isLoadingLocations = false;
-      notifyListeners();
     }
+  }
+
+  Future<void> listenToNearbyLocations() async{
+
+    _locationStreamSubscription?.cancel();
+
+    if(_nearbyLocationsStream == null) return;
+
+
+    _locationStreamSubscription = _nearbyLocationsStream!.listen((fetchedLocations) {
+
+      LoggingService.displayInfo("Locations found: ${fetchedLocations.length}");
+
+      _locations = fetchedLocations;
+
+      notifyListeners();
+    });
+  }
+
+  void buildClassRequestEntry() {
+
+    _classRequestEntryEntity = null;
+
+    notifyListeners();
+
+    _classRequestEntryEntity = ClassRequestEntryEntity(
+      classId: locationIdController.text,
+      classUnit: classNameController.text,
+      professorId: professorIdController.text,
+    );
+
+    notifyListeners();
   }
 
   void updateRadius(int newRadius) {
@@ -77,9 +159,27 @@ class StudentClassSelectionController extends ChangeNotifier {
   void selectLocation(String locationId) {
     if (_selectedLocationId == locationId) return;
 
+    _isLoadingClasses = true;
     _selectedLocationId = locationId;
-    _classesStream = _getClassesForLocationUsecase.call(locationId);
+
     notifyListeners();
+
+    _classesForLocationSubscription?.cancel();
+
+    _classesStream = _getClassesForLocationUsecase.call(locationId);
+
+    if(_classesStream == null){
+      _isLoadingClasses = false;
+      notifyListeners();
+      return;
+    }
+
+    _classesForLocationSubscription = _classesStream!.listen((classes){
+      _classesForLocation = classes;
+      _isLoadingClasses = false;
+      notifyListeners();
+    });
+
   }
 
   void clearSelectedLocation() {

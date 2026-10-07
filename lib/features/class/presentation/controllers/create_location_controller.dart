@@ -1,11 +1,8 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/core/services/location_service/location_service.dart';
 import 'package:sistema_abada_capoeira/core/services/location_service/place_suggestion.dart';
-import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
-import 'package:sistema_abada_capoeira/features/class/domain/usecases/get_classes_for_location_usecase.dart';
-import 'package:sistema_abada_capoeira/features/class/domain/usecases/get_nearby_locations_stream_usecase.dart';
+import 'package:sistema_abada_capoeira/features/class/domain/entities/location_entity.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/save_class_location_usecase.dart';
 
 
@@ -39,8 +36,6 @@ class CreateLocationController extends ChangeNotifier{
   bool get isSearching => _isSearching;
 
   Timer? _debounce;
-
-  
 
   void onSearchChanged(String query){
 
@@ -96,21 +91,24 @@ class CreateLocationController extends ChangeNotifier{
     _errorMessage = null;
     notifyListeners();
 
-
-    final result = await _saveClassLocationUsecase.call(
+    final LocationEntity locationEntity = LocationEntity(
+      id: '',
       name: name,
-      address: _selectedSuggestion!.description,
+      createdBy: userId,
+      address: _selectedSuggestion!.fullAddress,
       latitude: _selectedSuggestion!.latitude,
+      district: _selectedSuggestion!.district,
       longitude: _selectedSuggestion!.longitude,
-      userId: userId,
+      createdAt: DateTime.now(),
     );
+
+    final result = await _saveClassLocationUsecase.call(locationEntity);
 
     return result.fold((failure){
       _state = LocationFormState.error;
       _errorMessage = failure.message;
       return false;
     }, (locationId){
-
       _selectedSuggestion = null;
       _state = LocationFormState.success;
       _selectedLocationId = locationId;

@@ -7,11 +7,13 @@ import 'package:sistema_abada_capoeira/core/errors/failure.dart';
 import 'package:sistema_abada_capoeira/core/errors/exception_handler.dart';
 import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/core/constants/database_constants.dart';
+import 'package:sistema_abada_capoeira/features/class/data/models/location_entity_model.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
 import 'package:sistema_abada_capoeira/features/class/data/models/class_entity_model.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_member_entity.dart';
 import 'package:sistema_abada_capoeira/features/class/data/models/class_member_entity_model.dart';
 import 'package:sistema_abada_capoeira/features/class/data/datasources/class_remote_datasource.dart';
+import 'package:sistema_abada_capoeira/features/class/domain/entities/location_entity.dart';
 
 class ClassRemoteDatasourceImpl implements ClassRemoteDatasource{
 
@@ -19,14 +21,15 @@ class ClassRemoteDatasourceImpl implements ClassRemoteDatasource{
   final FirebaseFunctions _functions = FirebaseFunctions.instance;
 
   @override
-  Stream<QuerySnapshot> getClassesForLocation(String locationId){
+  Stream<List<ClassEntity>> getClassesForLocation(String locationId){
 
+    final stream = _firestore.collection('classes').where('locationId', isEqualTo: locationId).snapshots();
 
-    
-    return _firestore
-        .collection('classes')
-        .where('locationId', isEqualTo: locationId)
-        .snapshots();
+    return stream.map((documentList) {
+      return documentList.docs
+          .map((doc) => ClassEntityModel.fromSnapshot(doc))
+          .toList();
+    });
   }
 
   @override
@@ -70,25 +73,21 @@ class ClassRemoteDatasourceImpl implements ClassRemoteDatasource{
   }
 
   @override 
-  Future<Either<Failure, String>> saveClassLocation({
-    required String name,
-    required String address,
-    required double latitude,
-    required double longitude,
-    required String userId,
-  }) async{
-
+  Future<Either<Failure, String>> saveClassLocation(LocationEntity locationEntity) async{
+      
     try{
 
-      final GeoFirePoint myLocation = GeoFirePoint(GeoPoint(latitude, longitude));
+      final GeoFirePoint myLocation = GeoFirePoint(
+        GeoPoint(locationEntity.latitude, locationEntity.longitude),
+      );
 
       final collectionReference = _firestore.collection(DBCollections.locationsCollection);
       
       final document = await collectionReference.add({
-        'name': name,
-        'address': address,
-        'position': myLocation.data, // Salva geohash e geopoint juntos
-        'createdBy': userId,
+        'name': locationEntity.name,
+        'address': locationEntity.address,
+        'position': myLocation.data, 
+        'createdBy': locationEntity.createdBy,
         'isVisible': true,
         'createdAt': FieldValue.serverTimestamp(),
       });
@@ -101,7 +100,7 @@ class ClassRemoteDatasourceImpl implements ClassRemoteDatasource{
   }
 
   @override
-  Future<Stream<List<DocumentSnapshot>>> getNearbyLocationsStream(double radiusInKm) async {
+  Future<Stream<List<LocationEntity>>> getNearbyLocationsStream(double radiusInKm) async {
 
     try{
 
@@ -131,7 +130,12 @@ class ClassRemoteDatasourceImpl implements ClassRemoteDatasource{
         geopointFrom: geoPointFrom
       );
 
-      return stream;
+      return stream.map((documentList) {
+        return documentList
+            .map((doc) => LocationEntityModel.fromSnapshot(doc))
+            .toList();
+      });
+
     } catch(exception){
 
       ExceptionHandler.handleException(exception: exception, contextMessage: "getNearbyLocationsStream");

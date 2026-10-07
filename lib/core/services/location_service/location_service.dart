@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
-import 'package:sistema_abada_capoeira/core/services/location_service/place_suggestion.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
+import 'package:sistema_abada_capoeira/core/services/location_service/place_suggestion.dart';
 
 class LocationService {
 
@@ -97,9 +97,10 @@ class LocationService {
               .join(', ');
 
           return PlaceSuggestion(
-            description: fullAddress,
             latitude: lat,
             longitude: lng,
+            district: district,
+            fullAddress: fullAddress,
           );
         }).toList();
       }
