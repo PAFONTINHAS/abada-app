@@ -5,7 +5,9 @@ import 'package:sistema_abada_capoeira/shared/class_location_list_widget/locatio
 import 'package:sistema_abada_capoeira/features/location/presentation/controllers/student_class_selection_controller.dart';
 
 class ClassesLocationListWidget extends StatelessWidget {
-  const ClassesLocationListWidget({super.key});
+  const ClassesLocationListWidget({super.key, this.currentClassEntityId});
+  
+  final String? currentClassEntityId;
 
   @override
   Widget build(BuildContext context) {
@@ -89,10 +91,12 @@ class ClassesLocationListWidget extends StatelessWidget {
                   final location = controller.locations[index];
                   final isSelected = controller.selectedLocationId == location.id;
 
+
                   return ClassLocationCardWidget(
                     isSelected: isSelected,
                     location: location,
                     controller: controller,
+                    currentClassEntityId: currentClassEntityId,
                   );
                 },
               );

@@ -6,6 +6,7 @@ import 'package:sistema_abada_capoeira/features/class/domain/usecases/create_cla
 import 'package:sistema_abada_capoeira/features/class/data/repository/class_repository_impl.dart';
 import 'package:sistema_abada_capoeira/features/class/data/datasources/class_remote_datasource/class_remote_datasource.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_controller.dart';
+import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_migration_controller.dart';
 import 'package:sistema_abada_capoeira/features/location/domain/usecases/save_class_location_usecase.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/get_attended_classes_usecase.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/get_lectured_classes_usecase.dart';
@@ -39,6 +40,7 @@ class ClassProviders {
     ),
     ChangeNotifierProvider(create: (_) => ClassFormController()),
     ChangeNotifierProvider(create: (_) => ScheduleController()),
+    ChangeNotifierProvider(create: (_) => ClassMigrationController())
 
 
   ];

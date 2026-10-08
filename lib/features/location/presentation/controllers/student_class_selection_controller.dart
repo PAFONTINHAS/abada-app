@@ -74,22 +74,32 @@ class StudentClassSelectionController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void removeClassForLocation(String classEntityId){
 
-void reset() {
-  _locationStreamSubscription?.cancel();      
-  _classesForLocationSubscription?.cancel();  
-  _locationStreamSubscription = null;
-  _classesForLocationSubscription = null;
-  _locations = [];
-  _classesForLocation = [];
-  _searchRadiusKm = 10;
-  _selectedLocationId = null;
-  _nearbyLocationsStream = null;
-  _classesStream = null;
-  _isLoadingLocations = false;
-  _isLoadingClasses = false;
-  notifyListeners();
-}
+    List<ClassEntity> currentList = _classesForLocation;
+
+    currentList.removeWhere((entity) => entity.classId == classEntityId);
+
+    _classesForLocation = List.from(currentList);
+
+    notifyListeners();
+  }
+
+  void reset() {
+    _locationStreamSubscription?.cancel();      
+    _classesForLocationSubscription?.cancel();  
+    _locationStreamSubscription = null;
+    _classesForLocationSubscription = null;
+    _locations = [];
+    _classesForLocation = [];
+    _searchRadiusKm = 10;
+    _selectedLocationId = null;
+    _nearbyLocationsStream = null;
+    _classesStream = null;
+    _isLoadingLocations = false;
+    _isLoadingClasses = false;
+    notifyListeners();
+  }
 
   @override
   void dispose() {

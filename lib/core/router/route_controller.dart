@@ -39,4 +39,8 @@ class RouteController {
   static void pushReplacementClassPage({required BuildContext context, required ClassEntity classEntity}){
     context.pushReplacement('/classes/class', extra: classEntity);
   }
+
+  static void redirectToMigrateClassPage({required BuildContext context, required ClassEntity classEntity}){
+    context.push('/classes/migrate', extra: classEntity);
+  }
 }

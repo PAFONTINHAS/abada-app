@@ -9,10 +9,12 @@ class ClassLocationCardWidget extends StatelessWidget {
     required this.controller,
     required this.isSelected,
     required this.location,
+    this.currentClassEntityId
   });
 
   final bool isSelected;
   final LocationEntity location;
+  final String? currentClassEntityId;
   final StudentClassSelectionController controller;
 
   @override
@@ -118,10 +120,11 @@ class ClassLocationCardWidget extends StatelessWidget {
                   itemBuilder: (context, index) {
                     
                     final classEntity = controller.classesForLocation[index];
+
                     final isClassSelected =
-                        controller.classRequestEntryEntity != null &&
+                        (controller.classRequestEntryEntity != null &&
                         controller.classRequestEntryEntity!.classId ==
-                            classEntity.classId;
+                            classEntity.classId);
 
                     return ClassLocationCardListTileWidget(
                       classEntity: classEntity,

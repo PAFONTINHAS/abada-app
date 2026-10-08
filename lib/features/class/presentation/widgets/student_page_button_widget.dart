@@ -10,18 +10,21 @@ class StudentPageButtonWidget extends StatelessWidget {
     required this.onPressed,
     required this.buttonTitle,
     required this.buttonColor,
+    this.boxColor = Colors.white,
   });
 
   final IconData icon;
   final String buttonTitle;
   final VoidCallback onPressed;
   final Color buttonColor;
+  final Color boxColor;
 
   @override
   Widget build(BuildContext context) {
     return ClickableWidget(
       padding: EdgeInsetsGeometry.symmetric(vertical: 15),
       onTap: onPressed,
+      color: boxColor,
       child: Align(
         alignment: AlignmentGeometry.center,
         child: Container(
