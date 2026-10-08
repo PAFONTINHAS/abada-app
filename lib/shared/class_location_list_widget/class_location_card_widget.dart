@@ -9,12 +9,15 @@ class ClassLocationCardWidget extends StatelessWidget {
     required this.controller,
     required this.isSelected,
     required this.location,
-    this.currentClassEntityId
+    this.currentClassEntityId,
+    this.lecturedClasses
+
   });
 
   final bool isSelected;
   final LocationEntity location;
   final String? currentClassEntityId;
+  final List<String>? lecturedClasses;
   final StudentClassSelectionController controller;
 
   @override
@@ -74,9 +77,9 @@ class ClassLocationCardWidget extends StatelessWidget {
         ),
         onExpansionChanged: (expanded) {
           if (expanded) {
-            controller.selectLocation(location.id);
+            controller.selectLocation(location.id, currentClassEntityId, lecturedClasses);
           } else if (isSelected) {
-            controller.selectLocation('');
+            controller.selectLocation('', currentClassEntityId, lecturedClasses);
           }
         },
         children: [

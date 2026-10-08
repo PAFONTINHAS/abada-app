@@ -1,6 +1,8 @@
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
+import 'package:sistema_abada_capoeira/core/providers/membership_validation_providers.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/repository/class_repository.dart';
+import 'package:sistema_abada_capoeira/features/class/domain/usecases/create_class_migration_request_usecase.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/update_class_usecase.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/create_class_usecase.dart';
 import 'package:sistema_abada_capoeira/features/class/data/repository/class_repository_impl.dart';
@@ -27,6 +29,7 @@ class ClassProviders {
   static final GetAttendedClassesUsecase getAttendedClassesUsecase = GetAttendedClassesUsecase(classRepository);
   static final GetLecturedClassesUsecase getLecturedClassesUsecase = GetLecturedClassesUsecase(classRepository);
   static final GetClassesForLocationUsecase getClassesForLocationUsecase = GetClassesForLocationUsecase(classRepository);
+  static final CreateClassMigrationRequestUsecase migrateClassUsecase = CreateClassMigrationRequestUsecase(classRepository, MembershipValidationProviders.repository);
 
   static final List<SingleChildWidget> providers = [
 
@@ -40,7 +43,7 @@ class ClassProviders {
     ),
     ChangeNotifierProvider(create: (_) => ClassFormController()),
     ChangeNotifierProvider(create: (_) => ScheduleController()),
-    ChangeNotifierProvider(create: (_) => ClassMigrationController())
+    ChangeNotifierProvider(create: (_) => ClassMigrationController(migrateClassUsecase))
 
 
   ];

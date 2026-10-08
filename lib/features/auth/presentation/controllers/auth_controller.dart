@@ -42,7 +42,6 @@ class AuthController extends ChangeNotifier {
       return;
     }
 
-
     if((!_isRegistering || !_isSigningIn) && _userRole != UserRole.unknown){
 
       _status = AuthStatus.authenticated;

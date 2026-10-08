@@ -9,6 +9,7 @@ abstract class ClassRemoteDatasource {
   Future<Either<Failure, ClassEntity>> updateClass(ClassEntity classEntity);
   Future<Either<Failure, void>> addStudentToClass(String studentId, String classId);
   Future<Either<Failure, List<ClassEntity>>> getClassesByIdList(List<String> classesId);
+  Future<Either<Failure, void>> removeStudentFromClass(String studentId, String classId);
 
 
 

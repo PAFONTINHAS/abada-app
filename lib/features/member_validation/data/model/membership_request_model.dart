@@ -63,20 +63,21 @@ class MembershipRequestModel extends MembershipRequest {
   }
 
   factory MembershipRequestModel.fromEntity(MembershipRequest request){
-
     return MembershipRequestModel(
       id: request.id,
       status: request.status,
       classId: request.classId,
       memberId: request.memberId,
+      updatedAt: request.updatedAt,
       className: request.className,
       memberName: request.memberName,
       memberBelt: request.memberBelt,
       professorId: request.professorId,
       requestedAt: request.requestedAt,
+      changeReason: request.changeReason,
       memberNickname: request.memberNickname,
+      rejectionReason: request.rejectionReason,
     );
-
   }
 
   Map<String, dynamic> toMap() {

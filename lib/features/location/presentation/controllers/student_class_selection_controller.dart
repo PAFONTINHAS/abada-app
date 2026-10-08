@@ -168,7 +168,7 @@ class StudentClassSelectionController extends ChangeNotifier {
   }
 
   /// Seleciona uma academia e carrega as turmas ativas dela
-  void selectLocation(String locationId) {
+  void selectLocation(String locationId, String? currentClassId, List<String>? lecturedClasses) {
     if (_selectedLocationId == locationId) return;
 
     _isLoadingClasses = true;
@@ -186,8 +186,21 @@ class StudentClassSelectionController extends ChangeNotifier {
       return;
     }
 
+    final Set<String> excludedClassIds = {
+      if(currentClassId != null) currentClassId,
+      if(lecturedClasses != null) ...lecturedClasses
+    };
+
     _classesForLocationSubscription = _classesStream!.listen((classes){
-      _classesForLocation = classes;
+
+      if(excludedClassIds.isEmpty){
+        _classesForLocation = classes;
+      } else {
+
+        _classesForLocation = classes
+          .where((currentClass) => !excludedClassIds.contains(currentClass.classId))
+          .toList();
+      }
       _isLoadingClasses = false;
       notifyListeners();
     });
