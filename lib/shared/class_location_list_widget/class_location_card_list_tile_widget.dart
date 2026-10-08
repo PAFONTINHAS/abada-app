@@ -32,44 +32,48 @@ class ClassLocationCardListTileWidget extends StatelessWidget {
             color: theme.colorScheme.outline,
           ),
           const SizedBox(width: 4),
-          Text(
-            "Prof: ${classEntity.professor.professorNickname}",
-            style: TextStyle(
-              fontSize: 12,
-              color: theme.colorScheme.onSurfaceVariant,
+          
+          Expanded(
+            child: Text(
+              "Prof: ${classEntity.professor.professorNickname}",
+              style: TextStyle(
+                fontSize: 12,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
             ),
           ),
+          
         ],
       ),
       trailing: isClassSelected
-          ? FilledButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.check_rounded, size: 16),
-              label: const Text("Selecionada"),
-              style: FilledButton.styleFrom(
-                visualDensity: VisualDensity.compact,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
+        ? FilledButton.icon(
+            onPressed: () {},
+            icon: const Icon(Icons.check_rounded, size: 16),
+            label: const Text("Selecionada"),
+            style: FilledButton.styleFrom(
+              visualDensity: VisualDensity.compact,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
               ),
-            )
-          : OutlinedButton(
-              onPressed: () {
-                controller.setLocationIdController(classEntity.classId);
-                controller.setClassNameController(classEntity.unitName);
-                controller.setProfessorIdController(
-                  classEntity.professor.professorId,
-                );
-                controller.buildClassRequestEntry();
-              },
-              style: OutlinedButton.styleFrom(
-                visualDensity: VisualDensity.compact,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-              child: const Text("Selecionar"),
             ),
+          )
+        : OutlinedButton(
+            onPressed: () {
+              controller.setLocationIdController(classEntity.classId);
+              controller.setClassNameController(classEntity.unitName);
+              controller.setProfessorIdController(
+                classEntity.professor.professorId,
+              );
+              controller.buildClassRequestEntry();
+            },
+            style: OutlinedButton.styleFrom(
+              visualDensity: VisualDensity.compact,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+            child: const Text("Selecionar"),
+          ),
     );
   }
 }

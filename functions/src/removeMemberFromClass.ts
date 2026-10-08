@@ -10,7 +10,7 @@ interface MemberRequestData {
   classId: string;
 }
 
-export const approveMemberRequestAndAddToClass = functions.https.onCall(
+export const removeMemberFromClass = functions.https.onCall(
   async (memberRequestData: MemberRequestData, context) => {
     if (!context.auth) {
       throw new functions.https.HttpsError(
@@ -31,32 +31,15 @@ export const approveMemberRequestAndAddToClass = functions.https.onCall(
       .collection("students")
       .doc(memberRequestData.memberId);
 
-    const [memberDoc, classDoc, studentInClassDoc] = await Promise.all([
+    const [memberDoc] = await Promise.all([
       memberReference.get(),
-      classReference.get(),
-      studentInClassRef.get(),
     ]);
 
     if (!memberDoc.exists) {
-      console.error(`Utilizador ${memberRequestData.memberId} não encontrado.`);
+      console.error(`Usuário ${memberRequestData.memberId} não encontrado.`);
       throw new functions.https.HttpsError(
         "not-found",
-        "Utilizador não encontrado.",
-      );
-    }
-
-    if (!classDoc.exists) {
-      console.error(`Turma ${memberRequestData.classId} não encontrada.`);
-      throw new functions.https.HttpsError(
-        "not-found",
-        "Turma não encontrada.",
-      );
-    }
-
-    if (studentInClassDoc.exists) {
-      throw new functions.https.HttpsError(
-        "already-exists",
-        "Membro já faz parte da turma",
+        "Usuário não encontrado.",
       );
     }
 
@@ -69,26 +52,14 @@ export const approveMemberRequestAndAddToClass = functions.https.onCall(
       );
     }
 
-    let currentUserRole = "";
     try {
       const batch = db.batch();
 
-      batch.set(studentInClassRef, {
-        belt: memberData.belt,
-        name: memberData.fullName,
-        nickname: memberData.nickname,
-        displaySensitiveData: true,
-      });
-
-      if (memberData.lecturedClasses.lenght !== 0) {
-        currentUserRole = "professor";
-      } else {
-        currentUserRole = "student";
-      }
+      batch.delete(studentInClassRef);
 
       batch.update(memberReference, {
-        userRole: currentUserRole,
-        attendedClasses: FieldValue.arrayUnion(memberRequestData.classId),
+        userRole: "unvalidatedUser",
+        attendedClasses: FieldValue.arrayRemove(memberRequestData.classId),
       });
 
       await batch.commit();

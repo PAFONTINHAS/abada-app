@@ -74,22 +74,32 @@ class StudentClassSelectionController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void removeClassForLocation(String classEntityId){
 
-void reset() {
-  _locationStreamSubscription?.cancel();      
-  _classesForLocationSubscription?.cancel();  
-  _locationStreamSubscription = null;
-  _classesForLocationSubscription = null;
-  _locations = [];
-  _classesForLocation = [];
-  _searchRadiusKm = 10;
-  _selectedLocationId = null;
-  _nearbyLocationsStream = null;
-  _classesStream = null;
-  _isLoadingLocations = false;
-  _isLoadingClasses = false;
-  notifyListeners();
-}
+    List<ClassEntity> currentList = _classesForLocation;
+
+    currentList.removeWhere((entity) => entity.classId == classEntityId);
+
+    _classesForLocation = List.from(currentList);
+
+    notifyListeners();
+  }
+
+  void reset() {
+    _locationStreamSubscription?.cancel();      
+    _classesForLocationSubscription?.cancel();  
+    _locationStreamSubscription = null;
+    _classesForLocationSubscription = null;
+    _locations = [];
+    _classesForLocation = [];
+    _searchRadiusKm = 10;
+    _selectedLocationId = null;
+    _nearbyLocationsStream = null;
+    _classesStream = null;
+    _isLoadingLocations = false;
+    _isLoadingClasses = false;
+    notifyListeners();
+  }
 
   @override
   void dispose() {
@@ -158,7 +168,7 @@ void reset() {
   }
 
   /// Seleciona uma academia e carrega as turmas ativas dela
-  void selectLocation(String locationId) {
+  void selectLocation(String locationId, String? currentClassId, List<String>? lecturedClasses) {
     if (_selectedLocationId == locationId) return;
 
     _isLoadingClasses = true;
@@ -176,8 +186,21 @@ void reset() {
       return;
     }
 
+    final Set<String> excludedClassIds = {
+      if(currentClassId != null) currentClassId,
+      if(lecturedClasses != null) ...lecturedClasses
+    };
+
     _classesForLocationSubscription = _classesStream!.listen((classes){
-      _classesForLocation = classes;
+
+      if(excludedClassIds.isEmpty){
+        _classesForLocation = classes;
+      } else {
+
+        _classesForLocation = classes
+          .where((currentClass) => !excludedClassIds.contains(currentClass.classId))
+          .toList();
+      }
       _isLoadingClasses = false;
       notifyListeners();
     });

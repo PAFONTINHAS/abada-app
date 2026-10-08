@@ -133,6 +133,27 @@ class ClassRemoteDatasourceImpl implements ClassRemoteDatasource{
     }
 
   }
+ 
+  @override
+  Future<Either<Failure, void>> removeStudentFromClass(String studentId, String classId) async{
+
+    try{
+
+      final callable = _functions.httpsCallable("removeMemberFromClass");
+
+      await callable.call({
+        'memberId': studentId,
+        'classId': classId
+      });
+
+      return Right(null);
+
+    }catch(exception){
+
+      return ExceptionHandler.handleException(exception: exception, contextMessage: "addStudentToClass");
+    }
+
+  }
 
 
 }

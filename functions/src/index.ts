@@ -10,3 +10,8 @@ export {updateProfessorLecturedClasses}
 
 export {removeProfessorLecturedClasses}
   from "./removeProfessorLecturedClasses";
+
+export {removeMemberFromClass}
+  from "./removeMemberFromClass";
+
+

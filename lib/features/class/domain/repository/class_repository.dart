@@ -12,4 +12,6 @@ abstract class ClassRepository {
 
   Future<Either<Failure, ClassEntity>> createClass(ClassEntity classEntity);
   Future<Either<Failure, ClassEntity>> updateClass(ClassEntity classEntity);
+  Future<Either<Failure, void>> removeStudentFromClass(String studentId, String classId);
+
 }

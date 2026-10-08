@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
-import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
-import 'package:sistema_abada_capoeira/features/member_validation/presentation/controllers/membership_validation_controller.dart';
 import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
 import 'package:sistema_abada_capoeira/shared/section_widgets/section_title_widget.dart';
+import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/widgets/class_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_controller.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/widgets/class_entry_requests_button_widget.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/widgets/class_local_summary_card_list_widget.dart';
+import 'package:sistema_abada_capoeira/features/member_validation/presentation/controllers/membership_validation_controller.dart';
 
 class ProfessorClassesPage extends StatelessWidget {
   const ProfessorClassesPage({super.key});

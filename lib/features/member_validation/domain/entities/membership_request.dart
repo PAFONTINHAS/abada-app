@@ -24,7 +24,6 @@ class MembershipRequest {
     this.rejectionReason,
 
     required this.id,
-    required this.status,
     required this.classId,
     required this.memberId,
     required this.className,
@@ -33,6 +32,7 @@ class MembershipRequest {
     required this.professorId,
     required this.requestedAt,
     required this.memberNickname,
+    this.status = MembershipRequestStatus.requested,
 
   });
 }
