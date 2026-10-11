@@ -1,38 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:sistema_abada_capoeira/shared/dialogs/request_justification_dialog_widget.dart';
 
-import '../controllers/reject_request_dialog_controller.dart';
-import 'reject_request_form_widget.dart';
-
+/// Configures the shared justification dialog for membership rejection.
 class RejectRequestDialogWidget extends StatelessWidget {
-  final Future<bool> Function(String reason) onConfirm;
+  final Future<bool> Function(String justification) onConfirm;
 
-  const RejectRequestDialogWidget({
-    super.key,
-    required this.onConfirm,
-  });
+  const RejectRequestDialogWidget({super.key, required this.onConfirm});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => RejectRequestDialogController(),
-      child: Dialog(
-        backgroundColor: Colors.transparent,
-        insetPadding: const EdgeInsets.symmetric(horizontal: 24),
-        child: Container(
-          constraints: const BoxConstraints(maxWidth: 420),
-          padding: const EdgeInsets.fromLTRB(24, 24, 24, 20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(28),
-          ),
-          child: SingleChildScrollView(
-            child: RejectRequestFormWidget(
-              onConfirm: onConfirm,
-            ),
-          ),
-        ),
-      ),
+    // The caller supplies the action; this widget only configures the UI.
+    return RequestJustificationDialogWidget(
+      title: 'Recusar solicitação',
+      description: 'Informe a justificativa da recusa.',
+      hintText: 'Explique o motivo da recusa...',
+      confirmLabel: 'Recusar solicitação',
+      actionColor: const Color(0xFFEF4444),
+      icon: Icons.close,
+      onConfirm: onConfirm,
     );
   }
 }
