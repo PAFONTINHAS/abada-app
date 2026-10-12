@@ -43,4 +43,8 @@ class RouteController {
   static void redirectToMigrateClassPage({required BuildContext context, required ClassEntity classEntity}){
     context.push('/classes/migrate', extra: classEntity);
   }
+
+  static void redirectToCreateEventPage({required BuildContext context}){
+    context.push('/events/create');
+  }
 }
