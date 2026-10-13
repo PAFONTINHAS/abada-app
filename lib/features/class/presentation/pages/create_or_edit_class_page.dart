@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
 import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
-import 'package:sistema_abada_capoeira/features/class/presentation/widgets/address_field_widget.dart';
+import 'package:sistema_abada_capoeira/features/class/presentation/widgets/class_form_page_address_field_widget.dart';
 import 'package:sistema_abada_capoeira/shared/buttons/custom_text_button.dart';
 import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
@@ -89,7 +89,7 @@ class _CreateOrEditClassPageState extends State<CreateOrEditClassPage> {
 
             const SizedBox(height: 20),
 
-            AddressFieldWidget(
+            ClassFormPageAddressFieldWidget(
               formController: formController,
               createLocationController: createLocationController,
             ),

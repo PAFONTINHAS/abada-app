@@ -62,55 +62,54 @@ class StudentDashboardPage extends StatelessWidget {
       ),
     );
   }
-}
 
 
+  final List<Map<String, dynamic>> eventos = const [
 
-  List<Map<String, dynamic>> eventos = [
-
-    {
-      'title': 'Batizado e Troca de Cordas 2026',
-      'dateTime': '10/08/2026 - 09:00',
-      'location': 'Curitiba - PR',
-      'price': 'Gratuito',
-      'isFree': true,
-      'imagePath': 'assets/images/capoeira_event_image.jpg',
-      'onTap': () { LoggingService.displayInfo("Me clicaram aqui hein!");}
-    },
-    {
-      'title': 'Batizado e Troca de Cordas 2026',
-      'dateTime': '10/08/2026 - 09:00',
-      'location': 'Curitiba - PR',
-      'price': 'R\$ 60,00',
-      'isFree': false,
-      'imagePath': 'assets/images/capoeira_event_image.jpg',
-      'onTap': () { LoggingService.displayInfo("Me clicaram aqui hein!");}
-    },
-    {
-      'title': 'Batizado e Troca de Cordas 2026',
-      'dateTime': '10/08/2026 - 09:00',
-      'location': 'Curitiba - PR',
-      'price': 'Gratuito',
-      'isFree': true,
-      'imagePath': 'assets/images/capoeira_event_image.jpg',
-      'onTap': () { LoggingService.displayInfo("Me clicaram aqui hein!");}
-    },
-    {
-      'title': 'Batizado e Troca de Cordas 2026',
-      'dateTime': '10/08/2026 - 09:00',
-      'location': 'Curitiba - PR',
-      'price': 'Gratuito',
-      'isFree': true,
-      'imagePath': 'assets/images/capoeira_event_image.jpg',
-      'onTap': () { LoggingService.displayInfo("Me clicaram aqui hein!");}
-    },
-    {
-      'title': 'Batizado e Troca de Cordas 2026',
-      'dateTime': '10/08/2026 - 09:00',
-      'location': 'Curitiba - PR',
-      'price': 'Gratuito',
-      'isFree': true,
-      'imagePath': 'assets/images/capoeira_event_image.jpg',
-      'onTap': () { LoggingService.displayInfo("Me clicaram aqui hein!");}
-    },
+    // {
+    //   'title': 'Batizado e Troca de Cordas 2026',
+    //   'dateTime': '10/08/2026 - 09:00',
+    //   'location': 'Curitiba - PR',
+    //   'price': 'Gratuito',
+    //   'isFree': true,
+    //   'imagePath': 'assets/images/capoeira_event_image.jpg',
+    //   'onTap': () { LoggingService.displayInfo("Me clicaram aqui hein!");}
+    // },
+    // {
+    //   'title': 'Batizado e Troca de Cordas 2026',
+    //   'dateTime': '10/08/2026 - 09:00',
+    //   'location': 'Curitiba - PR',
+    //   'price': 'R\$ 60,00',
+    //   'isFree': false,
+    //   'imagePath': 'assets/images/capoeira_event_image.jpg',
+    //   'onTap': () { LoggingService.displayInfo("Me clicaram aqui hein!");}
+    // },
+    // {
+    //   'title': 'Batizado e Troca de Cordas 2026',
+    //   'dateTime': '10/08/2026 - 09:00',
+    //   'location': 'Curitiba - PR',
+    //   'price': 'Gratuito',
+    //   'isFree': true,
+    //   'imagePath': 'assets/images/capoeira_event_image.jpg',
+    //   'onTap': () { LoggingService.displayInfo("Me clicaram aqui hein!");}
+    // },
+    // {
+    //   'title': 'Batizado e Troca de Cordas 2026',
+    //   'dateTime': '10/08/2026 - 09:00',
+    //   'location': 'Curitiba - PR',
+    //   'price': 'Gratuito',
+    //   'isFree': true,
+    //   'imagePath': 'assets/images/capoeira_event_image.jpg',
+    //   'onTap': () { LoggingService.displayInfo("Me clicaram aqui hein!");}
+    // },
+    // {
+    //   'title': 'Batizado e Troca de Cordas 2026',
+    //   'dateTime': '10/08/2026 - 09:00',
+    //   'location': 'Curitiba - PR',
+    //   'price': 'Gratuito',
+    //   'isFree': true,
+    //   'imagePath': 'assets/images/capoeira_event_image.jpg',
+    //   'onTap': () { LoggingService.displayInfo("Me clicaram aqui hein!");}
+    // },
   ] ;
+}

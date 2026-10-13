@@ -1,0 +1,62 @@
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_products.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_type.dart';
+
+class EventFormController extends ChangeNotifier{
+
+  TextEditingController eventName = TextEditingController();
+  TextEditingController eventLocation = TextEditingController();
+  TextEditingController eventDescription = TextEditingController();
+
+  EventType _eventType = EventType.COMPETITION;
+  EventType get eventType => _eventType;
+
+  XFile? _eventImage;
+  XFile? get eventImage => _eventImage;
+
+  DateTime? _eventInitDate;
+  DateTime? get eventInitDate => _eventInitDate;
+
+  DateTime? _eventEndingTime;
+  DateTime? get eventEndingTime => _eventEndingTime;
+  
+  double _eventValue = 0.00;
+  double get eventValue => _eventValue;
+
+  List<EventProducts> _products = [];
+  List<EventProducts> get products => _products;  
+
+  void setEventLocation(String value){
+    eventLocation.text = value;
+
+    notifyListeners();
+  }
+
+  void setEventInitDate(DateTime selectedDate, TimeOfDay selectedTime){
+    _eventInitDate = DateTime(
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
+      selectedTime.hour,
+      selectedDate.minute
+    );
+
+    notifyListeners();
+  }
+  
+
+  void setEventEndingDate(DateTime selectedDate, TimeOfDay selectedTime){
+    _eventEndingTime = DateTime(
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
+      selectedTime.hour,
+      selectedDate.minute
+    );
+
+    notifyListeners();
+  }
+  
+
+}

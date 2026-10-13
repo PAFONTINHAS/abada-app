@@ -19,16 +19,12 @@ class CreateOrEditScheduleWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // 1. TÍTULO E LISTA DE HORÁRIOS SALVOS
-
         const SizedBox(height: 10),
         
-        // Exibe os horários já adicionados logo abaixo do título
         const ScheduleViewListWidget(),
         
         const SizedBox(height: 20),
 
-        // 2. CARD DE CRIAÇÃO DE NOVO HORÁRIO
         Container(
           width: double.infinity,
           decoration: BoxDecoration(

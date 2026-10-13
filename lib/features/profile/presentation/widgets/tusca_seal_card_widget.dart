@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sistema_abada_capoeira/core/utils/date_formatter.dart';
+import 'package:sistema_abada_capoeira/core/utils/date_controller.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/tusca_entity.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/tusca_status.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/info_card_widget.dart';
@@ -33,7 +33,7 @@ class TuscaSealCardWidget extends StatelessWidget {
         : "IRREGULAR";
 
     final statusColor = tuscaEntity.isRegularTusca ? Colors.green : Colors.red;
-    final expirationDate = DateFormatter.formatDDMMYYYY(tuscaEntity.validUntil);
+    final expirationDate = DateController.formatDDMMYYYY(tuscaEntity.validUntil);
 
     return InfoCardWidget(
       children: [

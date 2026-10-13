@@ -1,3 +1,5 @@
+import 'package:sistema_abada_capoeira/core/providers/event_providers.dart';
+
 import 'membership_validation_providers.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:sistema_abada_capoeira/core/providers/auth_providers.dart';
@@ -20,6 +22,7 @@ class ProvidersInjection {
     providers = [
       ...AuthProviders.providers,
       ...ClassProviders.providers,
+      ...EventProviders.providers,
       ...SplashProviders.providers,
       ...ProfileProviders.providers,
       ...LocationProviders.providers,

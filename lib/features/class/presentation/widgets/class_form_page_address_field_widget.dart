@@ -1,24 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:go_router/go_router.dart';
-import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
-import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
-import 'package:sistema_abada_capoeira/shared/buttons/custom_text_button.dart';
-import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
-import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
 import 'package:sistema_abada_capoeira/shared/inputs/custom_text_input/custom_text_input.dart';
-import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_controller.dart';
-import 'package:sistema_abada_capoeira/features/class/presentation/widgets/header_unit_name_widget.dart';
-import 'package:sistema_abada_capoeira/features/class/presentation/controllers/schedule_controller.dart';
-import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_form_controller.dart';
-import 'package:sistema_abada_capoeira/features/class/presentation/widgets/create_or_edit_schedule_widget.dart';
 import 'package:sistema_abada_capoeira/features/location/presentation/controllers/create_location_controller.dart';
 
 
-class AddressFieldWidget extends StatelessWidget {
-  const AddressFieldWidget({
+class ClassFormPageAddressFieldWidget extends StatelessWidget {
+  const ClassFormPageAddressFieldWidget({
     super.key,
     required this.createLocationController,
     required this.formController,

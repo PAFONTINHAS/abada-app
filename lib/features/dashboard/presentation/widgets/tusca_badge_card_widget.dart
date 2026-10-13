@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
-import 'package:sistema_abada_capoeira/core/utils/date_formatter.dart';
+import 'package:sistema_abada_capoeira/core/utils/date_controller.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/tusca_entity.dart';
 import 'package:sistema_abada_capoeira/shared/clickable/clickable_widget.dart';
 
@@ -82,7 +82,7 @@ class TuscaBadgeCardWidget extends StatelessWidget {
                           ),
 
                           TextSpan(
-                            text: DateFormatter.formatDDMMYYYY(tuscaEntity.validUntil),
+                            text: DateController.formatDDMMYYYY(tuscaEntity.validUntil),
                             style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,

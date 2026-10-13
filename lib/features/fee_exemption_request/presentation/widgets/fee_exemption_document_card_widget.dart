@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sistema_abada_capoeira/core/utils/date_formatter.dart';
+import 'package:sistema_abada_capoeira/core/utils/date_controller.dart';
 
 import '../../domain/entities/fee_exemption_document_entity.dart';
 
@@ -89,7 +89,7 @@ class FeeExemptionDocumentCardWidget extends StatelessWidget {
                     const SizedBox(height: 2),
 
                     Text(
-                      'Enviado em ${DateFormatter.formatDDMMYYYY(document.uploadedAt)}',
+                      'Enviado em ${DateController.formatDDMMYYYY(document.uploadedAt)}',
                       style: const TextStyle(
                         fontSize: 12,
                         color: secondaryText,
