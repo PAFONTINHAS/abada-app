@@ -102,14 +102,16 @@ class MembershipRequestItemWidget extends StatelessWidget {
 
   Future<void> _showResult(BuildContext context, RequestResultType type) {
     final resultData = RequestResultController().getResultData(type);
+
     return showDialog<void>(
       context: context,
-      builder: (_) {
-        return ActionSuccessDialogWidget(
-          title: resultData.title,
-          message: resultData.message,
-        );
-      },
+      builder: (_) => ActionSuccessDialogWidget(
+        title: resultData.title,
+        message: resultData.message,
+        icon: resultData.icon,
+        iconColor: resultData.iconColor,
+        backgroundColor: resultData.backgroundColor,
+      ),
     );
   }
 }

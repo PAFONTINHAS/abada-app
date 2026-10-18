@@ -30,16 +30,33 @@ class _RequestConfirmationDialogWidgetState
   bool _isLoading = false;
 
   Future<void> _confirm() async {
-    // Prevent repeated submissions while the supplied action is running.
     if (_isLoading) return;
+
     setState(() => _isLoading = true);
+
     try {
       final success = await widget.onConfirm();
-      // A failed action leaves the dialog open for retry or cancellation.
-      if (mounted && success) Navigator.of(context).pop(true);
+
+      if (!mounted) return;
+
+      if (success) {
+        Navigator.of(context).pop(true);
+      }
+    } catch (error, stackTrace) {
+      debugPrint('Confirmation action failed: $error');
+      debugPrintStack(stackTrace: stackTrace);
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Não foi possível concluir a ação. Tente novamente.'),
+        ),
+      );
     } finally {
-      // The route may have been dismissed before the callback completed.
-      if (mounted) setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -52,7 +69,10 @@ class _RequestConfirmationDialogWidgetState
         children: [
           Row(
             children: [
-              Icon(widget.icon, color: widget.actionColor),
+              RequestDialogWidget.actionIcon(
+                icon: widget.icon,
+                color: widget.actionColor,
+              ),
               const SizedBox(width: 12),
               Expanded(
                 child: Text(

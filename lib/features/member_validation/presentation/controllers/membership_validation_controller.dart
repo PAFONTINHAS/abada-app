@@ -1,6 +1,5 @@
 //esse arquivo faz a ligação entre tela e Use Cases
 
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/foundation.dart';
 import '../../domain/entities/membership_request.dart';
 import '../../domain/usecases/approve_membership_request_usecase.dart';

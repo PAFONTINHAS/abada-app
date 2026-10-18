@@ -7,7 +7,7 @@ import 'request_dialog_widget.dart';
 /// Feature-specific behavior stays in the supplied callback.
 class RequestJustificationDialogWidget extends StatefulWidget {
   final String title;
-  final String description;
+  final String? description;
   final String hintText;
   final String confirmLabel;
   final Color actionColor;
@@ -17,7 +17,7 @@ class RequestJustificationDialogWidget extends StatefulWidget {
   const RequestJustificationDialogWidget({
     super.key,
     required this.title,
-    required this.description,
+    this.description,
     required this.hintText,
     required this.confirmLabel,
     required this.actionColor,
@@ -38,19 +38,38 @@ class _RequestJustificationDialogWidgetState
 
   Future<void> _confirm() async {
     if (_isLoading) return;
+
     final justification = _justificationController.text.trim();
+
     if (justification.isEmpty) {
       MessageHandler.showWarning(context, 'Informe a justificativa.');
       return;
     }
+
     setState(() => _isLoading = true);
+
     try {
-      // Keep the dialog and input available for retry when the action fails.
       final success = await widget.onConfirm(justification);
-      if (mounted && success) Navigator.of(context).pop(true);
+
+      if (!mounted) return;
+
+      if (success) {
+        Navigator.of(context).pop(true);
+      }
+    } catch (error, stackTrace) {
+      debugPrint('Justification action failed: $error');
+      debugPrintStack(stackTrace: stackTrace);
+
+      if (!mounted) return;
+
+      MessageHandler.showError(
+        context,
+        'Não foi possível concluir a ação. Tente novamente.',
+      );
     } finally {
-      // The route may have been dismissed while the callback was running.
-      if (mounted) setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -70,7 +89,10 @@ class _RequestJustificationDialogWidgetState
         children: [
           Row(
             children: [
-              Icon(widget.icon, color: widget.actionColor),
+              RequestDialogWidget.actionIcon(
+                icon: widget.icon,
+                color: widget.actionColor,
+              ),
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
@@ -89,9 +111,12 @@ class _RequestJustificationDialogWidgetState
               ),
             ],
           ),
-          const SizedBox(height: 14),
-          Text(widget.description),
-          const SizedBox(height: 22),
+          if (widget.description != null &&
+              widget.description!.trim().isNotEmpty) ...[
+            const SizedBox(height: 14),
+            Text(widget.description!),
+          ],
+          const SizedBox(height: 20),
           CustomTextInput(
             label: 'Justificativa',
             controller: _justificationController,
