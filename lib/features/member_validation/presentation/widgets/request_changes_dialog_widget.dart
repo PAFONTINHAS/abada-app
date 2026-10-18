@@ -15,7 +15,7 @@ class RequestChangesDialogWidget extends StatelessWidget {
       title: 'Solicitar correções',
       hintText: 'Explique as correções necessárias...',
       confirmLabel: 'Enviar correções',
-      actionColor: RequestDialogWidget.rejectionColor,
+      actionColor: RequestDialogWidget.correctionColor,
       icon: Icons.edit_outlined,
       onConfirm: onConfirm,
     );
