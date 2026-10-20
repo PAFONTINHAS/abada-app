@@ -1,19 +1,19 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:sistema_abada_capoeira/features/events/domain/entities/event_products.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_type.dart';
 
 class EventFormController extends ChangeNotifier{
 
   TextEditingController eventName = TextEditingController();
+  TextEditingController eventValue = TextEditingController();
   TextEditingController eventLocation = TextEditingController();
   TextEditingController eventDescription = TextEditingController();
 
   EventType _eventType = EventType.COMPETITION;
   EventType get eventType => _eventType;
 
-  XFile? _eventImage;
-  XFile? get eventImage => _eventImage;
+  File? _eventImage;
+  File? get eventImage => _eventImage;
 
   DateTime? _eventInitDate;
   DateTime? get eventInitDate => _eventInitDate;
@@ -21,11 +21,6 @@ class EventFormController extends ChangeNotifier{
   DateTime? _eventEndingTime;
   DateTime? get eventEndingTime => _eventEndingTime;
   
-  double _eventValue = 0.00;
-  double get eventValue => _eventValue;
-
-  List<EventProducts> _products = [];
-  List<EventProducts> get products => _products;  
 
   void setEventLocation(String value){
     eventLocation.text = value;
@@ -55,6 +50,28 @@ class EventFormController extends ChangeNotifier{
       selectedDate.minute
     );
 
+    notifyListeners();
+  }
+
+  void setEventType(EventType type){
+
+    _eventType = type;
+
+    notifyListeners();
+  }
+
+  void setEventImage(File? imageFile){
+
+    if(imageFile == null) return;
+
+    _eventImage = imageFile;
+
+    notifyListeners();
+  }
+
+  void removeSelectedImage(){
+
+    _eventImage = null;
     notifyListeners();
   }
   
