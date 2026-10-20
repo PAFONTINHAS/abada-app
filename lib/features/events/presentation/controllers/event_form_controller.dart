@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_type.dart';
 
 class EventFormController extends ChangeNotifier{
@@ -20,7 +21,42 @@ class EventFormController extends ChangeNotifier{
 
   DateTime? _eventEndingTime;
   DateTime? get eventEndingTime => _eventEndingTime;
-  
+
+  // Adicione estes campos e métodos no seu EventFormController (ou controller dedicado)
+
+  ClassEntity? _selectedClass;
+  ClassEntity? get selectedClass => _selectedClass;
+
+  // Armazena os IDs dos alunos selecionados para graduação
+  final Set<String> _selectedMemberIds = {};
+  Set<String> get selectedMemberIds => _selectedMemberIds;
+
+  void selectClass(ClassEntity? classEntity) {
+    _selectedClass = classEntity;
+    _selectedMemberIds.clear(); // Limpa a seleção ao trocar de turma
+    notifyListeners();
+  }
+
+  void toggleMemberSelection(String memberId) {
+    if (_selectedMemberIds.contains(memberId)) {
+      _selectedMemberIds.remove(memberId);
+    } else {
+      _selectedMemberIds.add(memberId);
+    }
+    notifyListeners();
+  }
+
+  void toggleSelectAllMembers() {
+    if (_selectedClass == null) return;
+    
+    if (_selectedMemberIds.length == _selectedClass!.members.length) {
+      _selectedMemberIds.clear();
+    } else {
+      _selectedMemberIds.addAll(_selectedClass!.members.map((m) => m.studentId));
+    }
+    notifyListeners();
+  }
+    
 
   void setEventLocation(String value){
     eventLocation.text = value;
