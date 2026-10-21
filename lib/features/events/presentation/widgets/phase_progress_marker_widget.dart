@@ -24,56 +24,79 @@ class PhaseProgressMarkerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isFilledBox = currentPhase == phase || isCompleted;
+    final bool isActive = currentPhase == phase;
+    final bool isFilled = isActive || isCompleted;
 
     return Row(
       children: [
         Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              width: 40,
-              height: 40,
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 250),
+              width: 36,
+              height: 36,
               decoration: BoxDecoration(
-                color: isFilledBox
+                color: isFilled
                     ? ColorConstants.indigoColor
-                    : ColorConstants.whiteColor,
-                border: BoxBorder.all(color: ColorConstants.indigoColor),
+                    : ColorConstants.surfaceColor,
+                border: Border.all(
+                  color: isFilled
+                      ? ColorConstants.indigoColor
+                      : ColorConstants.borderColor,
+                  width: 2,
+                ),
                 shape: BoxShape.circle,
+                boxShadow: isActive
+                    ? [
+                        BoxShadow(
+                          color: ColorConstants.indigoColor.withOpacity(0.3),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        )
+                      ]
+                    : [],
               ),
               child: Center(
-                child: !isCompleted
-                    ? Text(
+                child: isCompleted
+                    ? const Icon(
+                        Icons.check_rounded,
+                        size: 18,
+                        color: ColorConstants.whiteColor,
+                      )
+                    : Text(
                         phaseNumber,
                         style: TextStyle(
-                          fontSize: 17,
-                          color: isFilledBox
+                          fontSize: 14,
+                          color: isFilled
                               ? ColorConstants.whiteColor
-                              : ColorConstants.indigoColor,
+                              : ColorConstants.textSecondary,
                           fontWeight: FontWeight.bold,
                         ),
-                      )
-                    : Icon(
-                        Icons.check,
-                        size: 17,
-                        color: ColorConstants.whiteColor,
                       ),
               ),
             ),
-
-            Text(phaseText, style: TextStyle(fontSize: 12)),
+            const SizedBox(height: 6),
+            Text(
+              phaseText,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: isActive ? FontWeight.bold : FontWeight.w500,
+                color: isActive
+                    ? ColorConstants.indigoColor
+                    : ColorConstants.textSecondary,
+              ),
+            ),
           ],
         ),
-
         if (!isLastPhase)
           Expanded(
             child: Container(
-              height: 1,
-              margin: const EdgeInsets.only(bottom: 20),
-              decoration: BoxDecoration(
-                color: !isCompleted
-                    ? const Color.fromARGB(62, 79, 39, 211)
-                    : ColorConstants.indigoColor,
-              ),
+              height: 2,
+              margin: const EdgeInsets.only(bottom: 20, left: 8, right: 8),
+              color: isCompleted
+                  ? ColorConstants.indigoColor
+                  : ColorConstants.borderColor,
             ),
           ),
       ],

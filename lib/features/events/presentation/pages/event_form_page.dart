@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sistema_abada_capoeira/shared/buttons/custom_text_button.dart';
+import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_navigation_bar_widget.dart';
 import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_type.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/models/event_phases.dart';
@@ -21,82 +22,96 @@ class EventFormPage extends StatelessWidget {
     final formController = context.read<EventFormController>();
 
     return Scaffold(
-      appBar: AppBar(title: Text("Criar evento")),
-      body: StandardScaffoldBodyWidget(
-        child: Selector<EventFormPhasesController, EventPhases>(
-          selector: (_, controller) => controller.currentPhase,
-          builder: (context, currentPhase, child) {
-
-
-            final bool isGraduationEvent = 
-              currentPhase == EventPhases.thirdPhase && 
+      backgroundColor: ColorConstants.backgroundColor,
+      appBar: AppBar(
+        title: const Text(
+          "Criar Evento",
+          style: TextStyle(
+            color: ColorConstants.textPrimary,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: ColorConstants.surfaceColor,
+        elevation: 0,
+        scrolledUnderElevation: 0.5,
+        iconTheme: const IconThemeData(color: ColorConstants.textPrimary),
+      ),
+      body: Selector<EventFormPhasesController, EventPhases>(
+        selector: (_, controller) => controller.currentPhase,
+        builder: (context, currentPhase, child) {
+          final bool isGraduationEvent =
+              currentPhase == EventPhases.thirdPhase &&
               formController.eventType == EventType.GRADUATION;
 
-            final bool isEventRevisionPhase = 
-              currentPhase == EventPhases.fourthPhase || 
-              currentPhase == EventPhases.thirdPhase && 
-              formController.eventType == EventType.COMPETITION;
+          final bool isEventRevisionPhase =
+              currentPhase == EventPhases.fourthPhase ||
+              (currentPhase == EventPhases.thirdPhase &&
+                  formController.eventType == EventType.COMPETITION);
 
-            String proceedButtonText = isEventRevisionPhase ? "Realizar Solicitação" : "Prosseguir";
+          final String proceedButtonText =
+              isEventRevisionPhase ? "Realizar Solicitação" : "Prosseguir";
 
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                EventPhaseProgressWidget(),
+          final bool showBackButton = currentPhase != EventPhases.firstPhase;
 
-                if(currentPhase == EventPhases.firstPhase) const EventFormFirstPhaseWidget(),
+          return Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+                  child: StandardScaffoldBodyWidget(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const EventPhaseProgressWidget(),
+                        const SizedBox(height: 24),
 
-                if(currentPhase == EventPhases.secondPhase) const EventFormSecondPhaseWidget(),
+                        if (currentPhase == EventPhases.firstPhase)
+                          const EventFormFirstPhaseWidget(),
 
-                if(isGraduationEvent) const EventFormGraduationPhaseWidget(),
+                        if (currentPhase == EventPhases.secondPhase)
+                          const EventFormSecondPhaseWidget(),
 
-                if(isEventRevisionPhase) EventFormRevisionPhaseWidget(),
-               
-                CustomTextButton(
-                  text: proceedButtonText,
-                  onPressed: () {
+                        if (isGraduationEvent)
+                          const EventFormGraduationPhaseWidget(),
 
-                    final bool isFirstPhaseComplete =
-                        formController.isFirstPhaseComplete &&
-                        currentPhase == EventPhases.firstPhase;
+                        if (isEventRevisionPhase)
+                          EventFormRevisionPhaseWidget(),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              EventFormNavigationBarWidget(
+                proceedText: proceedButtonText,
+                showBackButton: showBackButton,
+                onBack: () => eventFormPhasesController.previousFormPhase(),
+                onProceed: () {
+                  final bool isFirstPhaseComplete =
+                      formController.isFirstPhaseComplete &&
+                      currentPhase == EventPhases.firstPhase;
 
-                    final bool isSecondPhaseComplete =
-                        formController.isSecondPhaseComplete &&
-                        currentPhase == EventPhases.secondPhase;
+                  final bool isSecondPhaseComplete =
+                      formController.isSecondPhaseComplete &&
+                      currentPhase == EventPhases.secondPhase;
 
-                    final bool isGraduationPhaseComplete =
-                        formController.isGraduationPhaseComplete && isGraduationEvent;
-                    
-                    if(isFirstPhaseComplete) return eventFormPhasesController.nextFormPhase();
+                  final bool isGraduationPhaseComplete =
+                      formController.isGraduationPhaseComplete && isGraduationEvent;
 
-                    if(isSecondPhaseComplete) return eventFormPhasesController.nextFormPhase();
-
-                    if(isGraduationPhaseComplete) return eventFormPhasesController.nextFormPhase();
-
+                  if (isFirstPhaseComplete ||
+                      isSecondPhaseComplete ||
+                      isGraduationPhaseComplete ||
+                      isEventRevisionPhase) {
+                    eventFormPhasesController.nextFormPhase();
                   }
-                ),
-
-                Selector<EventFormController, bool>(
-                  selector: (_, controller) => controller.isFirstPhaseComplete,
-                  builder: (context, isFirstPhaseComplete, child) {
-
-                    if (!isFirstPhaseComplete || currentPhase == EventPhases.firstPhase){ 
-                      return SizedBox.shrink();
-                    }
-
-                    return CustomTextButton(
-                      text: "Voltar",
-                      onPressed: () =>
-                          eventFormPhasesController.previousFormPhase(),
-                    );
-                  },
-                ),
-              ],
-            );
-          },
-        ),
+                },
+              ),
+            ],
+          );
+        },
       ),
     );
   }
 }
-

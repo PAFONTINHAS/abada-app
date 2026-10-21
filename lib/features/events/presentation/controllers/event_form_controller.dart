@@ -85,7 +85,7 @@ class EventFormController extends ChangeNotifier{
       selectedDate.month,
       selectedDate.day,
       selectedTime.hour,
-      selectedDate.minute
+      selectedTime.minute
     );
 
     notifyListeners();
@@ -97,7 +97,7 @@ class EventFormController extends ChangeNotifier{
       selectedDate.month,
       selectedDate.day,
       selectedTime.hour,
-      selectedDate.minute
+      selectedTime.minute
     );
 
     notifyListeners();
