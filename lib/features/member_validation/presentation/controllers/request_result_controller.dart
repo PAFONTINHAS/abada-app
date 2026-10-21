@@ -4,9 +4,7 @@ import '../models/request_result_data.dart';
 import '../models/request_result_type.dart';
 
 class RequestResultController {
-  RequestResultData getResultData(
-    RequestResultType type,
-  ) {
+  RequestResultData getResultData(RequestResultType type) {
     switch (type) {
       case RequestResultType.approved:
         return RequestResultData(
@@ -14,8 +12,7 @@ class RequestResultController {
           iconColor: Colors.green,
           backgroundColor: Colors.green.shade50,
           title: 'Solicitação aprovada',
-          message:
-              'O vínculo do aluno foi aprovado com sucesso.',
+          message: 'O vínculo do aluno foi aprovado com sucesso.',
         );
 
       case RequestResultType.changesRequested:

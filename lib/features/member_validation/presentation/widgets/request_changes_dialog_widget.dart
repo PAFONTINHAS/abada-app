@@ -1,37 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:sistema_abada_capoeira/features/member_validation/presentation/controllers/request_changes_dialog_controller.dart';
-import 'package:sistema_abada_capoeira/features/member_validation/presentation/widgets/request_changes_form_widget.dart';
+import 'package:sistema_abada_capoeira/shared/dialogs/request_dialog_widget.dart';
+import 'package:sistema_abada_capoeira/shared/dialogs/request_justification_dialog_widget.dart';
 
+/// Configures the shared justification dialog for membership corrections.
 class RequestChangesDialogWidget extends StatelessWidget {
-  final Future<bool> Function(String reason) onConfirm;
+  final Future<bool> Function(String justification) onConfirm;
 
-  const RequestChangesDialogWidget({
-    super.key,
-    required this.onConfirm,
-  });
+  const RequestChangesDialogWidget({super.key, required this.onConfirm});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => RequestChangesDialogController(),
-      child: Dialog(
-        backgroundColor: Colors.transparent,
-        insetPadding: const EdgeInsets.symmetric(horizontal: 24),
-        child: Container(
-          constraints: const BoxConstraints(maxWidth: 420),
-          padding: const EdgeInsets.fromLTRB(24, 24, 24, 20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(28),
-          ),
-          child: SingleChildScrollView(
-            child: RequestChangesFormWidget(
-              onConfirm: onConfirm,
-            ),
-          ),
-        ),
-      ),
+    // The caller supplies the action; this widget only configures the UI.
+    return RequestJustificationDialogWidget(
+      title: 'Solicitar correções',
+      hintText: 'Explique as correções necessárias...',
+      confirmLabel: 'Enviar correções',
+      actionColor: RequestDialogWidget.correctionColor,
+      icon: Icons.edit_outlined,
+      onConfirm: onConfirm,
     );
   }
 }

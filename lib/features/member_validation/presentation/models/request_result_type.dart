@@ -1,5 +1,1 @@
-enum RequestResultType {
-  approved,
-  changesRequested,
-  rejected,
-}
+enum RequestResultType { approved, changesRequested, rejected }

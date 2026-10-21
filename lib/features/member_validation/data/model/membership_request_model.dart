@@ -2,19 +2,18 @@
 import '../../domain/entities/membership_request.dart';
 import '../../domain/entities/membership_request_status.dart';
 
-
 class MembershipRequestModel extends MembershipRequest {
   const MembershipRequestModel({
     super.updatedAt,
     super.changeReason,
     super.rejectionReason,
 
-    required super.id, //super significa = herda da classe pai 
+    required super.id, //super significa = herda da classe pai
     required super.status,
     required super.classId,
     required super.memberId,
     required super.className,
-    required super.memberName, 
+    required super.memberName,
     required super.memberBelt,
     required super.professorId,
     required super.requestedAt,
@@ -31,17 +30,17 @@ class MembershipRequestModel extends MembershipRequest {
     // 'professorId': '456',            ->         professorId: '456',
     // 'belt': 'Amarela',               ->         belt: 'Amarela',
     // }                                ->          )
-
     String id,
+
     //recebe o id da solicitação
     //id é separado dos outros atributos
-
     Map<String, dynamic> map,
     //recebe os dados da solicitação em formato de map. <chave, valor> texto e !=tipos
   ) {
     return MembershipRequestModel(
       id: id, //nome atributo : string id declarada
-      memberId: map['memberId'], //procura no obj map, o valor 'memberId' da chave memberId
+      memberId:
+          map['memberId'], //procura no obj map, o valor 'memberId' da chave memberId
       professorId: map['professorId'],
       classId: map['classId'],
       status: MembershipRequestStatus.values.byName(
@@ -50,7 +49,7 @@ class MembershipRequestModel extends MembershipRequest {
       ),
       className: map['className'],
       memberName: map['memberName'],
-      memberNickname: map ['memberNickname'],
+      memberNickname: map['memberNickname'],
       rejectionReason: map['rejectionReason'],
       changeReason: map['changeReason'],
       requestedAt: map['requestedAt'].toDate(),
@@ -62,7 +61,7 @@ class MembershipRequestModel extends MembershipRequest {
     );
   }
 
-  factory MembershipRequestModel.fromEntity(MembershipRequest request){
+  factory MembershipRequestModel.fromEntity(MembershipRequest request) {
     return MembershipRequestModel(
       id: request.id,
       status: request.status,
@@ -100,9 +99,7 @@ class MembershipRequestModel extends MembershipRequest {
       'className': className,
       'memberName': memberName,
       'memberNickname': memberNickname,
-      'memberBelt': memberBelt
-
+      'memberBelt': memberBelt,
     };
   }
 }
-

@@ -24,7 +24,8 @@ class MembershipRequestCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String memberName = "${request.memberName} - ${request.memberNickname}";
+    final String memberName =
+        "${request.memberName} - ${request.memberNickname}";
 
     return ClickableWidget(
       padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
@@ -34,9 +35,7 @@ class MembershipRequestCardWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: Colors.grey.shade200,
-          ),
+          border: Border.all(color: Colors.grey.shade200),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,6 +141,4 @@ class MembershipRequestCardWidget extends StatelessWidget {
       ),
     );
   }
-
-  
 }

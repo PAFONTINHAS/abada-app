@@ -26,11 +26,7 @@ class ActionButtonWidget extends StatelessWidget {
           color: backgroundColor,
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Icon(
-          icon,
-          size: 20,
-          color: iconColor,
-        ),
+        child: Icon(icon, size: 20, color: iconColor),
       ),
     );
   }
