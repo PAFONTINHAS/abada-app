@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/core/constants/app_spacing.dart';
 
 class MembershipRequestsInfoCardWidget extends StatelessWidget {
-  const MembershipRequestsInfoCardWidget({
-    super.key,
-  });
+  const MembershipRequestsInfoCardWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,11 +15,7 @@ class MembershipRequestsInfoCardWidget extends StatelessWidget {
       child: const Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            Icons.info_outline,
-            size: 22,
-            color: Color(0xFF252334),
-          ),
+          Icon(Icons.info_outline, size: 22, color: Color(0xFF252334)),
           SizedBox(width: 12),
           Expanded(
             child: Column(

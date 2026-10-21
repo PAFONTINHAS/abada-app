@@ -18,11 +18,7 @@ class MembershipRequestsErrorStateWidget extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
-              Icons.error_outline,
-              size: 48,
-              color: Colors.red,
-            ),
+            const Icon(Icons.error_outline, size: 48, color: Colors.red),
             const SizedBox(height: 12),
             const Text(
               'Não foi possível carregar as solicitações.',
@@ -32,10 +28,7 @@ class MembershipRequestsErrorStateWidget extends StatelessWidget {
             Text(
               errorMessage,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.grey.shade600,
-                fontSize: 12,
-              ),
+              style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
             ),
             const SizedBox(height: 16),
             FilledButton(
