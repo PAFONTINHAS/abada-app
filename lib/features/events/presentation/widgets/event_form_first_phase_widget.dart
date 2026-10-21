@@ -6,7 +6,6 @@ import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/shared/inputs/file_picker_widget.dart';
 import 'package:sistema_abada_capoeira/shared/inputs/custom_text_input/custom_text_input.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_controller.dart';
-import 'package:sistema_abada_capoeira/features/location/presentation/controllers/create_location_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_page_address_field_widget.dart';
 
 class EventFormFirstPhaseWidget extends StatelessWidget {
@@ -15,7 +14,6 @@ class EventFormFirstPhaseWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formController = context.read<EventFormController>();
-    final createLocationController = context.read<CreateLocationController>();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,6 +32,7 @@ class EventFormFirstPhaseWidget extends StatelessWidget {
               label: "Descrição do Evento",
               controller: formController.eventDescription,
               hintText: "Descreva o que ocorrerá no evento...",
+              maxLines: 3,
             ),
           ],
         ),
@@ -42,9 +41,7 @@ class EventFormFirstPhaseWidget extends StatelessWidget {
           title: "Localização",
           icon: Icons.location_on_outlined,
           children: [
-            
             EventFormPageAddressFieldWidget(
-              createLocationController: createLocationController,
               formController: formController,
             ),
           ],

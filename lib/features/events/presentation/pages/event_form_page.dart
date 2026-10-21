@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
+import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_navigation_bar_widget.dart';
 import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_type.dart';
@@ -84,11 +85,13 @@ class EventFormPage extends StatelessWidget {
                   ),
                 ),
               ),
+
               EventFormNavigationBarWidget(
                 proceedText: proceedButtonText,
                 showBackButton: showBackButton,
                 onBack: () => eventFormPhasesController.previousFormPhase(),
                 onProceed: () {
+
                   final bool isFirstPhaseComplete =
                       formController.isFirstPhaseComplete &&
                       currentPhase == EventPhases.firstPhase;
@@ -100,12 +103,16 @@ class EventFormPage extends StatelessWidget {
                   final bool isGraduationPhaseComplete =
                       formController.isGraduationPhaseComplete && isGraduationEvent;
 
+                  if(isEventRevisionPhase) return;
+                  
                   if (isFirstPhaseComplete ||
                       isSecondPhaseComplete ||
-                      isGraduationPhaseComplete ||
-                      isEventRevisionPhase) {
-                    eventFormPhasesController.nextFormPhase();
+                      isGraduationPhaseComplete) {
+                    return eventFormPhasesController.nextFormPhase();
                   }
+
+
+                  return MessageHandler.showWarning(context, "Preencha todas as informações antes de prosseguir");
                 },
               ),
             ],
