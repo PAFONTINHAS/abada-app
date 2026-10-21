@@ -6,6 +6,17 @@ enum EventType {
   UNKNOWN
 }
 
+extension EventTypeExt on EventType{
+
+  bool get isGraduationEvent{
+    return this == EventType.GRADUATION;
+  }
+
+  bool get isCompetitionEvent{
+    return this == EventType.COMPETITION;
+  }
+}
+
 class EventTypeExtension{
 
   EventTypeExtension._();

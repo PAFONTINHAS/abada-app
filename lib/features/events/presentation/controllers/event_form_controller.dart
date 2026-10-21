@@ -10,7 +10,24 @@ class EventFormController extends ChangeNotifier{
   TextEditingController eventLocation = TextEditingController();
   TextEditingController eventDescription = TextEditingController();
 
-  EventType _eventType = EventType.COMPETITION;
+  bool get isFirstPhaseComplete{
+
+    if(eventName.text.trim().isEmpty) return false;
+    if(eventLocation.text.trim().isEmpty) return false;
+    if(eventDescription.text.trim().isEmpty) return false;
+
+    return true;
+  }
+  
+  bool get isSecondPhaseComplete{
+    return _eventType != EventType.UNKNOWN;
+  }
+
+  bool get isGraduationPhaseComplete{
+    return _selectedMemberIds.isNotEmpty;
+  }
+
+  EventType _eventType = EventType.UNKNOWN;
   EventType get eventType => _eventType;
 
   File? _eventImage;
@@ -19,10 +36,8 @@ class EventFormController extends ChangeNotifier{
   DateTime? _eventInitDate;
   DateTime? get eventInitDate => _eventInitDate;
 
-  DateTime? _eventEndingTime;
-  DateTime? get eventEndingTime => _eventEndingTime;
-
-  // Adicione estes campos e métodos no seu EventFormController (ou controller dedicado)
+  DateTime? _eventEndingDate;
+  DateTime? get eventEndingDate => _eventEndingDate;
 
   ClassEntity? _selectedClass;
   ClassEntity? get selectedClass => _selectedClass;
@@ -75,10 +90,9 @@ class EventFormController extends ChangeNotifier{
 
     notifyListeners();
   }
-  
 
   void setEventEndingDate(DateTime selectedDate, TimeOfDay selectedTime){
-    _eventEndingTime = DateTime(
+    _eventEndingDate = DateTime(
       selectedDate.year,
       selectedDate.month,
       selectedDate.day,

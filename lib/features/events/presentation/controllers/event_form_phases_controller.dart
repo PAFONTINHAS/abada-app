@@ -14,5 +14,11 @@ class EventFormPhasesController extends ChangeNotifier{
     notifyListeners();
   }
 
+  void previousFormPhase(){
+    _currentPhase = _currentPhase.previousPhase;
+
+    notifyListeners();
+  }
+
 
 }
