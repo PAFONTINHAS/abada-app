@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/core/utils/date_controller.dart';
+import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/shared/inputs/file_picker_widget.dart';
 import 'package:sistema_abada_capoeira/shared/inputs/custom_text_input/custom_text_input.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_controller.dart';
@@ -42,17 +42,11 @@ class EventFormFirstPhaseWidget extends StatelessWidget {
           title: "Localização",
           icon: Icons.location_on_outlined,
           children: [
-            CustomTextInput(
-              label: "Endereço",
-              controller: formController.eventLocation,
-              maxLines: 2,
-              hintText: "Digite o endereço do evento...",
+            
+            EventFormPageAddressFieldWidget(
+              createLocationController: createLocationController,
+              formController: formController,
             ),
-
-            // EventFormPageAddressFieldWidget(
-            //   createLocationController: createLocationController,
-            //   formController: formController,
-            // ),
           ],
         ),
         const SizedBox(height: 16),
