@@ -42,6 +42,7 @@ class EventFormPage extends StatelessWidget {
       body: Selector<EventFormPhasesController, EventPhases>(
         selector: (_, controller) => controller.currentPhase,
         builder: (context, currentPhase, child) {
+
           final bool isGraduationEvent =
               currentPhase == EventPhases.thirdPhase &&
               formController.eventType == EventType.GRADUATION;
@@ -104,13 +105,17 @@ class EventFormPage extends StatelessWidget {
                       formController.isGraduationPhaseComplete && isGraduationEvent;
 
                   if(isEventRevisionPhase) return;
-                  
+
                   if (isFirstPhaseComplete ||
                       isSecondPhaseComplete ||
                       isGraduationPhaseComplete) {
                     return eventFormPhasesController.nextFormPhase();
                   }
 
+
+                  if(isGraduationEvent){
+                    return MessageHandler.showWarning(context, "Selecione uma turma ou ao menos um aluno para prosseguir");
+                  }
 
                   return MessageHandler.showWarning(context, "Preencha todas as informações antes de prosseguir");
                 },

@@ -7,11 +7,13 @@ class SectionDetailCardWidget extends StatelessWidget {
     required this.title,
     required this.icon,
     required this.children,
+    this.action
   });
 
   final String title;
   final IconData icon;
   final List<Widget> children;
+  final Widget? action;
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +39,11 @@ class SectionDetailCardWidget extends StatelessWidget {
                   color: ColorConstants.textPrimary,
                 ),
               ),
+
+              if(action != null) ... [
+                const SizedBox(width: 4),
+                Flexible(child: action!)
+              ]
             ],
           ),
           const Divider(height: 24, color: ColorConstants.borderColor),

@@ -6,7 +6,7 @@ import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/shared/inputs/file_picker_widget.dart';
 import 'package:sistema_abada_capoeira/shared/inputs/custom_text_input/custom_text_input.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_controller.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/widgets/phase_section_card_widget.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/section_detail_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/first_phase_date_picker_tile_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_page_address_field_widget.dart';
 
