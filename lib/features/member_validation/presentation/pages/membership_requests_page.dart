@@ -70,10 +70,10 @@ class MembershipRequestsPage extends StatelessWidget {
                     padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
                     itemCount: controller.requests.length,
                     itemBuilder: (context, index) {
-                      if (controller.requests.isEmpty) return const MembershipRequestsEmptyStateWidget();
-
+                      if (controller.requests.isEmpty) {
+                        return const MembershipRequestsEmptyStateWidget();
+                      }
                       final request = controller.requests[index];
-
                       return Padding(
                         padding: const EdgeInsetsGeometry.only(bottom: 22),
 
@@ -84,9 +84,9 @@ class MembershipRequestsPage extends StatelessWidget {
                       );
                     },
                   ),
-                )
+                ),
               ],
-            )
+            ),
           );
         },
       ),
