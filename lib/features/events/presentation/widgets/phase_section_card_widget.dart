@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 
-class FirstPhaseSectionCardWidget extends StatelessWidget {
-  const FirstPhaseSectionCardWidget({
+class SectionDetailCardWidget extends StatelessWidget {
+  const SectionDetailCardWidget({
     super.key,
     required this.title,
     required this.icon,
@@ -15,7 +15,7 @@ class FirstPhaseSectionCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-        return Container(
+    return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: ColorConstants.surfaceColor,

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 
-class FirstPhaseDatePickerTile extends StatelessWidget {
+class FirstPhaseDatePickerTileWidget extends StatelessWidget {
   final String label;
   final Widget selector;
   final VoidCallback onTap;
 
-  const FirstPhaseDatePickerTile({
+  const FirstPhaseDatePickerTileWidget({
     super.key,
     required this.label,
     required this.selector,

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_type.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/phase_section_card_widget.dart';
 import 'package:sistema_abada_capoeira/shared/inputs/custom_text_input/custom_text_input.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_products_section_widget.dart';
@@ -34,7 +35,7 @@ class EventFormSecondPhaseWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Cartão 1: Definição do Tipo e Valor
-        _buildSectionCard(
+        SectionDetailCardWidget(
           title: "Tipo e Investimento",
           icon: Icons.category_outlined,
           children: [
@@ -121,7 +122,7 @@ class EventFormSecondPhaseWidget extends StatelessWidget {
         const SizedBox(height: 16),
 
         // Cartão 2: Seção de Produtos Adicionais / Camisas / Acessórios
-        _buildSectionCard(
+        SectionDetailCardWidget(
           title: "Produtos e Itens Incluídos",
           icon: Icons.shopping_bag_outlined,
           children: const [
@@ -132,39 +133,4 @@ class EventFormSecondPhaseWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionCard({
-    required String title,
-    required IconData icon,
-    required List<Widget> children,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: ColorConstants.surfaceColor,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: ColorConstants.borderColor),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(icon, size: 20, color: ColorConstants.indigoColor),
-              const SizedBox(width: 8),
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: ColorConstants.textPrimary,
-                ),
-              ),
-            ],
-          ),
-          const Divider(height: 24, color: ColorConstants.borderColor),
-          ...children,
-        ],
-      ),
-    );
-  }
 }
