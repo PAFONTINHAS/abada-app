@@ -6,6 +6,8 @@ import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/shared/inputs/file_picker_widget.dart';
 import 'package:sistema_abada_capoeira/shared/inputs/custom_text_input/custom_text_input.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/first_phase_section_card_widget.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/first_phase_date_picker_tile_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_page_address_field_widget.dart';
 
 class EventFormFirstPhaseWidget extends StatelessWidget {
@@ -18,7 +20,7 @@ class EventFormFirstPhaseWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionCard(
+        FirstPhaseSectionCardWidget(
           title: "Informações Básicas",
           icon: Icons.info_outline_rounded,
           children: [
@@ -37,7 +39,7 @@ class EventFormFirstPhaseWidget extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 16),
-        _buildSectionCard(
+        FirstPhaseSectionCardWidget(
           title: "Localização",
           icon: Icons.location_on_outlined,
           children: [
@@ -47,14 +49,14 @@ class EventFormFirstPhaseWidget extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 16),
-        _buildSectionCard(
+        FirstPhaseSectionCardWidget(
           title: "Data e Horário",
           icon: Icons.calendar_today_rounded,
           children: [
             Row(
               children: [
                 Expanded(
-                  child: _DatePickerTile(
+                  child: FirstPhaseDatePickerTile(
                     label: "Data de Início",
                     selector: Selector<EventFormController, DateTime?>(
                       selector: (_, controller) => controller.eventInitDate,
@@ -80,7 +82,7 @@ class EventFormFirstPhaseWidget extends StatelessWidget {
                 ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: _DatePickerTile(
+                  child: FirstPhaseDatePickerTile(
                     label: "Data Final",
                     selector: Selector<EventFormController, DateTime?>(
                       selector: (_, controller) => controller.eventEndingDate,
@@ -109,8 +111,10 @@ class EventFormFirstPhaseWidget extends StatelessWidget {
             ),
           ],
         ),
+
         const SizedBox(height: 16),
-        _buildSectionCard(
+
+        FirstPhaseSectionCardWidget(
           title: "Mídia do Evento",
           icon: Icons.image_outlined,
           children: [
@@ -128,94 +132,6 @@ class EventFormFirstPhaseWidget extends StatelessWidget {
           ],
         ),
       ],
-    );
-  }
-
-  Widget _buildSectionCard({
-    required String title,
-    required IconData icon,
-    required List<Widget> children,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: ColorConstants.surfaceColor,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: ColorConstants.borderColor),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(icon, size: 20, color: ColorConstants.indigoColor),
-              const SizedBox(width: 8),
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: ColorConstants.textPrimary,
-                ),
-              ),
-            ],
-          ),
-          const Divider(height: 24, color: ColorConstants.borderColor),
-          ...children,
-        ],
-      ),
-    );
-  }
-}
-
-class _DatePickerTile extends StatelessWidget {
-  final String label;
-  final Widget selector;
-  final VoidCallback onTap;
-
-  const _DatePickerTile({
-    required this.label,
-    required this.selector,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        decoration: BoxDecoration(
-          color: ColorConstants.backgroundColor,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: ColorConstants.borderColor),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              label,
-              style: const TextStyle(
-                fontSize: 12,
-                color: ColorConstants.textSecondary,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Row(
-              children: [
-                Expanded(child: selector),
-                const Icon(
-                  Icons.access_time_rounded,
-                  size: 16,
-                  color: ColorConstants.indigoColor,
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
