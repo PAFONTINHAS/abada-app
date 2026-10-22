@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sistema_abada_capoeira/core/utils/list_converter.dart';
 import 'package:sistema_abada_capoeira/core/utils/date_controller.dart';
-import 'package:sistema_abada_capoeira/features/events/data/models/event_product_item_model.dart';
-import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_type.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
+import 'package:sistema_abada_capoeira/features/events/data/models/event_product_item_model.dart';
 
 class EventEntityModel extends EventEntity{
 
@@ -21,6 +21,7 @@ class EventEntityModel extends EventEntity{
     required super.eventDescription,
     required super.eventCreatorNickname,
 
+    super.eventImagePath,
     super.selectedClassId,
     super.selectedMembersId,
   });
@@ -48,13 +49,14 @@ class EventEntityModel extends EventEntity{
       eventValue: data['eventValue'],
       eventActive: data['eventActive'],
       eventLocation: data['eventLocation'],
+      eventImagePath: data['eventImagePath'],
       eventCreatorId: data['eventCreatorId'],
       selectedClassId: data['selectedClassId'],
       eventInitDate: initDate ?? DateTime.now(),
       eventDescription: data['eventDescription'],
       eventEndingDate: endingDate ?? DateTime.now(),
       eventCreatorNickname: data['eventCreatorNickname'],
-      selectedMembersId: Set<String>.from(data['selectedMembersId'] ?? []),
+      selectedMembersId: Set<String>.from(data['selectedMembersId']),
     );
   }
 
@@ -69,6 +71,7 @@ class EventEntityModel extends EventEntity{
       eventActive: entity.eventActive,
       eventInitDate: entity.eventInitDate,
       eventLocation: entity.eventLocation,
+      eventImagePath: entity.eventImagePath,
       eventCreatorId: entity.eventCreatorId,
       eventEndingDate: entity.eventEndingDate,
       selectedClassId:  entity.selectedClassId,
@@ -83,18 +86,18 @@ class EventEntityModel extends EventEntity{
     return {
       'products': products.map((product) => product.toMap()).toList(),
       'eventName': eventName,
-      'eventType': eventType.name,
       'eventValue': eventValue,
       'eventActive': eventActive,
+      'eventType': eventType.name,
       'eventInitDate': eventInitDate,
       'eventLocation': eventLocation,
       'eventCreatorId': eventCreatorId,
+      'eventImagePath': eventImagePath,
       'eventEndingDate': eventEndingDate,
       'selectedClassId': selectedClassId,
       'eventDescription': eventDescription,
       'selectedMembersId': selectedMembersId,
       'eventCreatorNickname': eventCreatorNickname,
-
     };
   }
   

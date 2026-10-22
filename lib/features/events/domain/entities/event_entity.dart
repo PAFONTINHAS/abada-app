@@ -16,6 +16,7 @@ class EventEntity {
     required this.eventDescription,
     required this.eventCreatorNickname,
 
+    this.eventImagePath,
     this.selectedClassId,
     this.selectedMembersId,
     this.eventActive = false,
@@ -28,6 +29,7 @@ class EventEntity {
   final String eventValue;
   final String eventCreatorId;
   final String eventCreatorNickname;
+  final String? eventImagePath;
 
   final bool eventActive;
   final EventType eventType;
@@ -37,10 +39,10 @@ class EventEntity {
   final Set<String>? selectedMembersId;
   final List<EventProductItem> products;
 
-
   EventEntity copyWith({
     String? eventId,
     String? eventName,
+    String? eventImagePath,
     bool? eventActive,
     String? eventValue,
     EventType? eventType,
@@ -64,12 +66,13 @@ class EventEntity {
       eventActive:          eventActive          ?? this.eventActive,
       eventInitDate:        eventInitDate        ?? this.eventInitDate,
       eventLocation:        eventLocation        ?? this.eventLocation,
+      eventImagePath:       eventImagePath       ?? this.eventImagePath,
       eventCreatorId:       eventCreatorId       ?? this.eventCreatorId,
       selectedClassId:      selectedClassId      ?? this.selectedClassId,
       eventEndingDate:      eventEndingDate      ?? this.eventEndingDate,
       eventDescription:     eventDescription     ?? this.eventDescription,
       selectedMembersId:    selectedMembersId    ?? this.selectedMembersId,
-      eventCreatorNickname: eventCreatorNickname ?? this.eventCreatorNickname
+      eventCreatorNickname: eventCreatorNickname ?? this.eventCreatorNickname,
     );
   }
 

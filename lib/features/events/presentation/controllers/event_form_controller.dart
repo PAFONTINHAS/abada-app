@@ -146,7 +146,7 @@ class EventFormController extends ChangeNotifier{
     _isLoading = true;
     notifyListeners();
 
-    final result = await _createEventRequestUsecase.call(event);
+    final result = await _createEventRequestUsecase.call(event, _eventImage);
 
     final bool success = result.fold((failure){
       _errorMessage = failure.message;

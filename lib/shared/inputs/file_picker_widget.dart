@@ -6,6 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:sistema_abada_capoeira/core/constants/app_colors.dart';
 import 'package:sistema_abada_capoeira/core/constants/app_spacing.dart';
 import 'package:sistema_abada_capoeira/core/constants/app_text_styles.dart';
+import 'package:sistema_abada_capoeira/core/services/image_service.dart';
 
 class FilePickerWidget extends StatefulWidget {
   final String? label;
@@ -37,6 +38,8 @@ class _FilePickerWidgetState extends State<FilePickerWidget> {
   File? _selectedFile;
   String? _errorMessage;
 
+  final ImageService _imageService = ImageService();
+
   @override
   void initState() {
     super.initState();
@@ -52,11 +55,14 @@ class _FilePickerWidgetState extends State<FilePickerWidget> {
       File? pickedFile;
 
       if (widget.imageOnly) {
-        final ImagePicker picker = ImagePicker();
-        final XFile? image = await picker.pickImage(
-          source: ImageSource.gallery,
-          imageQuality: 85,
-        );
+
+        final image = await _imageService.pickImage();
+        
+        // final ImagePicker picker = ImagePicker();
+        // final XFile? image = await picker.pickImage(
+        //   source: ImageSource.gallery,
+        //   imageQuality: 85,
+        // );
         
         if (image != null) {
           pickedFile = File(image.path);

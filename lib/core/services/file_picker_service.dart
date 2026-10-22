@@ -21,12 +21,4 @@ class FilePickerService {
       bytes: bytes,
     );
   }
-
-  static Future<XFile?> pickImage() async{
-
-    final picker = ImagePicker();
-
-    return await picker.pickImage(source: ImageSource.gallery);
-
-  }
 }

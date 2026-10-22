@@ -9,16 +9,15 @@ class CreateEventRequestUsecaseValidator {
 
     bool invalidDate = event.eventInitDate.isAtSameMomentAs(event.eventEndingDate);
 
-    bool validGraduationEvent =
-      event.eventType.isGraduationEvent &&
-        (
-          event.selectedClassId != null &&
-          (event.selectedMembersId != null && event.selectedMembersId!.isNotEmpty)
-        ); 
+    bool isGraduationEvent = event.eventType.isGraduationEvent;
+
+    bool validGraduationEvent =      
+        event.selectedClassId != null &&
+        (event.selectedMembersId != null && event.selectedMembersId!.isNotEmpty);
 
     if(event.eventName.isEmpty) return "Campo de nome não pode ser vazio";
     if(invalidDate) return "Data inválida";
-    if(!validGraduationEvent) return "Revise os requisitos para iniciar um evento de graduação";
+    if(isGraduationEvent && !validGraduationEvent) return "Revise os requisitos para iniciar um evento de graduação";
 
 
     return null;
