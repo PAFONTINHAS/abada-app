@@ -5,6 +5,7 @@ class EventFormNavigationBarWidget extends StatelessWidget {
   final String proceedText;
   final VoidCallback onProceed;
   final VoidCallback? onBack;
+  final VoidCallback onFinish;
   final bool showBackButton;
 
   const EventFormNavigationBarWidget({
@@ -13,6 +14,7 @@ class EventFormNavigationBarWidget extends StatelessWidget {
     required this.onProceed,
     this.onBack,
     this.showBackButton = true,
+    required this.onFinish
   });
 
   @override
@@ -59,7 +61,7 @@ class EventFormNavigationBarWidget extends StatelessWidget {
             Expanded(
               flex: 2,
               child: ElevatedButton(
-                onPressed: onProceed,
+                onPressed: proceedText == "Prosseguir" ? onProceed : onFinish,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: ColorConstants.indigoColor,
                   foregroundColor: ColorConstants.whiteColor,

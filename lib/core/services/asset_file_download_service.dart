@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 
 class AssetFileDownloadService {
   AssetFileDownloadService._();
@@ -32,7 +33,7 @@ class AssetFileDownloadService {
 
       return result.type == ResultType.done;
     } catch (exception) {
-      debugPrint('Erro ao abrir declaração: $exception');
+      LoggingService.displayError('Erro ao abrir declaração: $exception');
       return false;
     }
   }

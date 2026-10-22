@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_graduation_controller.dart';
 
 class GraduationPhaseClassSelectionWidget extends StatelessWidget {
   const GraduationPhaseClassSelectionWidget({
@@ -16,7 +17,7 @@ class GraduationPhaseClassSelectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formController = context.watch<EventFormController>();
+    final graduationController = context.watch<EventGraduationController>();
 
     return DropdownButtonFormField<ClassEntity>(
       initialValue: selectedClass,
@@ -74,7 +75,7 @@ class GraduationPhaseClassSelectionWidget extends StatelessWidget {
         );
       }).toList(),
       onChanged: (classEntity) {
-        formController.selectClass(classEntity);
+        graduationController.selectClass(classEntity);
       },
     );
   }

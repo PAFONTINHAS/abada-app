@@ -4,6 +4,8 @@ class MaskFormatter {
 
   static double convertMoneyStringToDouble(String money){
 
+    if(money.isEmpty) return 0.0;
+    
     final cleanPrice = money
       .replaceAll('R\$', '')
       .replaceAll('.', '')

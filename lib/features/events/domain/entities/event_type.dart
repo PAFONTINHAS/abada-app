@@ -15,6 +15,8 @@ extension EventTypeExt on EventType{
   bool get isCompetitionEvent{
     return this == EventType.COMPETITION;
   }
+
+  
 }
 
 class EventTypeExtension{
@@ -40,6 +42,15 @@ class EventTypeExtension{
       case EventType.UNKNOWN:     return 'DESCONHECIDO';
     }
 
+  }
+
+  static EventType fromString(String type){
+
+    switch(type){
+      case 'GRADUATION': return EventType.GRADUATION;
+      case 'COMPETITION': return EventType.COMPETITION;
+      default: return EventType.UNKNOWN;
+    }
   }
 
 

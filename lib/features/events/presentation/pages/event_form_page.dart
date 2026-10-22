@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_navigation_bar_widget.dart';
 import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_type.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/models/event_phases.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_phase_progress_widget.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_products_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_first_phase_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_second_phase_widget.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_graduation_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_revision_phase_widget.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_navigation_bar_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_phases_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_graduation_phase_widget.dart';
 
@@ -19,8 +23,13 @@ class EventFormPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final eventFormPhasesController = context.read<EventFormPhasesController>();
+    final profileController = context.read<ProfileController>();
     final formController = context.read<EventFormController>();
+    final eventProductsController = context.read<EventProductsController>();
+    final eventFormPhasesController = context.read<EventFormPhasesController>();
+    final eventGraduationController = context.read<EventGraduationController>();
+
+    final user = profileController.userProfile;
 
     return Scaffold(
       backgroundColor: ColorConstants.backgroundColor,
@@ -102,7 +111,7 @@ class EventFormPage extends StatelessWidget {
                       currentPhase == EventPhases.secondPhase;
 
                   final bool isGraduationPhaseComplete =
-                      formController.isGraduationPhaseComplete && isGraduationEvent;
+                      eventGraduationController.isGraduationPhaseComplete && isGraduationEvent;
 
                   if(isEventRevisionPhase) return;
 
@@ -118,6 +127,30 @@ class EventFormPage extends StatelessWidget {
                   }
 
                   return MessageHandler.showWarning(context, "Preencha todas as informações antes de prosseguir");
+                },
+                onFinish: () async{
+
+                  final createdEvent = formController.buildEventEntity(
+                    products: eventProductsController.products,
+                    userId: user.uid,
+                    userNickname: user.nickname,
+                    selectedMemberIds: eventGraduationController.selectedMemberIds,
+                    selectedClass: eventGraduationController.selectedClass,
+                  );
+
+                  if(createdEvent == null) return;
+
+                  final success = await formController.createEventRequest(createdEvent);
+
+                  if(!context.mounted) return;
+
+                  if(success){
+                    MessageHandler.showSuccess(context, "Solicitação de evento criada com sucesso");
+                    context.pop();
+                    return;
+                  }
+
+                  MessageHandler.showError(context, "Erro: ${formController.errorMessage}");
                 },
               ),
             ],

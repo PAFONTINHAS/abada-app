@@ -2,22 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_controller.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/widgets/graduation_phase_class_selection_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/member_graduation_tile.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/section_detail_card_widget.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_graduation_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/graduation_phase_class_selection_widget.dart';
 
 class EventFormGraduationPhaseWidget extends StatelessWidget {
   const EventFormGraduationPhaseWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final formController = context.watch<EventFormController>();
+    final graduationController = context.watch<EventGraduationController>();
     final classController = context.watch<ClassController>();
 
     final classes = classController.lecturedClasses;
-    final selectedClass = formController.selectedClass;
-    final selectedIds = formController.selectedMemberIds;
+    final selectedClass = graduationController.selectedClass;
+    final selectedIds = graduationController.selectedMemberIds;
 
     final bool allSelected = selectedClass != null &&
         selectedClass.members.isNotEmpty &&
@@ -46,7 +46,7 @@ class EventFormGraduationPhaseWidget extends StatelessWidget {
             title: "Alunos para Graduação",
             icon: Icons.workspace_premium_outlined,
             action: TextButton.icon(
-              onPressed: () => formController.toggleSelectAllMembers(),
+              onPressed: () => graduationController.toggleSelectAllMembers(),
               style: TextButton.styleFrom(
                 foregroundColor: ColorConstants.indigoColor,
                 padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
@@ -104,7 +104,7 @@ class EventFormGraduationPhaseWidget extends StatelessWidget {
                       member: member,
                       isSelected: isSelected,
                       onChanged: () =>
-                          formController.toggleMemberSelection(member.studentId),
+                          graduationController.toggleMemberSelection(member.studentId),
                     );
                   },
                 ),

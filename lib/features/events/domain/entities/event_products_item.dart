@@ -10,4 +10,12 @@ class EventProductItem {
   double price;
   bool mandatory;
 
+  Map<String, dynamic> toMap(){
+    return{
+      'product':  product,
+      'price':  price,
+      'mandatory':  mandatory,
+    };
+  }
+
 }

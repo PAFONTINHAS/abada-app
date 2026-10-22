@@ -31,7 +31,7 @@ class EventFormFirstPhaseWidget extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             CustomTextInput(
-              label: "Descrição do Evento",
+              label: "Descrição do Evento (opcional)",
               controller: formController.eventDescription,
               hintText: "Descreva o que ocorrerá no evento...",
               maxLines: 3,

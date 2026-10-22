@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sistema_abada_capoeira/core/utils/list_converter.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/schedule_entity.dart';
 import 'package:sistema_abada_capoeira/features/class/data/models/schedule_entity_model.dart';
@@ -25,13 +26,10 @@ class ClassEntityModel extends ClassEntity{
 
     final classProfessorEntity = ClassProfessorEntityModel.fromMap(data['professor']);
 
-    final List<dynamic> scheduleList = data['schedule'] as List<dynamic>;
-
-    final List<Map<String, dynamic>> typedList = List<Map<String, dynamic>>.from(scheduleList);
-
-    final List<ScheduleEntity> schedule = typedList
-        .map((data) => ScheduleEntityModel.fromSnapshot(data))
-        .toList();
+    final List<ScheduleEntity> schedule = ListConverter.fromDynamicList(
+      data['schedule'],
+      (map) => ScheduleEntityModel.fromSnapshot(map),
+    );
 
     return ClassEntityModel(
       classId: document.id,

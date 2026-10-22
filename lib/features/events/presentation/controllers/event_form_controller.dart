@@ -1,9 +1,23 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
+import 'package:sistema_abada_capoeira/core/utils/mask_formatter.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_type.dart';
+import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_products_item.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/usecases/create_event_request_usecase.dart';
 
 class EventFormController extends ChangeNotifier{
+
+  final CreateEventRequestUsecase _createEventRequestUsecase;
+
+  EventFormController(this._createEventRequestUsecase);
+
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
+  String? _errorMessage;
+  String? get errorMessage => _errorMessage;
 
   TextEditingController eventName = TextEditingController();
   TextEditingController eventValue = TextEditingController();
@@ -14,17 +28,12 @@ class EventFormController extends ChangeNotifier{
 
     if(eventName.text.trim().isEmpty) return false;
     if(eventLocation.text.trim().isEmpty) return false;
-    if(eventDescription.text.trim().isEmpty) return false;
 
     return true;
   }
   
   bool get isSecondPhaseComplete{
     return _eventType != EventType.UNKNOWN;
-  }
-
-  bool get isGraduationPhaseComplete{
-    return _selectedMemberIds.isNotEmpty;
   }
 
   EventType _eventType = EventType.UNKNOWN;
@@ -39,39 +48,6 @@ class EventFormController extends ChangeNotifier{
   DateTime? _eventEndingDate;
   DateTime? get eventEndingDate => _eventEndingDate;
 
-  ClassEntity? _selectedClass;
-  ClassEntity? get selectedClass => _selectedClass;
-
-  // Armazena os IDs dos alunos selecionados para graduação
-  final Set<String> _selectedMemberIds = {};
-  Set<String> get selectedMemberIds => _selectedMemberIds;
-
-  void selectClass(ClassEntity? classEntity) {
-    _selectedClass = classEntity;
-    _selectedMemberIds.clear(); // Limpa a seleção ao trocar de turma
-    notifyListeners();
-  }
-
-  void toggleMemberSelection(String memberId) {
-    if (_selectedMemberIds.contains(memberId)) {
-      _selectedMemberIds.remove(memberId);
-    } else {
-      _selectedMemberIds.add(memberId);
-    }
-    notifyListeners();
-  }
-
-  void toggleSelectAllMembers() {
-    if (_selectedClass == null) return;
-    
-    if (_selectedMemberIds.length == _selectedClass!.members.length) {
-      _selectedMemberIds.clear();
-    } else {
-      _selectedMemberIds.addAll(_selectedClass!.members.map((m) => m.studentId));
-    }
-    notifyListeners();
-  }
-    
 
   void setEventLocation(String value){
     eventLocation.text = value;
@@ -124,6 +100,66 @@ class EventFormController extends ChangeNotifier{
     _eventImage = null;
     notifyListeners();
   }
-  
+
+  EventEntity? buildEventEntity({
+    required List<EventProductItem> products,
+    required String userId,
+    required String userNickname,
+    required Set<String> selectedMemberIds,
+    required ClassEntity? selectedClass
+  }) {
+    double totalEventDoubleValue = MaskFormatter.convertMoneyStringToDouble(
+      eventValue.text.trim(),
+    );
+
+    for (final product in products) {
+      if (product.mandatory) {
+        totalEventDoubleValue += product.price;
+      }
+    }
+
+    String totalEventStringValue = MaskFormatter.convertMoneyDoubleToString(
+      totalEventDoubleValue,
+    );
+
+    final now = DateTime.now();
+
+    return EventEntity(
+      eventId: '',
+      products: products,
+      eventType: eventType,
+      eventCreatorId: userId,
+      eventName: eventName.text.trim(),
+      eventCreatorNickname: userNickname,
+      eventValue: totalEventStringValue,
+      eventInitDate: eventInitDate ?? now,
+      selectedMembersId: selectedMemberIds,
+      eventLocation: eventLocation.text.trim(),
+      eventEndingDate: eventEndingDate ?? now,
+      selectedClassId: selectedClass?.classId,
+      eventDescription: eventDescription.text.trim(),
+    );
+  }
+
+  Future<bool> createEventRequest(EventEntity event) async{
+
+    _isLoading = true;
+    notifyListeners();
+
+    final result = await _createEventRequestUsecase.call(event);
+
+    final bool success = result.fold((failure){
+      _errorMessage = failure.message;
+      return false;
+    }, (requestedEvent){
+
+      return true;
+    });
+
+    _isLoading = false;
+
+    notifyListeners();
+    return success;
+  }
 
 }

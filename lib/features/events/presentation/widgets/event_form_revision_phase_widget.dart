@@ -5,6 +5,7 @@ import 'package:sistema_abada_capoeira/core/utils/date_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_type.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_products_item.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_graduation_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/section_detail_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_products_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/revision_phase_info_row_widget.dart';
@@ -20,6 +21,7 @@ class EventFormRevisionPhaseWidget extends StatelessWidget {
     final formController = context.read<EventFormController>();
     final productsController = context.read<EventProductsController>();
     final List<EventProductItem> products = productsController.products;
+    final eventGraduationController = context.read<EventGraduationController>();
 
     // Cálculo do valor total (Evento + Produtos Obrigatórios)
     double totalEventDoubleValue = MaskFormatter.convertMoneyStringToDouble(
@@ -95,11 +97,11 @@ class EventFormRevisionPhaseWidget extends StatelessWidget {
               RevisionPhaseInfoRowWidget(
                 label: "Turma Selecionada",
                 value:
-                    formController.selectedClass?.unitName ?? "Não informada",
+                    eventGraduationController.selectedClass?.unitName ?? "Não informada",
               ),
               RevisionPhaseInfoRowWidget(
                 label: "Alunos Subindo de Corda",
-                value: "${formController.selectedMemberIds.length} aluno(s)",
+                value: "${eventGraduationController.selectedMemberIds.length} aluno(s)",
               ),
             ],
           ),
