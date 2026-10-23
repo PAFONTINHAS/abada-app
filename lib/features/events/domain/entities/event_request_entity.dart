@@ -4,35 +4,42 @@ import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_req
 class EventRequestEntity extends GenericRequestCreationParameters {
 
   EventRequestEntity({
-    super.changeReason,
-    super.rejectionReason,
-    required super.requestId,
     required this.eventId,
+    required super.requestId,
     required this.requesterId,
     required super.requestedAt,
+    required this.endingDate,
+    required this.eventName,
+    required this.initDate,
     required this.requesterNickname,
 
+    super.status,
     super.updatedAt,
-    super.status
+    super.changeReason,
+    super.rejectionReason,
   });
 
   final String requesterId;
   final String requesterNickname;
   final String eventId;
+  final String eventName;
+  final DateTime initDate;
+  final DateTime endingDate;
 
-
-  
   Map<String, dynamic> toMap(){
 
     return {
-      'changeReason': changeReason,
-      'requestedAt': requestedAt,
-      'updatedAt': updatedAt,
-      'status': status.name,
       'eventId': eventId,
+      'initDate': initDate,
+      'status': status.name,
+      'updatedAt': updatedAt,
+      'eventName': eventName,
+      'endingDate': endingDate,
       'requesterId': requesterId,
-      'requesterNickname': requesterNickname,
+      'requestedAt': requestedAt,
+      'changeReason': changeReason,
       'rejectionReason': rejectionReason,
+      'requesterNickname': requesterNickname,
     };
   }
 
@@ -46,12 +53,19 @@ class EventRequestEntity extends GenericRequestCreationParameters {
     final String? requesterId,
     final String? requesterNickname,
     final String? eventId,
+    final String? eventInitDate,
+    final String? eventName,
+    final DateTime? initDate,
+    final DateTime? endingDate,
   }){
     return EventRequestEntity(
       status: status ?? this.status,
       eventId: eventId ?? this.eventId,
+      initDate: initDate ?? this.initDate,
       updatedAt: updatedAt ?? this.updatedAt,
+      eventName: eventName ?? this.eventName,
       requestId: requestId ?? this.requestId,
+      endingDate: endingDate ?? this.endingDate,
       requesterId: requesterId ?? this.requesterId,
       requestedAt: requestedAt ?? this.requestedAt,
       changeReason: changeReason ?? this.changeReason,

@@ -7,7 +7,6 @@ enum GenericRequestStatus {
   unknow
 }
 
-
 class GenericRequestStatusExtension{
   GenericRequestStatusExtension._();
 

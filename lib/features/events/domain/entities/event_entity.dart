@@ -9,6 +9,7 @@ class EventEntity {
     required this.eventName,
     required this.eventType,
     required this.eventValue,
+    required this.finishedEvent,
     required this.eventInitDate,
     required this.eventLocation,
     required this.eventCreatorId,
@@ -32,6 +33,7 @@ class EventEntity {
   final String? eventImagePath;
 
   final bool eventActive;
+  final bool finishedEvent;
   final EventType eventType;
   final DateTime eventInitDate;
   final String? selectedClassId;
@@ -42,11 +44,12 @@ class EventEntity {
   EventEntity copyWith({
     String? eventId,
     String? eventName,
-    String? eventImagePath,
     bool? eventActive,
     String? eventValue,
+    bool? finishedEvent,
     EventType? eventType,
     String? eventLocation,
+    String? eventImagePath,
     String? eventCreatorId,
     String? selectedClassId,
     DateTime? eventInitDate,
@@ -64,6 +67,7 @@ class EventEntity {
       eventType:            eventType            ?? this.eventType,
       eventValue:           eventValue           ?? this.eventValue,
       eventActive:          eventActive          ?? this.eventActive,
+      finishedEvent:        finishedEvent        ?? this.finishedEvent,
       eventInitDate:        eventInitDate        ?? this.eventInitDate,
       eventLocation:        eventLocation        ?? this.eventLocation,
       eventImagePath:       eventImagePath       ?? this.eventImagePath,
@@ -73,6 +77,7 @@ class EventEntity {
       eventDescription:     eventDescription     ?? this.eventDescription,
       selectedMembersId:    selectedMembersId    ?? this.selectedMembersId,
       eventCreatorNickname: eventCreatorNickname ?? this.eventCreatorNickname,
+      
     );
   }
 

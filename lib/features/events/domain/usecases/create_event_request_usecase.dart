@@ -47,6 +47,9 @@ class CreateEventRequestUsecase extends StandardEventUsecase{
         requestId: '',
         requestedAt: DateTime.now(),
         eventId: createdEvent.eventId,
+        eventName: eventEntity.eventName,
+        initDate: eventEntity.eventInitDate,
+        endingDate: eventEntity.eventEndingDate,
         requesterId: createdEvent.eventCreatorId,
         requesterNickname: eventEntity.eventCreatorNickname,
       );

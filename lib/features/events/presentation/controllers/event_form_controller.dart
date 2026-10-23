@@ -127,6 +127,7 @@ class EventFormController extends ChangeNotifier{
     return EventEntity(
       eventId: '',
       products: products,
+      finishedEvent: false,
       eventType: eventType,
       eventCreatorId: userId,
       eventName: eventName.text.trim(),

@@ -9,6 +9,8 @@ class CreateEventRequestUsecaseValidator {
 
     bool invalidDate = event.eventInitDate.isAtSameMomentAs(event.eventEndingDate);
 
+    bool invalidBeforeDate = event.eventEndingDate.isBefore(event.eventInitDate);
+
     bool isGraduationEvent = event.eventType.isGraduationEvent;
 
     bool validGraduationEvent =      
@@ -18,7 +20,7 @@ class CreateEventRequestUsecaseValidator {
     if(event.eventName.isEmpty) return "Campo de nome não pode ser vazio";
     if(invalidDate) return "Data inválida";
     if(isGraduationEvent && !validGraduationEvent) return "Revise os requisitos para iniciar um evento de graduação";
-
+    if(invalidBeforeDate) return "Data final do evento não pode anterior à Data inicial do evento";
 
     return null;
   }

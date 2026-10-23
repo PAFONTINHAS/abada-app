@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/get_user_events_usecase.dart';
 
@@ -11,8 +12,8 @@ class CreatedEventsController extends ChangeNotifier{
   List<EventRequestEntity> _eventRequests = [];
   List<EventRequestEntity> get eventRequests => _eventRequests;
   
-  List<EventRequestEntity> _userEvents = [];
-  List<EventRequestEntity> get userEvents => _userEvents;
+  List<EventEntity> _userEvents = [];
+  List<EventEntity> get userEvents => _userEvents;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -21,7 +22,7 @@ class CreatedEventsController extends ChangeNotifier{
   String? get errorMessage => _errorMessage;
 
   Future<bool> getUserEvents(String userId) async{
-    
+
     _isLoading = true;
     notifyListeners();
 

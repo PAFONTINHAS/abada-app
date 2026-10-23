@@ -13,7 +13,11 @@ class EventsPage extends StatelessWidget {
       body: StandardScaffoldBodyWidget(child: Column(
         children: [
 
-          CustomTextButton(text: "Criar Evento", onPressed: () => RouteController.redirectToCreateEventPage(context: context))
+          CustomTextButton(text: "Criar Evento", onPressed: () => RouteController.redirectToCreateEventPage(context: context)),
+
+          SizedBox(height: 20,),
+          
+          CustomTextButton(text: "Seus Eventos", onPressed: () => RouteController.redirectToCreatedEventsPage(context: context))
 
 
 
