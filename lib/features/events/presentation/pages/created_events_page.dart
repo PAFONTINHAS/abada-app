@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
+import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_entity.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/widgets/finished_event_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/request_item_card.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/approved_event_card.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/finished_event_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/created_events_controller.dart';
 
 class CreatedEventsPage extends StatefulWidget {
@@ -96,7 +97,14 @@ class _CreatedEventsPageState extends State<CreatedEventsPage> {
     );
   }
 
-  void _navigateToEventDetails(String eventId) {
+  void _navigateToEventDetails({String? eventId, EventEntity? eventEntity}) {
+
+    return RouteController.redirectToEventDetailsPage(
+      context: context,
+      eventId: eventId,
+      eventEntity: eventEntity,
+    );
+
     // Implemente a navegação para a página de detalhes do evento aqui
     // Navigator.pushNamed(context, '/event-details', arguments: eventId);
   }
@@ -167,7 +175,7 @@ class _CreatedEventsPageState extends State<CreatedEventsPage> {
                 if (item is EventRequestEntity) {
                   return RequestItemCard(
                     request: item,
-                    onViewEventDetails: () => _navigateToEventDetails(item.eventId),
+                    onViewEventDetails: () => _navigateToEventDetails(eventId: item.eventId),
                     onViewRequestDetails: () => _showRequestDetailsModal(context, item),
                   );
                 } else if (item is EventEntity) {
@@ -175,15 +183,14 @@ class _CreatedEventsPageState extends State<CreatedEventsPage> {
                   if(!item.finishedEvent){
                     return ApprovedEventCard(
                       event: item,
-                      onViewEventDetails: () => _navigateToEventDetails(item.eventId),
+                      onViewEventDetails: () => _navigateToEventDetails(eventEntity: item),
                     );
                   }
 
                   if (item.finishedEvent) {
                     return FinishedEventCard(
                       event: item,
-                      onViewEventDetails: () =>
-                          _navigateToEventDetails(item.eventId),
+                      onViewEventDetails: () => _navigateToEventDetails(eventEntity: item),
                     );
                   }
                 }
@@ -194,10 +201,7 @@ class _CreatedEventsPageState extends State<CreatedEventsPage> {
           },
         ),
       ),
-      );
-
-
-
+    );
        
   }
 }

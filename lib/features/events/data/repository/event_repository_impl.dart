@@ -75,4 +75,10 @@ class EventRepositoryImpl implements EventRepository{
   Future<Either<Failure, List<EventRequestEntity>>> getPendingEventsRequests() async{
     return await eventRequestsRemoteDatasource.getPendingEventsRequests();
   }
+
+  @override
+  Future<Either<Failure, EventEntity>> getEventById(String eventId) async{
+    return await eventRemoteDatasource.getEventById(eventId);
+  }
+
 }

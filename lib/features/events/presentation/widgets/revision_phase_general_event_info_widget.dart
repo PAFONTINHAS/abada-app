@@ -8,11 +8,13 @@ class RevisionPhaseGeneralEventInfoWidget extends StatelessWidget {
     required this.eventName,
     required this.eventDescription,
     required this.eventType,
+    required this.eventCreatorNickname
   });
 
   final String eventName;
   final String eventDescription;
   final String eventType;
+  final String eventCreatorNickname;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +25,7 @@ class RevisionPhaseGeneralEventInfoWidget extends StatelessWidget {
         RevisionPhaseInfoRowWidget(label: "Nome do Evento", value: eventName),
         RevisionPhaseInfoRowWidget(label: "Descrição", value: eventDescription),
         RevisionPhaseInfoRowWidget(label: "Tipo de Evento", value: eventType),
+        RevisionPhaseInfoRowWidget(label: "Organizador:", value: eventCreatorNickname),
       ],
     );
   }

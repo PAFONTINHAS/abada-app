@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 
 class RouteController {
 
@@ -50,5 +51,12 @@ class RouteController {
 
   static void redirectToCreatedEventsPage({required BuildContext context}){
     context.push('/events/created_events');
+  }
+
+  static void redirectToEventDetailsPage({required BuildContext context, String? eventId, EventEntity? eventEntity}){
+    context.push('/events/event_details', extra: {
+      'eventId': eventId,
+      'eventEntity': eventEntity
+    });
   }
 }

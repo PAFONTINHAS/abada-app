@@ -48,9 +48,8 @@ class CoordenatorDashboardPage extends StatelessWidget {
             
             ViewMoreRequestsButtonWidget(onPressed: (){}),
 
-            SectionTitleWidget(sectionTitle: "Selo TUSCA"),
-
-            TuscaBadgeCardWidget(tuscaEntity: userProfile.tusca)
+            // SectionTitleWidget(sectionTitle: "Selo TUSCA"),
+            // TuscaBadgeCardWidget(tuscaEntity: userProfile.tusca)
           ],
         ),
       ),

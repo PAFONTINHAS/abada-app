@@ -12,6 +12,7 @@ import 'package:sistema_abada_capoeira/features/events/presentation/widgets/revi
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/revision_phase_aditional_products_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/revision_phase_financial_summary_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/revision_phase_general_event_info_widget.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 
 class EventFormRevisionPhaseWidget extends StatelessWidget {
   const EventFormRevisionPhaseWidget({super.key});
@@ -19,9 +20,12 @@ class EventFormRevisionPhaseWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formController = context.read<EventFormController>();
+    final profileController = context.read<ProfileController>();
     final productsController = context.read<EventProductsController>();
     final List<EventProductItem> products = productsController.products;
     final eventGraduationController = context.read<EventGraduationController>();
+
+    final userProfile = profileController.userProfile;
 
     // Cálculo do valor total (Evento + Produtos Obrigatórios)
     double totalEventDoubleValue = MaskFormatter.convertMoneyStringToDouble(
@@ -65,7 +69,9 @@ class EventFormRevisionPhaseWidget extends StatelessWidget {
               : formController.eventDescription.text,
           eventType: EventTypeExtension.convertToUIText(
             formController.eventType,
+
           ),
+          eventCreatorNickname: userProfile.nickname,
         ),
 
     
