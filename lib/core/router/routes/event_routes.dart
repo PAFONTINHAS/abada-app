@@ -1,11 +1,11 @@
 import 'package:go_router/go_router.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/pages/created_events_page.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_form_page.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/pages/events_page.dart';
 
 class EventRoutes {
 
   EventRoutes._();
-
 
   static final route = GoRoute(
     path: '/events',
@@ -18,8 +18,16 @@ class EventRoutes {
         builder: (context, state){
           return EventFormPage();
         }
+      ),
+
+      GoRoute(
+        path: 'created_events',
+        builder: (context, state){
+          return CreatedEventsPage();
+        }
       )
     ]
   );
+
 
 }

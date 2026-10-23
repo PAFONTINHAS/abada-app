@@ -8,6 +8,9 @@ abstract class EventRemoteDatasource {
   Future<Either<Failure, void>> removeEvent(String eventId);
   Future<Either<Failure, EventEntity>> createEvent(EventEntity entity);
   Future<Either<Failure, String>> uploadEventImage(File eventImage, String fileName);
+  Future<Either<Failure, List<EventEntity>>> getEventsByUserId(String userId);
+  Future<Either<Failure, List<EventEntity>>> getEvents();
+
 
 
 

@@ -16,5 +16,8 @@ abstract class EventRepository {
   Future<Either<Failure, void>> requestChanges(GenericRequestUpdateParameters params);
   Future<Either<Failure, void>> markRequestAsUpdated(GenericRequestUpdateParameters params);
   Future<Either<Failure, String>> uploadEventImage(File eventImage, String fileName);
-
+  Future<Either<Failure, List<EventEntity>>> getEvents();
+  Future<Either<Failure, List<EventEntity>>> getEventsByUserId(String userId);
+  Future<Either<Failure, List<EventRequestEntity>>> getPendingEventsRequestsByUserId(String userId);
+  Future<Either<Failure, List<EventRequestEntity>>> getPendingEventsRequests();
 }

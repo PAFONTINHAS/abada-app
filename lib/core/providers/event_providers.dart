@@ -7,6 +7,7 @@ import 'package:sistema_abada_capoeira/features/events/data/repository/event_rep
 import 'package:sistema_abada_capoeira/features/events/data/datasources/event_requests_remote_datasource.dart';
 import 'package:sistema_abada_capoeira/features/events/data/datasources/event_requests_remote_datasource_impl.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/create_event_request_usecase.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/created_events_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_graduation_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_products_controller.dart';
@@ -23,10 +24,12 @@ class EventProviders {
 
   static CreateEventRequestUsecase createEventRequestUsecase = CreateEventRequestUsecase(eventRepository);
 
+
   static final List<SingleChildWidget> providers = [
     ChangeNotifierProvider(create: (_) => EventFormController(createEventRequestUsecase)),
     ChangeNotifierProvider(create: (_) => EventProductsController()),
     ChangeNotifierProvider(create: (_) => EventFormPhasesController()),
-    ChangeNotifierProvider(create: (_) => EventGraduationController())
+    ChangeNotifierProvider(create: (_) => EventGraduationController()),
+    ChangeNotifierProvider(create: (_) => CreatedEventsController())
   ];
 }

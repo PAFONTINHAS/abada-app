@@ -14,6 +14,42 @@ class EventRemoteDatasourceImpl implements EventRemoteDatasource{
   final _firestore = FirebaseFirestore.instance;
   final ImageService _imageService = ImageService();
 
+  @override
+  Future<Either<Failure, List<EventEntity>>> getEventsByUserId(String userId) async{
+    try{
+      
+      final QuerySnapshot query = await _firestore
+          .collection('events')
+          .where('eventActive', isEqualTo: true)
+          .where('eventCreatorId', isEqualTo: userId)
+          .get();
+
+      final eventsList = query.docs.map((document) => EventEntityModel.fromSnapshot(document)).toList();
+
+      return Right(eventsList);
+
+    } catch(exception){
+      return ExceptionHandler.handleException(exception: exception, contextMessage: 'getEventsByUserId');
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<EventEntity>>> getEvents() async{
+    try{
+      final QuerySnapshot query = await _firestore
+          .collection('events')
+          .where('eventActive', isEqualTo: true)
+          .get();
+
+      final eventsList = query.docs.map((document) => EventEntityModel.fromSnapshot(document)).toList();
+
+      return Right(eventsList);
+
+    } catch(exception){
+      return ExceptionHandler.handleException(exception: exception, contextMessage: 'getEvents');
+    }
+  }
+
   
   @override
   Future<Either<Failure, String>> uploadEventImage(File eventImage, String fileName) async {

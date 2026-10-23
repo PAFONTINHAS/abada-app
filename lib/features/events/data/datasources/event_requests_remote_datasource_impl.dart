@@ -4,6 +4,7 @@ import 'package:sistema_abada_capoeira/core/errors/exception_handler.dart';
 import 'package:sistema_abada_capoeira/core/errors/failure.dart';
 import 'package:sistema_abada_capoeira/core/requests/data/request_datasource_impl.dart';
 import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
+import 'package:sistema_abada_capoeira/features/events/data/models/event_request_entity_model.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/data/datasources/event_requests_remote_datasource.dart';
 import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_update_parameters.dart';
@@ -12,6 +13,47 @@ class EventRequestsRemoteDatasourceImpl extends RequestDatasourceImpl implements
 
   final String _requestCollectionId = "event_requests";
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+
+  @override 
+  Future<Either<Failure, List<EventRequestEntity>>> getPendingEventsRequestsByUserId(String userId) async{
+    try{
+
+      final QuerySnapshot query = await _firestore
+        .collection(_requestCollectionId)
+        .where('status', isEqualTo: 'requested')
+        .where('requesterId', isEqualTo: userId)
+        .get();
+
+      final List<EventRequestEntity> pendingRequests = query.docs
+        .map((document) => EventRequestEntityModel.fromSnapshot(document))
+        .toList();
+
+      return Right(pendingRequests);
+
+    }catch(exception){
+      return ExceptionHandler.handleException(exception: exception, contextMessage: "getPendingEventsRequestsByUserId");
+    }
+  }
+  
+  @override
+  Future<Either<Failure, List<EventRequestEntity>>> getPendingEventsRequests() async{
+    try{
+
+      final QuerySnapshot query = await _firestore
+        .collection(_requestCollectionId)
+        .where('status', isEqualTo: 'requested')
+        .get();
+
+      final List<EventRequestEntity> pendingRequests = query.docs
+        .map((document) => EventRequestEntityModel.fromSnapshot(document))
+        .toList();
+
+      return Right(pendingRequests);
+    }catch(exception){
+      return ExceptionHandler.handleException(exception: exception, contextMessage: "getPendingEventsRequests");
+    }
+  }
 
   @override
   Future<Either<Failure, EventRequestEntity>> createEventRequest(EventRequestEntity params) async{

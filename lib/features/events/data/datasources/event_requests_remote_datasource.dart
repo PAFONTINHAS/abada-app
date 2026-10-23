@@ -5,6 +5,10 @@ import 'package:sistema_abada_capoeira/features/events/domain/entities/event_req
 
 abstract class EventRequestsRemoteDatasource {
 
+  Future<Either<Failure, List<EventRequestEntity>>> getPendingEventsRequestsByUserId(String userId);
+
+  Future<Either<Failure, List<EventRequestEntity>>> getPendingEventsRequests();
+
   Future<Either<Failure, EventRequestEntity>> createEventRequest(EventRequestEntity params);
 
   Future<Either<Failure, void>> approveRequest(GenericRequestUpdateParameters params); 

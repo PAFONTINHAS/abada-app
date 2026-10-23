@@ -47,4 +47,8 @@ class RouteController {
   static void redirectToCreateEventPage({required BuildContext context}){
     context.push('/events/create');
   }
+
+  static void redirectToCreatedEventsPage({required BuildContext context}){
+    context.push('/events/created_events');
+  }
 }
