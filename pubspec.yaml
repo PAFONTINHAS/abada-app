@@ -58,6 +58,10 @@ dependencies:
   geolocator: ^14.0.3
   http: ^1.6.0
   geoflutterfire_plus: ^0.0.34
+  dropdown_flutter: ^1.3.0
+  currency_text_input_formatter: ^2.3.2
+  cached_network_image: ^3.4.1
+  flutter_image_compress: ^2.5.1
 
 dev_dependencies:
   flutter_test:

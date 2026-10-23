@@ -4,7 +4,7 @@ import 'package:printing/printing.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'dart:typed_data';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:sistema_abada_capoeira/core/utils/date_formatter.dart';
+import 'package:sistema_abada_capoeira/core/utils/date_controller.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/user_profile_entity.dart';
 
 class TuscaReceiptGenerator{
@@ -16,7 +16,7 @@ class TuscaReceiptGenerator{
     final fontRegular = await PdfGoogleFonts.robotoRegular();
     final fontBold = await PdfGoogleFonts.robotoBold();
 
-    final validUntil = DateFormatter.formatDDMMYYYY(profile.tusca.validUntil);
+    final validUntil = DateController.formatDDMMYYYY(profile.tusca.validUntil);
 
     final protocol = profile.tusca.protocol ?? "00000";
 

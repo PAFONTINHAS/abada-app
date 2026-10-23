@@ -8,7 +8,6 @@ import 'package:sistema_abada_capoeira/features/class/presentation/controllers/s
 import 'package:sistema_abada_capoeira/features/class/presentation/widgets/schedule_view_list_widget.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/widgets/student_page_button_widget.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/widgets/weekdays_checkbox_list_widget.dart';
-import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_form_controller.dart';
 
 class CreateOrEditScheduleWidget extends StatelessWidget {
   const CreateOrEditScheduleWidget({super.key});
@@ -16,21 +15,16 @@ class CreateOrEditScheduleWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheduleController = context.read<ScheduleController>();
-    final createOrEditClassController = context.read<ClassFormController>();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // 1. TÍTULO E LISTA DE HORÁRIOS SALVOS
-
         const SizedBox(height: 10),
         
-        // Exibe os horários já adicionados logo abaixo do título
         const ScheduleViewListWidget(),
         
         const SizedBox(height: 20),
 
-        // 2. CARD DE CRIAÇÃO DE NOVO HORÁRIO
         Container(
           width: double.infinity,
           decoration: BoxDecoration(

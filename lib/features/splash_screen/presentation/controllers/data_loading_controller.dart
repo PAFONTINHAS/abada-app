@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/core/services/location_service/location_service.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_requests_controller.dart';
 import 'package:sistema_abada_capoeira/features/member_validation/presentation/controllers/membership_validation_controller.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
@@ -64,6 +65,11 @@ class DataLoadingController extends ChangeNotifier{
     final userId = profileController.userProfile.uid;
 
     await membershipValidationController.loadRequests(userId);
+  }
+
+  Future<void> fetchEventCreationRequests(EventRequestsController eventRequestsController) async{
+
+    await eventRequestsController.getPendingRequests();
   }
 
   Future<void> finishSplash(AuthController authController, UserRole userRole) async{

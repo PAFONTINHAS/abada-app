@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:printing/printing.dart';
-import 'package:sistema_abada_capoeira/core/utils/date_formatter.dart';
+import 'package:sistema_abada_capoeira/core/utils/date_controller.dart';
 import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
 import 'package:sistema_abada_capoeira/core/utils/tusca_protocol_generator.dart';
 import 'package:sistema_abada_capoeira/core/utils/tusca_receipt_generator.dart';
@@ -15,7 +15,7 @@ class TuscaReceiptDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final protocol = profile.tusca.protocol;
     final shortId = TuscaProtocolGenerator.generateShortId(profile);
-    final validUntil = DateFormatter.formatDDMMYYYY(profile.tusca.validUntil);
+    final validUntil = DateController.formatDDMMYYYY(profile.tusca.validUntil);
     
     final validatorName = profile.tusca.validatorName ?? 'Diretoria Abadá Capoeira';
     final rawValidatorId = profile.tusca.validatorId ?? '00000';

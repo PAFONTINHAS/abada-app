@@ -39,9 +39,9 @@ class ProfessorDashboardPage extends StatelessWidget {
 
             const DashboardLocalMetricSummaryCardListWidget(),
 
-            SectionTitleWidget(sectionTitle: "Selo TUSCA"),
+            // SectionTitleWidget(sectionTitle: "Selo TUSCA"),
             
-            TuscaBadgeCardWidget(tuscaEntity: userProfile.tusca),
+            // TuscaBadgeCardWidget(tuscaEntity: userProfile.tusca),
 
             SectionTitleWidget(
               sectionTitle: "Solicitações de entrada na turma",

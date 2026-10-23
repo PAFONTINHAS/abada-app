@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sistema_abada_capoeira/shared/clickable/clickable_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/models/request_type.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/models/request_type_extension.dart';
-import 'package:sistema_abada_capoeira/shared/clickable/clickable_widget.dart';
 
 class EventRequestCardWidget extends StatelessWidget {
   const EventRequestCardWidget({

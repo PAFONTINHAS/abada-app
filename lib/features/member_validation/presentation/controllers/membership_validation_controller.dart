@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 
 import '../../domain/entities/membership_request.dart';
 import '../../domain/usecases/approve_membership_request_usecase.dart';
@@ -56,7 +57,7 @@ class MembershipValidationController extends ChangeNotifier {
     } catch (error) {
       if (!_disposed && version == _loadVersion) {
         errorMessage = 'Não foi possível carregar as solicitações.';
-        debugPrint('Error loading requests: $error');
+        LoggingService.displayError('Error loading requests: $error');
       }
     } finally {
       if (!_disposed && version == _loadVersion) {
@@ -87,7 +88,7 @@ class MembershipValidationController extends ChangeNotifier {
       return await action();
     } catch (error) {
       actionErrorMessage = 'Não foi possível concluir a operação.';
-      debugPrint('Error processing request: $error');
+      LoggingService.displayError('Error processing request: $error');
       return false;
     } finally {
       _processingRequestIds.remove(requestId);
