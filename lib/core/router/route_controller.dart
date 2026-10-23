@@ -53,10 +53,16 @@ class RouteController {
     context.push('/events/created_events');
   }
 
-  static void redirectToEventDetailsPage({required BuildContext context, String? eventId, EventEntity? eventEntity}){
+  static void redirectToEventDetailsPage({
+    required BuildContext context,
+    String? eventId,
+    EventEntity? eventEntity,
+    bool analyseEventDetails = false,
+  }) {
     context.push('/events/event_details', extra: {
       'eventId': eventId,
-      'eventEntity': eventEntity
+      'eventEntity': eventEntity,
+      'analyseEventDetails': analyseEventDetails
     });
   }
 }

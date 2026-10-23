@@ -37,12 +37,13 @@ class EventRoutes {
 
           final String? eventId = parameters['eventId'] as String?;
           final EventEntity? eventEntity = parameters['eventEntity'] as EventEntity?;
+          final bool analyseEventDetails =  parameters['analyseEventDetails'] as bool;
 
           return EventDetailsPage(
             event: eventEntity,
             eventId: eventId,
+            analyseEventDetails: analyseEventDetails,
           );
-
         }
       )
     ]
