@@ -65,4 +65,8 @@ class RouteController {
       'analyseEventDetails': analyseEventDetails
     });
   }
+
+  static void redirectToPendingEventDetailsPage({required BuildContext context}){
+    context.push('/events/event_requests');
+  }
 }

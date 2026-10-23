@@ -4,6 +4,7 @@ import 'package:sistema_abada_capoeira/features/events/presentation/pages/create
 import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_details_page.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_form_page.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/pages/events_page.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/pages/pending_event_requests_page.dart';
 
 class EventRoutes {
 
@@ -44,6 +45,14 @@ class EventRoutes {
             eventId: eventId,
             analyseEventDetails: analyseEventDetails,
           );
+        }
+      ),
+
+      GoRoute(
+        path: 'event_requests',
+        builder: (context, state){
+
+          return PendingEventRequestsPage();
         }
       )
     ]

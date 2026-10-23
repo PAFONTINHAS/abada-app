@@ -42,7 +42,7 @@ class EventRequestsRemoteDatasourceImpl extends RequestDatasourceImpl implements
 
       final QuerySnapshot query = await _firestore
         .collection(_requestCollectionId)
-        .where('status', isNotEqualTo: 'requested')
+        .where('status', isEqualTo: 'requested')
         .get();
 
       final List<EventRequestEntity> pendingRequests = query.docs

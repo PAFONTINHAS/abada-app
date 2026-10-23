@@ -103,7 +103,6 @@ class _CreatedEventsPageState extends State<CreatedEventsPage> {
       context: context,
       eventId: eventId,
       eventEntity: eventEntity,
-      analyseEventDetails: true
     );
 
     // Implemente a navegação para a página de detalhes do evento aqui

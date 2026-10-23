@@ -17,9 +17,11 @@ class EventsPage extends StatelessWidget {
 
           SizedBox(height: 20,),
           
-          CustomTextButton(text: "Seus Eventos", onPressed: () => RouteController.redirectToCreatedEventsPage(context: context))
+          CustomTextButton(text: "Seus Eventos", onPressed: () => RouteController.redirectToCreatedEventsPage(context: context)),
 
-
+          SizedBox(height: 20,),
+          
+          CustomTextButton(text: "Solicitações de Eventos", onPressed: () => RouteController.redirectToPendingEventDetailsPage(context: context))
 
         ],
       )),
