@@ -8,19 +8,16 @@ import 'package:sistema_abada_capoeira/features/events/presentation/controllers/
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_requests_controller.dart';
 
 class PendingEventRequestsPage extends StatelessWidget {
-
   const PendingEventRequestsPage({super.key});
-
 
   @override
   Widget build(BuildContext context) {
     void navigateToEventDetails({String? eventId, EventEntity? eventEntity}) {
-
       return RouteController.redirectToEventDetailsPage(
         context: context,
         eventId: eventId,
         eventEntity: eventEntity,
-        analyseEventDetails: true
+        analyseEventDetails: true,
       );
     }
 
@@ -43,7 +40,8 @@ class PendingEventRequestsPage extends StatelessWidget {
         scrolledUnderElevation: 0.5,
         iconTheme: const IconThemeData(color: ColorConstants.textPrimary),
       ),
-      body: Padding( padding:  EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
 
         child: Consumer<CreatedEventsController>(
           builder: (context, controller, child) {
@@ -60,7 +58,6 @@ class PendingEventRequestsPage extends StatelessWidget {
               );
             }
 
-      
             return ListView.separated(
               itemCount: eventRequests.length,
               padding: const EdgeInsets.symmetric(vertical: 16),
@@ -70,8 +67,9 @@ class PendingEventRequestsPage extends StatelessWidget {
 
                 return RequestItemCard(
                   request: item,
-                  onViewEventDetails: () => navigateToEventDetails(eventId: item.eventId),
-                  onViewRequestDetails: () => {}
+                  onViewEventDetails: () =>
+                      navigateToEventDetails(eventId: item.eventId),
+                  onViewRequestDetails: () => {},
                 );
               },
             );
@@ -79,6 +77,5 @@ class PendingEventRequestsPage extends StatelessWidget {
         ),
       ),
     );
-       
   }
 }
