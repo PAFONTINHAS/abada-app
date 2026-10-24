@@ -5,10 +5,10 @@ import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_entity.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/widgets/request_item_card.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/widgets/approved_event_card_widget.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/created_events_page_widgets/request_item_card.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/widgets/finished_event_card_widget.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/created_events_page_widgets/finished_event_card_widget.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/created_events_page_widgets/approved_event_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/created_events_controller.dart';
 
 class CreatedEventsPage extends StatefulWidget {
@@ -32,7 +32,10 @@ class _CreatedEventsPageState extends State<CreatedEventsPage> {
     });
   }
 
-  void _showRequestDetailsModal(BuildContext context, EventRequestEntity request) {
+  void _showRequestDetailsModal(
+    BuildContext context,
+    EventRequestEntity request,
+  ) {
     String title = "Detalhes da Solicitação";
     String? reason;
 
@@ -98,7 +101,6 @@ class _CreatedEventsPageState extends State<CreatedEventsPage> {
   }
 
   void _navigateToEventDetails({String? eventId, EventEntity? eventEntity}) {
-
     return RouteController.redirectToEventDetailsPage(
       context: context,
       eventId: eventId,
@@ -127,7 +129,8 @@ class _CreatedEventsPageState extends State<CreatedEventsPage> {
         scrolledUnderElevation: 0.5,
         iconTheme: const IconThemeData(color: ColorConstants.textPrimary),
       ),
-      body: Padding( padding:  EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
 
         child: Consumer<CreatedEventsController>(
           builder: (context, controller, child) {
@@ -149,12 +152,20 @@ class _CreatedEventsPageState extends State<CreatedEventsPage> {
                 .where((req) => req.status != GenericRequestStatus.approved)
                 .toList();
 
-            final approvedEvents = controller.userEvents.where((event) => !event.finishedEvent);
+            final approvedEvents = controller.userEvents.where(
+              (event) => !event.finishedEvent,
+            );
 
-            final finishedEvents = controller.userEvents.where((event) => event.finishedEvent);
+            final finishedEvents = controller.userEvents.where(
+              (event) => event.finishedEvent,
+            );
 
             // Combina ambas as listas: solicitações primeiro, eventos aprovados por último
-            final List<Object> allItems = [...requests, ...approvedEvents, ...finishedEvents];
+            final List<Object> allItems = [
+              ...requests,
+              ...approvedEvents,
+              ...finishedEvents,
+            ];
 
             if (allItems.isEmpty) {
               return const Center(
@@ -175,22 +186,25 @@ class _CreatedEventsPageState extends State<CreatedEventsPage> {
                 if (item is EventRequestEntity) {
                   return RequestItemCard(
                     request: item,
-                    onViewEventDetails: () => _navigateToEventDetails(eventId: item.eventId),
-                    onViewRequestDetails: () => _showRequestDetailsModal(context, item),
+                    onViewEventDetails: () =>
+                        _navigateToEventDetails(eventId: item.eventId),
+                    onViewRequestDetails: () =>
+                        _showRequestDetailsModal(context, item),
                   );
                 } else if (item is EventEntity) {
-
-                  if(!item.finishedEvent){
+                  if (!item.finishedEvent) {
                     return ApprovedEventCardWidget(
                       event: item,
-                      onViewEventDetails: () => _navigateToEventDetails(eventEntity: item),
+                      onViewEventDetails: () =>
+                          _navigateToEventDetails(eventEntity: item),
                     );
                   }
 
                   if (item.finishedEvent) {
                     return FinishedEventCard(
                       event: item,
-                      onViewEventDetails: () => _navigateToEventDetails(eventEntity: item),
+                      onViewEventDetails: () =>
+                          _navigateToEventDetails(eventEntity: item),
                     );
                   }
                 }
@@ -202,6 +216,5 @@ class _CreatedEventsPageState extends State<CreatedEventsPage> {
         ),
       ),
     );
-       
   }
 }
