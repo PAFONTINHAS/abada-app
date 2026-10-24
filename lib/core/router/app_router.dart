@@ -6,6 +6,7 @@ import 'package:sistema_abada_capoeira/features/auth/presentation/models/auth_st
 import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:sistema_abada_capoeira/features/bottom_navigation/presentation/bottom_navigation_page.dart';
 import 'package:sistema_abada_capoeira/core/router/routes/fee_exemption_routes.dart';
+import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
 
 class AppRouter {
   AppRouter({required this.authController});
@@ -37,9 +38,9 @@ class AppRouter {
       }
 
       if (authStatus == AuthStatus.authenticated) {
-        if (currentPath == loginRoute || currentPath == splashRoute)
+        if (currentPath == loginRoute || currentPath == splashRoute){
           return dashboardRoute;
-
+        }
         return null;
       }
 
@@ -61,6 +62,7 @@ class AppRouter {
           BottomNavigationBranches.dashboardBranch,
           BottomNavigationBranches.classesBranch,
           BottomNavigationBranches.eventsBranch,
+          BottomNavigationBranches.newsBranch,
           BottomNavigationBranches.profileBranch,
         ],
       ),
