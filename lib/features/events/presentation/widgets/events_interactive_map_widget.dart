@@ -54,13 +54,14 @@ class EventsInteractiveMapWidget extends StatelessWidget {
     final userLocation = controller.userLocationEntity;
 
     LatLng initialCenter;
+    double initialZoom = 11;
 
     final brazilCenter = LatLng(-15.7801, -47.9292);
 
     if(userLocation == null || userLocation.cityCenterCoordinates == null){
 
-
       initialCenter = brazilCenter; 
+      initialZoom = 4.5;
     } else {
 
       initialCenter = LatLng(
@@ -81,7 +82,7 @@ class EventsInteractiveMapWidget extends StatelessWidget {
         child: FlutterMap(
           options: MapOptions(
             initialCenter: initialCenter,
-            initialZoom: 11,
+            initialZoom: initialZoom,
             // Permite que o mapa responda a gestos normais
             interactionOptions: const InteractionOptions(
               flags: InteractiveFlag.all,

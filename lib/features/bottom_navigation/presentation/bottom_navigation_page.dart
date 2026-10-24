@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
-import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
-import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
-import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 
 class BottomNavigationPage extends StatelessWidget {
   const BottomNavigationPage({super.key, required this.navigationShell});
@@ -13,9 +9,6 @@ class BottomNavigationPage extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    final authController = context.read<AuthController>();
-    final userRole = authController.userRole;
-
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: NavigationBar(

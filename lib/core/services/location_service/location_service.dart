@@ -10,10 +10,14 @@ import 'package:sistema_abada_capoeira/core/services/location_service/place_sugg
 
 class LocationService {
 
+  final String _userAgent = "AppAbadaCapoeiraTCC/1.0 (petersonfontinhas@gmail.com)";
+
   Future<CoordinatesEntity?> getCityCenter(String cityName) async{
     try{
 
-      final geoData = await GeocoderPro.nominatim().getDataFromAddress(cityName);
+      final geoData = await GeocoderPro.nominatim(
+        userAgent: _userAgent
+      ).getDataFromAddress(cityName);
 
       if(geoData != null){
 
@@ -123,7 +127,7 @@ class LocationService {
         
         url,
         headers: {
-          'User-Agent': 'AppAbadaCapoeiraTCC/1.0 (petersonfontinhas@gmail.com)',
+          'User-Agent': _userAgent,
           'Accept': 'application/json',
         }
       );

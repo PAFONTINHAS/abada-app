@@ -1,12 +1,11 @@
 import 'package:go_router/go_router.dart';
 import 'package:sistema_abada_capoeira/core/router/routes/auth_routes.dart';
 import 'package:sistema_abada_capoeira/core/router/routes/splash_route.dart';
+import 'package:sistema_abada_capoeira/core/router/routes/fee_exemption_routes.dart';
 import 'package:sistema_abada_capoeira/core/router/routes/bottom_navigation_branches.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/models/auth_status.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:sistema_abada_capoeira/features/bottom_navigation/presentation/bottom_navigation_page.dart';
-import 'package:sistema_abada_capoeira/core/router/routes/fee_exemption_routes.dart';
-import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
 
 class AppRouter {
   AppRouter({required this.authController});
