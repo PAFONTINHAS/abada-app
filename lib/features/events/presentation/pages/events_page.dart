@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sistema_abada_capoeira/core/utils/region_mapper.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
-import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
-import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
+import 'package:sistema_abada_capoeira/shared/inputs/custom_text_input/custom_text_input.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/events_controller.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
+import 'package:sistema_abada_capoeira/features/location/presentation/controllers/location_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/events_calendar_view_widget.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/events_page_view_toggle_button_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/management_events_actions_section_widget.dart';
-import 'package:sistema_abada_capoeira/shared/inputs/custom_text_input/custom_text_input.dart';
+// import 'package:sistema_abada_capoeira/core/utils/region_mapper.dart';
 
 class EventsPage extends StatefulWidget {
   const EventsPage({super.key});
@@ -17,27 +20,43 @@ class EventsPage extends StatefulWidget {
 }
 
 class _EventsPageState extends State<EventsPage> {
-  int _selectedViewIndex = 0; // 0 = Lista / Calendário, 1 = Mapa
-  String _selectedRegion = 'Todas';
-  
-  final List<String> _regions = [
-    'Todas',
-    'Sul',
-    'Sudeste',
-    'Centro-Oeste',
-    'Nordeste',
-    'Norte',
-  ];
+  String? _userCurrentState;
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      _fetchUserLocationAndSetRegion();
+    });
+  }
+
+  Future<void> _fetchUserLocationAndSetRegion() async {
+
+    final locationController = context.read<LocationController>();
+    final eventsController = context.read<EventsController>();
+
+    final locationEntity = locationController.userLocationEntity;
+
+    if(locationEntity == null) return;
+
+    // _userCurrentCity = locationEntity.city ?? "Cidade"; 
+    _userCurrentState = locationEntity.state ?? "Estado"; 
+
+
+    if (_userCurrentState != null) {
+      final userRegion = RegionMapper.getRegionFromState(_userCurrentState!);
+
+      eventsController.setSelectedRegion(userRegion);
+      
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-
     final profileController = context.read<ProfileController>();
     final userRole = profileController.userProfile.role;
-
     final eventsController = context.read<EventsController>();
-
-    final List<EventEntity> events = eventsController.events;
 
     return Scaffold(
       appBar: AppBar(
@@ -54,139 +73,107 @@ class _EventsPageState extends State<EventsPage> {
         elevation: 0,
         scrolledUnderElevation: 0.5,
       ),
-      body: StandardScaffoldBodyWidget(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 1. Barra de Ações Rápidas (Criar, Meus Eventos e Solicitações)
             if(!userRole.isStudent) const ManagementEventsActionsSectionWidget(),
-
             const SizedBox(height: 20),
 
-            // 2. Campo de Busca de Eventos (RF25)
             CustomTextInput(
               hintText: "Buscar por evento ou cidade...",
               prefixIcon: const Icon(Icons.search, color: ColorConstants.textSecondary),
               controller: eventsController.eventSearchController,
-              onChanged: (value){
-              },
+              onChanged: (value) => {eventsController.setEventSearchController(value)}, // Atualiza a lista filtrada
             ),
-            
 
             const SizedBox(height: 16),
 
-            // 3. Filtros Por Região (RF24 / RF25)
             SizedBox(
               height: 38,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: _regions.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 8),
-                itemBuilder: (context, index) {
-                  final region = _regions[index];
-                  final isSelected = _selectedRegion == region;
+              child: Selector<EventsController, String>(
+                selector: (_, controller) => controller.selectedRegion,
+                builder: (context, selectedRegion, child) {
+                  return ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: RegionMapper.regions.length,
+                    separatorBuilder: (_, _) => const SizedBox(width: 8),
+                    itemBuilder: (context, index) {
+                      final region = RegionMapper.regions[index];
+                      final isSelected = selectedRegion == region;
 
-                  return FilterChip(
-                    label: Text(region),
-                    selected: isSelected,
-                    onSelected: (selected) {
-                      setState(() {
-                        _selectedRegion = region;
-                      });
+                      return FilterChip(
+                        label: Text(region),
+                        selected: isSelected,
+                        onSelected: (selected) => eventsController.setSelectedRegion(region),
+                        selectedColor: ColorConstants.indigoColor,
+                        labelStyle: TextStyle(
+                          color: isSelected
+                              ? Colors.white
+                              : ColorConstants.textPrimary,
+                          fontWeight: isSelected
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                          fontSize: 13,
+                        ),
+                        backgroundColor: ColorConstants.surfaceColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          side: BorderSide(
+                            color: isSelected
+                                ? ColorConstants.indigoColor
+                                : ColorConstants.borderColor,
+                          ),
+                        ),
+                        showCheckmark: false,
+                      );
                     },
-                    selectedColor: ColorConstants.indigoColor,
-                    labelStyle: TextStyle(
-                      color: isSelected ? Colors.white : ColorConstants.textPrimary,
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                      fontSize: 13,
-                    ),
-                    backgroundColor: ColorConstants.surfaceColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      side: BorderSide(
-                        color: isSelected
-                            ? ColorConstants.indigoColor
-                            : ColorConstants.borderColor,
-                      ),
-                    ),
-                    showCheckmark: false,
                   );
                 },
               ),
             ),
+            const SizedBox(height: 20),
+
+            Selector<EventsController, int>(
+              selector: (_, controller) => controller.selectedViewIndex,
+              builder: (context, selectedViewIndex, child) {
+                return Row(
+                  children: [
+                    Expanded(
+                      child: EventsPageViewToggleButtonWidget(
+                        title: "Calendário",
+                        icon: Icons.calendar_month_outlined,
+                        isSelected: eventsController.selectedViewIndex == 0,
+                        onTap: () => eventsController.setSelectedViewIndex(0),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: EventsPageViewToggleButtonWidget(
+                        title: "Mapa Interativo",
+                        icon: Icons.map_outlined,
+                        isSelected: eventsController.selectedViewIndex == 1,
+                        onTap: () => eventsController.setSelectedViewIndex(1),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+
 
             const SizedBox(height: 20),
 
-            // 4. Alternador entre Lista/Calendário e Mapa Interativo (RF24 x RF25)
-            Row(
-              children: [
-                Expanded(
-                  child: _buildViewToggleButton(
-                    title: "Calendário",
-                    icon: Icons.calendar_month_outlined,
-                    isSelected: _selectedViewIndex == 0,
-                    onTap: () => setState(() => _selectedViewIndex = 0),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _buildViewToggleButton(
-                    title: "Mapa Interativo",
-                    icon: Icons.map_outlined,
-                    isSelected: _selectedViewIndex == 1,
-                    onTap: () => setState(() => _selectedViewIndex = 1),
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 20),
-
-            // 5. Área Principal de Exibição dos Eventos
-            _selectedViewIndex == 0
-                ? _buildEventsListPlaceholder()
-                : _buildInteractiveMapPlaceholder(),
-          ],
-        ),
-      ),
-    );
-  }
-
-
-  Widget _buildViewToggleButton({
-    required String title,
-    required IconData icon,
-    required bool isSelected,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(10),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        decoration: BoxDecoration(
-          color: isSelected ? ColorConstants.indigoColor : ColorConstants.surfaceColor,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: isSelected ? ColorConstants.indigoColor : ColorConstants.borderColor,
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              icon,
-              size: 18,
-              color: isSelected ? Colors.white : ColorConstants.textSecondary,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.bold,
-                color: isSelected ? Colors.white : ColorConstants.textPrimary,
-              ),
+            Selector<EventsController, int>(
+              selector: (_, controller) => controller.selectedViewIndex,
+              builder: (context, selectedViewIndex, child) {
+                return Expanded(
+                  child: selectedViewIndex == 0
+                      ? EventsCalendarViewWidget()
+                      : _buildInteractiveMapPlaceholder(),
+                );
+              },
             ),
           ],
         ),
@@ -194,39 +181,8 @@ class _EventsPageState extends State<EventsPage> {
     );
   }
 
-  // Placeholder para a Lista / Calendário (RF24)
-  Widget _buildEventsListPlaceholder() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: ColorConstants.surfaceColor,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: ColorConstants.borderColor),
-      ),
-      child: const Column(
-        children: [
-          Icon(Icons.event_note, size: 48, color: ColorConstants.textSecondary),
-          SizedBox(height: 12),
-          Text(
-            "Lista de Eventos Próximos (RF24)",
-            style: TextStyle(fontWeight: FontWeight.bold, color: ColorConstants.textPrimary),
-          ),
-          SizedBox(height: 4),
-          Text(
-            "Ordenados por geolocalização e data.",
-            style: TextStyle(fontSize: 12, color: ColorConstants.textSecondary),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Placeholder para o Mapa Interativo (RF25)
   Widget _buildInteractiveMapPlaceholder() {
     return Container(
-      height: 260,
       width: double.infinity,
       decoration: BoxDecoration(
         color: ColorConstants.backgroundColor,
@@ -241,12 +197,6 @@ class _EventsPageState extends State<EventsPage> {
           Text(
             "Mapa Interativo de Eventos (RF25)",
             style: TextStyle(fontWeight: FontWeight.bold, color: ColorConstants.textPrimary),
-          ),
-          SizedBox(height: 4),
-          Text(
-            "Visualização por estados e pins na região.",
-            style: TextStyle(fontSize: 12, color: ColorConstants.textSecondary),
-            textAlign: TextAlign.center,
           ),
         ],
       ),

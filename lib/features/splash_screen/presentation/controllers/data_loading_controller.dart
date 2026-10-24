@@ -4,6 +4,7 @@ import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/au
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_requests_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/events_controller.dart';
+import 'package:sistema_abada_capoeira/features/location/presentation/controllers/location_controller.dart';
 import 'package:sistema_abada_capoeira/features/member_validation/presentation/controllers/membership_validation_controller.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
@@ -75,6 +76,10 @@ class DataLoadingController extends ChangeNotifier{
 
   Future<void> fetchEvents(EventsController eventsController) async{
     await eventsController.getEvents();
+  }
+
+  Future<void> fetchUserLocation(LocationController locationController) async{
+    await locationController.getUserLocation();
   }
 
   Future<void> finishSplash(AuthController authController, UserRole userRole) async{

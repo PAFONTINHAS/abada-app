@@ -5,13 +5,17 @@ import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:sistema_abada_capoeira/core/errors/failure.dart';
 import 'package:sistema_abada_capoeira/core/errors/exception_handler.dart';
 import 'package:sistema_abada_capoeira/core/constants/database_constants.dart';
+import 'package:sistema_abada_capoeira/core/services/location_service/location_service.dart';
 import 'package:sistema_abada_capoeira/features/location/domain/entities/location_entity.dart';
+import 'package:sistema_abada_capoeira/core/services/location_service/user_location_entity.dart';
 import 'package:sistema_abada_capoeira/features/location/data/models/location_entity_model.dart';
 import 'package:sistema_abada_capoeira/features/location/data/datasources/location_remote_datasource.dart';
 
 class LocationRemoteDatasourceImpl implements LocationRemoteDatasource{
 
   final _firestore = FirebaseFirestore.instance;
+
+  final locationService = LocationService();
 
   @override 
   Future<Either<Failure, LocationEntity>> saveClassLocation(LocationEntity locationEntity) async{
@@ -44,7 +48,11 @@ class LocationRemoteDatasourceImpl implements LocationRemoteDatasource{
     try{
 
       // 1. Pega a localização atual do celular do aluno
-      Position position = await Geolocator.getCurrentPosition();
+      // Position position = await Geolocator.getCurrentPosition();
+
+      UserLocationEntity location = await locationService.getUserLocation();
+
+      final Position position = location.position;
 
       GeoFirePoint center = GeoFirePoint(
         GeoPoint(
@@ -101,6 +109,20 @@ class LocationRemoteDatasourceImpl implements LocationRemoteDatasource{
     }catch(exception){
 
       return ExceptionHandler.handleException(exception: exception, contextMessage: "findExistingLocationByOsmKey");
+    }
+  }
+
+
+  @override
+  Future<Either<Failure, UserLocationEntity>> getUserLocation() async{
+    try{
+
+      final UserLocationEntity userLocationEntity = await locationService.getUserLocation();
+
+      return Right(userLocationEntity);
+
+    }catch(exception){
+      return ExceptionHandler.handleException(exception: exception, contextMessage: 'getUserLocation');
     }
   }
 

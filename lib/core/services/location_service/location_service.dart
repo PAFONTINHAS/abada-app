@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'package:geocoding/geocoding.dart';
 import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
+import 'package:sistema_abada_capoeira/core/services/location_service/user_location_entity.dart';
 import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/core/services/location_service/place_suggestion.dart';
 
@@ -35,6 +37,35 @@ class LocationService {
       // Optional: await Geolocator.openAppSettings();
       return;
     } 
+
+  }
+
+
+  Future<UserLocationEntity> getUserLocation() async{
+
+    Position position = await Geolocator.getCurrentPosition(
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.high,
+        timeLimit: Duration(seconds: 15)
+      )
+    );
+
+    List<Placemark> placeMarks = await Geocoding().placemarkFromCoordinates(
+      position.latitude,
+      position.longitude,
+    );
+
+    if(placeMarks.isNotEmpty){
+      Placemark local = placeMarks.first;
+
+      return UserLocationEntity(
+        city: local.subAdministrativeArea ?? local.locality,
+        state: local.administrativeArea,
+        position: position,
+      );
+    }
+
+    return UserLocationEntity(city: null, state: null, position: position);
 
   }
 
