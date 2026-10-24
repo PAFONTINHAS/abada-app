@@ -78,9 +78,11 @@ class _EventsPageState extends State<EventsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if(!userRole.isStudent) const ManagementEventsActionsSectionWidget(),
-            const SizedBox(height: 20),
-
+            if (!userRole.isStudent) ...[
+              const ManagementEventsActionsSectionWidget(),
+              const SizedBox(height: 20),
+            ],
+            
             CustomTextInput(
               hintText: "Buscar por evento ou cidade...",
               prefixIcon: const Icon(Icons.search, color: ColorConstants.textSecondary),

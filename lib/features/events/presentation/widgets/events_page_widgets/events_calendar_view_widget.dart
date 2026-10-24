@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
+import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/events_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_card_widget.dart';
 
 class EventsCalendarViewWidget extends StatelessWidget {
   const EventsCalendarViewWidget({super.key});
@@ -45,60 +47,11 @@ class EventsCalendarViewWidget extends StatelessWidget {
           separatorBuilder: (_, __) => const SizedBox(height: 12),
           itemBuilder: (context, index) {
             final event = events[index];
-            return Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: ColorConstants.surfaceColor,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: ColorConstants.borderColor),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    event.eventName,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.location_on_outlined,
-                        size: 14,
-                        color: ColorConstants.textSecondary,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        "${event.city} - ${event.state}",
-                        style: const TextStyle(
-                          fontSize: 13,
-                          color: ColorConstants.textSecondary,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.calendar_today,
-                        size: 14,
-                        color: ColorConstants.textSecondary,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        "${event.eventInitDate.day}/${event.eventInitDate.month}/${event.eventInitDate.year}",
-                        style: const TextStyle(
-                          fontSize: 13,
-                          color: ColorConstants.textSecondary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+            return EventCardWidget(
+              event: event,
+              onTap: () => RouteController.redirectToEventDetailsPage(
+                context: context,
+                eventEntity: event,
               ),
             );
           },

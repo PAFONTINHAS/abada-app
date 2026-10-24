@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_requests_controller.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/widgets/action_card_button_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/action_card_button_widget.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_requests_controller.dart';
 
 class ManagementEventsActionsSectionWidget extends StatelessWidget {
   const ManagementEventsActionsSectionWidget({super.key});
@@ -39,10 +39,9 @@ class ManagementEventsActionsSectionWidget extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 12),
-        // Botão com Badge Opcional de Solicitações Pendentes
+        if(userRole.isCoordinator)...[
+          const SizedBox(height: 12),
 
-        if(userRole.isCoordinator)
           ActionCardButtonWidget(
             title: "Solicitações de Eventos",
             icon: Icons.pending_actions_outlined,
@@ -50,6 +49,7 @@ class ManagementEventsActionsSectionWidget extends StatelessWidget {
             isFullWidth: true,
             onTap: () => RouteController.redirectToPendingEventDetailsPage(context: context),
           ),
+        ]
       ],
     );
   }
