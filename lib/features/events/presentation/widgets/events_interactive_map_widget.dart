@@ -1,25 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
-import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
 import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
+import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/location/presentation/controllers/location_controller.dart';
 
 class EventsInteractiveMapWidget extends StatelessWidget {
   final List<EventEntity> events;
-  // final LatLng initialCenter;
-  final double initialZoom;
 
   const EventsInteractiveMapWidget({
     super.key,
     required this.events,
     // Podemos iniciar centralizado no Brasil, ou na localização atual do usuário
     // this.initialCenter = const LatLng(-15.7801, -47.9292), // Brasília como default
-    this.initialZoom = 4.5,
+    // this.initialZoom = 4.5,
   });
 
   void _showEventDetailsBottomSheet(BuildContext context, EventEntity event) {
@@ -41,7 +39,6 @@ class EventsInteractiveMapWidget extends StatelessWidget {
             onTap: () {
               Navigator.pop(ctx);
 
-              // TODO: Redirecionar para a página de detalhes do evento
               RouteController.redirectToEventDetailsPage(context: context, eventId: event.eventId);
             },
           ),
@@ -67,17 +64,11 @@ class EventsInteractiveMapWidget extends StatelessWidget {
       initialCenter = brazilCenter; 
     } else {
 
-      LoggingService.displayInfo("Pegando localização da cidade ${userLocation.city}");
-
       initialCenter = LatLng(
         userLocation.cityCenterCoordinates!.latitude,
         userLocation.cityCenterCoordinates!.longitude,
       );
     }
-
-    LoggingService.displayInfo("Centro inicial: $initialCenter");
-
-
 
     return Container(
       width: double.infinity,
