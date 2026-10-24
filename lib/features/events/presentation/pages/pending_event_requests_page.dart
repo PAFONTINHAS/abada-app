@@ -3,9 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/widgets/created_events_page_widgets/request_item_card.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/created_events_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_requests_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_status_card_widget.dart';
 
 class PendingEventRequestsPage extends StatefulWidget {
   const PendingEventRequestsPage({super.key});
@@ -45,7 +45,7 @@ class _PendingEventRequestsPageState extends State<PendingEventRequestsPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Meus Eventos",
+          "Solicitações de Eventos",
           style: TextStyle(
             color: ColorConstants.textPrimary,
             fontWeight: FontWeight.bold,
@@ -83,8 +83,8 @@ class _PendingEventRequestsPageState extends State<PendingEventRequestsPage> {
               itemBuilder: (context, index) {
                 final item = eventRequests[index];
 
-                return RequestItemCard(
-                  request: item,
+                return EventStatusCardWidget(
+                  item: item,
                   onViewEventDetails: () =>
                       navigateToEventDetails(eventId: item.eventId),
                   onViewRequestDetails: () => {},
