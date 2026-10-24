@@ -6,6 +6,7 @@ import 'package:sistema_abada_capoeira/shared/section_widgets/section_title_widg
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/widgets/class_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_controller.dart';
+import 'package:sistema_abada_capoeira/shared/appBar/custom_app_bar_widget.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/widgets/class_entry_requests_button_widget.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/widgets/class_local_summary_card_list_widget.dart';
 import 'package:sistema_abada_capoeira/features/member_validation/presentation/controllers/membership_validation_controller.dart';
@@ -25,21 +26,21 @@ class ProfessorClassesPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: const Text(
-          "Turmas",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-        ),
+      appBar: CustomAppBarWidget(
+        pageTitle: "Turmas",
+        onNotificationTap: (){} ,
       ),
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
 
-          if(membershipRequests.isNotEmpty)
+          if (membershipRequests.isNotEmpty)
             ClassEntryRequestsButtonWidget(
-              onPressed: () => RouteController.redirectoToClassesEntryRequestsPage(context: context)
+              onPressed: () =>
+                  RouteController.redirectoToClassesEntryRequestsPage(
+                    context: context,
+                  ),
             ),
         ],
       ),

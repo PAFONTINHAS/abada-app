@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sistema_abada_capoeira/shared/appBar/custom_app_bar_widget.dart';
 
 class NewsPage extends StatelessWidget {
   const NewsPage({super.key});
@@ -6,7 +7,10 @@ class NewsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Página de Notícias")),
+      appBar: CustomAppBarWidget(
+        pageTitle: "Notícias",
+        onNotificationTap: (){} ,
+      ),
       body: Column(children: [],),
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/utils/region_mapper.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
+import 'package:sistema_abada_capoeira/shared/appBar/custom_app_bar_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/events_interactive_map_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
 import 'package:sistema_abada_capoeira/shared/inputs/custom_text_input/custom_text_input.dart';
@@ -55,25 +56,14 @@ class _EventsPageState extends State<EventsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final profileController = context.read<ProfileController>();
-    final userRole = profileController.userProfile.role;
     final eventsController = context.read<EventsController>();
-    final locationController = context.read<LocationController>();
+    final profileController = context.read<ProfileController>();
 
+    final userRole = profileController.userProfile.role;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Eventos ABADÁ",
-          style: TextStyle(
-            color: ColorConstants.textPrimary,
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: ColorConstants.surfaceColor,
-        elevation: 0,
-        scrolledUnderElevation: 0.5,
+      appBar: CustomAppBarWidget(
+        pageTitle: "Eventos",
+        onNotificationTap: (){} ,
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),

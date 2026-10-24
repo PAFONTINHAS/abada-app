@@ -5,7 +5,7 @@ import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget
 import 'package:sistema_abada_capoeira/shared/section_widgets/section_title_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/events_controller.dart';
-import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/dashboard_app_bar_widget.dart';
+import 'package:sistema_abada_capoeira/shared/appBar/custom_app_bar_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/user_event_subscription_card_widget.dart';
 
 class StudentDashboardPage extends StatelessWidget {
@@ -17,7 +17,10 @@ class StudentDashboardPage extends StatelessWidget {
     final events = controller.events;
 
     return Scaffold(
-      appBar: DashboardAppBarWidget(onNotificationTap: () {}),
+      appBar: CustomAppBarWidget(
+        pageTitle: "Início",
+        onNotificationTap: (){} ,
+      ),
       body: StandardScaffoldBodyWidget(
         child: SingleChildScrollView(
           child: Column(

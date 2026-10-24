@@ -4,7 +4,7 @@ import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
 import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
 import 'package:sistema_abada_capoeira/shared/section_widgets/section_title_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/created_events_page_widgets/request_item_card.dart';
-import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/dashboard_app_bar_widget.dart';
+import 'package:sistema_abada_capoeira/shared/appBar/custom_app_bar_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_requests_controller.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/rapid_metrics_chart_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/view_more_requests_button_widget.dart';
@@ -32,7 +32,8 @@ class CoordinatorDashboardPage extends StatelessWidget {
 
     }
     return Scaffold(
-      appBar: DashboardAppBarWidget(
+      appBar: CustomAppBarWidget(
+        pageTitle: "Início",
         onNotificationTap: (){} ,
       ),
 
