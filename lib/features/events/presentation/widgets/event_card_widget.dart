@@ -9,12 +9,14 @@ class EventCardWidget extends StatelessWidget {
   final EventEntity event;
   final VoidCallback onTap;
   final double? width;
+  final bool showEventAdress;
 
   const EventCardWidget({
     super.key,
     required this.event,
     required this.onTap,
     this.width,
+    this.showEventAdress = false
   });
 
   String _formatEventDate(DateTime start, DateTime end) {
@@ -170,12 +172,26 @@ class EventCardWidget extends StatelessWidget {
                     const Icon(Icons.location_on_outlined, size: 14, color: ColorConstants.textSecondary),
                     const SizedBox(width: 6),
                     Expanded(
-                      child: Text(
-                        "${event.city} - ${event.state}",
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontSize: 12, color: ColorConstants.textSecondary),
-                      ),
+                      child: 
+                        showEventAdress
+                          ? Text(
+                              event.eventLocation,
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: ColorConstants.textSecondary,
+                              ),
+                            )
+                          : Text(
+                              "${event.city} - ${event.state}",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: ColorConstants.textSecondary,
+                              ),
+                            )
                     ),
                   ],
                 ),

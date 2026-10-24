@@ -7,7 +7,9 @@ class EventEntity {
     required this.city,
     required this.state,
     required this.eventId,
+    required this.latitude,
     required this.products,
+    required this.longitude,
     required this.eventName,
     required this.eventType,
     required this.eventValue,
@@ -37,6 +39,9 @@ class EventEntity {
   final String? eventDescription;
   final String eventCreatorNickname;
 
+  final double latitude;
+  final double longitude;
+
   final bool eventActive;
   final bool finishedEvent;
   final EventType eventType;
@@ -50,6 +55,8 @@ class EventEntity {
     String? city,
     String? state,
     String? eventId,
+    double? latitude,
+    double? longitude,
     String? eventName,
     bool? eventActive,
     String? eventValue,
@@ -71,7 +78,9 @@ class EventEntity {
       city:                 city                 ?? this.city,
       state:                state                ?? this.state,
       eventId:              eventId              ?? this.eventId,
+      latitude:             latitude             ?? this.latitude,
       products:             products             ?? this.products,
+      longitude:            longitude            ?? this.longitude,
       eventName:            eventName            ?? this.eventName,
       eventType:            eventType            ?? this.eventType,
       eventValue:           eventValue           ?? this.eventValue,

@@ -48,11 +48,9 @@ class LocationRemoteDatasourceImpl implements LocationRemoteDatasource{
     try{
 
       // 1. Pega a localização atual do celular do aluno
-      // Position position = await Geolocator.getCurrentPosition();
+      Position position = await Geolocator.getCurrentPosition();
 
-      UserLocationEntity location = await locationService.getUserLocation();
-
-      final Position position = location.position;
+      // UserLocationEntity location = await locationService.getUserLocation();
 
       GeoFirePoint center = GeoFirePoint(
         GeoPoint(

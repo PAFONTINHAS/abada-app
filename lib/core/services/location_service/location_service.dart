@@ -1,12 +1,34 @@
 import 'dart:convert';
+import 'package:geocoder_pro/geocoder_pro.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
+import 'package:sistema_abada_capoeira/core/services/location_service/coordinates_entity.dart';
 import 'package:sistema_abada_capoeira/core/services/location_service/user_location_entity.dart';
 import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/core/services/location_service/place_suggestion.dart';
 
 class LocationService {
+
+  Future<CoordinatesEntity?> getCityCenter(String cityName) async{
+    try{
+
+      final geoData = await GeocoderPro.nominatim().getDataFromAddress(cityName);
+
+      if(geoData != null){
+
+        return CoordinatesEntity(
+          latitude: geoData.latitude,
+          longitude: geoData.longitude,
+        );
+      }
+
+      return null;
+
+    }catch(exception){
+      throw Exception(exception);
+    }
+  }
 
   Future<void> requestLocationPermission() async {
     bool serviceEnabled;
@@ -58,14 +80,23 @@ class LocationService {
     if(placeMarks.isNotEmpty){
       Placemark local = placeMarks.first;
 
+      final String? city = local.subAdministrativeArea ?? local.locality;
+
+      CoordinatesEntity? cityCenterCoordinates;
+
+      if(city != null) {
+        cityCenterCoordinates = await getCityCenter(city);
+      }
+
       return UserLocationEntity(
-        city: local.subAdministrativeArea ?? local.locality,
-        state: local.administrativeArea,
         position: position,
+        state: local.administrativeArea,
+        cityCenterCoordinates: cityCenterCoordinates,
+        city: local.subAdministrativeArea ?? local.locality,
       );
     }
 
-    return UserLocationEntity(city: null, state: null, position: position);
+    return UserLocationEntity(city: null, state: null, position: position, cityCenterCoordinates: null);
 
   }
 

@@ -138,9 +138,8 @@ class EventFormPage extends StatelessWidget {
 
                   final createdEvent = formController.buildEventEntity(
                     userId: user.uid,
+                    place: selectedSuggestion,
                     userNickname: user.nickname,
-                    city: selectedSuggestion.city,
-                    state: selectedSuggestion.state,
                     products: eventProductsController.products,
                     selectedClass: eventGraduationController.selectedClass,
                     selectedMemberIds: eventGraduationController.selectedMemberIds,

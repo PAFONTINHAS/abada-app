@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:sistema_abada_capoeira/core/services/location_service/place_suggestion.dart';
 import 'package:sistema_abada_capoeira/core/utils/mask_formatter.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_type.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
@@ -102,9 +103,10 @@ class EventFormController extends ChangeNotifier{
   }
 
   EventEntity? buildEventEntity({
-    required String city,
-    required String state,
+    // required String city,
+    // required String state,
     required String userId,
+    required PlaceSuggestion place,
     required String userNickname,
     required ClassEntity? selectedClass,
     required Set<String> selectedMemberIds,
@@ -127,13 +129,15 @@ class EventFormController extends ChangeNotifier{
     final now = DateTime.now();
 
     return EventEntity(
-      city: city,
+      city: place.city,
       eventId: '',
-      state: state,
+      state: place.state,
       products: products,
       finishedEvent: false,
       eventType: eventType,
       eventCreatorId: userId,
+      latitude: place.latitude,
+      longitude: place.longitude,
       eventName: eventName.text.trim(),
       eventCreatorNickname: userNickname,
       eventValue: totalEventStringValue,

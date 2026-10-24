@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/utils/region_mapper.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/events_interactive_map_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
 import 'package:sistema_abada_capoeira/shared/inputs/custom_text_input/custom_text_input.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/events_controller.dart';
@@ -57,6 +58,7 @@ class _EventsPageState extends State<EventsPage> {
     final profileController = context.read<ProfileController>();
     final userRole = profileController.userProfile.role;
     final eventsController = context.read<EventsController>();
+    final locationController = context.read<LocationController>();
 
     return Scaffold(
       appBar: AppBar(
@@ -170,37 +172,19 @@ class _EventsPageState extends State<EventsPage> {
             Selector<EventsController, int>(
               selector: (_, controller) => controller.selectedViewIndex,
               builder: (context, selectedViewIndex, child) {
+
+
+
+
                 return Expanded(
                   child: selectedViewIndex == 0
                       ? EventsCalendarViewWidget()
-                      : _buildInteractiveMapPlaceholder(),
+                      : EventsInteractiveMapWidget(events: eventsController.events)
                 );
               },
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildInteractiveMapPlaceholder() {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: ColorConstants.backgroundColor,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: ColorConstants.borderColor),
-      ),
-      child: const Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.map, size: 48, color: ColorConstants.textSecondary),
-          SizedBox(height: 12),
-          Text(
-            "Mapa Interativo de Eventos (RF25)",
-            style: TextStyle(fontWeight: FontWeight.bold, color: ColorConstants.textPrimary),
-          ),
-        ],
       ),
     );
   }
