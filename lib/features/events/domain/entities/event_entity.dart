@@ -4,6 +4,8 @@ import 'package:sistema_abada_capoeira/features/events/domain/entities/event_typ
 class EventEntity {
 
   const EventEntity({
+    required this.city,
+    required this.state,
     required this.eventId,
     required this.products,
     required this.eventName,
@@ -23,25 +25,30 @@ class EventEntity {
     this.eventActive = false,
   });
 
+  final String city;
+  final String state;
   final String eventId;
   final String eventName;
-  final String? eventDescription;
-  final String eventLocation;
   final String eventValue;
+  final String eventLocation;
   final String eventCreatorId;
-  final String eventCreatorNickname;
   final String? eventImagePath;
+  final String? selectedClassId;
+  final String? eventDescription;
+  final String eventCreatorNickname;
 
   final bool eventActive;
   final bool finishedEvent;
   final EventType eventType;
   final DateTime eventInitDate;
-  final String? selectedClassId;
   final DateTime eventEndingDate;
   final Set<String>? selectedMembersId;
   final List<EventProductItem> products;
 
+
   EventEntity copyWith({
+    String? city,
+    String? state,
     String? eventId,
     String? eventName,
     bool? eventActive,
@@ -61,6 +68,8 @@ class EventEntity {
   }){
 
     return EventEntity(
+      city:                 city                 ?? this.city,
+      state:                state                ?? this.state,
       eventId:              eventId              ?? this.eventId,
       products:             products             ?? this.products,
       eventName:            eventName            ?? this.eventName,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_products_item.dart';
 
-class EventProductsController extends ChangeNotifier{
+class EventFormProductsController extends ChangeNotifier{
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController priceController = TextEditingController();

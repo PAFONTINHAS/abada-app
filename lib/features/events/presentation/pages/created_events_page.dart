@@ -6,7 +6,7 @@ import 'package:sistema_abada_capoeira/features/events/domain/entities/event_ent
 import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/request_item_card.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/widgets/approved_event_card.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/approved_event_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/finished_event_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/created_events_controller.dart';
@@ -181,7 +181,7 @@ class _CreatedEventsPageState extends State<CreatedEventsPage> {
                 } else if (item is EventEntity) {
 
                   if(!item.finishedEvent){
-                    return ApprovedEventCard(
+                    return ApprovedEventCardWidget(
                       event: item,
                       onViewEventDetails: () => _navigateToEventDetails(eventEntity: item),
                     );

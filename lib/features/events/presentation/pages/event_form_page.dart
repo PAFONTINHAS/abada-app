@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
@@ -9,25 +9,27 @@ import 'package:sistema_abada_capoeira/features/events/presentation/models/event
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_phase_progress_widget.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_products_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_first_phase_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_second_phase_widget.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_graduation_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_revision_phase_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_navigation_bar_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_phases_controller.dart';
+import 'package:sistema_abada_capoeira/features/location/presentation/controllers/create_location_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_products_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_graduation_phase_widget.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_graduation_controller.dart';
 
 class EventFormPage extends StatelessWidget {
   const EventFormPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final profileController = context.read<ProfileController>();
     final formController = context.read<EventFormController>();
-    final eventProductsController = context.read<EventProductsController>();
+    final profileController = context.read<ProfileController>();
+    final locationController = context.read<CreateLocationController>();
+    final eventProductsController = context.read<EventFormProductsController>();
     final eventFormPhasesController = context.read<EventFormPhasesController>();
-    final eventGraduationController = context.read<EventGraduationController>();
+    final eventGraduationController = context.read<EventFormGraduationController>();
 
     final user = profileController.userProfile;
 
@@ -130,12 +132,18 @@ class EventFormPage extends StatelessWidget {
                 },
                 onFinish: () async{
 
+                  final selectedSuggestion = locationController.selectedSuggestion;
+
+                  if(selectedSuggestion == null) return;
+
                   final createdEvent = formController.buildEventEntity(
-                    products: eventProductsController.products,
                     userId: user.uid,
                     userNickname: user.nickname,
-                    selectedMemberIds: eventGraduationController.selectedMemberIds,
+                    city: selectedSuggestion.city,
+                    state: selectedSuggestion.state,
+                    products: eventProductsController.products,
                     selectedClass: eventGraduationController.selectedClass,
+                    selectedMemberIds: eventGraduationController.selectedMemberIds,
                   );
 
                   if(createdEvent == null) return;

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 
-class ApprovedEventCard extends StatelessWidget {
+class ApprovedEventCardWidget extends StatelessWidget {
   final EventEntity event;
   final VoidCallback onViewEventDetails;
 
-  const ApprovedEventCard({
+  const ApprovedEventCardWidget({
     super.key,
     required this.event,
     required this.onViewEventDetails,

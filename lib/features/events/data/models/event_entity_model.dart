@@ -8,6 +8,8 @@ import 'package:sistema_abada_capoeira/features/events/data/models/event_product
 class EventEntityModel extends EventEntity{
 
   const EventEntityModel({
+    required super.city,
+    required super.state,
     required super.eventId,
     required super.products,
     required super.eventName,
@@ -46,6 +48,8 @@ class EventEntityModel extends EventEntity{
       eventId: snapshot.id,
       products: products,
       eventType: eventType,
+      city: data['city'] ?? "",
+      state: data['state'] ?? "",
       eventName: data['eventName'],
       eventValue: data['eventValue'],
       eventActive: data['eventActive'],
@@ -65,6 +69,8 @@ class EventEntityModel extends EventEntity{
 
   factory EventEntityModel.fromEntity(EventEntity entity){
     return EventEntityModel(
+      city: entity.city,
+      state: entity.state,
       eventId: entity.eventId,
       products: entity.products,
       eventName: entity.eventName,
@@ -87,7 +93,8 @@ class EventEntityModel extends EventEntity{
 
   Map<String, dynamic> toMap() {
     return {
-      'products': products.map((product) => product.toMap()).toList(),
+      'city': city,
+      'state': state,
       'eventName': eventName,
       'eventValue': eventValue,
       'eventActive': eventActive,
@@ -102,6 +109,7 @@ class EventEntityModel extends EventEntity{
       'eventDescription': eventDescription,
       'selectedMembersId': selectedMembersId,
       'eventCreatorNickname': eventCreatorNickname,
+      'products': products.map((product) => product.toMap()).toList(),
     };
   }
   

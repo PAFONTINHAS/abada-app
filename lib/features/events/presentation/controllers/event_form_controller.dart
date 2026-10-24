@@ -102,11 +102,13 @@ class EventFormController extends ChangeNotifier{
   }
 
   EventEntity? buildEventEntity({
-    required List<EventProductItem> products,
+    required String city,
+    required String state,
     required String userId,
     required String userNickname,
+    required ClassEntity? selectedClass,
     required Set<String> selectedMemberIds,
-    required ClassEntity? selectedClass
+    required List<EventProductItem> products,
   }) {
     double totalEventDoubleValue = MaskFormatter.convertMoneyStringToDouble(
       eventValue.text.trim(),
@@ -125,7 +127,9 @@ class EventFormController extends ChangeNotifier{
     final now = DateTime.now();
 
     return EventEntity(
+      city: city,
       eventId: '',
+      state: state,
       products: products,
       finishedEvent: false,
       eventType: eventType,
@@ -162,5 +166,4 @@ class EventFormController extends ChangeNotifier{
     notifyListeners();
     return success;
   }
-
 }

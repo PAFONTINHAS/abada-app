@@ -98,6 +98,8 @@ class LocationService {
           final fullAddress = "$name - $street, $houseNumber - $district, $city - $state, $postCode";
 
           return PlaceSuggestion(
+            city: city,
+            state: state,
             latitude: lat,
             osmKey: osmKey,
             longitude: lng,

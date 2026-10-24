@@ -6,6 +6,7 @@ import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_requests_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/events_controller.dart';
 import 'package:sistema_abada_capoeira/features/member_validation/presentation/controllers/membership_validation_controller.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
@@ -36,6 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     final AuthController authController = context.read<AuthController>();
     final ClassController classController = context.read<ClassController>();
+    final EventsController eventsController = context.read<EventsController>();
     final ProfileController profileController = context.read<ProfileController>();
     final DataLoadingController dataLoadingController = context.read<DataLoadingController>();
     final EventRequestsController eventRequestsController = context.read<EventRequestsController>();
@@ -56,6 +58,7 @@ class _SplashScreenState extends State<SplashScreen> {
       final userRole = profileController.userProfile.role;
    
       await Future.wait([
+        dataLoadingController.fetchEvents(eventsController),
         if(userRole != UserRole.student) dataLoadingController.fetchLecturedClasses(classController, profileController),
         if(userRole != UserRole.student) dataLoadingController.fetchClassEntryRequests(membershipValidationController, profileController),
         if(userRole == UserRole.coordinator) dataLoadingController.fetchEventCreationRequests(eventRequestsController)

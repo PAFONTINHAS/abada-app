@@ -54,6 +54,7 @@ class EventRemoteDatasourceImpl implements EventRemoteDatasource{
       final QuerySnapshot query = await _firestore
           .collection('events')
           .where('eventActive', isEqualTo: true)
+          .where('finishedEvent', isEqualTo: false)
           .get();
 
       final eventsList = query.docs.map((document) => EventEntityModel.fromSnapshot(document)).toList();
