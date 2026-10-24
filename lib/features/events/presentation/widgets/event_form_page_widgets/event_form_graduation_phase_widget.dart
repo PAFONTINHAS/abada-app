@@ -4,7 +4,7 @@ import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/member_graduation_tile.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/section_detail_card_widget.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_graduation_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_graduation_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/graduation_phase_class_selection_widget.dart';
 
 class EventFormGraduationPhaseWidget extends StatelessWidget {
@@ -12,7 +12,7 @@ class EventFormGraduationPhaseWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final graduationController = context.watch<EventGraduationController>();
+    final graduationController = context.watch<EventFormGraduationController>();
     final classController = context.watch<ClassController>();
 
     final classes = classController.lecturedClasses;

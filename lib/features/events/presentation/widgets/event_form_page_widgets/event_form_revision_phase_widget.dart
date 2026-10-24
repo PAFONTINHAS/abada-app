@@ -5,13 +5,13 @@ import 'package:sistema_abada_capoeira/core/utils/date_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_type.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_products_item.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_controller.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_graduation_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_graduation_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/section_detail_card_widget.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_products_controller.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/widgets/revision_phase_info_row_widget.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/widgets/revision_phase_aditional_products_widget.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/widgets/revision_phase_financial_summary_widget.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/widgets/revision_phase_general_event_info_widget.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_products_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_page_widgets/revision_phase_info_row_widget.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_page_widgets/revision_phase_aditional_products_widget.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_page_widgets/revision_phase_financial_summary_widget.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_page_widgets/revision_phase_general_event_info_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 
 class EventFormRevisionPhaseWidget extends StatelessWidget {
@@ -21,9 +21,9 @@ class EventFormRevisionPhaseWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final formController = context.read<EventFormController>();
     final profileController = context.read<ProfileController>();
-    final productsController = context.read<EventProductsController>();
+    final productsController = context.read<EventFormProductsController>();
     final List<EventProductItem> products = productsController.products;
-    final eventGraduationController = context.read<EventGraduationController>();
+    final eventGraduationController = context.read<EventFormGraduationController>();
 
     final userProfile = profileController.userProfile;
 

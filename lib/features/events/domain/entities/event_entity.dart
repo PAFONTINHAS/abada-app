@@ -4,8 +4,12 @@ import 'package:sistema_abada_capoeira/features/events/domain/entities/event_typ
 class EventEntity {
 
   const EventEntity({
+    required this.city,
+    required this.state,
     required this.eventId,
+    required this.latitude,
     required this.products,
+    required this.longitude,
     required this.eventName,
     required this.eventType,
     required this.eventValue,
@@ -23,26 +27,36 @@ class EventEntity {
     this.eventActive = false,
   });
 
+  final String city;
+  final String state;
   final String eventId;
   final String eventName;
-  final String? eventDescription;
-  final String eventLocation;
   final String eventValue;
+  final String eventLocation;
   final String eventCreatorId;
-  final String eventCreatorNickname;
   final String? eventImagePath;
+  final String? selectedClassId;
+  final String? eventDescription;
+  final String eventCreatorNickname;
+
+  final double latitude;
+  final double longitude;
 
   final bool eventActive;
   final bool finishedEvent;
   final EventType eventType;
   final DateTime eventInitDate;
-  final String? selectedClassId;
   final DateTime eventEndingDate;
   final Set<String>? selectedMembersId;
   final List<EventProductItem> products;
 
+
   EventEntity copyWith({
+    String? city,
+    String? state,
     String? eventId,
+    double? latitude,
+    double? longitude,
     String? eventName,
     bool? eventActive,
     String? eventValue,
@@ -61,8 +75,12 @@ class EventEntity {
   }){
 
     return EventEntity(
+      city:                 city                 ?? this.city,
+      state:                state                ?? this.state,
       eventId:              eventId              ?? this.eventId,
+      latitude:             latitude             ?? this.latitude,
       products:             products             ?? this.products,
+      longitude:            longitude            ?? this.longitude,
       eventName:            eventName            ?? this.eventName,
       eventType:            eventType            ?? this.eventType,
       eventValue:           eventValue           ?? this.eventValue,

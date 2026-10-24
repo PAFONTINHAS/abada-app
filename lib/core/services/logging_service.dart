@@ -1,8 +1,6 @@
 import 'package:logger/logger.dart';
 
 // ignore_for_file: constant_identifier_names, avoid_print
-
-
 enum LogEnvironment{
   PRODUCTION,
   DEVELOPMENT

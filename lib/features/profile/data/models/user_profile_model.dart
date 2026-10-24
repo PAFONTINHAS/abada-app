@@ -76,7 +76,7 @@ class UserProfileModel extends UserProfileEntity {
       'email': email,
       'phoneNumber': phoneNumber,
       'currentBeltName': currentBelt,
-      'role': role.name,
+      'userRole': role.name,
       'photoUrl': photoUrl,
       'tusca': tusca.toMap(),
       'city': city,

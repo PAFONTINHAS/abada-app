@@ -1,10 +1,38 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:geocoder_pro/geocoder_pro.dart';
 import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/core/services/location_service/place_suggestion.dart';
+import 'package:sistema_abada_capoeira/core/services/location_service/coordinates_entity.dart';
+import 'package:sistema_abada_capoeira/core/services/location_service/user_location_entity.dart';
 
 class LocationService {
+
+  final String _userAgent = "AppAbadaCapoeiraTCC/1.0 (petersonfontinhas@gmail.com)";
+
+  Future<CoordinatesEntity?> getCityCenter(String cityName) async{
+    try{
+
+      final geoData = await GeocoderPro.nominatim(
+        userAgent: _userAgent
+      ).getDataFromAddress(cityName);
+
+      if(geoData != null){
+
+        return CoordinatesEntity(
+          latitude: geoData.latitude,
+          longitude: geoData.longitude,
+        );
+      }
+
+      return null;
+
+    }catch(exception){
+      throw Exception(exception);
+    }
+  }
 
   Future<void> requestLocationPermission() async {
     bool serviceEnabled;
@@ -38,6 +66,44 @@ class LocationService {
 
   }
 
+
+  Future<UserLocationEntity> getUserLocation() async{
+
+    Position position = await Geolocator.getCurrentPosition(
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.high,
+        timeLimit: Duration(seconds: 15)
+      )
+    );
+
+    List<Placemark> placeMarks = await Geocoding().placemarkFromCoordinates(
+      position.latitude,
+      position.longitude,
+    );
+
+    if(placeMarks.isNotEmpty){
+      Placemark local = placeMarks.first;
+
+      final String? city = local.subAdministrativeArea ?? local.locality;
+
+      CoordinatesEntity? cityCenterCoordinates;
+
+      if(city != null) {
+        cityCenterCoordinates = await getCityCenter(city);
+      }
+
+      return UserLocationEntity(
+        position: position,
+        state: local.administrativeArea,
+        cityCenterCoordinates: cityCenterCoordinates,
+        city: local.subAdministrativeArea ?? local.locality,
+      );
+    }
+
+    return UserLocationEntity(city: null, state: null, position: position, cityCenterCoordinates: null);
+
+  }
+
   
   final http.Client client;
 
@@ -61,7 +127,7 @@ class LocationService {
         
         url,
         headers: {
-          'User-Agent': 'AppAbadaCapoeiraTCC/1.0 (petersonfontinhas@gmail.com)',
+          'User-Agent': _userAgent,
           'Accept': 'application/json',
         }
       );
@@ -98,6 +164,8 @@ class LocationService {
           final fullAddress = "$name - $street, $houseNumber - $district, $city - $state, $postCode";
 
           return PlaceSuggestion(
+            city: city,
+            state: state,
             latitude: lat,
             osmKey: osmKey,
             longitude: lng,

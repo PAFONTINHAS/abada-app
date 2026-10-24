@@ -4,7 +4,7 @@ import 'package:currency_text_input_formatter/currency_text_input_formatter.dart
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/shared/inputs/custom_text_input/custom_text_input.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_products_item.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_products_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_products_controller.dart';
 
 class EventProductsSectionWidget extends StatefulWidget {
   const EventProductsSectionWidget({super.key});
@@ -18,7 +18,7 @@ class _EventProductsSectionWidgetState
     extends State<EventProductsSectionWidget> {
   @override
   Widget build(BuildContext context) {
-    final controller = context.read<EventProductsController>();
+    final controller = context.read<EventFormProductsController>();
 
     final CurrencyTextInputFormatter moneyMaskFormatter =
         CurrencyTextInputFormatter.currency(
@@ -55,7 +55,7 @@ class _EventProductsSectionWidgetState
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Selector<EventProductsController, bool>(
+            Selector<EventFormProductsController, bool>(
               selector: (_, controller) => controller.optionalProduct,
               builder: (context, optionalProduct, child) {
                 return Row(
@@ -103,7 +103,7 @@ class _EventProductsSectionWidgetState
         const Divider(height: 32, color: ColorConstants.borderColor),
 
         // Lista de produtos adicionados
-        Selector<EventProductsController, List<EventProductItem>>(
+        Selector<EventFormProductsController, List<EventProductItem>>(
           selector: (_, controller) => controller.products,
           builder: (context, products, child) {
             if (products.isEmpty) {

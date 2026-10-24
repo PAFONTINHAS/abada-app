@@ -26,4 +26,11 @@ class MaskFormatter {
 
     return money.toStringAsFixed(2);
   }
+
+  static String convertToReais(String value){
+
+    final formatedValue = value.replaceAll('.', ',');
+
+    return "R\$ $formatedValue";
+  }
 }

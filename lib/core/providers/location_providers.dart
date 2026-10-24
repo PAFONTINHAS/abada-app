@@ -1,7 +1,9 @@
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:sistema_abada_capoeira/core/providers/class_providers.dart';
+import 'package:sistema_abada_capoeira/features/location/domain/usecases/get_user_location_usecase.dart';
 import 'package:sistema_abada_capoeira/features/location/presentation/controllers/create_location_controller.dart';
+import 'package:sistema_abada_capoeira/features/location/presentation/controllers/location_controller.dart';
 import 'package:sistema_abada_capoeira/features/location/presentation/controllers/student_class_selection_controller.dart';
 import 'package:sistema_abada_capoeira/features/location/data/datasources/location_remote_datasource.dart';
 import 'package:sistema_abada_capoeira/features/location/data/datasources/location_remote_datasource_impl.dart';
@@ -20,6 +22,7 @@ class LocationProviders {
 
   static final SaveClassLocationUsecase saveClassLocationUsecase = SaveClassLocationUsecase(locationRepository);
 
+  static final GetUserLocationUsecase getUserLocationUsecase = GetUserLocationUsecase(locationRepository);
   static final GetNearbyLocationsStreamUsecase getNearbyLocationsStreamUsecase = GetNearbyLocationsStreamUsecase(locationRepository);
 
   static final List<SingleChildWidget> providers = [
@@ -30,9 +33,8 @@ class LocationProviders {
         ClassProviders.getClassesForLocationUsecase,
         getNearbyLocationsStreamUsecase,
       ),
-    )
-
+    ),
+    ChangeNotifierProvider(create: (_) => LocationController(getUserLocationUsecase))
   ];
-
 
 }

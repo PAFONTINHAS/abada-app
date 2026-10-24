@@ -8,9 +8,13 @@ import 'package:sistema_abada_capoeira/features/events/data/models/event_product
 class EventEntityModel extends EventEntity{
 
   const EventEntityModel({
+    required super.city,
+    required super.state,
     required super.eventId,
     required super.products,
+    required super.latitude,
     required super.eventName,
+    required super.longitude,
     required super.eventType,
     required super.eventValue,
     required super.eventActive,
@@ -46,6 +50,10 @@ class EventEntityModel extends EventEntity{
       eventId: snapshot.id,
       products: products,
       eventType: eventType,
+      city: data['city'] ?? "",
+      state: data['state'] ?? "",
+      latitude: data['latitude'] ?? 0.00,
+      longitude: data['longitude'] ?? 0.00,
       eventName: data['eventName'],
       eventValue: data['eventValue'],
       eventActive: data['eventActive'],
@@ -65,10 +73,14 @@ class EventEntityModel extends EventEntity{
 
   factory EventEntityModel.fromEntity(EventEntity entity){
     return EventEntityModel(
+      city: entity.city,
+      state: entity.state,
       eventId: entity.eventId,
+      latitude: entity.latitude,
       products: entity.products,
-      eventName: entity.eventName,
       eventType: entity.eventType,
+      eventName: entity.eventName,
+      longitude: entity.longitude,
       eventValue: entity.eventValue,
       eventActive: entity.eventActive,
       finishedEvent: entity.finishedEvent,
@@ -79,7 +91,7 @@ class EventEntityModel extends EventEntity{
       eventEndingDate: entity.eventEndingDate,
       selectedClassId:  entity.selectedClassId,
       eventDescription: entity.eventDescription,
-      selectedMembersId: entity.selectedMembersId ,
+      selectedMembersId: entity.selectedMembersId,
       eventCreatorNickname: entity.eventCreatorNickname,
     );
   }
@@ -87,7 +99,10 @@ class EventEntityModel extends EventEntity{
 
   Map<String, dynamic> toMap() {
     return {
-      'products': products.map((product) => product.toMap()).toList(),
+      'city': city,
+      'state': state,
+      'latitude': latitude,
+      'longitude': longitude,
       'eventName': eventName,
       'eventValue': eventValue,
       'eventActive': eventActive,
@@ -102,6 +117,7 @@ class EventEntityModel extends EventEntity{
       'eventDescription': eventDescription,
       'selectedMembersId': selectedMembersId,
       'eventCreatorNickname': eventCreatorNickname,
+      'products': products.map((product) => product.toMap()).toList(),
     };
   }
   

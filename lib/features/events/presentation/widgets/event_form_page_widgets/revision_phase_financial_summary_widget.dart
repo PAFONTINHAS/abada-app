@@ -48,7 +48,7 @@ class RevisionPhaseFinancialSummaryWidget extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  "R\$ $totalEventValue",
+                  totalEventValue,
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,

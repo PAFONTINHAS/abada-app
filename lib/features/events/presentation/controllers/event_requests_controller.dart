@@ -32,9 +32,6 @@ class EventRequestsController extends ChangeNotifier{
       _errorMessage = failure.message;
       return false;
     }, (requests){
-
-      LoggingService.displayInfo("Solicitações encontradas: ${requests.length}");
-
       _eventRequests = requests;
 
       return true;

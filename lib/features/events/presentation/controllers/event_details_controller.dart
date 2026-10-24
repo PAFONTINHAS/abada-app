@@ -19,9 +19,6 @@ class EventDetailsController extends ChangeNotifier{
   EventEntity? get eventEntity => _eventEntity;
 
   Future<bool> getEventById(String eventId) async{
-
-    LoggingService.displayInfo("Pegando evento pelo id: $eventId");
-
     _isLoading = false;
     notifyListeners();
 
@@ -31,9 +28,6 @@ class EventDetailsController extends ChangeNotifier{
       _errorMessage = failure.message;
       return false;
     }, (event){
-
-      LoggingService.displayInfo("Evento capturado: $event");
-
 
       _eventEntity = event;
       return true;

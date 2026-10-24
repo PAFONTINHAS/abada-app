@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
 
-class EventGraduationController extends ChangeNotifier{
+class EventFormGraduationController extends ChangeNotifier{
 
   bool get isGraduationPhaseComplete{
     return _selectedMemberIds.isNotEmpty;

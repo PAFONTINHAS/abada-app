@@ -7,7 +7,7 @@ import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget
 import 'package:sistema_abada_capoeira/shared/section_widgets/section_title_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/tusca_badge_card_widget.dart';
-import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/dashboard_app_bar_widget.dart';
+import 'package:sistema_abada_capoeira/shared/appBar/custom_app_bar_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/view_more_requests_button_widget.dart';
 import 'package:sistema_abada_capoeira/features/member_validation/presentation/widgets/membership_request_item_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/dashboard_local_summary_card_list_widget.dart';
@@ -31,7 +31,10 @@ class ProfessorDashboardPage extends StatelessWidget {
     final userId = userProfile.uid;
 
     return Scaffold(
-      appBar: DashboardAppBarWidget(onNotificationTap: () {}),
+      appBar: CustomAppBarWidget(
+        pageTitle: "Início",
+        onNotificationTap: (){} ,
+      ),
       body: StandardScaffoldBodyWidget(
         child: Column(
           children: [

@@ -8,7 +8,7 @@ import 'package:sistema_abada_capoeira/shared/inputs/custom_text_input/custom_te
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/section_detail_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/first_phase_date_picker_tile_widget.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_page_address_field_widget.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_page_widgets/event_form_page_address_field_widget.dart';
 
 class EventFormFirstPhaseWidget extends StatelessWidget {
   const EventFormFirstPhaseWidget({super.key});
