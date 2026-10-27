@@ -15,7 +15,7 @@ export const removeMemberFromClass = functions.https.onCall(
     if (!context.auth) {
       throw new functions.https.HttpsError(
         "unauthenticated",
-        "Apenas usuários autenticados podem aprovar membros.",
+        "Apenas usuários autenticados podem remover membros.",
       );
     }
 
@@ -31,40 +31,63 @@ export const removeMemberFromClass = functions.https.onCall(
       .collection("students")
       .doc(memberRequestData.memberId);
 
-    const [memberDoc] = await Promise.all([
+    const [memberDoc, classDoc, studentInClassDoc] = await Promise.all([
       memberReference.get(),
+      classReference.get(),
+      studentInClassRef.get(),
     ]);
 
-    if (!memberDoc.exists) {
-      console.error(`Usuário ${memberRequestData.memberId} não encontrado.`);
+    if (!classDoc.exists) {
       throw new functions.https.HttpsError(
         "not-found",
-        "Usuário não encontrado.",
+        "Turma não encontrada.",
       );
     }
 
-    const memberData = memberDoc.data();
-
-    if (!memberData) {
+    const classData = classDoc.data();
+    if (classData?.professor?.professorId !== context.auth.uid) {
       throw new functions.https.HttpsError(
-        "internal",
-        "Erro ao aceder aos dados do utilizador.",
+        "permission-denied",
+        "Apenas o professor da turma pode remover alunos.",
+      );
+    }
+
+    if (!studentInClassDoc.exists) {
+      throw new functions.https.HttpsError(
+        "not-found",
+        "Aluno não faz parte desta turma.",
       );
     }
 
     try {
       const batch = db.batch();
 
+      const historyReference = classReference
+        .collection("studentHistory")
+        .doc();
+
+      batch.set(historyReference, {
+        ...studentInClassDoc.data(),
+        studentId: memberRequestData.memberId,
+        exitedAt: FieldValue.serverTimestamp(),
+      });
       batch.delete(studentInClassRef);
 
-      batch.update(memberReference, {
-        userRole: "unvalidatedUser",
-        attendedClasses: FieldValue.arrayRemove(memberRequestData.classId),
-      });
+      if (memberDoc.exists) {
+        batch.update(memberReference, {
+          userRole: "unvalidatedUser",
+          attendedClasses: FieldValue.arrayRemove(memberRequestData.classId),
+        });
+      } else {
+        console.warn(
+          `Usuário ${memberRequestData.memberId} não encontrado; ` +
+          "removendo apenas o vínculo órfão da turma.",
+        );
+      }
 
       await batch.commit();
 
-      return {"success": true};
+      return {"success": true, "exitedAt": "serverTimestamp"};
     } catch (error) {
       console.error("Erro ao realizar o batch commit:", error);
       throw new functions.https.HttpsError(

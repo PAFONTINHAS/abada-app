@@ -3,17 +3,23 @@ import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_member_entity.dart';
 
 class ClassMembersListWidget extends StatelessWidget {
-  const ClassMembersListWidget({super.key, required this.studentsList});
+  const ClassMembersListWidget({
+    super.key,
+    required this.studentsList,
+    this.onRemoveStudent,
+  });
 
   final List<ClassMemberEntity> studentsList;
+  final Future<void> Function(ClassMemberEntity student)? onRemoveStudent;
   @override
   Widget build(BuildContext context) {
-
     final double maxListSize = 300.0;
 
     final double currentListSize = studentsList.length * 80.0;
 
-    final double listSize = (currentListSize > maxListSize) ? maxListSize : currentListSize;
+    final double listSize = (currentListSize > maxListSize)
+        ? maxListSize
+        : currentListSize;
 
     return Container(
       clipBehavior: Clip.antiAlias,
@@ -45,7 +51,8 @@ class ClassMembersListWidget extends StatelessWidget {
                 shrinkWrap: true,
                 physics: const ScrollPhysics(),
                 itemCount: studentsList.length,
-                separatorBuilder: (context, index) => Divider(height: 1, color: Colors.grey.shade200, indent: 72),
+                separatorBuilder: (context, index) =>
+                    Divider(height: 1, color: Colors.grey.shade200, indent: 72),
                 itemBuilder: (context, index) {
                   final student = studentsList[index];
 
@@ -82,11 +89,17 @@ class ClassMembersListWidget extends StatelessWidget {
                         fontSize: 13,
                       ),
                     ),
-                    trailing: Icon(
-                      Icons.chevron_right,
-                      color: Colors.grey.shade400,
-                    ),
-                    onTap: () {},
+                    trailing: onRemoveStudent == null
+                        ? Icon(Icons.chevron_right, color: Colors.grey.shade400)
+                        : IconButton(
+                            tooltip: 'Remover aluno da turma',
+                            icon: const Icon(Icons.person_remove_outlined),
+                            color: Colors.red.shade700,
+                            onPressed: () => onRemoveStudent!(student),
+                          ),
+                    onTap: onRemoveStudent == null
+                        ? null
+                        : () => onRemoveStudent!(student),
                   );
                 },
               ),

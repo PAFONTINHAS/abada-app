@@ -1,5 +1,4 @@
 class ClassMemberEntity {
-
   final String studentId;
   final String? name;
   final String? nickname;
@@ -11,7 +10,6 @@ class ClassMemberEntity {
     this.name,
     this.nickname,
     required this.studentId,
-    required this.displaySensitiveData, 
+    required this.displaySensitiveData,
   });
-
 }

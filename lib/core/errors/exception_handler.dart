@@ -7,71 +7,128 @@ import 'package:sistema_abada_capoeira/core/errors/failure.dart';
 import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 
 class ExceptionHandler {
-
   ExceptionHandler._();
 
-  static Either<Failure, T> handleException<T>({required Object exception, required String contextMessage}) {
-    LoggingService.displayError("[ExceptionHandler.handleException] Erro: $exception. Contexto: $contextMessage.");
+  static Either<Failure, T> handleException<T>({
+    required Object exception,
+    required String contextMessage,
+  }) {
+    LoggingService.displayError(
+      "[ExceptionHandler.handleException] Erro: $exception. Contexto: $contextMessage.",
+    );
 
-    // Tratar FirebaseAuthException ANTES do switch genérico
+    // Handle FirebaseAuthException before the generic Firebase exception.
     if (exception is FirebaseAuthException) {
       switch (exception.code) {
         case 'email-already-in-use':
-          return Left(EmailAlreadyInUseFailure("Este email já está registrado"));
+          return Left(
+            EmailAlreadyInUseFailure("Este email já está registrado"),
+          );
         case 'requires-recent-login':
-          return Left(ReauthenticateFailure("Por segurança, faça o login novamente antes de excluir a conta"));
+          return Left(
+            ReauthenticateFailure(
+              "Por segurança, faça o login novamente antes de excluir a conta",
+            ),
+          );
         case 'user-not-found':
           return Left(NotFoundFailure("Usuário não encontrado"));
         case 'wrong-password':
-          return Left(UnauthorizedFailure("Senha incorreta. Tente novamente ou faça login com google"));
+          return Left(
+            UnauthorizedFailure(
+              "Senha incorreta. Tente novamente ou faça login com google",
+            ),
+          );
         case 'invalid-email':
           return Left(ValidationFailure("Email inválido"));
         case 'user-disabled':
           return Left(UnauthorizedFailure("Esta conta foi desativada"));
         case 'invalid-credential':
-          return Left(UnauthorizedFailure("Credenciais inválidas. Verifique seu email e senha"));
+          return Left(
+            UnauthorizedFailure(
+              "Credenciais inválidas. Verifique seu email e senha",
+            ),
+          );
         case 'too-many-requests':
-          return Left(UnauthorizedFailure("Bloqueamos seu dispositivo após muitas tentativas. Tente novamente mais tarde"));
+          return Left(
+            UnauthorizedFailure(
+              "Bloqueamos seu dispositivo após muitas tentativas. Tente novamente mais tarde",
+            ),
+          );
         case 'no-current-user':
-          return Left(UnauthorizedFailure("Nenhum usuário autenticado no momento"));
+          return Left(
+            UnauthorizedFailure("Nenhum usuário autenticado no momento"),
+          );
         default:
-          return Left(ServerFailure('Erro de autenticação: ${exception.message}'));
+          return Left(
+            ServerFailure('Erro de autenticação: ${exception.message}'),
+          );
+      }
+    }
+
+    if (exception is FirebaseFunctionsException) {
+      switch (exception.code) {
+        case 'not-found':
+          return Left(
+            NotFoundFailure(exception.message ?? 'Recurso não encontrado.'),
+          );
+        case 'permission-denied':
+        case 'unauthenticated':
+          return Left(
+            UnauthorizedFailure(
+              exception.message ??
+                  'Você não tem permissão para realizar esta ação.',
+            ),
+          );
+        case 'invalid-argument':
+          return Left(
+            BadRequestFailure(
+              exception.message ?? 'Dados inválidos para esta operação.',
+            ),
+          );
+        default:
+          return Left(
+            ServerFailure(
+              'Erro da Cloud Function: ${exception.code} - ${exception.message}',
+            ),
+          );
       }
     }
 
     switch (exception.runtimeType) {
       case FirebaseException _:
-        if( exception is FirebaseException){
+        if (exception is FirebaseException) {
           return Left(ServerFailure('Erro no Firestore: ${exception.message}'));
         }
-        
-        if( exception is FirebaseFunctionsException){
-          return Left(ServerFailure('Erro da Cloud Function: ${exception.code} - ${exception.message}'));
-        }
 
-        return Left(ServerFailure('Erro desconhecido no servidor: ${exception.toString()}'));
+        return Left(
+          ServerFailure(
+            'Erro desconhecido no servidor: ${exception.toString()}',
+          ),
+        );
 
       case SocketException _:
         return Left(NetworkFailure('Erro de conexão com a internet.'));
 
       case FormatException _:
-        return Left(BadRequestFailure('Formato inválido: ${exception.toString()}'));
+        return Left(
+          BadRequestFailure('Formato inválido: ${exception.toString()}'),
+        );
 
       case TimeoutException _:
         return Left(TimeoutFailure('Tempo de requisição excedido.'));
 
       case FileSystemException _:
-        return Left(CacheFailure('Erro de cache ou arquivo: ${exception.toString()}'));
-
+        return Left(
+          CacheFailure('Erro de cache ou arquivo: ${exception.toString()}'),
+        );
 
       default:
-        return Left(UnknownFailure(
-          'Ocorreu um erro inesperado ${exception.toString()}'
-          '${" | Contexto: $contextMessage"}'
-        ));
+        return Left(
+          UnknownFailure(
+            'Ocorreu um erro inesperado ${exception.toString()}'
+            '${" | Contexto: $contextMessage"}',
+          ),
+        );
     }
   }
-
 }
-
-

@@ -2,10 +2,10 @@ import '../errors/failure.dart';
 import 'package:flutter/material.dart';
 
 /// Gerenciador global de mensagens da aplicação
-/// 
+///
 /// Responsável por exibir mensagens de sucesso, erro e informação
 /// de forma padronizada usando SnackBar.
-/// 
+///
 /// Uso:
 /// ```dart
 /// MessageHandler.showSuccess(context, 'Operação realizada com sucesso!');
@@ -13,9 +13,8 @@ import 'package:flutter/material.dart';
 /// MessageHandler.showFailure(context, failure);
 /// ```
 class MessageHandler {
+  MessageHandler._();
 
-  MessageHandler ._();
-  
   /// Exibe uma mensagem de sucesso
   static void showSuccess(BuildContext context, String message) {
     _showSnackBar(
@@ -26,7 +25,7 @@ class MessageHandler {
     );
   }
 
-  static void clearSnackbar(BuildContext context){
+  static void clearSnackbar(BuildContext context) {
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
@@ -38,7 +37,6 @@ class MessageHandler {
 
   /// Exibe uma mensagem de erro
   static void showError(BuildContext context, String message) {
-
     _showSnackBar(
       context,
       message,
@@ -116,9 +114,8 @@ class MessageHandler {
     required IconData icon,
     Duration duration = const Duration(seconds: 3),
   }) {
-
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
-  
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
@@ -126,15 +123,12 @@ class MessageHandler {
             Icon(icon, color: Colors.white),
             const SizedBox(width: 12),
             Expanded(
-              child: Text(
-                message,
-                style: const TextStyle(color: Colors.white),
-              ),
+              child: Text(message, style: const TextStyle(color: Colors.white)),
             ),
           ],
         ),
         backgroundColor: backgroundColor,
-        behavior: SnackBarBehavior.floating,
+        behavior: SnackBarBehavior.fixed,
         duration: duration,
         action: SnackBarAction(
           label: 'OK',

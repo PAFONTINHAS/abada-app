@@ -11,15 +11,16 @@ import 'package:sistema_abada_capoeira/features/class/domain/entities/class_memb
 import 'package:sistema_abada_capoeira/features/class/data/models/class_member_entity_model.dart';
 import 'package:sistema_abada_capoeira/features/class/data/datasources/class_remote_datasource/class_remote_datasource.dart';
 
-class ClassRemoteDatasourceImpl implements ClassRemoteDatasource{
-
+class ClassRemoteDatasourceImpl implements ClassRemoteDatasource {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseFunctions _functions = FirebaseFunctions.instance;
 
   @override
-  Stream<List<ClassEntity>> getClassesForLocation(String locationId){
-
-    final stream = _firestore.collection('classes').where('locationId', isEqualTo: locationId).snapshots();
+  Stream<List<ClassEntity>> getClassesForLocation(String locationId) {
+    final stream = _firestore
+        .collection('classes')
+        .where('locationId', isEqualTo: locationId)
+        .snapshots();
 
     return stream.map((documentList) {
       return documentList.docs
@@ -29,54 +30,57 @@ class ClassRemoteDatasourceImpl implements ClassRemoteDatasource{
   }
 
   @override
-  Future<Either<Failure, ClassEntity>> createClass(ClassEntity classEntity) async{
-
-    try{
-
+  Future<Either<Failure, ClassEntity>> createClass(
+    ClassEntity classEntity,
+  ) async {
+    try {
       final model = ClassEntityModel.fromEntity(classEntity);
 
-      final documentReference = _firestore.collection(DBCollections.classesCollection).doc();
+      final documentReference = _firestore
+          .collection(DBCollections.classesCollection)
+          .doc();
 
       await documentReference.set(model.toMap());
 
       LoggingService.displayInfo(model.toMap());
 
       return Right(model.copyWith(classId: documentReference.id));
-
-    } catch(exception){
-
-      return ExceptionHandler.handleException(exception: exception, contextMessage: "createClass");
+    } catch (exception) {
+      return ExceptionHandler.handleException(
+        exception: exception,
+        contextMessage: "createClass",
+      );
     }
   }
 
   @override
-  Future<Either<Failure, ClassEntity>> updateClass(ClassEntity classEntity) async{
-
-    try{
-
+  Future<Either<Failure, ClassEntity>> updateClass(
+    ClassEntity classEntity,
+  ) async {
+    try {
       final model = ClassEntityModel.fromEntity(classEntity);
 
-      final documentReference = _firestore.collection(DBCollections.classesCollection).doc(model.classId);
+      final documentReference = _firestore
+          .collection(DBCollections.classesCollection)
+          .doc(model.classId);
 
       await documentReference.update(model.toMap());
 
       return Right(model);
-
-    } catch(exception){
-
-      return ExceptionHandler.handleException(exception: exception, contextMessage: "updateClass");
+    } catch (exception) {
+      return ExceptionHandler.handleException(
+        exception: exception,
+        contextMessage: "updateClass",
+      );
     }
   }
 
-
-
-
   @override
-  Future<Either<Failure, List<ClassEntity>>> getClassesByIdList(List<String> classesId) async{
-
-    try{
-
-      if(classesId.isEmpty) return Right([]);
+  Future<Either<Failure, List<ClassEntity>>> getClassesByIdList(
+    List<String> classesId,
+  ) async {
+    try {
+      if (classesId.isEmpty) return Right([]);
 
       final snapshots = await _firestore
           .collection('classes')
@@ -85,19 +89,23 @@ class ClassRemoteDatasourceImpl implements ClassRemoteDatasource{
 
       final List<ClassEntity> classes = [];
 
-      for(final classDocument in snapshots.docs){
+      for (final classDocument in snapshots.docs) {
+        ClassEntityModel classEntityModel = ClassEntityModel.fromSnapshot(
+          classDocument,
+        );
 
-        ClassEntityModel classEntityModel = ClassEntityModel.fromSnapshot(classDocument);
-
-        final membersSnapshots = await _firestore.collection('classes').doc(classDocument.id).collection("students").get();
+        final membersSnapshots = await _firestore
+            .collection('classes')
+            .doc(classDocument.id)
+            .collection("students")
+            .get();
 
         List<ClassMemberEntity> members = [];
 
-
-        for(final memberDocument in membersSnapshots.docs){
-          
-
-          final memberEntityModel = ClassMemberEntityModel.fromSnapshot(memberDocument);
+        for (final memberDocument in membersSnapshots.docs) {
+          final memberEntityModel = ClassMemberEntityModel.fromSnapshot(
+            memberDocument,
+          );
 
           members.add(memberEntityModel);
         }
@@ -107,53 +115,51 @@ class ClassRemoteDatasourceImpl implements ClassRemoteDatasource{
       }
 
       return Right(classes);
-
-    } catch(exception){
-      return ExceptionHandler.handleException(exception: exception, contextMessage: "getClassesByIdList");
+    } catch (exception) {
+      return ExceptionHandler.handleException(
+        exception: exception,
+        contextMessage: "getClassesByIdList",
+      );
     }
-  }  
+  }
 
   @override
-  Future<Either<Failure, void>> addStudentToClass(String studentId, String classId) async{
+  Future<Either<Failure, void>> addStudentToClass(
+    String studentId,
+    String classId,
+  ) async {
+    try {
+      final callable = _functions.httpsCallable(
+        "approveMemberRequestAndAddToClass",
+      );
 
-    try{
-
-      final callable = _functions.httpsCallable("approveMemberRequestAndAddToClass");
-
-      await callable.call({
-        'memberId': studentId,
-        'classId': classId
-      });
+      await callable.call({'memberId': studentId, 'classId': classId});
 
       return Right(null);
-
-    }catch(exception){
-
-      return ExceptionHandler.handleException(exception: exception, contextMessage: "addStudentToClass");
+    } catch (exception) {
+      return ExceptionHandler.handleException(
+        exception: exception,
+        contextMessage: "addStudentToClass",
+      );
     }
-
   }
- 
+
   @override
-  Future<Either<Failure, void>> removeStudentFromClass(String studentId, String classId) async{
-
-    try{
-
+  Future<Either<Failure, void>> removeStudentFromClass(
+    String studentId,
+    String classId,
+  ) async {
+    try {
       final callable = _functions.httpsCallable("removeMemberFromClass");
 
-      await callable.call({
-        'memberId': studentId,
-        'classId': classId
-      });
+      await callable.call({'memberId': studentId, 'classId': classId});
 
       return Right(null);
-
-    }catch(exception){
-
-      return ExceptionHandler.handleException(exception: exception, contextMessage: "addStudentToClass");
+    } catch (exception) {
+      return ExceptionHandler.handleException(
+        exception: exception,
+        contextMessage: "removeStudentFromClass",
+      );
     }
-
   }
-
-
 }

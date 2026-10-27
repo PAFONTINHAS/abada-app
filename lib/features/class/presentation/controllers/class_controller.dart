@@ -1,23 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:dartz/dartz.dart';
+import 'package:sistema_abada_capoeira/core/errors/failure.dart';
 import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/create_class_usecase.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/get_attended_classes_usecase.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/get_lectured_classes_usecase.dart';
+import 'package:sistema_abada_capoeira/features/class/domain/usecases/remove_student_from_class_usecase.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/update_class_usecase.dart';
 
-class ClassController extends ChangeNotifier{
-
+class ClassController extends ChangeNotifier {
   final UpdateClassUsecase _updateClassUsecase;
   final CreateClassUsecase _createClassUsecase;
   final GetAttendedClassesUsecase _getAttendedClassesUsecase;
   final GetLecturedClassesUsecase _getLecturedClassesUsecase;
+  final RemoveStudentFromClassUsecase _removeStudentFromClassUsecase;
 
   ClassController(
     this._createClassUsecase,
     this._updateClassUsecase,
     this._getAttendedClassesUsecase,
     this._getLecturedClassesUsecase,
+    this._removeStudentFromClassUsecase,
   );
 
   bool _isLoading = false;
@@ -32,8 +36,7 @@ class ClassController extends ChangeNotifier{
   List<ClassEntity> _lecturedClasses = [];
   List<ClassEntity> get lecturedClasses => _lecturedClasses;
 
-  Future<bool> createClassUsecase(ClassEntity classEntity) async{
-
+  Future<bool> createClassUsecase(ClassEntity classEntity) async {
     _isLoading = true;
     _errorMessage = null;
 
@@ -42,35 +45,34 @@ class ClassController extends ChangeNotifier{
     final result = await _createClassUsecase.call(classEntity);
 
     final success = result.fold(
-      (failure){
+      (failure) {
         _errorMessage = failure.message;
         return false;
-      }, (createdClass){
-
-        final List<ClassEntity> currentLecturedClasses = List.from(_lecturedClasses);
+      },
+      (createdClass) {
+        final List<ClassEntity> currentLecturedClasses = List.from(
+          _lecturedClasses,
+        );
 
         currentLecturedClasses.add(createdClass);
 
         _lecturedClasses = List.from(currentLecturedClasses);
 
-
         return true;
-      });
+      },
+    );
 
     _isLoading = false;
 
     notifyListeners();
 
-    for(final classEntity in _lecturedClasses){
-
-
+    for (final classEntity in _lecturedClasses) {
       LoggingService.displayInfo("Class: ${classEntity.toMap()} ");
     }
     return success;
   }
 
-  Future<bool> updateClassUsecase(ClassEntity classEntity) async{
-
+  Future<bool> updateClassUsecase(ClassEntity classEntity) async {
     _isLoading = true;
     _errorMessage = null;
 
@@ -79,21 +81,26 @@ class ClassController extends ChangeNotifier{
     final result = await _updateClassUsecase.call(classEntity);
 
     final success = result.fold(
-      (failure){
+      (failure) {
         _errorMessage = failure.message;
         return false;
-      }, (updatedClass){
+      },
+      (updatedClass) {
+        final List<ClassEntity> currentLecturedClasses = List.from(
+          _lecturedClasses,
+        );
 
-        final List<ClassEntity> currentLecturedClasses = List.from(_lecturedClasses);
+        currentLecturedClasses.removeWhere(
+          (classEntity) => classEntity.classId == updatedClass.classId,
+        );
 
-        currentLecturedClasses.removeWhere((classEntity) => classEntity.classId == updatedClass.classId);
-        
         currentLecturedClasses.add(updatedClass);
 
         _lecturedClasses = List.from(currentLecturedClasses);
 
         return true;
-      });
+      },
+    );
 
     _isLoading = false;
 
@@ -103,7 +110,6 @@ class ClassController extends ChangeNotifier{
   }
 
   Future<bool> getAttendedClasses(List<String> attendedClassesId) async {
-
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
@@ -111,16 +117,16 @@ class ClassController extends ChangeNotifier{
     final result = await _getAttendedClassesUsecase.call(attendedClassesId);
 
     final success = result.fold(
-      (failure){
+      (failure) {
         _errorMessage = failure.message;
         return false;
-      }, (fetchedAttendedClasses){
-
+      },
+      (fetchedAttendedClasses) {
         _attendedClasses = List.from(fetchedAttendedClasses);
 
         return true;
-        
-      });
+      },
+    );
 
     _isLoading = false;
     notifyListeners();
@@ -129,7 +135,6 @@ class ClassController extends ChangeNotifier{
   }
 
   Future<bool> getLecturedClasses(List<String> lecturedClassesId) async {
-
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
@@ -137,16 +142,17 @@ class ClassController extends ChangeNotifier{
     final result = await _getLecturedClassesUsecase.call(lecturedClassesId);
 
     final success = result.fold(
-      (failure){
+      (failure) {
         _errorMessage = failure.message;
         return false;
-      }, (fetchedLecturedClasses){
-
-        _lecturedClasses = List.from(_lecturedClasses)..addAll(fetchedLecturedClasses);
+      },
+      (fetchedLecturedClasses) {
+        _lecturedClasses = List.from(_lecturedClasses)
+          ..addAll(fetchedLecturedClasses);
 
         return true;
-        
-      });
+      },
+    );
 
     _isLoading = false;
     notifyListeners();
@@ -154,5 +160,51 @@ class ClassController extends ChangeNotifier{
     return success;
   }
 
+  Future<bool> removeStudentFromClass({
+    required String studentId,
+    required String classId,
+  }) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
 
+    final Either<Failure, void> result =
+        await _removeStudentFromClassUsecase.call(studentId, classId);
+
+    final success = result.fold(
+      (failure) {
+        _errorMessage = failure.message;
+        return false;
+      },
+      (_) {
+        _lecturedClasses = _lecturedClasses
+            .map(
+              (classEntity) => classEntity.classId == classId
+                  ? classEntity.copyWith(
+                      members: classEntity.members
+                          .where((member) => member.studentId != studentId)
+                          .toList(),
+                    )
+                  : classEntity,
+            )
+            .toList();
+        _attendedClasses = _attendedClasses
+            .map(
+              (classEntity) => classEntity.classId == classId
+                  ? classEntity.copyWith(
+                      members: classEntity.members
+                          .where((member) => member.studentId != studentId)
+                          .toList(),
+                    )
+                  : classEntity,
+            )
+            .toList();
+        return true;
+      },
+    );
+
+    _isLoading = false;
+    notifyListeners();
+    return success;
+  }
 }
