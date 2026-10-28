@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
+import 'package:sistema_abada_capoeira/core/utils/mask_formatter.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_products_item.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/section_detail_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_page_widgets/revision_phase_info_row_widget.dart';
@@ -16,13 +17,16 @@ class RevisionPhaseAditionalProductsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    bool isFree = eventValue == "0.00";
+
     return SectionDetailCardWidget(
       title: "Investimento & Produtos",
       icon: Icons.shopping_bag_outlined,
       children: [
         RevisionPhaseInfoRowWidget(
           label: "Valor da Inscrição",
-          value: eventValue,
+          value: isFree ? 'GRATUITO' : MaskFormatter.convertToReais(eventValue),
         ),
         const Divider(height: 20, color: ColorConstants.borderColor),
         const Text(
@@ -88,7 +92,10 @@ class RevisionPhaseAditionalProductsWidget extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      "R\$ ${product.price.toStringAsFixed(2).replaceAll('.', ',')}",
+
+                      MaskFormatter.convertToReais(
+                        MaskFormatter.convertMoneyDoubleToString(product.price),
+                      ),
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 13,

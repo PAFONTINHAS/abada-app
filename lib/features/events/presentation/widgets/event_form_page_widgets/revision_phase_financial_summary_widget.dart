@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
+import 'package:sistema_abada_capoeira/core/utils/mask_formatter.dart';
 
 class RevisionPhaseFinancialSummaryWidget extends StatelessWidget {
   const RevisionPhaseFinancialSummaryWidget({
@@ -11,6 +12,8 @@ class RevisionPhaseFinancialSummaryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isFree = totalEventValue == "0.00";
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
@@ -48,7 +51,7 @@ class RevisionPhaseFinancialSummaryWidget extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  totalEventValue,
+                  isFree ? 'GRATUITO' : MaskFormatter.convertToReais(totalEventValue),
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,

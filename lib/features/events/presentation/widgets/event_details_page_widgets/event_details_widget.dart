@@ -26,8 +26,6 @@ class EventDetailsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final eventValue = MaskFormatter.convertToReais(eventEntity.eventValue);
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
