@@ -4,15 +4,15 @@ import 'package:sistema_abada_capoeira/core/utils/mask_formatter.dart';
 import 'package:sistema_abada_capoeira/core/utils/date_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_type.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_products_item.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_controller.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_graduation_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/section_detail_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_products_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_graduation_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_page_widgets/revision_phase_info_row_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_page_widgets/revision_phase_aditional_products_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_page_widgets/revision_phase_financial_summary_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_page_widgets/revision_phase_general_event_info_widget.dart';
-import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 
 class EventFormRevisionPhaseWidget extends StatelessWidget {
   const EventFormRevisionPhaseWidget({super.key});
@@ -41,10 +41,6 @@ class EventFormRevisionPhaseWidget extends StatelessWidget {
     String totalEventStringValue = MaskFormatter.convertMoneyDoubleToString(
       totalEventDoubleValue,
     );
-
-    final String eventValue = formController.eventValue.text.isEmpty
-        ? "GRATUITO"
-        : formController.eventValue.text;
 
     final String initDateStr = DateController.formatDDMMYYYYHM(
       formController.eventInitDate,
@@ -117,7 +113,7 @@ class EventFormRevisionPhaseWidget extends StatelessWidget {
 
         // 5. Produtos Adicionais
         RevisionPhaseAditionalProductsWidget(
-          eventValue: eventValue,
+          eventValue: totalEventStringValue,
           products: products,
         ),
 

@@ -40,19 +40,20 @@ class EventCardWidget extends StatelessWidget {
   }
 
   Widget _buildFallbackImage() {
+
     return Container(
       height: 140,
       width: double.infinity,
       color: ColorConstants.indigoLight,
-      child: const Center(
-        child: Icon(Icons.event_available, size: 48, color: ColorConstants.indigoColor),
+      child: Center(
+        child: Image.asset('assets/images/generic_event_image.jpg')
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final bool isFree = event.eventValue.isEmpty || event.eventValue.toLowerCase() == 'gratuito';
+    final bool isFree = event.eventValue == "0.00" || event.eventValue.toLowerCase() == 'gratuito';
     final String priceText = isFree ? "GRATUITO" : MaskFormatter.convertToReais(event.eventValue);
 
     return Container(
