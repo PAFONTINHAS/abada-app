@@ -47,4 +47,9 @@ class ClassRepositoryImpl implements ClassRepository {
   Future<Either<Failure, void>> removeStudentFromClass(String studentId, String classId) async{
     return await remoteDatasource.removeStudentFromClass(studentId, classId);
   }
+
+  @override
+  Future<Either<Failure, void>> leaveClass(String classId) async {
+    return await remoteDatasource.leaveClass(classId);
+  }
 }

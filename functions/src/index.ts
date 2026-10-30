@@ -14,4 +14,5 @@ export {removeProfessorLecturedClasses}
 export {removeMemberFromClass}
   from "./removeMemberFromClass";
 
-
+export {leaveClass}
+  from "./leaveClass";

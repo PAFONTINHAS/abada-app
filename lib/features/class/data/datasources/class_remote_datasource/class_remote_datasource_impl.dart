@@ -162,4 +162,22 @@ class ClassRemoteDatasourceImpl implements ClassRemoteDatasource {
       );
     }
   }
+
+  @override
+  Future<Either<Failure, void>> leaveClass(
+    String classId,
+  ) async {
+    try {
+      final callable = _functions.httpsCallable("leaveClass");
+
+      await callable.call({'classId': classId});
+
+      return Right(null);
+    } catch (exception) {
+      return ExceptionHandler.handleException(
+        exception: exception,
+        contextMessage: "leaveClass",
+      );
+    }
+  }
 }
