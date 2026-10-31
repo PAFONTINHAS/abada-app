@@ -71,16 +71,28 @@ export const approveMemberRequestAndAddToClass = functions.https.onCall(
 
     let currentUserRole = "";
     try {
+      const displaySensitiveData = !!memberData.displaySensitiveData;
+
+      // Tratamento para evitar 'undefined' usando fallback para 'null'
+      const memberBelt = memberData.belt ?? null;
+      let memberName = memberData.fullName ?? null;
+      let memberNickname = memberData.nickname ?? null;
+
+      if (!displaySensitiveData) {
+        memberName = null;
+        memberNickname = null;
+      }
+
       const batch = db.batch();
 
       batch.set(studentInClassRef, {
-        belt: memberData.belt,
-        name: memberData.fullName,
-        nickname: memberData.nickname,
-        displaySensitiveData: true,
+        belt: memberBelt,
+        name: memberName,
+        nickname: memberNickname,
+        displaySensitiveData: displaySensitiveData,
       });
 
-      if (memberData.lecturedClasses.lenght !== 0) {
+      if (memberData.lecturedClasses.length !== 0) {
         currentUserRole = "professor";
       } else {
         currentUserRole = "student";
