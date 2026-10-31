@@ -13,7 +13,6 @@ class EventEntity {
     required this.eventName,
     required this.eventType,
     required this.eventValue,
-    required this.finishedEvent,
     required this.eventInitDate,
     required this.eventLocation,
     required this.eventCreatorId,
@@ -25,6 +24,7 @@ class EventEntity {
     this.selectedClassId,
     this.selectedMembersId,
     this.eventActive = false,
+    this.finishedEvent = false,
   });
 
   final String city;

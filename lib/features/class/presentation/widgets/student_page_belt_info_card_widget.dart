@@ -64,9 +64,9 @@ class StudentPageBeltInfoCardWidget extends StatelessWidget {
                             ),
                             const SizedBox(height: 2),
                             Text(
-                              'Corda $currentBelt',
+                              'CORDA $currentBelt',
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: 14,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
                               ),

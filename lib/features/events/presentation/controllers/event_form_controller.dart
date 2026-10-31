@@ -129,11 +129,10 @@ class EventFormController extends ChangeNotifier{
     final now = DateTime.now();
 
     return EventEntity(
-      city: place.city,
       eventId: '',
-      state: place.state,
+      city: place.city,
       products: products,
-      finishedEvent: false,
+      state: place.state,
       eventType: eventType,
       eventCreatorId: userId,
       latitude: place.latitude,

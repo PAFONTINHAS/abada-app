@@ -11,6 +11,12 @@ export {updateProfessorLecturedClasses}
 export {removeProfessorLecturedClasses}
   from "./removeProfessorLecturedClasses";
 
+export {finishEventsAndGraduateMembers}
+  from "./finishEventsAndGraduateMembers";
+
+export {updateMemberData}
+  from "./updateMemberData";
+
 export {removeMemberFromClass}
   from "./removeMemberFromClass";
 

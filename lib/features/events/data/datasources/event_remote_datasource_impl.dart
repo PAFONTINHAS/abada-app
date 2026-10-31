@@ -3,8 +3,9 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sistema_abada_capoeira/core/errors/failure.dart';
-import 'package:sistema_abada_capoeira/core/errors/exception_handler.dart';
 import 'package:sistema_abada_capoeira/core/services/image_service.dart';
+import 'package:sistema_abada_capoeira/core/errors/exception_handler.dart';
+import 'package:sistema_abada_capoeira/core/constants/database_constants.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/data/models/event_entity_model.dart';
 import 'package:sistema_abada_capoeira/features/events/data/datasources/event_remote_datasource.dart';
@@ -18,7 +19,7 @@ class EventRemoteDatasourceImpl implements EventRemoteDatasource{
   Future<Either<Failure, EventEntity>> getEventById(String eventId) async{
     try{
       
-      final DocumentSnapshot document = await _firestore.collection('events').doc(eventId).get();
+      final DocumentSnapshot document = await _firestore.collection(DBCollections.ongoingEventsCollection).doc(eventId).get();
 
       final entityModel = EventEntityModel.fromSnapshot(document);
 
@@ -34,7 +35,7 @@ class EventRemoteDatasourceImpl implements EventRemoteDatasource{
     try{
       
       final QuerySnapshot query = await _firestore
-          .collection('events')
+          .collection(DBCollections.ongoingEventsCollection)
           .where('eventActive', isEqualTo: true)
           .where('eventCreatorId', isEqualTo: userId)
           .get();
@@ -52,7 +53,7 @@ class EventRemoteDatasourceImpl implements EventRemoteDatasource{
   Future<Either<Failure, List<EventEntity>>> getEvents() async{
     try{
       final QuerySnapshot query = await _firestore
-          .collection('events')
+          .collection(DBCollections.ongoingEventsCollection)
           .where('eventActive', isEqualTo: true)
           .where('finishedEvent', isEqualTo: false)
           .get();
@@ -91,7 +92,7 @@ class EventRemoteDatasourceImpl implements EventRemoteDatasource{
 
       final entityModel = EventEntityModel.fromEntity(entity);
 
-      final docReference = _firestore.collection('events').doc();
+      final docReference = _firestore.collection(DBCollections.ongoingEventsCollection).doc();
       
       await docReference.set(entityModel.toMap());
 
@@ -108,7 +109,7 @@ class EventRemoteDatasourceImpl implements EventRemoteDatasource{
 
     try{
 
-      await _firestore.collection('events').doc(eventId).delete();
+      await _firestore.collection(DBCollections.ongoingEventsCollection).doc(eventId).delete();
 
       return Right(null);
 
