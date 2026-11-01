@@ -6,6 +6,7 @@ class GenericRequestUpdateParameters {
   final String changeReason;
   final DateTime? updatedAt;
   final GenericRequestStatus status;
+  final Map<String, dynamic> additionalData;
 
   const GenericRequestUpdateParameters({
     this.updatedAt,
@@ -13,5 +14,6 @@ class GenericRequestUpdateParameters {
     required this.requestId,
     this.rejectionReason = '',
     this.status = GenericRequestStatus.requested,
+    this.additionalData = const {},
   });
 }

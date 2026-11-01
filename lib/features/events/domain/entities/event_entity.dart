@@ -2,7 +2,6 @@ import 'package:sistema_abada_capoeira/features/events/domain/entities/event_pro
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_type.dart';
 
 class EventEntity {
-
   const EventEntity({
     required this.eventId,
     required this.products,
@@ -50,6 +49,7 @@ class EventEntity {
     EventType? eventType,
     String? eventLocation,
     String? eventImagePath,
+    bool clearEventImage = false,
     String? eventCreatorId,
     String? selectedClassId,
     DateTime? eventInitDate,
@@ -58,30 +58,26 @@ class EventEntity {
     String? eventCreatorNickname,
     Set<String>? selectedMembersId,
     List<EventProductItem>? products,
-  }){
-
+  }) {
     return EventEntity(
-      eventId:              eventId              ?? this.eventId,
-      products:             products             ?? this.products,
-      eventName:            eventName            ?? this.eventName,
-      eventType:            eventType            ?? this.eventType,
-      eventValue:           eventValue           ?? this.eventValue,
-      eventActive:          eventActive          ?? this.eventActive,
-      finishedEvent:        finishedEvent        ?? this.finishedEvent,
-      eventInitDate:        eventInitDate        ?? this.eventInitDate,
-      eventLocation:        eventLocation        ?? this.eventLocation,
-      eventImagePath:       eventImagePath       ?? this.eventImagePath,
-      eventCreatorId:       eventCreatorId       ?? this.eventCreatorId,
-      selectedClassId:      selectedClassId      ?? this.selectedClassId,
-      eventEndingDate:      eventEndingDate      ?? this.eventEndingDate,
-      eventDescription:     eventDescription     ?? this.eventDescription,
-      selectedMembersId:    selectedMembersId    ?? this.selectedMembersId,
+      eventId: eventId ?? this.eventId,
+      products: products ?? this.products,
+      eventName: eventName ?? this.eventName,
+      eventType: eventType ?? this.eventType,
+      eventValue: eventValue ?? this.eventValue,
+      eventActive: eventActive ?? this.eventActive,
+      finishedEvent: finishedEvent ?? this.finishedEvent,
+      eventInitDate: eventInitDate ?? this.eventInitDate,
+      eventLocation: eventLocation ?? this.eventLocation,
+      eventImagePath: clearEventImage
+          ? null
+          : eventImagePath ?? this.eventImagePath,
+      eventCreatorId: eventCreatorId ?? this.eventCreatorId,
+      selectedClassId: selectedClassId ?? this.selectedClassId,
+      eventEndingDate: eventEndingDate ?? this.eventEndingDate,
+      eventDescription: eventDescription ?? this.eventDescription,
+      selectedMembersId: selectedMembersId ?? this.selectedMembersId,
       eventCreatorNickname: eventCreatorNickname ?? this.eventCreatorNickname,
-      
     );
   }
-
-
-  
-
 }

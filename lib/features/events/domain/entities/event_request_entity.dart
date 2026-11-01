@@ -12,6 +12,9 @@ class EventRequestEntity extends GenericRequestCreationParameters {
     required this.eventName,
     required this.initDate,
     required this.requesterNickname,
+    this.decidedBy,
+    this.decidedByName,
+    this.decidedAt,   
 
     super.status,
     super.updatedAt,
@@ -19,6 +22,9 @@ class EventRequestEntity extends GenericRequestCreationParameters {
     super.rejectionReason,
   });
 
+  final String? decidedBy;
+  final String? decidedByName;
+  final DateTime? decidedAt;
   final String requesterId;
   final String requesterNickname;
   final String eventId;
@@ -40,6 +46,9 @@ class EventRequestEntity extends GenericRequestCreationParameters {
       'changeReason': changeReason,
       'rejectionReason': rejectionReason,
       'requesterNickname': requesterNickname,
+      'decidedBy': decidedBy,
+      'decidedByName': decidedByName,
+      'decidedAt': decidedAt,
     };
   }
 
@@ -57,6 +66,9 @@ class EventRequestEntity extends GenericRequestCreationParameters {
     final String? eventName,
     final DateTime? initDate,
     final DateTime? endingDate,
+    String? decidedBy,
+    String? decidedByName,
+    DateTime? decidedAt,
   }){
     return EventRequestEntity(
       status: status ?? this.status,
@@ -71,6 +83,9 @@ class EventRequestEntity extends GenericRequestCreationParameters {
       changeReason: changeReason ?? this.changeReason,
       rejectionReason: rejectionReason ?? this.rejectionReason,
       requesterNickname: requesterNickname ?? this.requesterNickname,
+      decidedBy: decidedBy ?? this.decidedBy,
+      decidedByName: decidedByName ?? this.decidedByName,
+      decidedAt: decidedAt ?? this.decidedAt,
     );
   }
 

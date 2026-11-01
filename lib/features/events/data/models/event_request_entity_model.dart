@@ -9,6 +9,9 @@ class EventRequestEntityModel extends EventRequestEntity {
     super.updatedAt,
     super.changeReason,
     super.rejectionReason,
+    super.decidedBy,
+    super.decidedByName,
+    super.decidedAt,
 
     required super.requestId,
     required super.eventId,
@@ -20,17 +23,18 @@ class EventRequestEntityModel extends EventRequestEntity {
     required super.requesterNickname,
   });
 
-  factory EventRequestEntityModel.fromSnapshot(DocumentSnapshot doc){
+  factory EventRequestEntityModel.fromSnapshot(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
 
-    final data = doc.data() as Map<String,dynamic>;
-
-    final requestedAt = DateController.toDate(data['requestedAt']) ?? DateTime.now();
+    final requestedAt =
+        DateController.toDate(data['requestedAt']) ?? DateTime.now();
     final updatedAt = DateController.toDate(data['updatedAt']);
     final initDate = DateController.toDate(data['initDate']) ?? DateTime.now();
-    final endingDate = DateController.toDate(data['endingDate']) ?? DateTime.now();
+    final endingDate =
+        DateController.toDate(data['endingDate']) ?? DateTime.now();
 
-
-    final GenericRequestStatus status = GenericRequestStatusExtension.fromString(data['status']);
+    final GenericRequestStatus status =
+        GenericRequestStatusExtension.fromString(data['status']);
 
     return EventRequestEntityModel(
       status: status,
@@ -45,8 +49,9 @@ class EventRequestEntityModel extends EventRequestEntity {
       changeReason: data['changeReason'],
       rejectionReason: data['rejectionReason'],
       requesterNickname: data['requesterNickname'],
-
+      decidedBy: data['decidedBy'] as String?,
+      decidedByName: data['decidedByName'] as String?,
+      decidedAt: DateController.toDate(data['decidedAt']),
     );
   }
-
 }

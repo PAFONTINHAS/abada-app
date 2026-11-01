@@ -58,8 +58,10 @@ class EventEntityModel extends EventEntity{
       eventDescription: data['eventDescription'],
       eventEndingDate: endingDate ?? DateTime.now(),
       eventCreatorNickname: data['eventCreatorNickname'],
-      selectedMembersId: Set<String>.from(data['selectedMembersId']),
-    );
+      selectedMembersId: data['selectedMembersId'] != null
+        ? Set<String>.from(data['selectedMembersId'])
+        : null,
+        );
   }
 
 
@@ -100,7 +102,7 @@ class EventEntityModel extends EventEntity{
       'eventEndingDate': eventEndingDate,
       'selectedClassId': selectedClassId,
       'eventDescription': eventDescription,
-      'selectedMembersId': selectedMembersId,
+      'selectedMembersId': selectedMembersId?.toList(),
       'eventCreatorNickname': eventCreatorNickname,
     };
   }
