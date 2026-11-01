@@ -6,8 +6,10 @@ import 'package:sistema_abada_capoeira/features/class/domain/usecases/update_cla
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/create_class_usecase.dart';
 import 'package:sistema_abada_capoeira/features/class/data/repository/class_repository_impl.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_controller.dart';
+import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_migration_controller.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/get_attended_classes_usecase.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/get_lectured_classes_usecase.dart';
+import 'package:sistema_abada_capoeira/features/class/domain/usecases/remove_student_from_class_usecase.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/schedule_controller.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_form_controller.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/get_classes_for_location_usecase.dart';
@@ -17,35 +19,48 @@ import 'package:sistema_abada_capoeira/features/class/data/datasources/class_rem
 import 'package:sistema_abada_capoeira/features/class/data/datasources/class_remote_datasource/class_remote_datasource_impl.dart';
 
 class ClassProviders {
-
   ClassProviders._();
 
-  static final ClassRemoteDatasource classRemoteDatasource = ClassRemoteDatasourceImpl();
-  static final ClassRepository classRepository = ClassRepositoryImpl(classRemoteDatasource);
+  static final ClassRemoteDatasource classRemoteDatasource =
+      ClassRemoteDatasourceImpl();
+  static final ClassRepository classRepository = ClassRepositoryImpl(
+    classRemoteDatasource,
+  );
 
-  static final CreateClassUsecase createClassUsecase = CreateClassUsecase(classRepository);
-  static final UpdateClassUsecase updateClassUsecase = UpdateClassUsecase(classRepository);
-  static final GetAttendedClassesUsecase getAttendedClassesUsecase = GetAttendedClassesUsecase(classRepository);
-  static final GetLecturedClassesUsecase getLecturedClassesUsecase = GetLecturedClassesUsecase(classRepository);
-  static final GetClassesForLocationUsecase getClassesForLocationUsecase = GetClassesForLocationUsecase(classRepository);
-  static final CreateClassMigrationRequestUsecase migrateClassUsecase = CreateClassMigrationRequestUsecase(classRepository, MembershipValidationProviders.repository);
-  
+  static final CreateClassUsecase createClassUsecase = CreateClassUsecase(
+    classRepository,
+  );
+  static final UpdateClassUsecase updateClassUsecase = UpdateClassUsecase(
+    classRepository,
+  );
+  static final GetAttendedClassesUsecase getAttendedClassesUsecase =
+      GetAttendedClassesUsecase(classRepository);
+  static final GetLecturedClassesUsecase getLecturedClassesUsecase =
+      GetLecturedClassesUsecase(classRepository);
+  static final RemoveStudentFromClassUsecase removeStudentFromClassUsecase =
+      RemoveStudentFromClassUsecase(classRepository);
+  static final GetClassesForLocationUsecase getClassesForLocationUsecase =
+      GetClassesForLocationUsecase(classRepository);
+  static final CreateClassMigrationRequestUsecase migrateClassUsecase =
+      CreateClassMigrationRequestUsecase(
+        classRepository,
+        MembershipValidationProviders.repository,
+      );
 
   static final List<SingleChildWidget> providers = [
-
     ChangeNotifierProvider(
       create: (_) => ClassController(
         createClassUsecase,
         updateClassUsecase,
         getAttendedClassesUsecase,
         getLecturedClassesUsecase,
+        removeStudentFromClassUsecase,
       ),
     ),
     ChangeNotifierProvider(create: (_) => ClassFormController()),
     ChangeNotifierProvider(create: (_) => ScheduleController()),
-    ChangeNotifierProvider(create: (_) => ClassMigrationController(migrateClassUsecase))
-
-
+    ChangeNotifierProvider(
+      create: (_) => ClassMigrationController(migrateClassUsecase),
+    ),
   ];
-
 }
