@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
+import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/member_graduation_tile.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/section_detail_card_widget.dart';
@@ -17,7 +18,7 @@ Widget build(BuildContext context) {
 
   final classes = classController.lecturedClasses;
 
-  debugPrint('Turmas disponíveis: ${classes.length}');
+  LoggingService.displayInfo('Turmas disponíveis: ${classes.length}');
 
   final selectedClass = graduationController.selectedClass;
   final selectedIds = graduationController.selectedMemberIds;

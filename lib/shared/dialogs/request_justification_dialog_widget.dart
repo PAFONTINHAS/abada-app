@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
 import 'package:sistema_abada_capoeira/shared/inputs/custom_text_input/custom_text_input.dart';
 import 'request_dialog_widget.dart';
@@ -57,8 +58,7 @@ class _RequestJustificationDialogWidgetState
         Navigator.of(context).pop(true);
       }
     } catch (error, stackTrace) {
-      debugPrint('Justification action failed: $error');
-      debugPrintStack(stackTrace: stackTrace);
+      LoggingService.displayError('Justification action failed', error: error, stack: stackTrace);
 
       if (!mounted) return;
 

@@ -1,6 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sistema_abada_capoeira/features/auth/domain/usecases/logout_user_usecase.dart';
 import 'package:sistema_abada_capoeira/features/auth/domain/usecases/delete_user_usecase.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/models/auth_status.dart';

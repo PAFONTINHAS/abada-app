@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sistema_abada_capoeira/core/errors/failure.dart';
-import 'package:sistema_abada_capoeira/features/auth/domain/entities/user_entity.dart';
+import 'package:sistema_abada_capoeira/features/auth/domain/entities/user_registration_entity.dart';
 import 'package:sistema_abada_capoeira/features/auth/domain/entities/user_login_params.dart';
 import 'package:sistema_abada_capoeira/features/auth/domain/repository/auth_repository.dart';
 import 'package:sistema_abada_capoeira/features/auth/domain/entities/user_credential_params.dart';
@@ -13,7 +13,7 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl(this.authRemoteDatasource);
 
   @override
-  Future<Either<Failure, UserEntity>> registerUser(UserEntity user) async {
+  Future<Either<Failure, UserRegistrationEntity>> registerUser(UserRegistrationEntity user) async {
     return await authRemoteDatasource.registerUser(user);
   }
 
@@ -24,11 +24,6 @@ class AuthRepositoryImpl implements AuthRepository {
     return await authRemoteDatasource.createUserCredential(
       userCredentialParams,
     );
-  }
-
-  @override
-  Future<Either<Failure, UserEntity>> getUserDataByUserId(String userId) async {
-    return await authRemoteDatasource.getUserDataByUserId(userId);
   }
 
   @override

@@ -1,11 +1,10 @@
 import 'package:flutter/foundation.dart';
-import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
-
 import '../../domain/entities/membership_request.dart';
-import '../../domain/usecases/approve_membership_request_usecase.dart';
-import '../../domain/usecases/get_professor_membership_requests_usecase.dart';
 import '../../domain/usecases/reject_membership_request_usecase.dart';
 import '../../domain/usecases/request_membership_changes_usecase.dart';
+import '../../domain/usecases/approve_membership_request_usecase.dart';
+import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
+import '../../domain/usecases/get_professor_membership_requests_usecase.dart';
 
 class MembershipValidationController extends ChangeNotifier {
   final GetProfessorMembershipRequestsUseCase getProfessorRequestsUsecase;
@@ -103,7 +102,18 @@ class MembershipValidationController extends ChangeNotifier {
       return result.fold((failure) {
         actionErrorMessage = failure.message;
         return false;
-      }, (_) => true);
+      }, (_){
+
+        final updatedRequests = List.from(requests);
+
+        updatedRequests.remove((currentRequest) => currentRequest == request.id);
+
+        requests = List.from(updatedRequests);
+
+        notifyListeners();
+
+        return true;
+      });
     });
   }
 
