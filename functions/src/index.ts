@@ -20,4 +20,5 @@ export {updateMemberData}
 export {removeMemberFromClass}
   from "./removeMemberFromClass";
 
-
+export {leaveClass}
+  from "./leaveClass";

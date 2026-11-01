@@ -33,8 +33,7 @@ class CreateClassMigrationRequestUsecase extends StandardClassUsecase{
 
     return sendRequest.fold((failure) => Left(failure), (_) async{
 
-      return await classRepository.removeStudentFromClass(
-        migrationRequest.memberId,
+      return await classRepository.leaveClass(
         migrationRequest.currentClassId,
       );
     });
