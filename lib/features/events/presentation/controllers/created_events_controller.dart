@@ -16,6 +16,11 @@ class CreatedEventsController extends ChangeNotifier {
     this._getUserEventsUsecase,
     this._getEventByIdUsecase,
   );
+  
+  void cleanController(){
+    _eventRequests.clear();
+    _userEvents.clear();
+  }
 
   List<EventRequestEntity> _eventRequests = [];
   List<EventRequestEntity> get eventRequests => _eventRequests;

@@ -30,6 +30,7 @@ class ProfileController extends ChangeNotifier {
 
   String? errorMessage;
 
+
   Future<void> getUserProfile(String userId) async {
     status = ProfileLoadStatus.loading;
     notifyListeners();

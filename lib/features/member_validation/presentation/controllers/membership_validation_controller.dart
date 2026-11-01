@@ -29,6 +29,11 @@ class MembershipValidationController extends ChangeNotifier {
   int _loadVersion = 0;
   final Set<String> _processingRequestIds = {};
 
+  void cleanController(){
+    _disposed = false;
+    _loadVersion = 0;
+    _processingRequestIds.clear();
+  }
   bool isProcessingRequest(String requestId) {
     return _processingRequestIds.contains(requestId);
   }

@@ -14,6 +14,15 @@ class AuthController extends ChangeNotifier {
     _auth.authStateChanges().listen(_onAuthStateChanged);
   }
   
+  void cleanController(){
+    _user = null;
+    _userRole = UserRole.unknown;
+    _status = AuthStatus.initializing;
+    _isLoading = false;
+    _isRegistering = false;
+    _isSigningIn = false;
+  }
+
   User? _user;
   User? get user => _user;
 

@@ -53,6 +53,22 @@ class StudentClassSelectionController extends ChangeNotifier {
   bool _isLoadingClasses = false;
   bool get isLoadingClasses => _isLoadingClasses;
 
+  void cleanController(){
+
+    _searchRadiusKm = 10;
+    _selectedLocationId = null;
+    _locations.clear();
+    _classesForLocation.clear();
+    _classRequestEntryEntity = null;
+    _nearbyLocationsStream = null;
+    _locationStreamSubscription?.cancel();
+    _classesForLocationSubscription?.cancel();
+    locationIdController.clear();
+    professorIdController.clear();
+    classNameController.clear();
+    _classesStream = null;
+  }
+
   void setLocationIdController (String value){
 
     locationIdController.text = value;

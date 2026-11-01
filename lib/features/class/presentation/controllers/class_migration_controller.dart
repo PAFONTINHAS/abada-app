@@ -14,6 +14,10 @@ class ClassMigrationController extends ChangeNotifier{
 
   TextEditingController migrationReason = TextEditingController();
 
+  void cleanController(){
+    migrationReason.clear();
+  }
+
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 

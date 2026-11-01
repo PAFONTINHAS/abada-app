@@ -129,8 +129,8 @@ class _CreateOrEditClassPageState extends State<CreateOrEditClassPage> {
                 if(classEntity == null) return;
                 
                 final success = !isEditing
-                    ? await classController.createClassUsecase(classEntity)
-                    : await classController.updateClassUsecase(classEntity);
+                    ? await classController.createClass(classEntity)
+                    : await classController.updateClass(classEntity);
 
                 if(!context.mounted) return;
 

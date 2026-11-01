@@ -19,6 +19,10 @@ class FeeExemptionDocumentsController extends ChangeNotifier {
   bool isLoading = false;
   String? errorMessage;
 
+  void cleanController(){
+    documents.clear();
+  }
+
   // Busca e carrega todas as versões de PDFs vinculadas a uma solicitação
   Future<bool> getLoadDocuments(String feeExemptionId) async {
     isLoading = true;

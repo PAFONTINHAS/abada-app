@@ -1,13 +1,11 @@
-import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
-
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/core/utils/mask_formatter.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_type.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_products_item.dart';
+import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/create_event_request_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/resubmit_event_request_usecase.dart';
 
@@ -27,12 +25,13 @@ class EventFormController extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
 
   EventEntity? _originalEvent;
+  bool get isEditing => _originalEvent != null;
+  
   String? _requestId;
+  String? get requestId => _requestId;
+
   GenericRequestStatus? _savedStatus;
   GenericRequestStatus? get savedStatus => _savedStatus;
-
-  bool get isEditing => _originalEvent != null;
-  String? get requestId => _requestId;
 
   final TextEditingController eventName = TextEditingController();
   final TextEditingController eventValue = TextEditingController();
@@ -55,6 +54,7 @@ class EventFormController extends ChangeNotifier {
 
   File? _eventImage;
   File? get eventImage => _eventImage;
+
   String? get existingImageUrl => _originalEvent?.eventImagePath;
 
   DateTime? _eventInitDate;
@@ -62,6 +62,15 @@ class EventFormController extends ChangeNotifier {
 
   DateTime? _eventEndingDate;
   DateTime? get eventEndingDate => _eventEndingDate;
+
+  void cleanController(){
+    _originalEvent = null;
+    _requestId = null;
+    _savedStatus = null;
+    _eventInitDate = null;
+    _eventEndingDate = null;
+    _eventImage = null;
+  }
 
   /// Carrega os dados do evento existente para edição e reenvio.
   void loadEventForEditing({

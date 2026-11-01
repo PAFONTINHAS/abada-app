@@ -12,6 +12,7 @@ import 'package:sistema_abada_capoeira/features/profile/domain/usecases/update_i
 import 'package:sistema_abada_capoeira/features/profile/domain/usecases/upload_profile_photo_usecase.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/usecases/deactivate_account_usecase.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_form_controller.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/request_status_controller.dart';
 
 class ProfileProviders {
@@ -55,5 +56,6 @@ class ProfileProviders {
   static List<SingleChildWidget> providers = [
     ChangeNotifierProvider(create: (_) => profileController),
     ChangeNotifierProvider(create: (_) => requestStatusController),
+    ChangeNotifierProvider(create: (_) => ProfileFormController(profileController))
   ];
 }
