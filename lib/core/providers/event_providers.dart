@@ -17,6 +17,9 @@ import 'package:sistema_abada_capoeira/features/events/presentation/controllers/
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_products_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_phases_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_requests_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/usecases/reject_event_request_usecase.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/usecases/request_event_changes_usecase.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/usecases/resubmit_event_request_usecase.dart';
 
 class EventProviders {
 
@@ -30,15 +33,18 @@ class EventProviders {
   static GetEventByIdUsecase getEventByIdUsecase = GetEventByIdUsecase(eventRepository);
   static GetUserEventsUsecase getUserEventsUsecase = GetUserEventsUsecase(eventRepository);
   static CreateEventRequestUsecase createEventRequestUsecase = CreateEventRequestUsecase(eventRepository);
+  static final ResubmitEventRequestUsecase resubmitEventRequestUsecase =ResubmitEventRequestUsecase(eventRepository);
   static GetPendingEventsRequestsUsecase getPendingEventsRequestsUsecase = GetPendingEventsRequestsUsecase(eventRepository);
-
+  static final RejectEventRequestUsecase rejectEventRequestUsecase =RejectEventRequestUsecase(eventRepository);
+  static final RequestEventChangesUsecase requestEventChangesUsecase =RequestEventChangesUsecase(eventRepository);
+  
   static final List<SingleChildWidget> providers = [
     ChangeNotifierProvider(create: (_) => EventProductsController()),
     ChangeNotifierProvider(create: (_) => EventFormPhasesController()),
     ChangeNotifierProvider(create: (_) => EventGraduationController()),
     ChangeNotifierProvider(create: (_) => EventDetailsController(getEventByIdUsecase)),
-    ChangeNotifierProvider(create: (_) => CreatedEventsController(getUserEventsUsecase)),
-    ChangeNotifierProvider(create: (_) => EventFormController(createEventRequestUsecase)),
-    ChangeNotifierProvider(create: (_) => EventRequestsController(getPendingEventsRequestsUsecase))
-  ];
+    ChangeNotifierProvider(create: (_) => CreatedEventsController(getUserEventsUsecase, getEventByIdUsecase)),
+    ChangeNotifierProvider(create: (_) => EventFormController(createEventRequestUsecase,resubmitEventRequestUsecase,),),
+    ChangeNotifierProvider(create: (_) => EventRequestsController(getPendingEventsRequestsUsecase,rejectEventRequestUsecase,requestEventChangesUsecase,)),  
+    ];
 }

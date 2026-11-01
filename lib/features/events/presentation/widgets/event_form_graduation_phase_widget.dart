@@ -10,20 +10,23 @@ import 'package:sistema_abada_capoeira/features/events/presentation/widgets/grad
 class EventFormGraduationPhaseWidget extends StatelessWidget {
   const EventFormGraduationPhaseWidget({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    final graduationController = context.watch<EventGraduationController>();
-    final classController = context.watch<ClassController>();
+@override
+Widget build(BuildContext context) {
+  final graduationController = context.watch<EventGraduationController>();
+  final classController = context.watch<ClassController>();
 
-    final classes = classController.lecturedClasses;
-    final selectedClass = graduationController.selectedClass;
-    final selectedIds = graduationController.selectedMemberIds;
+  final classes = classController.lecturedClasses;
 
-    final bool allSelected = selectedClass != null &&
-        selectedClass.members.isNotEmpty &&
-        selectedIds.length == selectedClass.members.length;
+  debugPrint('Turmas disponíveis: ${classes.length}');
 
-    return Column(
+  final selectedClass = graduationController.selectedClass;
+  final selectedIds = graduationController.selectedMemberIds;
+
+  final bool allSelected = selectedClass != null &&
+      selectedClass.members.isNotEmpty &&
+      selectedIds.length == selectedClass.members.length;
+
+  return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Cartão 1: Seleção de Turma

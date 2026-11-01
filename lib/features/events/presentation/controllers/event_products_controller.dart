@@ -12,6 +12,27 @@ class EventProductsController extends ChangeNotifier{
   List<EventProductItem> _products = [];
   List<EventProductItem> get products => _products;  
 
+  void loadProducts(List<EventProductItem> products) {
+  _products = List<EventProductItem>.from(products);
+
+  nameController.clear();
+  priceController.clear();
+  _mandatoryProduct = false;
+
+  notifyListeners();
+}
+
+void reset() {
+  _products = [];
+
+  nameController.clear();
+  priceController.clear();
+
+  _mandatoryProduct = false;
+
+  notifyListeners();
+}
+
   @override
   void dispose() {
     nameController.dispose();

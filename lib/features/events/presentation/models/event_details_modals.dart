@@ -23,7 +23,7 @@ class EventDetailsModals {
     required String title,
     required String labelText,
     required Color buttonColor,
-    required Function(String reason) onSubmit,
+    required Future<bool> Function(String reason) onSubmit,
 
   }) async {
 

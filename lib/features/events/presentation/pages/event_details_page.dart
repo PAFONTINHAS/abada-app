@@ -13,10 +13,12 @@ class EventDetailsPage extends StatefulWidget {
     super.key,
     this.event,
     this.eventId,
+    this.requestId,
     this.analyseEventDetails = false,
   });
 
   final String? eventId;
+  final String? requestId;
   final EventEntity? event;
   final bool analyseEventDetails;
 
@@ -25,6 +27,7 @@ class EventDetailsPage extends StatefulWidget {
 }
 
 class _EventDetailsPageState extends State<EventDetailsPage> {
+  bool _initialized = false;
   final TextEditingController _reasonController = TextEditingController();
 
   @override
@@ -37,16 +40,22 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) return;
       final controller = context.read<EventDetailsController>();
 
       if (widget.eventId != null) {
-        controller.getEventById(widget.eventId!);
+        await controller.getEventById(
+          widget.eventId!,
+          requestId: widget.analyseEventDetails ? widget.requestId : null,
+        );
+        if (mounted) setState(() => _initialized = true);
         return;
       }
 
       if (widget.event != null) {
         controller.setEventEntity(widget.event!);
+        setState(() => _initialized = true);
         return;
       }
     });
@@ -78,7 +87,12 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
           ),
           body: StandardScaffoldBodyWidget(
             child: () {
-              if (controller.isLoading || eventEntity == null) {
+              if (_initialized && controller.errorMessage != null) {
+                return Center(child: Text(controller.errorMessage!));
+              }
+              if (!_initialized ||
+                  controller.isLoading ||
+                  eventEntity == null) {
                 return const Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -116,13 +130,19 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
           ),
 
           // --- BottomNavigationBar para as ações do Coordenador ---
-
-          // EAI ISA. PARA CONTINUAR A PARTE DE REJEIÇÃO DE SOLICITAÇÃO E SOLICITAÇÃO DE MUDANÇAS, SIGA ESSA WIDGET
           bottomNavigationBar:
               widget.analyseEventDetails &&
-                  !controller.isLoading &&
-                  eventEntity != null
-              ? EventDetailsNavigationBarWidget(controller: controller)
+                  widget.requestId != null &&
+                  _initialized &&
+                  eventEntity != null &&
+                  controller.canDecide(
+                    widget.requestId!,
+                    widget.eventId ?? widget.event?.eventId ?? '',
+                  )
+              ? EventDetailsNavigationBarWidget(
+                  controller: controller,
+                  requestId: widget.requestId!,
+                )
               : null,
         );
       },

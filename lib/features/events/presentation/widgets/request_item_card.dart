@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_policy.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_entity.dart';
@@ -7,17 +8,19 @@ class RequestItemCard extends StatelessWidget {
   final EventRequestEntity request;
   final VoidCallback onViewEventDetails;
   final VoidCallback onViewRequestDetails;
+  final VoidCallback? onEditRequest;
 
   const RequestItemCard({
     super.key,
     required this.request,
     required this.onViewEventDetails,
     required this.onViewRequestDetails,
+    this.onEditRequest,
   });
 
   bool get _hasRequestDetails {
     return request.status == GenericRequestStatus.rejected ||
-           request.status == GenericRequestStatus.changesRequested;
+        request.status == GenericRequestStatus.changesRequested;
   }
 
   Color _getStatusBackgroundColor(GenericRequestStatus status) {
@@ -83,7 +86,10 @@ class RequestItemCard extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: _getStatusBackgroundColor(request.status),
                   borderRadius: BorderRadius.circular(20),
@@ -102,14 +108,33 @@ class RequestItemCard extends StatelessWidget {
               ),
             ],
           ),
+          if (EventRequestPolicy.canEdit(request.status) &&
+              onEditRequest != null) ...[
+            const SizedBox(height: 8),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: onEditRequest,
+                icon: const Icon(Icons.edit_outlined),
+                label: const Text('Editar evento'),
+              ),
+            ),
+          ],
           const SizedBox(height: 12),
           Row(
             children: [
-              const Icon(Icons.calendar_today_outlined, size: 14, color: ColorConstants.textSecondary),
+              const Icon(
+                Icons.calendar_today_outlined,
+                size: 14,
+                color: ColorConstants.textSecondary,
+              ),
               const SizedBox(width: 6),
               Text(
                 "${request.initDate.day}/${request.initDate.month}/${request.initDate.year} - ${request.endingDate.day}/${request.endingDate.month}/${request.endingDate.year}",
-                style: const TextStyle(fontSize: 13, color: ColorConstants.textSecondary),
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: ColorConstants.textSecondary,
+                ),
               ),
             ],
           ),
@@ -130,7 +155,10 @@ class RequestItemCard extends StatelessWidget {
                     ),
                     child: const Text(
                       "Ver solicitação",
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),

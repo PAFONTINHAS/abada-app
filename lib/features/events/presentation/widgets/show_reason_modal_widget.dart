@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_requests_controller.dart';
 
-class ShowReasonModalWidget extends StatelessWidget {
+class ShowReasonModalWidget extends StatefulWidget {
   const ShowReasonModalWidget({
     super.key,
     required this.title,
@@ -15,12 +13,64 @@ class ShowReasonModalWidget extends StatelessWidget {
   final String title;
   final String labelText;
   final Color buttonColor;
-  final Function(String reason) onSubmit;
+  final Future<bool> Function(String reason) onSubmit;
+
+  @override
+  State<ShowReasonModalWidget> createState() => _ShowReasonModalWidgetState();
+}
+
+class _ShowReasonModalWidgetState extends State<ShowReasonModalWidget> {
+  final TextEditingController _reasonController = TextEditingController();
+
+  bool _isSubmitting = false;
+
+  @override
+  void dispose() {
+    _reasonController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submit() async {
+    final reason = _reasonController.text.trim();
+
+    if (reason.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Por favor, preencha a justificativa.')),
+      );
+      return;
+    }
+
+    if (_isSubmitting) return;
+
+    setState(() {
+      _isSubmitting = true;
+    });
+
+    try {
+      final success = await widget.onSubmit(reason);
+
+      if (!mounted) return;
+
+      if (success) {
+        Navigator.of(context).pop();
+      }
+    } catch (_) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Não foi possível concluir a operação.')),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSubmitting = false;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final controller = context.read<EventRequestsController>();
-
     return Padding(
       padding: EdgeInsets.only(
         left: 16,
@@ -33,19 +83,22 @@ class ShowReasonModalWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            title,
+            widget.title,
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
               color: ColorConstants.textPrimary,
             ),
           ),
+
           const SizedBox(height: 12),
+
           TextField(
-            controller: controller.reasonController,
+            controller: _reasonController,
             maxLines: 4,
+            enabled: !_isSubmitting,
             decoration: InputDecoration(
-              hintText: labelText,
+              hintText: widget.labelText,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
                 borderSide: const BorderSide(color: ColorConstants.borderColor),
@@ -54,35 +107,34 @@ class ShowReasonModalWidget extends StatelessWidget {
               fillColor: ColorConstants.backgroundColor,
             ),
           ),
+
           const SizedBox(height: 16),
+
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: buttonColor,
+                backgroundColor: widget.buttonColor,
                 foregroundColor: ColorConstants.whiteColor,
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              onPressed: () {
-                final reason = controller.reasonController.text.trim();
-                if (reason.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Por favor, preencha a justificativa."),
+              onPressed: _isSubmitting ? null : _submit,
+              child: _isSubmitting
+                  ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
+                  : const Text(
+                      'Confirmar e Enviar',
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                  );
-                  return;
-                }
-                Navigator.pop(context);
-                onSubmit(reason);
-              },
-              child: const Text(
-                "Confirmar e Enviar",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
             ),
           ),
         ],

@@ -1,16 +1,22 @@
+
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
+
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_entity.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_decision_parameters.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/get_pending_events_requests_usecase.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/usecases/reject_event_request_usecase.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/usecases/request_event_changes_usecase.dart';
 
-class EventRequestsController extends ChangeNotifier{
+class EventRequestsController extends ChangeNotifier {
+  final GetPendingEventsRequestsUsecase _getPendingUsecase;
+  final RejectEventRequestUsecase _rejectUsecase;
+  final RequestEventChangesUsecase _changesUsecase;
 
-  final GetPendingEventsRequestsUsecase _getPendingEventsRequestsUsecase;
-
-  EventRequestsController(this._getPendingEventsRequestsUsecase);
-
-  TextEditingController reasonController = TextEditingController();
+  EventRequestsController(
+    this._getPendingUsecase,
+    this._rejectUsecase,
+    this._changesUsecase,
+  );
 
   List<EventRequestEntity> _eventRequests = [];
   List<EventRequestEntity> get eventRequests => _eventRequests;
@@ -18,32 +24,91 @@ class EventRequestsController extends ChangeNotifier{
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
+  bool _isProcessing = false;
+  bool get isProcessing => _isProcessing;
+
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
 
-  Future<bool> getPendingRequests() async{
-    
+  String? _actionError;
+  String? get actionError => _actionError;
+
+  Future<bool> getPendingRequests() async {
     _isLoading = true;
+    _errorMessage = null;
     notifyListeners();
 
-    final result = await _getPendingEventsRequestsUsecase.call();
+    try {
+      final result = await _getPendingUsecase.call();
 
-    final bool success = result.fold((failure){
-      _errorMessage = failure.message;
+      return result.fold(
+        (failure) {
+          _errorMessage = failure.message;
+          return false;
+        },
+        (requests) {
+          _eventRequests = requests;
+          return true;
+        },
+      );
+    } catch (_) {
+      _errorMessage = 'Erro ao carregar solicitações.';
       return false;
-    }, (requests){
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 
-      LoggingService.displayInfo("Solicitações encontradas: ${requests.length}");
+  Future<bool> reject(
+    EventRequestDecisionParameters params,
+  ) {
+    return _execute(
+      () => _rejectUsecase.call(params),
+      params.requestId,
+    );
+  }
 
-      _eventRequests = requests;
+  Future<bool> requestChanges(
+    EventRequestDecisionParameters params,
+  ) {
+    return _execute(
+      () => _changesUsecase.call(params),
+      params.requestId,
+    );
+  }
 
-      return true;
-    });
+  Future<bool> _execute(
+    Future<dynamic> Function() action,
+    String requestId,
+  ) async {
+    if (_isProcessing) return false;
 
-
-    _isLoading = false;
+    _isProcessing = true;
+    _actionError = null;
     notifyListeners();
 
-    return success;
+    try {
+      final result = await action();
+
+      return result.fold(
+        (failure) {
+          _actionError = failure.message;
+          return false;
+        },
+        (_) {
+          _eventRequests.removeWhere(
+            (request) => request.requestId == requestId,
+          );
+          return true;
+        },
+      );
+    } catch (_) {
+      _actionError = 'Não foi possível concluir a operação.';
+      return false;
+    } finally {
+      _isProcessing = false;
+      notifyListeners();
+    }
   }
 }
