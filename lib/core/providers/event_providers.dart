@@ -1,5 +1,6 @@
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/usecases/get_event_subscriptions_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/get_events_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/repository/event_repository.dart';
 import 'package:sistema_abada_capoeira/features/events/data/repository/event_repository_impl.dart';
@@ -7,6 +8,7 @@ import 'package:sistema_abada_capoeira/features/events/domain/usecases/get_user_
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/get_event_by_id_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/data/datasources/event_remote_datasource.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/subscribe_to_event_usecase.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_subscription_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/events_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/create_event_request_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/data/datasources/event_remote_datasource_impl.dart';
@@ -18,7 +20,7 @@ import 'package:sistema_abada_capoeira/features/events/presentation/controllers/
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/get_pending_events_requests_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_phases_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/data/datasources/event_requests_remote_datasource_impl.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_subscription_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_details_subscription_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_products_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_graduation_controller.dart';
 
@@ -36,6 +38,7 @@ class EventProviders {
   static GetUserEventsUsecase getUserEventsUsecase = GetUserEventsUsecase(eventRepository);
   static SubscribeToEventUsecase subscribeToEventUsecase = SubscribeToEventUsecase(eventRepository);
   static CreateEventRequestUsecase createEventRequestUsecase = CreateEventRequestUsecase(eventRepository);
+  static GetEventSubscriptionsUsecase getEventSubscriptionsUsecase = GetEventSubscriptionsUsecase(eventRepository);
   static GetPendingEventsRequestsUsecase getPendingEventsRequestsUsecase = GetPendingEventsRequestsUsecase(eventRepository);
 
   static final List<SingleChildWidget> providers = [
@@ -46,7 +49,8 @@ class EventProviders {
     ChangeNotifierProvider(create: (_) => EventDetailsController(getEventByIdUsecase)),
     ChangeNotifierProvider(create: (_) => CreatedEventsController(getUserEventsUsecase)),
     ChangeNotifierProvider(create: (_) => EventFormController(createEventRequestUsecase)),
-    ChangeNotifierProvider(create: (_) => EventSubscriptionController(subscribeToEventUsecase)),
+    ChangeNotifierProvider(create: (_) => EventSubscriptionController(getEventSubscriptionsUsecase)),
+    ChangeNotifierProvider(create: (_) => EventDetailsSubscriptionController(subscribeToEventUsecase)),
     ChangeNotifierProvider(create: (_) => EventRequestsController(getPendingEventsRequestsUsecase)),
   ];
 }

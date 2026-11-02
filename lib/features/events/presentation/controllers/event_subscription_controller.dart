@@ -1,135 +1,44 @@
-
 import 'package:flutter/material.dart';
-import 'package:sistema_abada_capoeira/core/utils/generator.dart';
-import 'package:sistema_abada_capoeira/core/utils/mask_formatter.dart';
-import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
-import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/models/payment_method.dart';
-import 'package:sistema_abada_capoeira/features/events/domain/entities/event_products_item.dart';
-import 'package:sistema_abada_capoeira/features/events/domain/entities/selected_event_products.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
-import 'package:sistema_abada_capoeira/features/events/domain/usecases/subscribe_to_event_usecase.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/usecases/get_event_subscriptions_usecase.dart';
 
 class EventSubscriptionController extends ChangeNotifier{
 
-  final SubscribeToEventUsecase _subscribeToEventUsecase;
+  final GetEventSubscriptionsUsecase _getEventSubscriptionsUsecase;
 
-  EventSubscriptionController(this._subscribeToEventUsecase);
+  EventSubscriptionController(this._getEventSubscriptionsUsecase);
 
-  PaymentMethod _paymentMethod = PaymentMethod.pix;
-  PaymentMethod get paymentMethod => _paymentMethod;
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
 
-  bool _isProcessing = false;
-  bool get isProcessing => _isProcessing;
-
-  EventEntity? _currentEvent;
-  EventEntity? get currentEvent => _currentEvent; 
-
-  void setPaymentMethod(PaymentMethod method){
-    _paymentMethod = method;
-    notifyListeners();
-  }
-
-  Set<EventProductItem> _selectedOptionalProducts = {};
-  Set<EventProductItem> get selectedOptionalProducts => _selectedOptionalProducts;
-
-  double get totalAmount{
-
-    if(_currentEvent == null) return 0.0;
-
-    double total = MaskFormatter.convertMoneyStringToDouble(_currentEvent!.eventValue);
-
-    for (final product in _currentEvent!.products) {
-      if (!product.mandatory && _selectedOptionalProducts.contains(product)){
-        total += product.price;
-      }
-    }
-
-    return total;
-
-  }
-
-  void setEvent(EventEntity event){
-
-    _currentEvent = event;
-    notifyListeners();
-  }
-
-  void addOptionalProduct(EventProductItem product){
-    final currentProducts = Set<EventProductItem>.from(_selectedOptionalProducts);
-
-    currentProducts.add(product);
-
-    _selectedOptionalProducts = currentProducts;
-
-    notifyListeners();
-
-  }
-
-  void removeOptionalProduct(EventProductItem product){
-
-    final currentProducts = Set<EventProductItem>.from(_selectedOptionalProducts);
-
-    currentProducts.remove(product);
-
-    _selectedOptionalProducts = currentProducts;
-
-    notifyListeners();
-  }
-
+  String? _errorMessage;
+  String? get errorMessage => _errorMessage;
   
+  List<EventSubscriptionEntity> _subscriptions = [];
+  List<EventSubscriptionEntity> get subscriptions => _subscriptions;
 
-  
-  Future<bool> processPayment(String userId) async {
+  Future<bool> getEventSubscriptions(String userId) async{
 
-    _isProcessing = true;
+    _isLoading = true;
+    _errorMessage = null;
     notifyListeners();
 
-    if(_currentEvent == null) return false;
+    final result = await _getEventSubscriptionsUsecase.call(userId);
 
-    String eventReceipt = Generator.generateVerificationCode(userId, _currentEvent!.eventId);
+    final success = result.fold((failure){
+      _errorMessage = failure.message;
+      return false;
+    }, (fetchedSubscriptions){
 
+      _subscriptions = List<EventSubscriptionEntity>.from(fetchedSubscriptions);
 
-    final double totalAmount = this.totalAmount;
+      return true;
+    });
 
-    final Set<SelectedEventProduct> selectedEventProducts =
-      _selectedOptionalProducts.map(
-        (product) => SelectedEventProduct(
-          product: product.product,
-          price: product.price,
-        ),
-      )
-      .toSet();
+    _isLoading = false;
 
-    final subscription = EventSubscriptionEntity(
-      id: '',
-      userId: userId,
-      totalValue: totalAmount,
-      verificationCode: eventReceipt,
-      eventId: _currentEvent!.eventId,
-      paymentMethod: _paymentMethod.name,
-      status: SubscriptionStatus.subscribed,
-      selectedProducts: selectedEventProducts,
-      createdAt: DateTime.now(),
-    );
-   
-
-    final success = await subscribeToEvent(subscription);
-   
-    _isProcessing = false;
     notifyListeners();
 
     return success;
   }
-
-  Future<bool> subscribeToEvent(EventSubscriptionEntity entity) async{
-
-    final result = await _subscribeToEventUsecase.call(entity);
-
-    return result.fold((failiure)=> false, (_) => true); 
-  }
-  
-
-  
-
 }

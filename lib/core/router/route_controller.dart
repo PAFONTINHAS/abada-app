@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
 
 class RouteController {
 
@@ -71,5 +72,12 @@ class RouteController {
 
   static void redirectToPendingEventDetailsPage({required BuildContext context}){
     context.push('/events/event_requests');
+  }
+
+  static void redirectToEventReceiptPage({required BuildContext context, required EventEntity event, required EventSubscriptionEntity subscription}){
+    context.push('/events/event_details/subscription_receipt', extra: {
+      'event': event,
+      'subscription': subscription
+    });
   }
 }

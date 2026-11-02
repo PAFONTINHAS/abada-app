@@ -1,1 +1,0 @@
-enum PaymentMethod { pix, creditCard }

@@ -1,7 +1,7 @@
-import 'package:sistema_abada_capoeira/features/events/domain/entities/event_products_item.dart';
-import 'package:sistema_abada_capoeira/features/events/domain/entities/selected_event_products.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/selected_event_product.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/subscription_status.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/payment_method.dart';
 
-enum SubscriptionStatus { subscribed, confirmed, canceled }
 
 class EventSubscriptionEntity {
   final String id;
@@ -10,22 +10,22 @@ class EventSubscriptionEntity {
   final String? classId;
   final double totalValue;
   final DateTime createdAt;
-  final String paymentMethod;
+  final PaymentMethod paymentMethod;
   final String verificationCode;
   final SubscriptionStatus status;
   final Set<SelectedEventProduct> selectedProducts;
 
   const EventSubscriptionEntity({
-    required this.id,
-    required this.eventId,
-    required this.userId,
     this.classId,
-    required this.totalValue,
-    required this.selectedProducts,
-    required this.paymentMethod,
-    required this.verificationCode,
-    required this.status,
+    required this.id,
+    required this.userId,
+    required this.eventId,
     required this.createdAt,
+    required this.totalValue,
+    required this.paymentMethod,
+    required this.selectedProducts,
+    required this.verificationCode,
+    this.status = SubscriptionStatus.subscribed,
   });
 
   Map<String, dynamic> toMap() {
@@ -50,9 +50,9 @@ class EventSubscriptionEntity {
     String? classId,
     double? totalValue,
     DateTime? createdAt,
-    String? paymentMethod,
     String? verificationCode,
     SubscriptionStatus? status,
+    PaymentMethod? paymentMethod,
     Set<SelectedEventProduct>? selectedProducts,
   }){
 

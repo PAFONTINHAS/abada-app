@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:collection/collection.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_subscription_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/events_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
@@ -15,6 +18,9 @@ class EventsCalendarViewWidget extends StatelessWidget {
     final controller = context.read<ProfileController>();
 
     final user = controller.userProfile;
+
+    final subscriptionController = context.read<EventSubscriptionController>();
+    final subscriptions = subscriptionController.subscriptions;
 
     return Selector<EventsController, List<EventEntity>>(
       selector: (_, controller) => controller.filteredEvents,
@@ -60,15 +66,34 @@ class EventsCalendarViewWidget extends StatelessWidget {
           itemBuilder: (context, index) {
             final event = events[index];
 
-            final bool isSubscriptionAllowed = event.eventCreatorId != user.uid;
-
             return EventCardWidget(
               event: event,
-              onTap: () => RouteController.redirectToEventDetailsPage(
-                context: context,
-                eventEntity: event,
-                isSubscriptionAllowed: isSubscriptionAllowed
-              ),
+              onTap: () {
+                final EventSubscriptionEntity? subscription = subscriptions
+                    .firstWhereOrNull(
+                      (eventSubscription) =>
+                          eventSubscription.eventId == event.eventId,
+                    );
+
+                final bool alreadySubscribedToEvent = subscription != null;
+
+                if (alreadySubscribedToEvent) {
+                  RouteController.redirectToEventReceiptPage(
+                    context: context,
+                    event: event,
+                    subscription: subscription,
+                  );
+                } else {
+                  final bool isSubscriptionAllowed =
+                      user.uid != event.eventCreatorId;
+
+                  RouteController.redirectToEventDetailsPage(
+                    context: context,
+                    eventEntity: event,
+                    isSubscriptionAllowed: isSubscriptionAllowed,
+                  );
+                }
+              },
             );
           },
         );

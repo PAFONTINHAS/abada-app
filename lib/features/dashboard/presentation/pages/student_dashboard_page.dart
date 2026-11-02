@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:collection/collection.dart';
 import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
+import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_subscription_controller.dart';
 import 'package:sistema_abada_capoeira/shared/appBar/custom_app_bar_widget.dart';
 import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
 import 'package:sistema_abada_capoeira/shared/section_widgets/section_title_widget.dart';
@@ -17,6 +21,8 @@ class StudentDashboardPage extends StatelessWidget {
     final controller = context.read<EventsController>();
 
     final profileController = context.read<ProfileController>();
+    final subscriptionController = context.read<EventSubscriptionController>();
+    final subscriptions = subscriptionController.subscriptions;
     final user = profileController.userProfile;
     final events = controller.events;
 
@@ -51,13 +57,34 @@ class StudentDashboardPage extends StatelessWidget {
                       event: event,
                       width: 280, // Limita a largura para o carrossel horizontal
                       onTap: () {
+                        
+                        LoggingService.displayInfo("Subscriptions: ${subscriptions.length}");
+                        final EventSubscriptionEntity? subscription =
+                            subscriptions.firstWhereOrNull(
+                              (eventSubscription) =>
+                                  eventSubscription.eventId == event.eventId,
+                            ); 
 
-                        final bool isSubscriptionAllowed = user.uid != event.eventCreatorId;
-                        RouteController.redirectToEventDetailsPage(
-                          context: context,
-                          eventEntity: event,
-                          isSubscriptionAllowed: isSubscriptionAllowed,
-                        );
+                        final bool alreadySubscribedToEvent = subscription != null;
+
+                        LoggingService.displayInfo("alreadySubscribedToEvent: $alreadySubscribedToEvent");
+
+                        if(alreadySubscribedToEvent){
+
+                          LoggingService.displayInfo("Inscrição de evento encontrada. Redirecionando...");
+
+                          RouteController.redirectToEventReceiptPage(context: context, event: event, subscription: subscription);
+                        } else{
+  
+                          final bool isSubscriptionAllowed = user.uid != event.eventCreatorId;
+
+                          RouteController.redirectToEventDetailsPage(
+                            context: context,
+                            eventEntity: event,
+                            isSubscriptionAllowed: isSubscriptionAllowed,
+                          );
+                        }
+
                       },
                     );
                   },

@@ -6,8 +6,8 @@ import 'package:sistema_abada_capoeira/core/utils/mask_formatter.dart';
 import 'package:sistema_abada_capoeira/core/utils/app_message_handler.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/models/payment_method.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_subscription_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/payment_method.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_details_subscription_controller.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 
 class EventCheckoutBottomSheetWidget extends StatefulWidget {
@@ -28,7 +28,7 @@ class _EventCheckoutBottomSheetWidgetState extends State<EventCheckoutBottomShee
 
     WidgetsBinding.instance.addPostFrameCallback((_){
       
-      final controller = context.read<EventSubscriptionController>();
+      final controller = context.read<EventDetailsSubscriptionController>();
 
       controller.setEvent(widget.event);
     });
@@ -39,7 +39,7 @@ class _EventCheckoutBottomSheetWidgetState extends State<EventCheckoutBottomShee
 
     final profileController = context.read<ProfileController>();
     final user = profileController.userProfile;
-    final controller = context.watch<EventSubscriptionController>();
+    final controller = context.watch<EventDetailsSubscriptionController>();
     final mandatoryProducts = widget.event.products.where((p) => p.mandatory).toList();
     final optionalProducts = widget.event.products.where((p) => !p.mandatory).toList();
 

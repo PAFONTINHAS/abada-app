@@ -4,9 +4,9 @@ import 'package:sistema_abada_capoeira/core/utils/date_controller.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_details_page_widgets/event_subscription_bottom.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_details_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_details_page_widgets/event_details_widget.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_details_page_widgets/event_subscription_bottom.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_details_page_widgets/event_details_navigation_bar_widget.dart';
 
 class EventDetailsPage extends StatefulWidget {
@@ -59,16 +59,17 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
   @override
   Widget build(BuildContext context) {
 
-
     return Consumer<EventDetailsController>(
       builder: (context, controller, child) {
         final eventEntity = controller.eventEntity;
+
 
         bool isValidEvent = eventEntity != null && !controller.isLoading;
 
         bool isSubscriptionAllowed = widget.isSubscriptionAllowed && !widget.analyseEventDetails && isValidEvent;
         bool isAnalysisAllowed = widget.analyseEventDetails && widget.isSubscriptionAllowed && isValidEvent;
 
+    
         return Scaffold(
           appBar: AppBar(
             title: Text(

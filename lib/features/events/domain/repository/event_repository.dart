@@ -23,5 +23,6 @@ abstract class EventRepository {
   Future<Either<Failure, List<EventRequestEntity>>> getPendingEventsRequests();
   Future<Either<Failure, EventEntity>> getEventById(String eventId);
   Future<Either<Failure, EventSubscriptionEntity>> subscribeToEvent(EventSubscriptionEntity subscription);  
+  Future<Either<Failure, List<EventSubscriptionEntity>>> getEventSubscriptions(String userId);
 
 }
