@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
+import 'package:sistema_abada_capoeira/core/utils/app_message_handler.dart';
 import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/models/auth_status.dart';
@@ -75,7 +75,7 @@ class _MigrateClassPageState extends State<MigrateClassPage> {
                 onConfirm: () async {
                   if (locationController.classRequestEntryEntity == null) {
                     context.pop();
-                    return MessageHandler.showWarning(
+                    return AppMessageHandler.showWarning(
                       context,
                       "Selecione uma turma primeiro",
                     );
@@ -93,13 +93,13 @@ class _MigrateClassPageState extends State<MigrateClassPage> {
                   context.pop();
 
                   if (!success && classMigrationController.errorMessage != null) {
-                    return MessageHandler.showError(
+                    return AppMessageHandler.showError(
                       context,
                       "Erro ao criar solicitação: ${classMigrationController.errorMessage}",
                     );
                   }
 
-                  MessageHandler.showSuccess(
+                  AppMessageHandler.showSuccess(
                     context,
                     "Solicitação concluída. Redirecionando...",
                   );

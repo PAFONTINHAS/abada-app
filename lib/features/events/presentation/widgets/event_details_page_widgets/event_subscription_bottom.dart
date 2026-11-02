@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_details_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_details_page_widgets/event_checkout_bottom_sheet_widget.dart';
 
 class EventSubscriptionBottom extends StatelessWidget {
   const EventSubscriptionBottom({super.key, required this.controller});
@@ -26,7 +27,18 @@ class EventSubscriptionBottom extends StatelessWidget {
           children: [
             Expanded(
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                    ),
+                    builder: (context) => EventCheckoutBottomSheetWidget(
+                      event: controller.eventEntity!,
+                    ),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green.shade700,
                   foregroundColor: ColorConstants.whiteColor,

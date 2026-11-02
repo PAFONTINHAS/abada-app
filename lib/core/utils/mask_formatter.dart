@@ -1,3 +1,4 @@
+
 class MaskFormatter {
 
   MaskFormatter._();
@@ -8,13 +9,13 @@ class MaskFormatter {
     
     final cleanPrice = money
       .replaceAll('R\$', '')
-      .replaceAll('.', '')
+      .replaceAll('.', ',')
       .replaceAll(',', '.')
       .trim();
 
     return double.tryParse(cleanPrice) ?? 0.0;
   }
-  
+
   static double convertToTwoDecimalsValue(double value){
 
     String formatedValue = value.toStringAsFixed(2);

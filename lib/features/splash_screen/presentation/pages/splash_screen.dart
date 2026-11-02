@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sistema_abada_capoeira/core/constants/app_spacing.dart';
 import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
-import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
+import 'package:sistema_abada_capoeira/core/utils/app_message_handler.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_requests_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/events_controller.dart';
@@ -81,7 +81,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
       if(mounted){
 
-        MessageHandler.showError(context, "Erro na inicialização do dispositivo. Saindo da conta...");
+        AppMessageHandler.showError(context, "Erro na inicialização do dispositivo. Saindo da conta...");
 
       }
       

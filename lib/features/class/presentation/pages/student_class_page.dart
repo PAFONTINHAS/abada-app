@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
-import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
+import 'package:sistema_abada_capoeira/core/utils/app_message_handler.dart';
 import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
 import 'package:sistema_abada_capoeira/shared/appBar/custom_app_bar_widget.dart';
 import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
@@ -91,9 +91,9 @@ class StudentClassPage extends StatelessWidget {
 
               if (!context.mounted) return;
               if (success) {
-                MessageHandler.showSuccess(context, 'Aluno removido da turma.');
+                AppMessageHandler.showSuccess(context, 'Aluno removido da turma.');
               } else {
-                MessageHandler.showError(
+                AppMessageHandler.showError(
                   context,
                   controller.errorMessage ??
                       'Não foi possível remover o aluno.',

@@ -12,8 +12,8 @@ import 'package:flutter/material.dart';
 /// MessageHandler.showError(context, 'Erro ao realizar operação');
 /// MessageHandler.showFailure(context, failure);
 /// ```
-class MessageHandler {
-  MessageHandler._();
+class AppMessageHandler {
+  AppMessageHandler._();
 
   /// Exibe uma mensagem de sucesso
   static void showSuccess(BuildContext context, String message) {

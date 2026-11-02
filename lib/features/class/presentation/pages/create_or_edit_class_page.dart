@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
+import 'package:sistema_abada_capoeira/core/utils/app_message_handler.dart';
 import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/widgets/class_form_page_address_field_widget.dart';
@@ -116,7 +116,7 @@ class _CreateOrEditClassPageState extends State<CreateOrEditClassPage> {
                 final scheduleList = scheduleController.scheduleList;
 
                 if (scheduleList.isEmpty){
-                  return MessageHandler.showWarning(
+                  return AppMessageHandler.showWarning(
                     context,
                     "Adicione ao menos um dia de aula com seu respectivo horário",
                   );
@@ -140,7 +140,7 @@ class _CreateOrEditClassPageState extends State<CreateOrEditClassPage> {
                       ? "Turma criada com sucesso!"
                       : "Turma atualizada com sucesso!";
 
-                  MessageHandler.showSuccess(context, successMessage);
+                  AppMessageHandler.showSuccess(context, successMessage);
 
                   formController.clearControllers();
                   scheduleController.clearFields();
@@ -149,7 +149,7 @@ class _CreateOrEditClassPageState extends State<CreateOrEditClassPage> {
                   return;
                 }
 
-                MessageHandler.showError(context, "Erro: ${classController.errorMessage}");
+                AppMessageHandler.showError(context, "Erro: ${classController.errorMessage}");
               },
               color: ColorConstants.indigoColor,
               textColor: ColorConstants.whiteColor,

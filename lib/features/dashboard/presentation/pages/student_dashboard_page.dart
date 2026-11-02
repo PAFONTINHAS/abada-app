@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
-import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
-import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
+import 'package:sistema_abada_capoeira/shared/appBar/custom_app_bar_widget.dart';
 import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
 import 'package:sistema_abada_capoeira/shared/section_widgets/section_title_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/events_controller.dart';
-import 'package:sistema_abada_capoeira/shared/appBar/custom_app_bar_widget.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/user_event_subscription_card_widget.dart';
 
 class StudentDashboardPage extends StatelessWidget {
@@ -44,7 +43,7 @@ class StudentDashboardPage extends StatelessWidget {
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: events.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 16),
+                  separatorBuilder: (_, _) => const SizedBox(width: 16),
                   itemBuilder: (context, index) {
                     final event = events[index];
 

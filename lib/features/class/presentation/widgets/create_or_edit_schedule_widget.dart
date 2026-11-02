@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/constants/app_spacing.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
-import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
+import 'package:sistema_abada_capoeira/core/utils/app_message_handler.dart';
 import 'package:sistema_abada_capoeira/core/utils/time_picker_helper.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/schedule_controller.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/widgets/schedule_view_list_widget.dart';
@@ -119,7 +119,7 @@ class CreateOrEditScheduleWidget extends StatelessWidget {
                             final closingHourIsEqualToOpeningHour = TimePickerHelper.compareTimes(openingHour, closingHour) == 1;
 
                             if (closingHourIsEqualToOpeningHour || closingHourIsGreaterThanOpeningHour) {
-                              MessageHandler.showError(
+                              AppMessageHandler.showError(
                                 context,
                                 "Horario de término não pode ser menor ou igual ao horário de início",
                               );

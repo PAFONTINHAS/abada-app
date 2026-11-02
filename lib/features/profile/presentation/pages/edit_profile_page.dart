@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
+import 'package:sistema_abada_capoeira/core/utils/app_message_handler.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/user_profile_entity.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/profile_header_widget.dart';
@@ -42,7 +42,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     if (success || !mounted) return;
 
     final details = _formController.photoErrorMessage;
-    MessageHandler.showError(
+    AppMessageHandler.showError(
       context,
       details == null || details.isEmpty
           ? 'Não foi possível enviar a foto.'
@@ -57,7 +57,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     if (success) {
       Navigator.of(context).pop();
     } else {
-      MessageHandler.showError(
+      AppMessageHandler.showError(
         context,
         _formController.errorMessage ??
             'Não foi possível salvar as alterações.',
@@ -69,9 +69,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
     final success = await _formController.requestChange();
     if (!mounted) return;
     if (success) {
-      MessageHandler.showSuccess(context, 'Solicitação enviada para análise.');
+      AppMessageHandler.showSuccess(context, 'Solicitação enviada para análise.');
     } else {
-      MessageHandler.showError(
+      AppMessageHandler.showError(
         context,
         _formController.errorMessage ??
             'Não foi possível enviar a solicitação.',

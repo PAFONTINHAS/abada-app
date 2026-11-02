@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:printing/printing.dart';
 import 'package:sistema_abada_capoeira/core/utils/date_controller.dart';
-import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
+import 'package:sistema_abada_capoeira/core/utils/app_message_handler.dart';
 import 'package:sistema_abada_capoeira/core/utils/tusca_protocol_generator.dart';
 import 'package:sistema_abada_capoeira/core/utils/tusca_receipt_generator.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/user_profile_entity.dart';

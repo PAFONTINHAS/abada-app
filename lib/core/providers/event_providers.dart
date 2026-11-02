@@ -17,6 +17,7 @@ import 'package:sistema_abada_capoeira/features/events/presentation/controllers/
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/get_pending_events_requests_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_phases_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/data/datasources/event_requests_remote_datasource_impl.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_subscription_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_products_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_graduation_controller.dart';
 
@@ -38,6 +39,7 @@ class EventProviders {
   static final List<SingleChildWidget> providers = [
     ChangeNotifierProvider(create: (_) => EventFormPhasesController()),
     ChangeNotifierProvider(create: (_) => EventFormProductsController()),
+    ChangeNotifierProvider(create: (_) => EventSubscriptionController()),
     ChangeNotifierProvider(create: (_) => EventFormGraduationController()),
     ChangeNotifierProvider(create: (_) => EventsController(getEventsUsecase)),
     ChangeNotifierProvider(create: (_) => EventDetailsController(getEventByIdUsecase)),

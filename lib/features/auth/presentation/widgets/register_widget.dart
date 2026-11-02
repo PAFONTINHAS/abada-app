@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
+import 'package:sistema_abada_capoeira/core/utils/app_message_handler.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/models/auth_status.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/models/register_phase.dart';
@@ -67,7 +67,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                 onFirstPhasePressed: () => formController.moveToTheNextPhase(),
                 onSecondPhasePressed: () async{
 
-                  MessageHandler.showInfo(context, "Criando sua conta");
+                  AppMessageHandler.showInfo(context, "Criando sua conta");
 
                   if(locationController.classRequestEntryEntity == null) return;
 
@@ -79,12 +79,12 @@ class _RegisterWidgetState extends State<RegisterWidget> {
 
                     authController.setAuthStatus(AuthStatus.initializing);
 
-                    MessageHandler.showSuccess(context, "Conta criada com sucesso! Redirecionando...");
+                    AppMessageHandler.showSuccess(context, "Conta criada com sucesso! Redirecionando...");
 
                     return;
                   }
 
-                  MessageHandler.showError(context, formController.errorMessage ?? "Erro");
+                  AppMessageHandler.showError(context, formController.errorMessage ?? "Erro");
 
                 },
               ),
