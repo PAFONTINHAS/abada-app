@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
 import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
 import 'package:sistema_abada_capoeira/shared/section_widgets/section_title_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_card_widget.dart';
@@ -14,6 +16,9 @@ class StudentDashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = context.read<EventsController>();
+
+    final profileController = context.read<ProfileController>();
+    final user = profileController.userProfile;
     final events = controller.events;
 
     return Scaffold(
@@ -41,15 +46,18 @@ class StudentDashboardPage extends StatelessWidget {
                   itemCount: events.length,
                   separatorBuilder: (_, __) => const SizedBox(width: 16),
                   itemBuilder: (context, index) {
-                    final evento = events[index];
+                    final event = events[index];
 
                     return EventCardWidget(
-                      event: evento,
-                      width:
-                          280, // Limita a largura para o carrossel horizontal
+                      event: event,
+                      width: 280, // Limita a largura para o carrossel horizontal
                       onTap: () {
-                        LoggingService.displayInfo(
-                          "Acessando evento: ${evento.eventName}",
+
+                        final bool isSubscriptionAllowed = user.uid != event.eventCreatorId;
+                        RouteController.redirectToEventDetailsPage(
+                          context: context,
+                          eventEntity: event,
+                          isSubscriptionAllowed: isSubscriptionAllowed,
                         );
                       },
                     );

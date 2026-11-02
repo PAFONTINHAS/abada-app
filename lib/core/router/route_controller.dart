@@ -58,11 +58,14 @@ class RouteController {
     String? eventId,
     EventEntity? eventEntity,
     bool analyseEventDetails = false,
+    bool isSubscriptionAllowed = false
+
   }) {
     context.push('/events/event_details', extra: {
       'eventId': eventId,
       'eventEntity': eventEntity,
-      'analyseEventDetails': analyseEventDetails
+      'isSubscriptionAllowed': isSubscriptionAllowed,
+      'analyseEventDetails': analyseEventDetails,
     });
   }
 

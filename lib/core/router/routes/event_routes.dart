@@ -37,12 +37,14 @@ class EventRoutes {
           final Map<String, dynamic> parameters = state.extra as Map<String, dynamic>;
 
           final String? eventId = parameters['eventId'] as String?;
+          final bool isSubscriptionAllowed= parameters['isSubscriptionAllowed'] as bool;
           final EventEntity? eventEntity = parameters['eventEntity'] as EventEntity?;
           final bool analyseEventDetails =  parameters['analyseEventDetails'] as bool;
 
           return EventDetailsPage(
-            event: eventEntity,
             eventId: eventId,
+            event: eventEntity,
+            isSubscriptionAllowed: isSubscriptionAllowed,
             analyseEventDetails: analyseEventDetails,
           );
         }

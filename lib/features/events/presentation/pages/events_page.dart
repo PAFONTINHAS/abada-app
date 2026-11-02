@@ -3,12 +3,12 @@ import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/utils/region_mapper.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/shared/appBar/custom_app_bar_widget.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/widgets/events_interactive_map_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
 import 'package:sistema_abada_capoeira/shared/inputs/custom_text_input/custom_text_input.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/events_controller.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 import 'package:sistema_abada_capoeira/features/location/presentation/controllers/location_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/events_interactive_map_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/events_page_widgets/events_calendar_view_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/events_page_widgets/events_page_view_toggle_button_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/events_page_widgets/management_events_actions_section_widget.dart';
@@ -156,16 +156,11 @@ class _EventsPageState extends State<EventsPage> {
               },
             ),
 
-
             const SizedBox(height: 20),
 
             Selector<EventsController, int>(
               selector: (_, controller) => controller.selectedViewIndex,
               builder: (context, selectedViewIndex, child) {
-
-
-
-
                 return Expanded(
                   child: selectedViewIndex == 0
                       ? EventsCalendarViewWidget()

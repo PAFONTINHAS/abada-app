@@ -59,9 +59,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
       final userRole = profileController.userProfile.role;
    
+      dataLoadingController.fetchUserLocation(locationController);
       await Future.wait([
         dataLoadingController.fetchEvents(eventsController),
-        dataLoadingController.fetchUserLocation(locationController),
         if(userRole != UserRole.student) dataLoadingController.fetchLecturedClasses(classController, profileController),
         if(userRole != UserRole.student) dataLoadingController.fetchClassEntryRequests(membershipValidationController, profileController),
         if(userRole == UserRole.coordinator) dataLoadingController.fetchEventCreationRequests(eventRequestsController)
