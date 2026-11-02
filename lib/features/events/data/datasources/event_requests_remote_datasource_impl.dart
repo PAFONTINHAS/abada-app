@@ -14,7 +14,6 @@ class EventRequestsRemoteDatasourceImpl extends RequestDatasourceImpl implements
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-
   @override 
   Future<Either<Failure, List<EventRequestEntity>>> getPendingEventsRequestsByUserId(String userId) async{
     try{

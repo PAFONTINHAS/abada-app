@@ -6,8 +6,9 @@ import 'package:sistema_abada_capoeira/core/utils/mask_formatter.dart';
 import 'package:sistema_abada_capoeira/core/utils/app_message_handler.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_subscription_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/models/payment_method.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_subscription_controller.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 
 class EventCheckoutBottomSheetWidget extends StatefulWidget {
   final EventEntity event;
@@ -36,6 +37,8 @@ class _EventCheckoutBottomSheetWidgetState extends State<EventCheckoutBottomShee
   @override
   Widget build(BuildContext context) {
 
+    final profileController = context.read<ProfileController>();
+    final user = profileController.userProfile;
     final controller = context.watch<EventSubscriptionController>();
     final mandatoryProducts = widget.event.products.where((p) => p.mandatory).toList();
     final optionalProducts = widget.event.products.where((p) => !p.mandatory).toList();
@@ -130,7 +133,7 @@ class _EventCheckoutBottomSheetWidgetState extends State<EventCheckoutBottomShee
               const SizedBox(height: 8),
               ...optionalProducts.map((prod) {
                 final isSelected =
-                    controller.selectedOptionalProducts.contains(prod.product);
+                    controller.selectedOptionalProducts.contains(prod);
                 return CheckboxListTile(
                   contentPadding: EdgeInsets.zero,
                   dense: true,
@@ -153,11 +156,12 @@ class _EventCheckoutBottomSheetWidgetState extends State<EventCheckoutBottomShee
                   ),
                   value: isSelected,
                   onChanged: (checked) {
+
                     setState(() {
                       if (checked == true) {
-                        controller.selectedOptionalProducts.add(prod.product);
+                        controller.selectedOptionalProducts.add(prod);
                       } else {
-                        controller.selectedOptionalProducts.remove(prod.product);
+                        controller.selectedOptionalProducts.remove(prod);
                       }
                     });
                   },
@@ -268,7 +272,7 @@ class _EventCheckoutBottomSheetWidgetState extends State<EventCheckoutBottomShee
 
                   if(controller.isProcessing) return;
 
-                  final success = await controller.processPayment();  
+                  final success = await controller.processPayment(user.uid);  
 
 
                   if(!context.mounted) return;

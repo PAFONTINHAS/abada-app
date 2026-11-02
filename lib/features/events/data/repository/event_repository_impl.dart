@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:sistema_abada_capoeira/core/errors/failure.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/repository/event_repository.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/data/datasources/event_remote_datasource.dart';
@@ -80,5 +81,10 @@ class EventRepositoryImpl implements EventRepository{
   Future<Either<Failure, EventEntity>> getEventById(String eventId) async{
     return await eventRemoteDatasource.getEventById(eventId);
   }
+
+  @override
+  Future<Either<Failure, EventSubscriptionEntity>> subscribeToEvent(EventSubscriptionEntity subscription) async{
+    return await eventRemoteDatasource.subscribeToEvent(subscription);
+  }  
 
 }

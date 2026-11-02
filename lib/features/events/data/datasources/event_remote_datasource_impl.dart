@@ -6,9 +6,11 @@ import 'package:sistema_abada_capoeira/core/errors/failure.dart';
 import 'package:sistema_abada_capoeira/core/services/image_service.dart';
 import 'package:sistema_abada_capoeira/core/errors/exception_handler.dart';
 import 'package:sistema_abada_capoeira/core/constants/database_constants.dart';
+import 'package:sistema_abada_capoeira/features/events/data/models/event_subscription_entity_model.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/data/models/event_entity_model.dart';
 import 'package:sistema_abada_capoeira/features/events/data/datasources/event_remote_datasource.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
 
 class EventRemoteDatasourceImpl implements EventRemoteDatasource{
 
@@ -116,6 +118,27 @@ class EventRemoteDatasourceImpl implements EventRemoteDatasource{
     }catch(exception){
       return ExceptionHandler.handleException(exception: exception, contextMessage: 'removeEvent');
     }
+
+  }
+
+  @override
+  Future<Either<Failure, EventSubscriptionEntity>> subscribeToEvent(EventSubscriptionEntity subscription) async{
+
+    try{
+
+      final subscriptionModel = EventSubscriptionEntityModel.fromEntity(subscription);
+
+      final collectionReference = _firestore.collection(DBCollections.ongoingEventsSubscriptionsCollection).doc();
+      
+      await collectionReference.set(subscriptionModel.toMap());
+
+      return Right(subscription.copyWith(id: collectionReference.id));
+
+    }catch(exception){
+
+      return ExceptionHandler.handleException(exception: exception, contextMessage: "subscribeToEvent");
+    }
+
 
   }
 
