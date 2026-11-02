@@ -79,12 +79,12 @@ class EventDetailsSubscriptionController extends ChangeNotifier{
   
 
   
-  Future<bool> processPayment(String userId) async {
+  Future<EventSubscriptionEntity?> processPayment(String userId) async {
 
     _isProcessing = true;
     notifyListeners();
 
-    if(_currentEvent == null) return false;
+    if(_currentEvent == null) return null;
 
     String eventReceipt = Generator.generateVerificationCode(userId, _currentEvent!.eventId);
 
@@ -112,19 +112,19 @@ class EventDetailsSubscriptionController extends ChangeNotifier{
     );
    
 
-    final success = await subscribeToEvent(subscription);
+    final updatedSubscription = await subscribeToEvent(subscription);
    
     _isProcessing = false;
     notifyListeners();
 
-    return success;
+    return updatedSubscription;
   }
 
-  Future<bool> subscribeToEvent(EventSubscriptionEntity entity) async{
+  Future<EventSubscriptionEntity?> subscribeToEvent(EventSubscriptionEntity entity) async{
 
     final result = await _subscribeToEventUsecase.call(entity);
 
-    return result.fold((failiure)=> false, (_) => true); 
+    return result.fold((failiure) => null, (subscription) => subscription); 
   }
   
 

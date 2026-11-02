@@ -22,7 +22,6 @@ class StudentDashboardPage extends StatelessWidget {
 
     final profileController = context.read<ProfileController>();
     final subscriptionController = context.read<EventSubscriptionController>();
-    final subscriptions = subscriptionController.subscriptions;
     final user = profileController.userProfile;
     final events = controller.events;
 
@@ -57,7 +56,8 @@ class StudentDashboardPage extends StatelessWidget {
                       event: event,
                       width: 280, // Limita a largura para o carrossel horizontal
                       onTap: () {
-                        
+                        final subscriptions = subscriptionController.subscriptions;
+
                         LoggingService.displayInfo("Subscriptions: ${subscriptions.length}");
                         final EventSubscriptionEntity? subscription =
                             subscriptions.firstWhereOrNull(

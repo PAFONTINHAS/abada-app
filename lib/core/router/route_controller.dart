@@ -80,4 +80,13 @@ class RouteController {
       'subscription': subscription
     });
   }
+
+  static void pushReplacementEventReceiptPage({required BuildContext context, required EventEntity event, required EventSubscriptionEntity subscription}){
+    context.pushReplacement('/events/event_details/subscription_receipt', extra: {
+      'event': event,
+      'subscription': subscription
+    });
+  }
+
+  
 }

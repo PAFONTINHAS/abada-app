@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
 import 'package:sistema_abada_capoeira/core/utils/mask_formatter.dart';
 import 'package:sistema_abada_capoeira/core/utils/app_message_handler.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/payment_method.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_details_subscription_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_subscription_controller.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_details_subscription_controller.dart';
 
 class EventCheckoutBottomSheetWidget extends StatefulWidget {
   final EventEntity event;
@@ -270,19 +272,28 @@ class _EventCheckoutBottomSheetWidgetState extends State<EventCheckoutBottomShee
               child: ElevatedButton(
                 onPressed: () async{
 
+                  final subscriptionController = context.read<EventSubscriptionController>();
+
                   if(controller.isProcessing) return;
 
-                  final success = await controller.processPayment(user.uid);  
-
+                  final subscription = await controller.processPayment(user.uid);  
 
                   if(!context.mounted) return;
 
                   context.pop();
 
-                  if (success ) {
+                  if (subscription != null) {
                     AppMessageHandler.showSuccess(
                       context,
                       "Inscrição e produtos confirmados com sucesso!",
+                    );
+
+                    subscriptionController.addEventSubscription(subscription);
+                    
+                    RouteController.pushReplacementEventReceiptPage(
+                      context: context,
+                      event: widget.event,
+                      subscription: subscription,
                     );
                   }
                   

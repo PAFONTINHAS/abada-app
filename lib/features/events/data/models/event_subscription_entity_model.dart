@@ -75,7 +75,7 @@ class EventSubscriptionEntityModel extends EventSubscriptionEntity{
           'price': product.price,
         };
       }),
-      'paymentMethod': paymentMethod,
+      'paymentMethod': paymentMethod.name,
       'verificationCode': verificationCode,
       'status': status.name,
       'createdAt': createdAt.toIso8601String(),

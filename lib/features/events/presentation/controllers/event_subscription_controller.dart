@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/get_event_subscriptions_usecase.dart';
 
@@ -40,5 +41,19 @@ class EventSubscriptionController extends ChangeNotifier{
     notifyListeners();
 
     return success;
+  }
+
+  void addEventSubscription(EventSubscriptionEntity subscription){
+
+    LoggingService.displayInfo("Tamanho atual: ${_subscriptions.length}");
+    final currentSubscriptionList = List<EventSubscriptionEntity>.from(_subscriptions);
+
+    currentSubscriptionList.add(subscription);
+
+    _subscriptions = currentSubscriptionList;
+
+    LoggingService.displayInfo("Tamanho atualizado: ${_subscriptions.length}");
+
+    notifyListeners();  
   }
 }

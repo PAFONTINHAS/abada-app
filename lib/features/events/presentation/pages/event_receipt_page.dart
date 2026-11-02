@@ -172,7 +172,7 @@ class EventReceiptPage extends StatelessWidget {
                         ),
                         const SizedBox(height: 16),
                         _buildInfoRow("Status", subscription.status.displayPortugueseText, isHighlight: true),
-                        _buildInfoRow("Data", DateController.formatDDMMYYYYHM(subscription.createdAt)),
+                        _buildInfoRow("Incrito em", DateController.formatDDMMYYYYHM(subscription.createdAt)),
                         _buildInfoRow("Pagamento", subscription.paymentMethod.displayPortugueseText),
                         
                         if (subscription.selectedProducts.isNotEmpty) ...[
