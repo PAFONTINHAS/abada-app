@@ -67,6 +67,7 @@ dependencies:
   latlong2: ^0.10.1
   geocoder_pro: ^1.1.0
   qr_flutter: ^4.1.0
+  collection: ^1.19.1
 
 dev_dependencies:
   flutter_test:

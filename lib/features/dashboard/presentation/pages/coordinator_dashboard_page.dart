@@ -23,10 +23,14 @@ class CoordinatorDashboardPage extends StatelessWidget {
 
     if (request.status == GenericRequestStatus.changesRequested) {
       title = "Solicitação de Alterações";
-      reason = request.changeReason ?? "Nenhum motivo informado.";
+      reason = request.changeReason.isEmpty
+          ? request.changeReason
+          : "Nenhum motivo informado.";
     } else if (request.status == GenericRequestStatus.rejected) {
       title = "Motivo da Recusa";
-      reason = request.rejectionReason ?? "Nenhum motivo informado.";
+      reason = request.rejectionReason.isEmpty
+          ? request.changeReason
+          : "Nenhum motivo informado.";
     }
 
     showDialog(
