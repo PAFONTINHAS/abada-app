@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:sistema_abada_capoeira/core/utils/date_controller.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
-import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
+import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_entity.dart';
 
 class EventStatusCardWidget extends StatelessWidget {
@@ -24,7 +25,6 @@ class EventStatusCardWidget extends StatelessWidget {
   DateTime get _endingDate => _isRequest ? item.endingDate : item.eventEndingDate;
 
   // Extração segura de dados caso seja um EventEntity completo
-  String? get _imagePath => _isEvent ? (item as EventEntity).eventImagePath : null;
   String? get _location => _isEvent ? "${(item as EventEntity).city} - ${(item as EventEntity).state}" : null;
   String? get _description => _isEvent ? (item as EventEntity).eventDescription : null;
 
@@ -96,26 +96,6 @@ class EventStatusCardWidget extends StatelessWidget {
     return (item as EventEntity).finishedEvent ? Icons.flag_outlined : Icons.check_circle_outline;
   }
 
-  String _formatEventDate(DateTime start, DateTime end) {
-    final startDay = start.day.toString().padLeft(2, '0');
-    final startMonth = start.month.toString().padLeft(2, '0');
-    final startYear = start.year.toString();
-    final startHour = start.hour.toString().padLeft(2, '0');
-    final startMin = start.minute.toString().padLeft(2, '0');
-
-    final endDay = end.day.toString().padLeft(2, '0');
-    final endMonth = end.month.toString().padLeft(2, '0');
-    final endYear = end.year.toString();
-    final endHour = end.hour.toString().padLeft(2, '0');
-    final endMin = end.minute.toString().padLeft(2, '0');
-
-    if (startYear == endYear && startMonth == endMonth && startDay == endDay) {
-      return '$startDay/$startMonth/$startYear - $startHour:$startMin até $endHour:$endMin';
-    } else {
-      return 'de $startDay/$startMonth/$startYear, $startHour:$startMin até $endDay/$endMonth/$endYear, $endHour:$endMin';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     if (!_isRequest && !_isEvent) return const SizedBox.shrink();
@@ -142,7 +122,6 @@ class EventStatusCardWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [          
-          // 2. Corpo do Card
           Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -229,7 +208,7 @@ class EventStatusCardWidget extends StatelessWidget {
                     const SizedBox(width: 6),
                     Expanded(
                       child: Text(
-                        _formatEventDate(_initDate, _endingDate),
+                        DateController.formatEventDate(_initDate, _endingDate),
                         style: const TextStyle(fontSize: 12, color: ColorConstants.textSecondary),
                       ),
                     ),

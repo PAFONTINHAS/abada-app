@@ -4,8 +4,8 @@ import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_details_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/models/event_details_modals.dart';
 
-class EventDetailsNavigationBarWidget extends StatelessWidget {
-  const EventDetailsNavigationBarWidget({super.key, required this.controller});
+class EventDetailsRevisionBottomWidget extends StatelessWidget {
+  const EventDetailsRevisionBottomWidget({super.key, required this.controller});
 
   final EventDetailsController controller;
 

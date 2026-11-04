@@ -5,8 +5,12 @@ import {FieldValue, Timestamp} from "firebase-admin/firestore";
 
 const db = admin.firestore();
 
-export const finishEventsAndGraduateMembers = functions.pubsub
-  .schedule("0 * * * *")
+export const finishEventsAndGraduateMembers = functions
+  .runWith({
+    timeoutSeconds: 540,
+    memory: "512MB",
+  })
+  .pubsub.schedule("0 * * * *")
   .timeZone("America/Sao_Paulo")
   .onRun(async () => {
     console.log("Função acionada");
@@ -15,37 +19,54 @@ export const finishEventsAndGraduateMembers = functions.pubsub
     const agoraTimestamp = Timestamp.fromDate(agora);
 
     try {
-      const query = db
+      const finishedEvents = await db
         .collection("ongoing_events")
         .where("eventActive", "==", true)
-        .where("eventEndingDate", "<=", agoraTimestamp);
+        .where("eventEndingDate", "<=", agoraTimestamp)
+        .get();
 
-      const snapshot = await query.get();
-
-      if (snapshot.empty) {
+      if (finishedEvents.empty) {
         console.log("Nenhum evento vencido");
         return null;
       }
 
-      console.log(`Encontrados ${snapshot.size} eventos para processar`);
+      console.log(`Encontrados ${finishedEvents.size} eventos para processar`);
 
-      const promises = snapshot.docs.map(async (doc) => {
-        const finshedEventsRef = db.collection("finished_events").doc();
+      const promises = finishedEvents.docs.map(async (eventDoc) => {
+        const finishedEventsRef = db
+          .collection("finished_events")
+          .doc(eventDoc.id);
+        const eventSubscriptionRef =
+          finishedEventsRef.collection("subscriptions");
 
-        const event = doc.data();
+        const eventSubscriptionsSnap = await db
+          .collection("ongoing_events_subscriptions")
+          .where("eventId", "==", eventDoc.id)
+          .get();
+
+        const event = eventDoc.data();
 
         if (!event) return;
 
         const batch = db.batch();
 
-        batch.set(finshedEventsRef, {
+        batch.set(finishedEventsRef, {
           ...event,
           eventActive: false,
           finishedEvent: true,
           updatedAt: FieldValue.serverTimestamp(),
         });
 
-        batch.delete(doc.ref);
+        if (!eventSubscriptionsSnap.empty) {
+          for (const subDoc of eventSubscriptionsSnap.docs) {
+            const newSubDocRef = eventSubscriptionRef.doc(subDoc.id);
+
+            await newSubDocRef.set(subDoc.data());
+            await subDoc.ref.delete();
+          }
+        }
+
+        batch.delete(eventDoc.ref);
 
         if (
           event.eventType === "GRADUATION" &&
@@ -62,13 +83,19 @@ export const finishEventsAndGraduateMembers = functions.pubsub
               const userData = userDoc.data();
               const currentBelt = userData?.belt;
 
-              const currentIndex = abadaBelts.findIndex(
-                (belt) => belt.belt.toUpperCase() === currentBelt.toUpperCase(),
-              );
+              if (currentBelt) {
+                const currentIndex = abadaBelts.findIndex(
+                  (belt) =>
+                    belt.belt.toUpperCase() === currentBelt.toUpperCase(),
+                );
 
-              if (currentIndex !== -1 && currentIndex < abadaBelts.length - 1) {
-                const nextBelt = abadaBelts[currentIndex + 1];
-                batch.update(userRef, {belt: nextBelt.belt});
+                if (
+                  currentIndex !== -1 &&
+                  currentIndex < abadaBelts.length - 1
+                ) {
+                  const nextBelt = abadaBelts[currentIndex + 1];
+                  batch.update(userRef, {belt: nextBelt.belt});
+                }
               }
             },
           );

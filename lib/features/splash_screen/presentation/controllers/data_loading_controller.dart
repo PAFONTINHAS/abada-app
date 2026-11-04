@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_controller.dart';

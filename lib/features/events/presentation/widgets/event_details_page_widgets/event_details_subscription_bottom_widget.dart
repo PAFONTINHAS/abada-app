@@ -3,8 +3,8 @@ import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_details_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_details_page_widgets/event_checkout_bottom_sheet_widget.dart';
 
-class EventSubscriptionBottom extends StatelessWidget {
-  const EventSubscriptionBottom({super.key, required this.controller});
+class EventDetailsSubscriptionBottomWidget extends StatelessWidget {
+  const EventDetailsSubscriptionBottomWidget({super.key, required this.controller});
 
   final EventDetailsController controller;
 

@@ -71,5 +71,26 @@ class DateController{
     return timestamp.toDate();  
   } 
 
+
+  static String formatEventDate(DateTime start, DateTime end) {
+    final startDay = start.day.toString().padLeft(2, '0');
+    final startMonth = start.month.toString().padLeft(2, '0');
+    final startYear = start.year.toString();
+    final startHour = start.hour.toString().padLeft(2, '0');
+    final startMin = start.minute.toString().padLeft(2, '0');
+
+    final endDay = end.day.toString().padLeft(2, '0');
+    final endMonth = end.month.toString().padLeft(2, '0');
+    final endYear = end.year.toString();
+    final endHour = end.hour.toString().padLeft(2, '0');
+    final endMin = end.minute.toString().padLeft(2, '0');
+
+    if (startYear == endYear && startMonth == endMonth && startDay == endDay) {
+      return '$startDay/$startMonth/$startYear - $startHour:$startMin até $endHour:$endMin';
+    } else {
+      return 'de $startDay/$startMonth/$startYear, $startHour:$startMin até $endDay/$endMonth/$endYear, $endHour:$endMin';
+    }
+  }
+
 }
 
