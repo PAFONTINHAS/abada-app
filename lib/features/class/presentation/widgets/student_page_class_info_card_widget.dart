@@ -11,7 +11,6 @@ class StudentPageClassInfoCardWidget extends StatelessWidget {
     required this.classEntity
   });
 
-  
   final ClassEntity classEntity;
 
   @override

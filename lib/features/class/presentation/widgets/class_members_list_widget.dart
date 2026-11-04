@@ -83,7 +83,7 @@ class ClassMembersListWidget extends StatelessWidget {
                       ),
                     ),
                     subtitle: Text(
-                      'Corda ${student.belt}',
+                      'CORDA ${student.belt}',
                       style: TextStyle(
                         color: Colors.grey.shade600,
                         fontSize: 13,
