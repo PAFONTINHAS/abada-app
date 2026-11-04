@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:sistema_abada_capoeira/core/utils/mask_formatter.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_type.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/section_detail_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_page_widgets/revision_phase_info_row_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_page_widgets/revision_phase_financial_summary_widget.dart';
@@ -25,6 +26,13 @@ class EventDetailsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = context.read<ProfileController>();
+
+    final user = controller.userProfile;
+
+    final eventCreator = user.uid == eventEntity.eventCreatorId
+        ? "${eventEntity.eventCreatorNickname} (Você)"
+        : eventEntity.eventCreatorNickname;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,7 +53,7 @@ class EventDetailsWidget extends StatelessWidget {
               ? eventEntity.eventDescription!
               : "Sem descrição informada",
           eventType: EventTypeExtension.convertToUIText(eventEntity.eventType),
-          eventCreatorNickname: eventEntity.eventCreatorNickname,
+          eventCreatorNickname: eventCreator,
         ),
 
         const SizedBox(height: 16),

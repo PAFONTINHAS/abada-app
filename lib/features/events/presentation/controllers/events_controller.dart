@@ -12,10 +12,7 @@ class EventsController extends ChangeNotifier{
 
   int _selectedViewIndex = 0;
   int get selectedViewIndex => _selectedViewIndex;
-
-  // String _searchBar = "";
-  // String get searchBar => _searchBar;
-
+  
   TextEditingController searchBar = TextEditingController();
 
   List<EventEntity> get filteredEvents {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
+import 'package:sistema_abada_capoeira/core/utils/app_message_handler.dart';
 import 'package:sistema_abada_capoeira/shared/inputs/custom_text_input/custom_text_input.dart';
 import 'request_dialog_widget.dart';
 
@@ -42,7 +42,7 @@ class _RequestJustificationDialogWidgetState
     final justification = _justificationController.text.trim();
 
     if (justification.isEmpty) {
-      MessageHandler.showWarning(context, 'Informe a justificativa.');
+      AppMessageHandler.showWarning(context, 'Informe a justificativa.');
       return;
     }
 
@@ -62,7 +62,7 @@ class _RequestJustificationDialogWidgetState
 
       if (!mounted) return;
 
-      MessageHandler.showError(
+      AppMessageHandler.showError(
         context,
         'Não foi possível concluir a ação. Tente novamente.',
       );

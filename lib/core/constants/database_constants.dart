@@ -10,6 +10,7 @@ class DBCollections {
   static final String eventsRequestsCollection = "event_requests";
   static final String membershipRequestsCollection = "membership_requests";
   static final String feeExemptionRequestsCollection = "fee_exemption_requests";
+  static final String ongoingEventsSubscriptionsCollection = "ongoing_events_subscriptions";
 
 }
 

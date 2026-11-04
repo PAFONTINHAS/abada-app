@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
+import 'package:sistema_abada_capoeira/core/utils/app_message_handler.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/schedule_entity.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/schedule_color_controller.dart';
 
@@ -73,7 +73,7 @@ class ScheduleController extends ChangeNotifier{
 
     if (openingHourController.text.isEmpty || closingHourController.text.isEmpty){
       
-      MessageHandler.showWarning(context, "Preencha os campos de horário");
+      AppMessageHandler.showWarning(context, "Preencha os campos de horário");
 
       return false; 
     }
@@ -85,7 +85,7 @@ class ScheduleController extends ChangeNotifier{
 
       if(isSameClosingHour && isSameOpeningHour){
 
-        MessageHandler.showWarning(context, "Horários de início e de término já selecionados");
+        AppMessageHandler.showWarning(context, "Horários de início e de término já selecionados");
 
         return false;
       }
@@ -95,7 +95,7 @@ class ScheduleController extends ChangeNotifier{
     List<int> scheduleDays = _fetchScheduleDays();
 
     if (scheduleDays.isEmpty){
-      MessageHandler.showWarning(context, "Selecione ao menos um dia");
+      AppMessageHandler.showWarning(context, "Selecione ao menos um dia");
 
       return false;
     } // Evita salvar sem nenhum dia selecionado

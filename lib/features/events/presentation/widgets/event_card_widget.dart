@@ -1,46 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:sistema_abada_capoeira/core/utils/date_controller.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
-import 'package:sistema_abada_capoeira/core/utils/mask_formatter.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
-import 'package:sistema_abada_capoeira/features/events/domain/entities/event_type.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_card_tags_widget.dart';
 
 class EventCardWidget extends StatelessWidget {
+  final double? width;
   final EventEntity event;
   final VoidCallback onTap;
-  final double? width;
   final bool showEventAdress;
+  final bool alreadySubscribed;
 
   const EventCardWidget({
     super.key,
+    this.width,
     required this.event,
     required this.onTap,
-    this.width,
-    this.showEventAdress = false
+    this.showEventAdress = false,
+    this.alreadySubscribed = false,
   });
 
-  String _formatEventDate(DateTime start, DateTime end) {
-    final startDay = start.day.toString().padLeft(2, '0');
-    final startMonth = start.month.toString().padLeft(2, '0');
-    final startYear = start.year.toString();
-    final startHour = start.hour.toString().padLeft(2, '0');
-    final startMin = start.minute.toString().padLeft(2, '0');
-
-    final endDay = end.day.toString().padLeft(2, '0');
-    final endMonth = end.month.toString().padLeft(2, '0');
-    final endYear = end.year.toString();
-    final endHour = end.hour.toString().padLeft(2, '0');
-    final endMin = end.minute.toString().padLeft(2, '0');
-
-    if (startYear == endYear && startMonth == endMonth && startDay == endDay) {
-      return '$startDay/$startMonth/$startYear - $startHour:$startMin até $endHour:$endMin';
-    } else {
-      return 'de $startDay/$startMonth/$startYear, $startHour:$startMin até $endDay/$endMonth/$endYear, $endHour:$endMin';
-    }
-  }
-
   Widget _buildFallbackImage() {
-
     return Container(
       height: 140,
       width: double.infinity,
@@ -53,9 +34,6 @@ class EventCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isFree = event.eventValue == "0.00" || event.eventValue.toLowerCase() == 'gratuito';
-    final String priceText = isFree ? "GRATUITO" : MaskFormatter.convertToReais(event.eventValue);
-
     return Container(
       width: width,
       decoration: BoxDecoration(
@@ -100,44 +78,8 @@ class EventCardWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Tags (Preço e Tipo)
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: isFree ? Colors.green.shade50 : Colors.orange.shade50,
-                        borderRadius: BorderRadius.circular(4),
-                        border: Border.all(
-                          color: isFree ? Colors.green.shade200 : Colors.orange.shade200,
-                        ),
-                      ),
-                      child: Text(
-                        priceText,
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                          color: isFree ? Colors.green.shade700 : Colors.orange.shade800,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: ColorConstants.indigoLight,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Text(
-                        EventTypeExtension.convertToUIText(event.eventType),
-                        style: const TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                          color: ColorConstants.indigoDark,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                EventCardTagsWidget(event: event, alreadySubscribed: alreadySubscribed),
+ 
                 const SizedBox(height: 10),
 
                 // Nome do Evento
@@ -203,7 +145,7 @@ class EventCardWidget extends StatelessWidget {
                     const SizedBox(width: 6),
                     Expanded(
                       child: Text(
-                        _formatEventDate(event.eventInitDate, event.eventEndingDate),
+                        DateController.formatEventDate(event.eventInitDate, event.eventEndingDate),
                         style: const TextStyle(fontSize: 12, color: ColorConstants.textSecondary),
                       ),
                     ),
@@ -225,8 +167,10 @@ class EventCardWidget extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text(
-                      "Ver detalhes do evento",
+                    child: Text(
+                      alreadySubscribed
+                          ? "Ver comprovante"
+                          : "Ver detalhes do evento", 
                       style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                     ),
                   ),

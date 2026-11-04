@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
+import 'package:collection/collection.dart';
+import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
+import 'package:sistema_abada_capoeira/shared/appBar/custom_app_bar_widget.dart';
 import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
 import 'package:sistema_abada_capoeira/shared/section_widgets/section_title_widget.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_card_widget.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/events_controller.dart';
-import 'package:sistema_abada_capoeira/shared/appBar/custom_app_bar_widget.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/events_empty_state_widget.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_subscription_controller.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/user_event_subscription_card_widget.dart';
 
 class StudentDashboardPage extends StatelessWidget {
@@ -14,13 +20,25 @@ class StudentDashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = context.read<EventsController>();
+
+    final profileController = context.read<ProfileController>();
+    final subscriptionController = context.read<EventSubscriptionController>();
+    final user = profileController.userProfile;
     final events = controller.events;
 
+    EventSubscriptionEntity? hasAlreadySubscribed(EventEntity event) {
+      final subscriptions = subscriptionController.subscriptions;
+
+      final EventSubscriptionEntity? subscription = subscriptions
+          .firstWhereOrNull(
+            (eventSubscription) => eventSubscription.eventId == event.eventId,
+          );
+
+      return subscription;
+    }
+
     return Scaffold(
-      appBar: CustomAppBarWidget(
-        pageTitle: "Início",
-        onNotificationTap: (){} ,
-      ),
+      appBar: CustomAppBarWidget(pageTitle: "Início", onNotificationTap: () {}),
       body: StandardScaffoldBodyWidget(
         child: SingleChildScrollView(
           child: Column(
@@ -34,27 +52,51 @@ class StudentDashboardPage extends StatelessWidget {
               ),
 
               // Altura ajustada para comportar o Card Rico
-              SizedBox(
-                height: 400,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: events.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 16),
-                  itemBuilder: (context, index) {
-                    final evento = events[index];
+              Consumer<EventSubscriptionController>(
+                builder: (context, value, child) {
+                  return SizedBox(
+                    height: 400,
+                    child: events.isEmpty
+                        ? EventsEmptyStateWidget()
+                        : ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: events.length,
+                            separatorBuilder: (_, _) =>
+                                const SizedBox(width: 16),
+                            itemBuilder: (context, index) {
+                              final event = events[index];
 
-                    return EventCardWidget(
-                      event: evento,
-                      width:
-                          280, // Limita a largura para o carrossel horizontal
-                      onTap: () {
-                        LoggingService.displayInfo(
-                          "Acessando evento: ${evento.eventName}",
-                        );
-                      },
-                    );
-                  },
-                ),
+                              EventSubscriptionEntity? eventSubscription =
+                                  hasAlreadySubscribed(event);
+
+                              return EventCardWidget(
+                                event: event,
+                                width: 280,
+                                alreadySubscribed: eventSubscription != null,
+                                onTap: () {
+                                  if (eventSubscription != null) {
+                                    RouteController.redirectToEventReceiptPage(
+                                      context: context,
+                                      event: event,
+                                      subscription: eventSubscription,
+                                    );
+                                  } else {
+                                    final bool isSubscriptionAllowed =
+                                        user.uid != event.eventCreatorId;
+
+                                    RouteController.redirectToEventDetailsPage(
+                                      context: context,
+                                      eventEntity: event,
+                                      isSubscriptionAllowed:
+                                          isSubscriptionAllowed,
+                                    );
+                                  }
+                                },
+                              );
+                            },
+                          ),
+                  );
+                },
               ),
 
               const SizedBox(height: 24),

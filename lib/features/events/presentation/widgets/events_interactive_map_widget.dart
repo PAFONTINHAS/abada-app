@@ -24,19 +24,19 @@ class EventsInteractiveMapWidget extends StatelessWidget {
       context: context,
       backgroundColor: Colors.transparent, // Deixa transparente para vermos as bordas do Card
       isScrollControlled: true,
-      builder: (ctx) {
+      builder: (context) {
         return Padding(
           // Dá um respiro das bordas da tela e da área de navegação do celular
           padding: EdgeInsets.only(
             left: 16,
             right: 16,
-            bottom: MediaQuery.of(ctx).padding.bottom + 16,
+            bottom: MediaQuery.of(context).padding.bottom + 16,
           ),
           child: EventCardWidget(
             event: event,
             showEventAdress: true,
             onTap: () {
-              Navigator.pop(ctx);
+              Navigator.pop(context);
 
               RouteController.redirectToEventDetailsPage(context: context, eventId: event.eventId);
             },

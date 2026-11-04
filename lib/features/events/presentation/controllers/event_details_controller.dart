@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/get_event_by_id_usecase.dart';
 

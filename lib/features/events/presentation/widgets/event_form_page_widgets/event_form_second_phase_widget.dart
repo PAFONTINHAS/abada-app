@@ -6,7 +6,7 @@ import 'package:sistema_abada_capoeira/features/events/domain/entities/event_typ
 import 'package:sistema_abada_capoeira/shared/inputs/custom_text_input/custom_text_input.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/section_detail_card_widget.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_products_section_widget.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_page_widgets/event_products_section_widget.dart';
 
 class EventFormSecondPhaseWidget extends StatelessWidget {
   const EventFormSecondPhaseWidget({super.key});

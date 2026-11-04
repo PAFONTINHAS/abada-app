@@ -9,7 +9,7 @@ import '../models/request_result_type.dart';
 import 'membership_request_card_widget.dart';
 import '../../domain/entities/membership_request.dart';
 import '../controllers/membership_validation_controller.dart';
-import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
+import 'package:sistema_abada_capoeira/core/utils/app_message_handler.dart';
 
 class MembershipRequestItemWidget extends StatelessWidget {
   final MembershipRequest request;
@@ -41,7 +41,7 @@ class MembershipRequestItemWidget extends StatelessWidget {
     final success = await action();
 
     if (!success && context.mounted) {
-      MessageHandler.showError(
+      AppMessageHandler.showError(
         context,
         controller.actionErrorMessage ??
             'Não foi possível concluir a operação. Tente novamente.',

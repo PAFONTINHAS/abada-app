@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
-import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
-import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_entity.dart';
+import 'package:sistema_abada_capoeira/shared/appBar/custom_app_bar_widget.dart';
 import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
 import 'package:sistema_abada_capoeira/shared/section_widgets/section_title_widget.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_entity.dart';
+import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_status_card_widget.dart';
-import 'package:sistema_abada_capoeira/shared/appBar/custom_app_bar_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_requests_controller.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/rapid_metrics_chart_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/view_more_requests_button_widget.dart';
@@ -23,10 +23,14 @@ class CoordinatorDashboardPage extends StatelessWidget {
 
     if (request.status == GenericRequestStatus.changesRequested) {
       title = "Solicitação de Alterações";
-      reason = request.changeReason ?? "Nenhum motivo informado.";
+      reason = request.changeReason.isEmpty
+          ? request.changeReason
+          : "Nenhum motivo informado.";
     } else if (request.status == GenericRequestStatus.rejected) {
       title = "Motivo da Recusa";
-      reason = request.rejectionReason ?? "Nenhum motivo informado.";
+      reason = request.rejectionReason.isEmpty
+          ? request.changeReason
+          : "Nenhum motivo informado.";
     }
 
     showDialog(

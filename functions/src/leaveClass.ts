@@ -20,8 +20,10 @@ export const leaveClass = functions.https.onCall(
 
     const memberId = context.auth.uid;
     const memberReference = db.collection("users").doc(memberId);
-    const classReference = db.collection("classes").doc(classRequestData.classId);
-    const studentInClassRef = classReference.collection("students").doc(memberId);
+    const classReference =
+      db.collection("classes").doc(classRequestData.classId);
+    const studentInClassRef =
+      classReference.collection("students").doc(memberId);
 
     const [memberDoc, classDoc, studentInClassDoc] = await Promise.all([
       memberReference.get(),

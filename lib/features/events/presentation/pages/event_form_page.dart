@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
+import 'package:sistema_abada_capoeira/core/utils/app_message_handler.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_type.dart';
@@ -9,15 +9,15 @@ import 'package:sistema_abada_capoeira/features/events/presentation/models/event
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_phase_progress_widget.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_phases_controller.dart';
+import 'package:sistema_abada_capoeira/features/location/presentation/controllers/create_location_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_products_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_graduation_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_page_widgets/event_form_first_phase_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_page_widgets/event_form_second_phase_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_page_widgets/event_form_revision_phase_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_page_widgets/event_form_navigation_bar_widget.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_phases_controller.dart';
-import 'package:sistema_abada_capoeira/features/location/presentation/controllers/create_location_controller.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_products_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_page_widgets/event_form_graduation_phase_widget.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_graduation_controller.dart';
 
 class EventFormPage extends StatelessWidget {
   const EventFormPage({super.key});
@@ -125,10 +125,10 @@ class EventFormPage extends StatelessWidget {
 
 
                   if(isGraduationEvent){
-                    return MessageHandler.showWarning(context, "Selecione uma turma ou ao menos um aluno para prosseguir");
+                    return AppMessageHandler.showWarning(context, "Selecione uma turma ou ao menos um aluno para prosseguir");
                   }
 
-                  return MessageHandler.showWarning(context, "Preencha todas as informações antes de prosseguir");
+                  return AppMessageHandler.showWarning(context, "Preencha todas as informações antes de prosseguir");
                 },
                 onFinish: () async{
 
@@ -152,12 +152,12 @@ class EventFormPage extends StatelessWidget {
                   if(!context.mounted) return;
 
                   if(success){
-                    MessageHandler.showSuccess(context, "Solicitação de evento criada com sucesso");
+                    AppMessageHandler.showSuccess(context, "Solicitação de evento criada com sucesso");
                     context.pop();
                     return;
                   }
 
-                  MessageHandler.showError(context, "Erro: ${formController.errorMessage}");
+                  AppMessageHandler.showError(context, "Erro: ${formController.errorMessage}");
                 },
               ),
             ],

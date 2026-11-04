@@ -6,8 +6,9 @@ import 'package:sistema_abada_capoeira/features/events/domain/entities/event_ent
 import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_entity.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/controllers/created_events_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_status_card_widget.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/created_events_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/created_event_alert_dialog_widget.dart';
 
 class CreatedEventsPage extends StatefulWidget {
   const CreatedEventsPage({super.key});
@@ -44,54 +45,7 @@ class _CreatedEventsPageState extends State<CreatedEventsPage> {
 
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: ColorConstants.surfaceColor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text(
-          title,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            color: ColorConstants.textPrimary,
-          ),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "Observação dos avaliadores:",
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                color: ColorConstants.textSecondary,
-                fontSize: 13,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: ColorConstants.backgroundColor,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: ColorConstants.borderColor),
-              ),
-              child: Text(
-                reason ?? "Sem observações detalhadas.",
-                style: const TextStyle(
-                  color: ColorConstants.textPrimary,
-                  fontSize: 14,
-                ),
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text("Fechar"),
-          ),
-        ],
-      ),
+      builder: (context) => CreatedEventAlertDialogWidget(title: title, reason: reason)
     );
   }
 
