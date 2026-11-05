@@ -12,7 +12,6 @@ import 'package:sistema_abada_capoeira/features/events/presentation/controllers/
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/events_empty_state_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_subscription_controller.dart';
-import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/user_event_subscription_card_widget.dart';
 
 class StudentDashboardPage extends StatelessWidget {
   const StudentDashboardPage({super.key});
@@ -69,12 +68,13 @@ class StudentDashboardPage extends StatelessWidget {
                               EventSubscriptionEntity? eventSubscription =
                                   hasAlreadySubscribed(event);
 
+                              bool alreadySubscribed = eventSubscription != null;
                               return EventCardWidget(
                                 event: event,
                                 width: 280,
-                                alreadySubscribed: eventSubscription != null,
+                                alreadySubscribed: alreadySubscribed, //eventSubscription != null,
                                 onTap: () {
-                                  if (eventSubscription != null) {
+                                  if (alreadySubscribed) {
                                     RouteController.redirectToEventReceiptPage(
                                       context: context,
                                       event: event,
@@ -101,23 +101,23 @@ class StudentDashboardPage extends StatelessWidget {
 
               const SizedBox(height: 24),
 
-              SectionTitleWidget(
-                sectionTitle: "Minhas Inscrições",
-                onPressedTitle: "Ver todas",
-                onPressed: () {},
-              ),
-              UserEventSubscriptionCardWidget(
-                eventName: "Batizado e Troca de Crodas 2026",
-                subscriptionConfirmed: true,
-              ),
-              UserEventSubscriptionCardWidget(
-                eventName: "Workshop de Maculelê",
-                subscriptionConfirmed: true,
-              ),
-              UserEventSubscriptionCardWidget(
-                eventName: "Troca de Cordas Infantil",
-                subscriptionConfirmed: false,
-              ),
+              // SectionTitleWidget(
+              //   sectionTitle: "Minhas Inscrições",
+              //   onPressedTitle: "Ver todas",
+              //   onPressed: () {},
+              // ),
+              // UserEventSubscriptionCardWidget(
+              //   eventName: "Batizado e Troca de Crodas 2026",
+              //   subscriptionConfirmed: true,
+              // ),
+              // UserEventSubscriptionCardWidget(
+              //   eventName: "Workshop de Maculelê",
+              //   subscriptionConfirmed: true,
+              // ),
+              // UserEventSubscriptionCardWidget(
+              //   eventName: "Troca de Cordas Infantil",
+              //   subscriptionConfirmed: false,
+              // ),
             ],
           ),
         ),

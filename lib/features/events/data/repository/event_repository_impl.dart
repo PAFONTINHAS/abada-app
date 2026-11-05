@@ -92,5 +92,12 @@ class EventRepositoryImpl implements EventRepository{
     return await eventRemoteDatasource.getEventSubscriptions(userId);
   }
 
+  @override
+  Future<Either<Failure, EventSubscriptionEntity?>> validateEventSubscriptionAvailability(String userId, String eventId) async{
+
+    return await eventRemoteDatasource.validateEventSubscriptionAvailability(userId, eventId);
+  }
+
+
 
 }
