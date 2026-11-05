@@ -79,24 +79,24 @@ class EventReceiptPage extends StatelessWidget {
             const SizedBox(height: 24),
             
             // Botão de Voltar
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton(
-                onPressed: () => Navigator.of(context).pop(), // Ou GoRouter.pop() dependendo de como sua rota funciona
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  side: const BorderSide(color: ColorConstants.indigoColor),
-                ),
-                child: const Text(
-                  "Voltar aos Eventos",
-                  style: TextStyle(
-                    fontSize: 16, 
-                    fontWeight: FontWeight.bold,
-                    color: ColorConstants.indigoColor
-                  ),
-                ),
-              ),
-            )
+            // SizedBox(
+            //   width: double.infinity,
+            //   child: OutlinedButton(
+            //     onPressed: () => Navigator.of(context).pop(), // Ou GoRouter.pop() dependendo de como sua rota funciona
+            //     style: OutlinedButton.styleFrom(
+            //       padding: const EdgeInsets.symmetric(vertical: 16),
+            //       side: const BorderSide(color: ColorConstants.indigoColor),
+            //     ),
+            //     child: const Text(
+            //       "Voltar aos Eventos",
+            //       style: TextStyle(
+            //         fontSize: 16, 
+            //         fontWeight: FontWeight.bold,
+            //         color: ColorConstants.indigoColor
+            //       ),
+            //     ),
+            //   ),
+            // )
           ],
         ),
       ),

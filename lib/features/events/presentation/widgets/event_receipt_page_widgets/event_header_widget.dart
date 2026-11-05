@@ -17,18 +17,20 @@ class EventHeaderWidget extends StatelessWidget {
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            event.eventName,
+           event.eventName,
             style: const TextStyle(
               color: ColorConstants.whiteColor,
               fontSize: 22,
               fontWeight: FontWeight.bold,
             ),
+            textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Icon(Icons.calendar_month, color: Colors.white70, size: 16),
               const SizedBox(width: 8),
@@ -38,8 +40,21 @@ class EventHeaderWidget extends StatelessWidget {
                   event.eventEndingDate,
                 ),
                 style: const TextStyle(color: Colors.white, fontSize: 14),
+                textAlign: TextAlign.center,
               ),
             ],
+          ),
+
+          const SizedBox(height: 8),
+
+          Text(
+            event.eventLocation,
+            style: const TextStyle(
+              color: ColorConstants.whiteColor,
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
           ),
         ],
       ),
