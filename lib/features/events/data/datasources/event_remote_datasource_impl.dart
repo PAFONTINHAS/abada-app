@@ -5,6 +5,7 @@ import 'package:sistema_abada_capoeira/core/errors/failure.dart';
 import 'package:sistema_abada_capoeira/core/services/image_service.dart';
 import 'package:sistema_abada_capoeira/core/errors/exception_handler.dart';
 import 'package:sistema_abada_capoeira/core/constants/database_constants.dart';
+import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/data/models/event_entity_model.dart';
 import 'package:sistema_abada_capoeira/features/events/data/datasources/event_remote_datasource.dart';
@@ -156,6 +157,34 @@ class EventRemoteDatasourceImpl implements EventRemoteDatasource{
 
       return ExceptionHandler.handleException(exception: exception, contextMessage: "subscribeToEvent");
     }
+
+  }
+
+
+  @override
+  Future<Either<Failure, EventSubscriptionEntity?>> validateEventSubscriptionAvailability(String userId, String eventId) async{
+
+    try{
+
+      final query = await _firestore.collection(DBCollections.ongoingEventsSubscriptionsCollection)
+      .where("userId", isEqualTo: userId)
+      .where("eventId", isEqualTo: eventId)
+      .limit(1)
+      .get();
+      
+      if(query.docs.isEmpty) return Right(null);
+
+
+      final document = query.docs.first;
+
+      final model = EventSubscriptionEntityModel.fromSnapshot(document);
+
+      return Right(model);
+
+    }catch(exception){
+      return ExceptionHandler.handleException(exception: exception, contextMessage: "getEventSubscriptionByUserAndEventId");
+    }
+
 
   }
   
