@@ -169,7 +169,7 @@ class EventCardWidget extends StatelessWidget {
                     ),
                     child: Text(
                       alreadySubscribed
-                          ? "Ver comprovante"
+                          ? "Ver ingresso"
                           : "Ver detalhes do evento", 
                       style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                     ),

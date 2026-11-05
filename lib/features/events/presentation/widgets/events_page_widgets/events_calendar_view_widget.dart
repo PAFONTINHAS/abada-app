@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:collection/collection.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
+import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_subscription_controller.dart';
@@ -19,8 +20,6 @@ class EventsCalendarViewWidget extends StatelessWidget {
 
     final user = controller.userProfile;
 
-    final subscriptionController = context.read<EventSubscriptionController>();
-    final subscriptions = subscriptionController.subscriptions;
 
     return Selector<EventsController, List<EventEntity>>(
       selector: (_, controller) => controller.filteredEvents,
@@ -60,15 +59,18 @@ class EventsCalendarViewWidget extends StatelessWidget {
           );
         }
 
-        return ListView.separated(
-          itemCount: events.length,
-          separatorBuilder: (_, __) => const SizedBox(height: 12),
-          itemBuilder: (context, index) {
-            final event = events[index];
+        return Consumer<EventSubscriptionController>(
+          builder: (context, controller, child){
+            
+            LoggingService.displayInfo("Mudanças no controller de ingressos");
+            final subscriptions = controller.subscriptions;
 
-            return EventCardWidget(
-              event: event,
-              onTap: () {
+            return ListView.separated(
+              itemCount: events.length,
+              separatorBuilder: (_, __) => const SizedBox(height: 12),
+              itemBuilder: (context, index) {
+                final event = events[index];
+
                 final EventSubscriptionEntity? subscription = subscriptions
                     .firstWhereOrNull(
                       (eventSubscription) =>
@@ -77,25 +79,33 @@ class EventsCalendarViewWidget extends StatelessWidget {
 
                 final bool alreadySubscribedToEvent = subscription != null;
 
-                if (alreadySubscribedToEvent) {
-                  RouteController.redirectToEventReceiptPage(
-                    context: context,
-                    event: event,
-                    subscription: subscription,
-                  );
-                } else {
-                  final bool isSubscriptionAllowed =
-                      user.uid != event.eventCreatorId;
+                LoggingService.displayInfo("AlreaySubscribed? $alreadySubscribedToEvent");
+                return EventCardWidget(
+                  event: event,
+                  alreadySubscribed: alreadySubscribedToEvent,
+                  onTap: () {
 
-                  RouteController.redirectToEventDetailsPage(
-                    context: context,
-                    eventEntity: event,
-                    isSubscriptionAllowed: isSubscriptionAllowed,
-                  );
-                }
+                    if (alreadySubscribedToEvent) {
+                      RouteController.redirectToEventReceiptPage(
+                        context: context,
+                        event: event,
+                        subscription: subscription,
+                      );
+                    } else {
+                      final bool isSubscriptionAllowed =
+                          user.uid != event.eventCreatorId;
+
+                      RouteController.redirectToEventDetailsPage(
+                        context: context,
+                        eventEntity: event,
+                        isSubscriptionAllowed: isSubscriptionAllowed,
+                      );
+                    }
+                  },
+                );
               },
             );
-          },
+          }
         );
       },
     );

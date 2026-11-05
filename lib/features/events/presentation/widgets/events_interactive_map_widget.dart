@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
@@ -5,6 +6,8 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_subscription_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/location/presentation/controllers/location_controller.dart';
 
@@ -14,9 +17,6 @@ class EventsInteractiveMapWidget extends StatelessWidget {
   const EventsInteractiveMapWidget({
     super.key,
     required this.events,
-    // Podemos iniciar centralizado no Brasil, ou na localização atual do usuário
-    // this.initialCenter = const LatLng(-15.7801, -47.9292), // Brasília como default
-    // this.initialZoom = 4.5,
   });
 
   void _showEventDetailsBottomSheet(BuildContext context, EventEntity event) {
@@ -25,22 +25,50 @@ class EventsInteractiveMapWidget extends StatelessWidget {
       backgroundColor: Colors.transparent, // Deixa transparente para vermos as bordas do Card
       isScrollControlled: true,
       builder: (context) {
-        return Padding(
-          // Dá um respiro das bordas da tela e da área de navegação do celular
-          padding: EdgeInsets.only(
-            left: 16,
-            right: 16,
-            bottom: MediaQuery.of(context).padding.bottom + 16,
-          ),
-          child: EventCardWidget(
-            event: event,
-            showEventAdress: true,
-            onTap: () {
-              Navigator.pop(context);
+        return Consumer<EventSubscriptionController>(
+          builder: (context, controller, child) {
 
-              RouteController.redirectToEventDetailsPage(context: context, eventId: event.eventId);
-            },
-          ),
+            final subscriptions = controller.subscriptions;
+
+            
+            final EventSubscriptionEntity? subscription = subscriptions
+                .firstWhereOrNull(
+                  (eventSubscription) =>
+                      eventSubscription.eventId == event.eventId,
+                );
+
+            final bool alreadySubscribedToEvent = subscription != null;
+
+            return Padding(
+              // Dá um respiro das bordas da tela e da área de navegação do celular
+              padding: EdgeInsets.only(
+                left: 16,
+                right: 16,
+                bottom: MediaQuery.of(context).padding.bottom + 16,
+              ),
+              child: EventCardWidget(
+                event: event,
+                showEventAdress: true,
+                alreadySubscribed: alreadySubscribedToEvent,
+                onTap: () {
+                  Navigator.pop(context);
+
+                  if (alreadySubscribedToEvent) {
+                    return RouteController.redirectToEventReceiptPage(
+                      context: context,
+                      event: event,
+                      subscription: subscription,
+                    );
+                  }
+                  
+                  RouteController.redirectToEventDetailsPage(
+                    context: context,
+                    eventId: event.eventId,
+                  );
+                },
+              ),
+            );
+          },
         );
       },
     );

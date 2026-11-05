@@ -88,7 +88,7 @@ class DateController{
     if (startYear == endYear && startMonth == endMonth && startDay == endDay) {
       return '$startDay/$startMonth/$startYear - $startHour:$startMin até $endHour:$endMin';
     } else {
-      return 'de $startDay/$startMonth/$startYear, $startHour:$startMin até $endDay/$endMonth/$endYear, $endHour:$endMin';
+      return '$startDay/$startMonth/$startYear, $startHour:$startMin até $endDay/$endMonth/$endYear, $endHour:$endMin';
     }
   }
 
