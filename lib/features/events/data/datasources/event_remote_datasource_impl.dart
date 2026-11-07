@@ -11,6 +11,7 @@ import 'package:sistema_abada_capoeira/features/events/data/models/event_entity_
 import 'package:sistema_abada_capoeira/features/events/data/datasources/event_remote_datasource.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/data/models/event_subscription_entity_model.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/events_and_user_subscriptions.dart';
 
 class EventRemoteDatasourceImpl implements EventRemoteDatasource{
 
@@ -52,17 +53,54 @@ class EventRemoteDatasourceImpl implements EventRemoteDatasource{
   }
 
   @override
-  Future<Either<Failure, List<EventEntity>>> getEvents() async{
+  Future<Either<Failure, EventsAndUserSubscriptions>> getEventsAndSubscriptions(String userId) async{
     try{
+
+      final List<DocumentSnapshot> userSubscriptions = []; 
+
+      LoggingService.displayInfo("Pegando eventos");
       final QuerySnapshot query = await _firestore
           .collection(DBCollections.ongoingEventsCollection)
           .where('eventActive', isEqualTo: true)
           .where('finishedEvent', isEqualTo: false)
           .get();
 
-      final eventsList = query.docs.map((document) => EventEntityModel.fromSnapshot(document)).toList();
+      for(final document in query.docs){
+        
+        if(document.data() == null) continue;
+        
+        final subscriptionDoc = await _firestore
+          .collection(DBCollections.ongoingEventsCollection)
+          .doc(document.id)
+          .collection(DBCollections.eventSubscriptionsCollection)
+          .doc(userId)
+          .get();
 
-      return Right(eventsList);
+        if(!subscriptionDoc.exists || subscriptionDoc.data() == null) continue;
+
+
+        if(subscriptionDoc.exists && document.data() != null){
+
+          LoggingService.displayInfo("Inscrição para o evento ${document.id} encontrada");
+
+          userSubscriptions.add(subscriptionDoc);
+        } 
+      }
+
+      final eventsList = query.docs
+          .map((document) => EventEntityModel.fromSnapshot(document))
+          .toList();
+      final subscriptionsList = userSubscriptions
+          .map((document) => EventSubscriptionEntityModel.fromSnapshot(document))
+          .toList();
+
+
+      return Right(
+        EventsAndUserSubscriptions(
+          events: eventsList,
+          userSubscriptions: subscriptionsList,
+        ),
+      );
 
     } catch(exception){
       return ExceptionHandler.handleException(exception: exception, contextMessage: 'getEvents');
@@ -123,7 +161,11 @@ class EventRemoteDatasourceImpl implements EventRemoteDatasource{
 
       final subscriptionModel = EventSubscriptionEntityModel.fromEntity(subscription);
 
-      final collectionReference = _firestore.collection(DBCollections.ongoingEventsSubscriptionsCollection).doc();
+      final collectionReference = _firestore
+          .collection(DBCollections.ongoingEventsCollection)
+          .doc(subscription.eventId)
+          .collection(DBCollections.eventSubscriptionsCollection)
+          .doc(subscription.userId);
       
       await collectionReference.set(subscriptionModel.toMap());
 
@@ -136,48 +178,19 @@ class EventRemoteDatasourceImpl implements EventRemoteDatasource{
   }
 
   @override
-  Future<Either<Failure, List<EventSubscriptionEntity>>> getEventSubscriptions(String userId) async{
-
+  Future<Either<Failure, EventSubscriptionEntity?>> validateEventSubscriptionAvailability(String userId, String eventId) async{
     try{
 
-      final query = await _firestore
-          .collection(DBCollections.ongoingEventsSubscriptionsCollection)
-          .where('userId', isEqualTo: userId)
+      final subscriptionDocument = await _firestore
+          .collection(DBCollections.ongoingEventsCollection)
+          .doc(eventId)
+          .collection(DBCollections.eventSubscriptionsCollection)
+          .doc(userId)
           .get();
 
-      if(query.docs.isEmpty) return Right([]);
+      if(!subscriptionDocument.exists) return Right(null);
 
-      final eventSubscriptions = query.docs
-        .map((document) => EventSubscriptionEntityModel.fromSnapshot(document))
-        .toList();
-
-      return Right(eventSubscriptions);
-
-    }catch(exception){
-
-      return ExceptionHandler.handleException(exception: exception, contextMessage: "subscribeToEvent");
-    }
-
-  }
-
-
-  @override
-  Future<Either<Failure, EventSubscriptionEntity?>> validateEventSubscriptionAvailability(String userId, String eventId) async{
-
-    try{
-
-      final query = await _firestore.collection(DBCollections.ongoingEventsSubscriptionsCollection)
-      .where("userId", isEqualTo: userId)
-      .where("eventId", isEqualTo: eventId)
-      .limit(1)
-      .get();
-      
-      if(query.docs.isEmpty) return Right(null);
-
-
-      final document = query.docs.first;
-
-      final model = EventSubscriptionEntityModel.fromSnapshot(document);
+      final model = EventSubscriptionEntityModel.fromSnapshot(subscriptionDocument);
 
       return Right(model);
 

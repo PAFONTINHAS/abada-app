@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:collection/collection.dart';
-import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
 import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
+import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
-import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_subscription_controller.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/controllers/events_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_card_widget.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/events_controller.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_subscription_controller.dart';
 
 class EventsCalendarViewWidget extends StatelessWidget {
   const EventsCalendarViewWidget({super.key});
@@ -79,7 +79,6 @@ class EventsCalendarViewWidget extends StatelessWidget {
 
                 final bool alreadySubscribedToEvent = subscription != null;
 
-                LoggingService.displayInfo("AlreaySubscribed? $alreadySubscribedToEvent");
                 return EventCardWidget(
                   event: event,
                   alreadySubscribed: alreadySubscribedToEvent,

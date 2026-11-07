@@ -39,9 +39,10 @@ export const finishEventsAndGraduateMembers = functions
         const eventSubscriptionRef =
           finishedEventsRef.collection("subscriptions");
 
-        const eventSubscriptionsSnap = await db
-          .collection("ongoing_events_subscriptions")
-          .where("eventId", "==", eventDoc.id)
+        const eventSubscriptionsSnap = await
+        db.collection("ongoing_events")
+          .doc(eventDoc.id)
+          .collection("subscriptions")
           .get();
 
         const event = eventDoc.data();
@@ -77,6 +78,9 @@ export const finishEventsAndGraduateMembers = functions
             async (memberId: string) => {
               const userRef = db.collection("users").doc(memberId);
               const userDoc = await userRef.get();
+              const graduationHistoryRef = userRef
+                .collection("graduation_history")
+                .doc();
 
               if (!userDoc.exists) return;
 
@@ -95,6 +99,16 @@ export const finishEventsAndGraduateMembers = functions
                 ) {
                   const nextBelt = abadaBelts[currentIndex + 1];
                   batch.update(userRef, {belt: nextBelt.belt});
+
+                  batch.set(graduationHistoryRef, {
+                    "eventId": eventDoc.id,
+                    "eventName": event.eventName,
+                    "eventInitDate": event.eventInitDate,
+                    "eventEndingDate": event.eventEndingDate,
+                    "serverGraduationTime": Timestamp.now(),
+                    "previousBelt": currentBelt,
+                    "updatedBelt": nextBelt.belt,
+                  });
                 }
               }
             },

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:sistema_abada_capoeira/core/errors/failure.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/events_and_user_subscriptions.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/repository/event_repository.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/data/datasources/event_remote_datasource.dart';
@@ -58,8 +59,8 @@ class EventRepositoryImpl implements EventRepository{
   }
 
   @override
-  Future<Either<Failure, List<EventEntity>>> getEvents() async{
-    return await eventRemoteDatasource.getEvents();
+  Future<Either<Failure, EventsAndUserSubscriptions>> getEventsAndSubscriptions(String userId) async{
+    return await eventRemoteDatasource.getEventsAndSubscriptions(userId);
   }
 
   @override
@@ -86,11 +87,6 @@ class EventRepositoryImpl implements EventRepository{
   Future<Either<Failure, EventSubscriptionEntity>> subscribeToEvent(EventSubscriptionEntity subscription) async{
     return await eventRemoteDatasource.subscribeToEvent(subscription);
   }  
-
-  @override
-  Future<Either<Failure, List<EventSubscriptionEntity>>> getEventSubscriptions(String userId) async{
-    return await eventRemoteDatasource.getEventSubscriptions(userId);
-  }
 
   @override
   Future<Either<Failure, EventSubscriptionEntity?>> validateEventSubscriptionAvailability(String userId, String eventId) async{
