@@ -57,8 +57,6 @@ class EventRemoteDatasourceImpl implements EventRemoteDatasource{
     try{
 
       final List<DocumentSnapshot> userSubscriptions = []; 
-
-      LoggingService.displayInfo("Pegando eventos");
       final QuerySnapshot query = await _firestore
           .collection(DBCollections.ongoingEventsCollection)
           .where('eventActive', isEqualTo: true)
@@ -80,8 +78,6 @@ class EventRemoteDatasourceImpl implements EventRemoteDatasource{
 
 
         if(subscriptionDoc.exists && document.data() != null){
-
-          LoggingService.displayInfo("Inscrição para o evento ${document.id} encontrada");
 
           userSubscriptions.add(subscriptionDoc);
         } 

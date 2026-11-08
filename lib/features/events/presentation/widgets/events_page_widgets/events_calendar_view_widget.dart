@@ -20,7 +20,6 @@ class EventsCalendarViewWidget extends StatelessWidget {
 
     final user = controller.userProfile;
 
-
     return Selector<EventsController, List<EventEntity>>(
       selector: (_, controller) => controller.filteredEvents,
       builder: (context, value, child) {

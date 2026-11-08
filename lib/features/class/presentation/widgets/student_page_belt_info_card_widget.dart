@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
 
 class StudentPageBeltInfoCardWidget extends StatelessWidget {
   const StudentPageBeltInfoCardWidget({super.key, required this.currentBelt});
@@ -15,7 +16,7 @@ class StudentPageBeltInfoCardWidget extends StatelessWidget {
       ),
       // 1. COLUMN PRINCIPAL (Título em cima, conteúdo embaixo)
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // Título
           const Text(
@@ -111,6 +112,20 @@ class StudentPageBeltInfoCardWidget extends StatelessWidget {
               ],
             ),
           ),
+
+          SizedBox(height: 10),
+
+          TextButton(
+            child: Text(
+              "Ver histórico de graduação",
+              style: TextStyle(
+                color: Colors.blue,
+              ),
+            ),
+            onPressed: () => RouteController.redirectToGraduationHistoryPage(
+              context: context,
+            ),
+          )
         ],
       ),
     );
