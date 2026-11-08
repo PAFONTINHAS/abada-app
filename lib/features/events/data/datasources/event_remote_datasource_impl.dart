@@ -5,7 +5,6 @@ import 'package:sistema_abada_capoeira/core/errors/failure.dart';
 import 'package:sistema_abada_capoeira/core/services/image_service.dart';
 import 'package:sistema_abada_capoeira/core/errors/exception_handler.dart';
 import 'package:sistema_abada_capoeira/core/constants/database_constants.dart';
-import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/data/models/event_entity_model.dart';
 import 'package:sistema_abada_capoeira/features/events/data/datasources/event_remote_datasource.dart';
@@ -155,13 +154,18 @@ class EventRemoteDatasourceImpl implements EventRemoteDatasource{
   Future<Either<Failure, EventSubscriptionEntity>> subscribeToEvent(EventSubscriptionEntity subscription) async{
     try{
 
+
       final subscriptionModel = EventSubscriptionEntityModel.fromEntity(subscription);
+
+      String? documentId = subscription.minorStudentSubscriptionData != null
+          ? null
+          : subscription.userId;
 
       final collectionReference = _firestore
           .collection(DBCollections.ongoingEventsCollection)
           .doc(subscription.eventId)
           .collection(DBCollections.eventSubscriptionsCollection)
-          .doc(subscription.userId);
+          .doc(documentId);
       
       await collectionReference.set(subscriptionModel.toMap());
 

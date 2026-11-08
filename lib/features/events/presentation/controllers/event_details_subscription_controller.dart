@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/core/utils/generator.dart';
 import 'package:sistema_abada_capoeira/core/utils/mask_formatter.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
@@ -77,20 +76,9 @@ class EventDetailsSubscriptionController extends ChangeNotifier{
     notifyListeners();
   }
 
-  
-
-  
-  Future<EventSubscriptionEntity?> processPayment(String userId, String userName) async {
-
-    _isProcessing = true;
-    notifyListeners();
-
-    if(_currentEvent == null) return null;
+  EventSubscriptionEntity buildSubscriptionEntity(String userId, String userName){
 
     String eventReceipt = Generator.generateVerificationCode(userId, _currentEvent!.eventId);
-
-
-    final double totalAmount = this.totalAmount;
 
     final Set<SelectedEventProduct> selectedEventProducts =
       _selectedOptionalProducts.map(
@@ -101,7 +89,8 @@ class EventDetailsSubscriptionController extends ChangeNotifier{
       )
       .toSet();
 
-    final subscription = EventSubscriptionEntity(
+
+    return EventSubscriptionEntity(
       id: '',
       userId: userId,
       userName: userName,
@@ -112,6 +101,42 @@ class EventDetailsSubscriptionController extends ChangeNotifier{
       selectedProducts: selectedEventProducts,
       createdAt: DateTime.now(),
     );
+  }
+
+  
+
+  
+  Future<EventSubscriptionEntity?> processPayment(String userId, String userName) async {
+
+    _isProcessing = true;
+    notifyListeners();
+
+    if(_currentEvent == null) return null;
+
+    final subscription = buildSubscriptionEntity(userId, userName);
+
+    // String eventReceipt = Generator.generateVerificationCode(userId, _currentEvent!.eventId);
+
+    // final Set<SelectedEventProduct> selectedEventProducts =
+    //   _selectedOptionalProducts.map(
+    //     (product) => SelectedEventProduct(
+    //       product: product.product,
+    //       price: product.price,
+    //     ),
+    //   )
+    //   .toSet();
+
+    // final subscription = EventSubscriptionEntity(
+    //   id: '',
+    //   userId: userId,
+    //   userName: userName,
+    //   totalValue: totalAmount,
+    //   paymentMethod: _paymentMethod,
+    //   verificationCode: eventReceipt,
+    //   eventId: _currentEvent!.eventId,
+    //   selectedProducts: selectedEventProducts,
+    //   createdAt: DateTime.now(),
+    // );
    
 
     final updatedSubscription = await subscribeToEvent(subscription);
@@ -129,7 +154,4 @@ class EventDetailsSubscriptionController extends ChangeNotifier{
     return result.fold((failiure) => null, (subscription) => subscription); 
   }
   
-
-  
-
 }

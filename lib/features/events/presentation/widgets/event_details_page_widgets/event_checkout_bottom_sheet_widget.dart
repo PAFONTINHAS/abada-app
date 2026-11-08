@@ -17,7 +17,6 @@ class EventCheckoutBottomSheetWidget extends StatefulWidget {
   final EventEntity event;
 
   const EventCheckoutBottomSheetWidget({super.key, required this.event});
-
   @override
   State<EventCheckoutBottomSheetWidget> createState() => _EventCheckoutBottomSheetWidgetState();
 }

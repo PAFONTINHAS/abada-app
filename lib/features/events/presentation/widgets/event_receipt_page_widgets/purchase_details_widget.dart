@@ -8,11 +8,23 @@ import 'package:sistema_abada_capoeira/features/events/domain/entities/event_sub
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_receipt_page_widgets/event_info_row_widget.dart';
 
 class PurchaseDetailsWidget extends StatelessWidget {
-  const PurchaseDetailsWidget({super.key, required this.subscription});
+  const PurchaseDetailsWidget({
+    super.key,
+    required this.subscription,
+    required this.showTotalPayed,
+  });
 
   final EventSubscriptionEntity subscription;
+  final bool showTotalPayed;
   @override
   Widget build(BuildContext context) {
+    final isMinorSubscription =
+        subscription.minorStudentSubscriptionData != null;
+
+    final userName = isMinorSubscription
+        ? subscription.minorStudentSubscriptionData!.studentFullName
+        : subscription.userName;
+
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -27,11 +39,30 @@ class PurchaseDetailsWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
+
           EventInfoRowWidget(
             label: "Status",
             value: subscription.status.displayPortugueseText,
             isHighlight: true,
           ),
+
+          EventInfoRowWidget(label: "Nome", value: userName),
+
+          if (isMinorSubscription)
+            EventInfoRowWidget(
+              label: 'Responsável Legal',
+              value:
+                  subscription.minorStudentSubscriptionData!.legalGuardianName,
+            ),
+
+          if (isMinorSubscription)
+            EventInfoRowWidget(
+              label: 'Telefone do Responsável',
+              value: subscription
+                  .minorStudentSubscriptionData!
+                  .legalGuardianPhoneNumber,
+            ),
+
           EventInfoRowWidget(
             label: "Incrito em",
             value: DateController.formatDDMMYYYYHM(subscription.createdAt),
@@ -70,37 +101,39 @@ class PurchaseDetailsWidget extends StatelessWidget {
             ),
           ],
 
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 12),
-            child: Divider(color: ColorConstants.borderColor),
-          ),
+          if (showTotalPayed) ...[
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 12),
+              child: Divider(color: ColorConstants.borderColor),
+            ),
 
-          // Total
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                "Total Pago",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: ColorConstants.textPrimary,
-                ),
-              ),
-              Text(
-                MaskFormatter.convertToReais(
-                  MaskFormatter.convertMoneyDoubleToString(
-                    subscription.totalValue,
+            // Total
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "Total Pago",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: ColorConstants.textPrimary,
                   ),
                 ),
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: ColorConstants.indigoColor,
+                Text(
+                  MaskFormatter.convertToReais(
+                    MaskFormatter.convertMoneyDoubleToString(
+                      subscription.totalValue,
+                    ),
+                  ),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: ColorConstants.indigoColor,
+                  ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
+          ],
         ],
       ),
     );

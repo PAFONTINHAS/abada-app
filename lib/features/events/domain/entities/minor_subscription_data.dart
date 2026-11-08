@@ -1,20 +1,27 @@
 class MinorStudentSubscriptionData {
 
-  final String legalGuardian;
+  final String legalGuardianName;
+  final String studentFullName;
+  final String studentNickname;
   final String studentCurrentBelt;
   final String legalGuardianPhoneNumber;
   final bool   hasLegalGuardianConsent;
 
   const MinorStudentSubscriptionData({
-    required this.legalGuardian,
+    required this.studentFullName,
+    required this.studentNickname,
     required this.studentCurrentBelt,
+
+    required this.legalGuardianName,
     required this.legalGuardianPhoneNumber,
     required this.hasLegalGuardianConsent,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'legalGuardian': legalGuardian,
+      'studentFullName': studentFullName,
+      'studentNickname': studentNickname,
+      'legalGuardian': legalGuardianName,
       'studentCurrentBelt': studentCurrentBelt,
       'legalGuardianPhoneNumber': legalGuardianPhoneNumber,
       'hasLegalGuardianConsent': hasLegalGuardianConsent,

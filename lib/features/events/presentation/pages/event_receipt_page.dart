@@ -10,11 +10,13 @@ import 'package:sistema_abada_capoeira/features/events/presentation/widgets/even
 class EventReceiptPage extends StatelessWidget {
   final EventEntity event;
   final EventSubscriptionEntity subscription;
+  final bool showTotalPayed;
 
   const EventReceiptPage({
     super.key,
     required this.event,
     required this.subscription,
+    this.showTotalPayed = true,
   });
   
   @override
@@ -71,7 +73,7 @@ class EventReceiptPage extends StatelessWidget {
                   ),
 
                   // Detalhes da Compra
-                  PurchaseDetailsWidget(subscription: subscription),
+                  PurchaseDetailsWidget(subscription: subscription, showTotalPayed: showTotalPayed,),
                 ],
               ),
             ),
@@ -79,24 +81,24 @@ class EventReceiptPage extends StatelessWidget {
             const SizedBox(height: 24),
             
             // Botão de Voltar
-            // SizedBox(
-            //   width: double.infinity,
-            //   child: OutlinedButton(
-            //     onPressed: () => Navigator.of(context).pop(), // Ou GoRouter.pop() dependendo de como sua rota funciona
-            //     style: OutlinedButton.styleFrom(
-            //       padding: const EdgeInsets.symmetric(vertical: 16),
-            //       side: const BorderSide(color: ColorConstants.indigoColor),
-            //     ),
-            //     child: const Text(
-            //       "Voltar aos Eventos",
-            //       style: TextStyle(
-            //         fontSize: 16, 
-            //         fontWeight: FontWeight.bold,
-            //         color: ColorConstants.indigoColor
-            //       ),
-            //     ),
-            //   ),
-            // )
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton(
+                onPressed: () => Navigator.of(context).pop(), // Ou GoRouter.pop() dependendo de como sua rota funciona
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  side: const BorderSide(color: ColorConstants.indigoColor),
+                ),
+                child: const Text(
+                  "Voltar aos Eventos",
+                  style: TextStyle(
+                    fontSize: 16, 
+                    fontWeight: FontWeight.bold,
+                    color: ColorConstants.indigoColor
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       ),

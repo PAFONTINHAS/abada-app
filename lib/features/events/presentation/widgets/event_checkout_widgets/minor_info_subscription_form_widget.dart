@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_minor_subscription_controller.dart';
 import 'package:sistema_abada_capoeira/shared/inputs/custom_text_input/custom_text_input.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_minor_subscription_controller.dart';
 
 class MinorInfoSubscriptionFormWidget extends StatelessWidget {
   const MinorInfoSubscriptionFormWidget({super.key});
@@ -81,7 +81,9 @@ class MinorInfoSubscriptionFormWidget extends StatelessWidget {
         const SizedBox(height: 12),
 
         CustomTextInput(
+          keyboardType: TextInputType.numberWithOptions(),
           hintText: "Telefone/Whatsapp do Responsável",
+          hasMask: true,
           mask: phoneMaskFormatter,
           controller: controller.guardianPhoneController,
         ),

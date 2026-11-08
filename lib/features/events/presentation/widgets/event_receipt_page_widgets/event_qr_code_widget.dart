@@ -46,7 +46,7 @@ class EventQrCodeWidget extends StatelessWidget {
           Text(
             subscription.verificationCode,
             style: const TextStyle(
-              fontSize: 18,
+              fontSize: 17,
               fontWeight: FontWeight.bold,
               letterSpacing: 2,
               color: ColorConstants.textPrimary,

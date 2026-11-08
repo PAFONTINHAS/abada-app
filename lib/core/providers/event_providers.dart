@@ -6,6 +6,7 @@ import 'package:sistema_abada_capoeira/features/events/data/repository/event_rep
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/get_user_events_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/get_event_by_id_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/data/datasources/event_remote_datasource.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/usecases/subscribe_minor_to_event_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/subscribe_to_event_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_minor_subscription_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/events_controller.dart';
@@ -38,6 +39,7 @@ class EventProviders {
   static GetUserEventsUsecase getUserEventsUsecase = GetUserEventsUsecase(eventRepository);
   static SubscribeToEventUsecase subscribeToEventUsecase = SubscribeToEventUsecase(eventRepository);
   static CreateEventRequestUsecase createEventRequestUsecase = CreateEventRequestUsecase(eventRepository);
+  static SubscribeMinorToEventUsecase subscribeMinorToEventUsecase = SubscribeMinorToEventUsecase(eventRepository);
   static GetPendingEventsRequestsUsecase getPendingEventsRequestsUsecase = GetPendingEventsRequestsUsecase(eventRepository);
 
   static final List<SingleChildWidget> providers = [
@@ -45,12 +47,12 @@ class EventProviders {
     ChangeNotifierProvider(create: (_) => EventSubscriptionController()),
     ChangeNotifierProvider(create: (_) => EventFormProductsController()),
     ChangeNotifierProvider(create: (_) => EventFormGraduationController()),
-    ChangeNotifierProvider(create: (_) => EventMinorSubscriptionController()),
     ChangeNotifierProvider(create: (_) => EventsController(getEventsUsecase)),
     ChangeNotifierProvider(create: (_) => EventDetailsController(getEventByIdUsecase)),
     ChangeNotifierProvider(create: (_) => CreatedEventsController(getUserEventsUsecase)),
     ChangeNotifierProvider(create: (_) => EventFormController(createEventRequestUsecase)),
     ChangeNotifierProvider(create: (_) => EventRequestsController(getPendingEventsRequestsUsecase)),
     ChangeNotifierProvider(create: (_) => EventDetailsSubscriptionController(subscribeToEventUsecase)),
+    ChangeNotifierProvider(create: (_) => EventMinorSubscriptionController(subscribeMinorToEventUsecase)),
   ];
 }

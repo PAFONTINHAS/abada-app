@@ -43,7 +43,7 @@ class EventSubscriptionEntity {
       'paymentMethod': paymentMethod,
       'selectedProducts': selectedProducts,
       'verificationCode': verificationCode,
-      'createdAt': createdAt.toIso8601String(),
+      'createdAt': createdAt,
     };
   }
 

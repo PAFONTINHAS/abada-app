@@ -30,7 +30,8 @@ class LegalGuardianConsentCheckboxWidget extends StatelessWidget {
               onChanged: (checked) =>
                   controller.setHasGuardianConsent(checked ?? false),
               title: const Text(
-                "Declaro que obtive a autorização prévia do responsável legal para a inscrição do menor neste evento.",
+                "Declaro que todas as informações inseridas são verdadeiras " 
+                "e obtive a autorização prévia do responsável legal para a inscrição do menor neste evento.",
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,

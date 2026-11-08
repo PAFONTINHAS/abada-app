@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/core/utils/list_converter.dart';
 import 'package:sistema_abada_capoeira/core/utils/date_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/payment_method.dart';
@@ -63,12 +64,16 @@ class EventSubscriptionEntityModel extends EventSubscriptionEntity{
       paymentMethod: entity.paymentMethod,
       selectedProducts: entity.selectedProducts,
       verificationCode: entity.verificationCode,
+      minorStudentSubscriptionData: entity.minorStudentSubscriptionData
     );
   }
 
   @override
   Map<String, dynamic> toMap() {
-    return {
+
+    LoggingService.displayInfo("Dados do menor: $minorStudentSubscriptionData");
+
+    final map = {
       'userId': userId,
       'eventId': eventId,
       'userName': userName,
@@ -76,8 +81,7 @@ class EventSubscriptionEntityModel extends EventSubscriptionEntity{
       'status': status.name,
       'paymentMethod': paymentMethod.name,
       'verificationCode': verificationCode,
-      'createdAt': createdAt.toIso8601String(),
-      'minorSubscriptionData': minorStudentSubscriptionData?.toMap(),
+      'createdAt': createdAt,
       'selectedProducts': selectedProducts.map((product){
         return {
           'product': product.product,
@@ -85,6 +89,17 @@ class EventSubscriptionEntityModel extends EventSubscriptionEntity{
         };
       }),
     };
+
+    if(minorStudentSubscriptionData != null){
+      map.addAll({
+        'minorStudentSubscriptionData': minorStudentSubscriptionData!.toMap()
+      });
+    }
+
+
+    LoggingService.displayInfo("Mapa: $map");
+
+    return map;
   }
 
 }

@@ -7,7 +7,7 @@ import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_subscription_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_minor_subscription_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_details_subscription_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_checkout_widgets/event_checkout_button_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_checkout_widgets/mandatory_products_list_widget.dart';
@@ -26,9 +26,8 @@ class EventMinorSubscriptionPage extends StatefulWidget {
       _EventMinorSubscriptionPageState();
 }
 
-class _EventMinorSubscriptionPageState extends State<EventMinorSubscriptionPage> {
-  final _formKey = GlobalKey<FormState>();
-
+class _EventMinorSubscriptionPageState
+    extends State<EventMinorSubscriptionPage> {
   @override
   void initState() {
     super.initState();
@@ -38,10 +37,8 @@ class _EventMinorSubscriptionPageState extends State<EventMinorSubscriptionPage>
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     final profileController = context.read<ProfileController>();
     final user = profileController.userProfile;
     final controller = context.watch<EventDetailsSubscriptionController>();
@@ -54,85 +51,95 @@ class _EventMinorSubscriptionPageState extends State<EventMinorSubscriptionPage>
         .toList();
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          "Inscrição de Menor de Idade",
+          style: TextStyle(
+            color: ColorConstants.textPrimary,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: ColorConstants.surfaceColor,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: ColorConstants.textPrimary),
+      ),
       body: StandardScaffoldBodyWidget(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Cabeçalho
-              Text(
-                "Inscrição de Menor de Idade",
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: ColorConstants.textPrimary,
-                ),
-              ),
-              const SizedBox(height: 4),
-              
-              const MinorInfoSubscriptionFormWidget(),
-              
-              const SizedBox(height: 16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const MinorInfoSubscriptionFormWidget(),
 
-              // --- SEÇÃO: PRODUTOS OBRIGATÓRIOS ---
-              if (mandatoryProducts.isNotEmpty) MandatoryProductsListWidget(mandatoryProducts: mandatoryProducts),
+            const SizedBox(height: 16),
 
-              // --- SEÇÃO: PRODUTOS OPCIONAIS ---
-              if (optionalProducts.isNotEmpty) SelectOptionalProductsWidget(optionalProducts: optionalProducts),
+            // --- SEÇÃO: PRODUTOS OBRIGATÓRIOS ---
+            if (mandatoryProducts.isNotEmpty)
+              MandatoryProductsListWidget(mandatoryProducts: mandatoryProducts),
 
-              const Divider(color: ColorConstants.borderColor),
-              const SizedBox(height: 8),
+            // --- SEÇÃO: PRODUTOS OPCIONAIS ---
+            if (optionalProducts.isNotEmpty)
+              SelectOptionalProductsWidget(optionalProducts: optionalProducts),
 
-              // Resumo do Total Recalculado
-              const TotalSubscriptionValueWidget(),
-              
-              const SizedBox(height: 20),
+            const Divider(color: ColorConstants.borderColor),
+            const SizedBox(height: 8),
 
-              // Seleção da Forma de Pagamento
+            // Resumo do Total Recalculado
+            const TotalSubscriptionValueWidget(),
 
-              const SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-              // --- CHECKBOX LGPD / CONSENTIMENTO (RN05) ---
-              const LegalGuardianConsentCheckboxWidget(),
+            // Seleção da Forma de Pagamento
+            const SizedBox(height: 20),
 
-              const SizedBox(height: 24),
+            // --- CHECKBOX LGPD / CONSENTIMENTO (RN05) ---
+            const LegalGuardianConsentCheckboxWidget(),
 
-              // Botão Confirmar
-              EventCheckoutButtonWidget(
-                onProceed: () async {
-                  final subscriptionController = context.read<EventSubscriptionController>();
+            const SizedBox(height: 24),
 
-                  if (controller.isProcessing) return;
+            // Botão Confirmar
+            EventCheckoutButtonWidget(
+              onProceed: () async {
+                final minorSubscriptonController = context .read<EventMinorSubscriptionController>();
 
-                  final subscription = await controller.processPayment(
-                    user.uid,
-                    user.fullName,
+                if (controller.isProcessing) return;
+
+                final eventSubscription = controller.buildSubscriptionEntity(
+                  user.uid,
+                  user.fullName,
+                );
+
+                final subscription = await minorSubscriptonController
+                    .subscribeMinorToEvent(eventSubscription);
+
+                if (!context.mounted) return;
+
+                if (minorSubscriptonController.errorMessage != null) {
+                  return AppMessageHandler.showError(
+                    context,
+                    minorSubscriptonController.errorMessage!,
+                  );
+                }
+
+                if (subscription != null) {
+                  context.pop();
+
+                  AppMessageHandler.showSuccess(
+                    context,
+                    "Inscrição e produtos confirmados com sucesso!",
                   );
 
-                  if (!context.mounted) return;
-
-                  // context.pop();
-
-                  if (subscription != null) {
-                    AppMessageHandler.showSuccess(
-                      context,
-                      "Inscrição e produtos confirmados com sucesso!",
-                    );
-
-                    subscriptionController.addEventSubscription(subscription);
-
-                    RouteController.pushReplacementEventReceiptPage(
-                      context: context,
-                      event: widget.event,
-                      subscription: subscription,
-                    );
-                  }
-                },
-              ),
-            ],
-          ),
+                  RouteController.pushReplacementEventReceiptPage(
+                    context: context,
+                    event: widget.event,
+                    subscription: subscription,
+                  );
+                }
+              },
+            ),
+          ],
         ),
       ),
     );
