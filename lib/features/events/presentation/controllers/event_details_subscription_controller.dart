@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/core/utils/generator.dart';
 import 'package:sistema_abada_capoeira/core/utils/mask_formatter.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
@@ -79,7 +80,7 @@ class EventDetailsSubscriptionController extends ChangeNotifier{
   
 
   
-  Future<EventSubscriptionEntity?> processPayment(String userId) async {
+  Future<EventSubscriptionEntity?> processPayment(String userId, String userName) async {
 
     _isProcessing = true;
     notifyListeners();
@@ -103,10 +104,11 @@ class EventDetailsSubscriptionController extends ChangeNotifier{
     final subscription = EventSubscriptionEntity(
       id: '',
       userId: userId,
+      userName: userName,
       totalValue: totalAmount,
+      paymentMethod: _paymentMethod,
       verificationCode: eventReceipt,
       eventId: _currentEvent!.eventId,
-      paymentMethod: _paymentMethod,
       selectedProducts: selectedEventProducts,
       createdAt: DateTime.now(),
     );

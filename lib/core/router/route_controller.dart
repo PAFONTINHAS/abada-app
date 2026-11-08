@@ -58,6 +58,7 @@ class RouteController {
     context.push('classes/graduation_history');
   }
 
+
   static void redirectToEventDetailsPage({
     required BuildContext context,
     String? eventId,
@@ -76,6 +77,10 @@ class RouteController {
 
   static void redirectToPendingEventDetailsPage({required BuildContext context}){
     context.push('/events/event_requests');
+  }
+
+  static void redirectToMinorSubscriptionPage({required BuildContext context, required EventEntity event}){
+    context.push('/events/event_details/minor_subscription', extra: event);
   }
 
   static void redirectToEventReceiptPage({required BuildContext context, required EventEntity event, required EventSubscriptionEntity subscription}){

@@ -6,8 +6,7 @@ import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_details_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_details_page_widgets/event_details_widget.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_details_page_widgets/event_details_subscription_bottom_widget.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_details_page_widgets/event_details_revision_bottom_widget.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_details_page_widgets/event_bottom_navigation_bar_widget.dart';
 
 class EventDetailsPage extends StatefulWidget {
   const EventDetailsPage({
@@ -62,13 +61,6 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
     return Consumer<EventDetailsController>(
       builder: (context, controller, child) {
         final eventEntity = controller.eventEntity;
-
-
-        bool isValidEvent = eventEntity != null && !controller.isLoading;
-
-        bool isSubscriptionAllowed = widget.isSubscriptionAllowed && !widget.analyseEventDetails && isValidEvent;
-        bool isAnalysisAllowed = widget.analyseEventDetails && widget.isSubscriptionAllowed && isValidEvent;
-
     
         return Scaffold(
           appBar: AppBar(
@@ -128,13 +120,12 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
           ),
 
           // --- BottomNavigationBar para as ações do Coordenador ---
-
-          // EAI ISA. PARA CONTINUAR A PARTE DE REJEIÇÃO DE SOLICITAÇÃO E SOLICITAÇÃO DE MUDANÇAS, SIGA ESSA WIDGET
-          bottomNavigationBar: isAnalysisAllowed
-              ? EventDetailsRevisionBottomWidget(controller: controller)
-              : isSubscriptionAllowed
-                ? EventDetailsSubscriptionBottomWidget(controller: controller)
-                : null
+          bottomNavigationBar: EventBottomNavigationBarWidget(
+            controller: controller,
+            eventEntity: eventEntity,
+            analyseEventDetails: widget.analyseEventDetails,
+            isSubscriptionAllowed: widget.isSubscriptionAllowed,
+          )
         );
       },
     );

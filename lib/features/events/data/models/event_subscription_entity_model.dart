@@ -1,15 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sistema_abada_capoeira/core/utils/date_controller.dart';
 import 'package:sistema_abada_capoeira/core/utils/list_converter.dart';
-import 'package:sistema_abada_capoeira/features/events/data/models/selcted_event_product_model.dart';
-import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
+import 'package:sistema_abada_capoeira/core/utils/date_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/payment_method.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/subscription_status.dart';
+import 'package:sistema_abada_capoeira/features/events/data/models/selcted_event_product_model.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
 
 class EventSubscriptionEntityModel extends EventSubscriptionEntity{
 
   const EventSubscriptionEntityModel({
-    super.classId,
+    required super.userName,
     required super.id,
     required super.status,
     required super.userId,
@@ -19,6 +19,9 @@ class EventSubscriptionEntityModel extends EventSubscriptionEntity{
     required super.paymentMethod,
     required super.selectedProducts,
     required super.verificationCode,
+
+    super.minorStudentSubscriptionData,
+
   });
   
 
@@ -39,10 +42,11 @@ class EventSubscriptionEntityModel extends EventSubscriptionEntity{
       status: status,
       userId: data['userId'],
       eventId: data['eventId'],
-      createdAt: createdAt ?? DateTime.now(),
-      totalValue: data['totalValue'],
       paymentMethod: paymentMethod,
+      totalValue: data['totalValue'],
+      userName: data['userName'] ?? "",
       selectedProducts: selectedProducts,
+      createdAt: createdAt ?? DateTime.now(),
       verificationCode: data['verificationCode'],
     );
   }
@@ -53,7 +57,7 @@ class EventSubscriptionEntityModel extends EventSubscriptionEntity{
       status: entity.status,
       userId: entity.userId,
       eventId: entity.eventId,
-      classId: entity.classId,
+      userName: entity.userName,
       createdAt: entity.createdAt,
       totalValue: entity.totalValue,
       paymentMethod: entity.paymentMethod,
@@ -67,18 +71,19 @@ class EventSubscriptionEntityModel extends EventSubscriptionEntity{
     return {
       'userId': userId,
       'eventId': eventId,
-      'classId': classId,
+      'userName': userName,
       'totalValue': totalValue,
+      'status': status.name,
+      'paymentMethod': paymentMethod.name,
+      'verificationCode': verificationCode,
+      'createdAt': createdAt.toIso8601String(),
+      'minorSubscriptionData': minorStudentSubscriptionData?.toMap(),
       'selectedProducts': selectedProducts.map((product){
         return {
           'product': product.product,
           'price': product.price,
         };
       }),
-      'paymentMethod': paymentMethod.name,
-      'verificationCode': verificationCode,
-      'status': status.name,
-      'createdAt': createdAt.toIso8601String(),
     };
   }
 

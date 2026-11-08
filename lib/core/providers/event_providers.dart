@@ -7,6 +7,7 @@ import 'package:sistema_abada_capoeira/features/events/domain/usecases/get_user_
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/get_event_by_id_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/data/datasources/event_remote_datasource.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/subscribe_to_event_usecase.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_minor_subscription_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/events_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/create_event_request_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/data/datasources/event_remote_datasource_impl.dart';
@@ -41,14 +42,15 @@ class EventProviders {
 
   static final List<SingleChildWidget> providers = [
     ChangeNotifierProvider(create: (_) => EventFormPhasesController()),
+    ChangeNotifierProvider(create: (_) => EventSubscriptionController()),
     ChangeNotifierProvider(create: (_) => EventFormProductsController()),
     ChangeNotifierProvider(create: (_) => EventFormGraduationController()),
+    ChangeNotifierProvider(create: (_) => EventMinorSubscriptionController()),
     ChangeNotifierProvider(create: (_) => EventsController(getEventsUsecase)),
     ChangeNotifierProvider(create: (_) => EventDetailsController(getEventByIdUsecase)),
     ChangeNotifierProvider(create: (_) => CreatedEventsController(getUserEventsUsecase)),
     ChangeNotifierProvider(create: (_) => EventFormController(createEventRequestUsecase)),
-    ChangeNotifierProvider(create: (_) => EventSubscriptionController()),
-    ChangeNotifierProvider(create: (_) => EventDetailsSubscriptionController(subscribeToEventUsecase)),
     ChangeNotifierProvider(create: (_) => EventRequestsController(getPendingEventsRequestsUsecase)),
+    ChangeNotifierProvider(create: (_) => EventDetailsSubscriptionController(subscribeToEventUsecase)),
   ];
 }

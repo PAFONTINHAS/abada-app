@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/shared/clickable/clickable_widget.dart';
 
 class StudentPageButtonWidget extends StatelessWidget {
