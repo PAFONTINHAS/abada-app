@@ -1,6 +1,7 @@
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
+import 'package:sistema_abada_capoeira/features/class/presentation/pages/graduation_history_page.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/pages/student_class_page.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/pages/migrate_class_page.dart';
@@ -34,6 +35,13 @@ class ClassRoutes {
           final classEntity = state.extra as ClassEntity;
 
           return StudentClassPage(selectedClass: classEntity);
+        },
+      ),
+
+      GoRoute(
+        path: 'graduation_history',
+        builder: (context, state) {
+          return GraduationHistoryPage();
         },
       ),
 

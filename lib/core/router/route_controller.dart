@@ -54,6 +54,10 @@ class RouteController {
     context.push('/events/created_events');
   }
 
+  static void redirectToGraduationHistoryPage({required BuildContext context}){
+    context.push('classes/graduation_history');
+  }
+
   static void redirectToEventDetailsPage({
     required BuildContext context,
     String? eventId,

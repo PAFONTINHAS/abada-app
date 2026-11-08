@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:sistema_abada_capoeira/features/profile/domain/entities/graduation_history_entity.dart';
 import '../models/profile_change_request_model.dart';
 import '../datasources/profile_remote_datasource.dart';
 import '../../domain/entities/user_profile_entity.dart';
@@ -66,6 +67,11 @@ class ProfileRepositoryImpl implements ProfileRepository {
     }
   }
 
+  Future<Either<Failure, List<GraduationHistoryEntity>>> getGraduationHistory(String userId) async {
+    return profileRemoteDatasource.getGraduationHistory(userId);
+  }
+
+
   @override
   Future<Either<Failure, void>> updateChangeRequest({
     required ProfileChangeRequestEntity request,
@@ -74,12 +80,11 @@ class ProfileRepositoryImpl implements ProfileRepository {
   }) async {
     try {
       final model = ProfileChangeRequestModel.fromEntity(request);
-      final collection = await profileRemoteDatasource.profileCollectionFor(request.userId);
       return await profileRemoteDatasource.updateChangeRequest(
         model,
         status: status,
         profileUpdates: profileUpdates,
-        profileCollection: collection,
+        profileCollection: 'users',
       );
     } catch (exception) {
       return ExceptionHandler.handleException(

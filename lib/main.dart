@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:sistema_abada_capoeira/core/router/app_router.dart';
 import 'package:sistema_abada_capoeira/core/providers/providers_injection.dart';
 import 'package:sistema_abada_capoeira/core/services/location_service/location_service.dart';
-
 void main() async{
 
   WidgetsFlutterBinding.ensureInitialized();

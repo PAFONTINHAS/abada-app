@@ -74,8 +74,14 @@ class DataLoadingController extends ChangeNotifier{
     await eventRequestsController.getPendingRequests();
   }
 
-  Future<void> fetchEvents(EventsController eventsController) async{
-    await eventsController.getEvents();
+  Future<void> fetchEvents(EventsController eventsController, EventSubscriptionController subscriptionController, String userId) async{
+    
+    await eventsController.getEventsAndSubscriptions(userId);
+
+    subscriptionController.setEventSubscriptions(eventsController.temporarySubscriptionsList);
+
+    eventsController.clearTemporarySubscriptionsList();
+
   }
 
   Future<void> fetchUserLocation(LocationController locationController) async{
@@ -87,12 +93,6 @@ class DataLoadingController extends ChangeNotifier{
     nextStep();
 
     authController.setAuthenticatedUser(role: userRole);  
-  }
-
-  Future<void> getEventsSubscriptions(EventSubscriptionController eventSubscriptionController, String userId) async{
-
-    await eventSubscriptionController.getEventSubscriptions(userId);
-
   }
 
 }

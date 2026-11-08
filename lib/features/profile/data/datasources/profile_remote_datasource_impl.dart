@@ -1,5 +1,8 @@
 import 'dart:typed_data';
 import 'package:dartz/dartz.dart';
+import 'package:sistema_abada_capoeira/core/constants/database_constants.dart';
+import 'package:sistema_abada_capoeira/features/profile/data/models/graduation_history_entity_model.dart';
+import 'package:sistema_abada_capoeira/features/profile/domain/entities/graduation_history_entity.dart';
 import 'profile_remote_datasource.dart';
 import '../models/user_profile_model.dart';
 import '../models/profile_change_request_model.dart';
@@ -12,15 +15,12 @@ import 'package:sistema_abada_capoeira/core/errors/exception_handler.dart';
 
 class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  
 
-  @override
+    @override
   Future<Either<Failure, UserProfileEntity>> fetchUserProfile(String userId) async {
     try {
-      final document = await firestore.collection('users').doc(userId).get();
-
-      if (!document.exists) {
-        throw Exception('User not found');
-      }
+      final document = await firestore.collection(DBCollections.usersCollection).doc(userId).get();
 
       final userProfileEntityModel = UserProfileModel.fromSnapshot(document);
 
@@ -33,11 +33,35 @@ class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
     }
   }
 
+
+  @override
+  Future<Either<Failure, List<GraduationHistoryEntity>>> getGraduationHistory(String userId) async {
+    try {
+      final snapshots = await firestore
+        .collection(DBCollections.usersCollection)
+        .doc(userId)
+        .collection(DBCollections.userGraduationHistoryCollection)
+        .get();
+
+
+      final List<GraduationHistoryEntity> graduationHistoryList = snapshots.docs
+        .map((document) => GraduationHistoryEntityModel.fromSnapshot(document))
+        .toList();    
+
+      return Right(graduationHistoryList);
+    } catch (exception) {
+      return ExceptionHandler.handleException(
+        exception: exception,
+        contextMessage: 'fetchProfile',
+      );
+    }
+  }
+
   @override
   Future<Either<Failure, UserProfileEntity>> updateUserEntity(UserProfileEntity profile) async {
     try {
 
-      final documentReference = firestore.collection('users').doc(profile.uid);
+      final documentReference = firestore.collection(DBCollections.usersCollection).doc(profile.uid);
 
       final UserProfileModel userProfileModel = UserProfileModel.fromEntity(profile);
 
@@ -77,12 +101,6 @@ class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
         contextMessage: 'uploadProfilePhoto',
       );
     }
-  }
-
-  @override
-  Future<String> profileCollectionFor(String userId) async {
-    final usersDocument = await firestore.collection('users').doc(userId).get();
-    return usersDocument.exists ? 'users' : 'usuarios';
   }
 
   @override
@@ -150,6 +168,8 @@ class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
       );
     }
   }
+
+  
 
   @override
   Future<Either<Failure, void>> updateChangeRequest(

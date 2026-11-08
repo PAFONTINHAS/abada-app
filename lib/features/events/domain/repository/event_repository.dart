@@ -6,6 +6,7 @@ import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_req
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/events_and_user_subscriptions.dart';
 
 abstract class EventRepository {
   
@@ -17,13 +18,12 @@ abstract class EventRepository {
   Future<Either<Failure, void>> requestChanges(GenericRequestUpdateParameters params);
   Future<Either<Failure, void>> markRequestAsUpdated(GenericRequestUpdateParameters params);
   Future<Either<Failure, String>> uploadEventImage(File eventImage, String fileName);
-  Future<Either<Failure, List<EventEntity>>> getEvents();
   Future<Either<Failure, List<EventEntity>>> getEventsByUserId(String userId);
+  Future<Either<Failure, EventsAndUserSubscriptions>> getEventsAndSubscriptions(String userId);
   Future<Either<Failure, List<EventRequestEntity>>> getPendingEventsRequestsByUserId(String userId);
   Future<Either<Failure, List<EventRequestEntity>>> getPendingEventsRequests();
   Future<Either<Failure, EventEntity>> getEventById(String eventId);
   Future<Either<Failure, EventSubscriptionEntity>> subscribeToEvent(EventSubscriptionEntity subscription);  
-  Future<Either<Failure, List<EventSubscriptionEntity>>> getEventSubscriptions(String userId);
   Future<Either<Failure, EventSubscriptionEntity?>> validateEventSubscriptionAvailability(String userId, String eventId);
 
 }

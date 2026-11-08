@@ -1,6 +1,6 @@
 class AbadaBelts {
   AbadaBelts._();
-  final List<AbadaBelt> belts = const [
+  static final List<AbadaBelt> belts = const [
     // categoria: aluno
     AbadaBelt(belt: "CRUA", category: "aluno", number: 0),
     AbadaBelt(belt: "PONTA CURA AMARELA", category: "aluno", number: 1),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/core/utils/region_mapper.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/get_events_usecase.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
 
 class EventsController extends ChangeNotifier{
 
@@ -12,6 +13,9 @@ class EventsController extends ChangeNotifier{
 
   int _selectedViewIndex = 0;
   int get selectedViewIndex => _selectedViewIndex;
+
+  List<EventSubscriptionEntity> _temporarySubscriptionsList = [];
+  List<EventSubscriptionEntity> get temporarySubscriptionsList => _temporarySubscriptionsList;
   
   TextEditingController searchBar = TextEditingController();
 
@@ -71,18 +75,20 @@ class EventsController extends ChangeNotifier{
     notifyListeners();
   }
 
-  Future<bool> getEvents() async{
+  Future<bool> getEventsAndSubscriptions(String userId) async{
 
     _isLoading = true;
     notifyListeners();
 
-    final result = await _getEventsUsecase.call();
+    final result = await _getEventsUsecase.call(userId);
 
     final bool success = result.fold((failure){
       _errorMessage = failure.message;
       return false;
-    }, (fetchedEvents){
-      _events = List.from(fetchedEvents);
+    }, (fetchedEventsAndSubscriptions){
+
+      _events = List.from(fetchedEventsAndSubscriptions.events);
+      _temporarySubscriptionsList = fetchedEventsAndSubscriptions.userSubscriptions;
 
       return true;
     });
@@ -91,6 +97,10 @@ class EventsController extends ChangeNotifier{
     notifyListeners();
 
     return success;
+  }
+
+  void clearTemporarySubscriptionsList(){
+    _temporarySubscriptionsList.clear();
   }
 
 }
