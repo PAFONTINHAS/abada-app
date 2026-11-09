@@ -13,10 +13,10 @@ abstract class EventRemoteDatasource {
   Future<Either<Failure, EventEntity>> createEvent(EventEntity entity);
   Future<Either<Failure, List<EventEntity>>> getEventsByUserId(String userId);
   Future<Either<Failure, String>> uploadEventImage(File eventImage, String fileName);
+  Future<Either<Failure, List<EventSubscriptionEntity>>> getEventSubscriptions(String eventId);
   Future<Either<Failure, EventsAndUserSubscriptions>> getEventsAndSubscriptions(String userId);
   Future<Either<Failure, EventSubscriptionEntity?>> validateEventSubscriptionAvailability(String userId, String eventId);
   Future<Either<Failure, EventSubscriptionEntity>> subscribeToEvent(EventSubscriptionEntity subscription);  
-
 
 
 

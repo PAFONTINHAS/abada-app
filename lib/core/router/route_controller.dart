@@ -83,6 +83,10 @@ class RouteController {
     context.push('/events/event_details/minor_subscription', extra: event);
   }
 
+  static void redirectToEventRegistrantsListPage({required BuildContext context, required EventEntity event}){
+    context.push('/events/event_details/registrants_list', extra: event);
+  }
+
   static void redirectToEventReceiptPage({required BuildContext context, required EventEntity event, required EventSubscriptionEntity subscription}){
     context.push('/events/event_details/subscription_receipt', extra: {
       'event': event,

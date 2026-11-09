@@ -3,8 +3,8 @@ import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_details_controller.dart';
 
-class EventDetailsMinorSubscriptionBottomButtonWidget extends StatelessWidget {
-  const EventDetailsMinorSubscriptionBottomButtonWidget({super.key, required this.controller});
+class EventDetailsProfessorBottomOptionsWidget extends StatelessWidget {
+  const EventDetailsProfessorBottomOptionsWidget({super.key, required this.controller});
 
   final EventDetailsController controller;
 
@@ -39,6 +39,27 @@ class EventDetailsMinorSubscriptionBottomButtonWidget extends StatelessWidget {
                 ),
                 child: const Text(
                   "Inscrever Menor de Idade",
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+
+            SizedBox(width: 10),
+
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () => RouteController.redirectToEventRegistrantsListPage(context: context, event: controller.eventEntity!),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: ColorConstants.indigoColor,
+                  foregroundColor: ColorConstants.whiteColor,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: const Text(
+                  "Ver lista de Inscritos",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
               ),

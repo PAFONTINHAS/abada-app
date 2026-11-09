@@ -36,6 +36,16 @@ class EventReceiptPage extends StatelessWidget {
         backgroundColor: ColorConstants.surfaceColor,
         elevation: 0,
         iconTheme: const IconThemeData(color: ColorConstants.textPrimary),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.picture_as_pdf),
+            tooltip: "Exportar PDF",
+            onPressed: () {
+              // Lógica para gerar/compartilhar PDF individual do comprovante
+
+            },
+          ),
+        ],
       ),
       body: StandardScaffoldBodyWidget(
         child: Column(

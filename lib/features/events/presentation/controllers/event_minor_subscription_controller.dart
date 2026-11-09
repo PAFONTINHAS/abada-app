@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sistema_abada_capoeira/features/events/domain/entities/minor_subscription_data.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/minor_student_subscription_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/subscribe_minor_to_event_usecase.dart';
 
@@ -42,9 +42,9 @@ class EventMinorSubscriptionController extends ChangeNotifier {
     notifyListeners();
   }
 
-  MinorStudentSubscriptionData _buildMinorSubscriptionData(){
+  MinorStudentSubscriptionEntity _buildMinorSubscriptionData(){
 
-    return MinorStudentSubscriptionData(
+    return MinorStudentSubscriptionEntity(
       studentNickname: studentNicknameController.text.trim(),
       studentFullName: studentNameController.text.trim(),
       legalGuardianName: guardianNameController.text.trim(),

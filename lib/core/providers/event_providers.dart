@@ -1,5 +1,6 @@
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/usecases/get_event_subscriptions_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/get_events_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/repository/event_repository.dart';
 import 'package:sistema_abada_capoeira/features/events/data/repository/event_repository_impl.dart';
@@ -20,7 +21,8 @@ import 'package:sistema_abada_capoeira/features/events/presentation/controllers/
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/get_pending_events_requests_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_phases_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/data/datasources/event_requests_remote_datasource_impl.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_subscription_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/general_event_subscriptions_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/user_event_subscription_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_products_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_graduation_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_details_subscription_controller.dart';
@@ -39,12 +41,13 @@ class EventProviders {
   static GetUserEventsUsecase getUserEventsUsecase = GetUserEventsUsecase(eventRepository);
   static SubscribeToEventUsecase subscribeToEventUsecase = SubscribeToEventUsecase(eventRepository);
   static CreateEventRequestUsecase createEventRequestUsecase = CreateEventRequestUsecase(eventRepository);
+  static GetEventSubscriptionsUsecase getEventSubscriptionsUsecase = GetEventSubscriptionsUsecase(eventRepository);
   static SubscribeMinorToEventUsecase subscribeMinorToEventUsecase = SubscribeMinorToEventUsecase(eventRepository);
   static GetPendingEventsRequestsUsecase getPendingEventsRequestsUsecase = GetPendingEventsRequestsUsecase(eventRepository);
 
   static final List<SingleChildWidget> providers = [
     ChangeNotifierProvider(create: (_) => EventFormPhasesController()),
-    ChangeNotifierProvider(create: (_) => EventSubscriptionController()),
+    ChangeNotifierProvider(create: (_) => UserEventSubscriptionController()),
     ChangeNotifierProvider(create: (_) => EventFormProductsController()),
     ChangeNotifierProvider(create: (_) => EventFormGraduationController()),
     ChangeNotifierProvider(create: (_) => EventsController(getEventsUsecase)),
@@ -54,5 +57,6 @@ class EventProviders {
     ChangeNotifierProvider(create: (_) => EventRequestsController(getPendingEventsRequestsUsecase)),
     ChangeNotifierProvider(create: (_) => EventDetailsSubscriptionController(subscribeToEventUsecase)),
     ChangeNotifierProvider(create: (_) => EventMinorSubscriptionController(subscribeMinorToEventUsecase)),
+    ChangeNotifierProvider(create: (_) => GeneralEventSubscriptionsController(getEventSubscriptionsUsecase))
   ];
 }

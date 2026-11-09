@@ -5,7 +5,7 @@ import 'package:sistema_abada_capoeira/core/utils/app_message_handler.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_subscription_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/user_event_subscription_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_details_subscription_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_checkout_widgets/event_checkout_button_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_checkout_widgets/mandatory_products_list_widget.dart';
@@ -90,7 +90,7 @@ class _EventCheckoutBottomSheetWidgetState extends State<EventCheckoutBottomShee
             EventCheckoutButtonWidget(
               onProceed: () async {
                 final subscriptionController = context
-                    .read<EventSubscriptionController>();
+                    .read<UserEventSubscriptionController>();
 
                 if (controller.isProcessing) return;
 

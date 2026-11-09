@@ -6,6 +6,7 @@ import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_
 import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_form_page.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_minor_subscription_page.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_receipt_page.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_registrants_list_page.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/pages/events_page.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/pages/pending_event_requests_page.dart';
 
@@ -63,6 +64,16 @@ class EventRoutes {
               final subscription = parameters['subscription'] as EventSubscriptionEntity;
 
               return EventReceiptPage(event: event, subscription: subscription);
+            }
+          ),
+
+          GoRoute(
+            path: 'registrants_list',
+            builder: (context, state){
+
+              final event = state.extra as EventEntity;
+
+              return EventRegistrantsListPage(event: event);
             }
           ),
 

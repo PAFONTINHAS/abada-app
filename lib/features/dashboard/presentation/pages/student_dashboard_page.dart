@@ -11,7 +11,7 @@ import 'package:sistema_abada_capoeira/features/events/domain/entities/event_sub
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/events_controller.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/events_empty_state_widget.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_subscription_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/user_event_subscription_controller.dart';
 
 class StudentDashboardPage extends StatelessWidget {
   const StudentDashboardPage({super.key});
@@ -21,7 +21,7 @@ class StudentDashboardPage extends StatelessWidget {
     final controller = context.read<EventsController>();
 
     final profileController = context.read<ProfileController>();
-    final subscriptionController = context.read<EventSubscriptionController>();
+    final subscriptionController = context.read<UserEventSubscriptionController>();
     final user = profileController.userProfile;
     final events = controller.events;
 
@@ -51,7 +51,7 @@ class StudentDashboardPage extends StatelessWidget {
               ),
 
               // Altura ajustada para comportar o Card Rico
-              Consumer<EventSubscriptionController>(
+              Consumer<UserEventSubscriptionController>(
                 builder: (context, value, child) {
                   return SizedBox(
                     height: 400,

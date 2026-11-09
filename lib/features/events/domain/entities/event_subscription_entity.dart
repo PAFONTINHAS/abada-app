@@ -1,7 +1,7 @@
 import 'package:sistema_abada_capoeira/features/events/domain/entities/payment_method.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/subscription_status.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/selected_event_product.dart';
-import 'package:sistema_abada_capoeira/features/events/domain/entities/minor_subscription_data.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/minor_student_subscription_entity.dart';
 
 
 class EventSubscriptionEntity {
@@ -15,7 +15,7 @@ class EventSubscriptionEntity {
   final SubscriptionStatus status;
   final PaymentMethod paymentMethod;
   final Set<SelectedEventProduct> selectedProducts;
-  final MinorStudentSubscriptionData? minorStudentSubscriptionData;
+  final MinorStudentSubscriptionEntity? minorStudentSubscriptionData;
 
 
   const EventSubscriptionEntity({
@@ -61,7 +61,7 @@ class EventSubscriptionEntity {
     PaymentMethod? paymentMethod,
     String? legalGuardianPhoneNumber,
     Set<SelectedEventProduct>? selectedProducts,
-    MinorStudentSubscriptionData? minorStudentSubscriptionData,
+    MinorStudentSubscriptionEntity? minorStudentSubscriptionData,
     
   }){
 

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/core/utils/list_converter.dart';
 import 'package:sistema_abada_capoeira/core/utils/date_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/data/models/minor_student_subscription_entity_model.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/payment_method.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/subscription_status.dart';
 import 'package:sistema_abada_capoeira/features/events/data/models/selcted_event_product_model.dart';
@@ -34,9 +35,14 @@ class EventSubscriptionEntityModel extends EventSubscriptionEntity{
       (map) => SelectedEventProductModel.fromMap(map),
     ).toSet();
 
+    
+
     final createdAt = DateController.toDate(data['createdAt']);
     final status = SubscriptionStatusExtension.fromString(data['status']);
     final paymentMethod = PaymentMethodExtension.fromString(data['paymentMethod']);
+    final minorSubscriptionData = data['minorSubscriptionData'] != null
+        ? MinorStudentSubscriptionEntityModel.fromSnapshot(data['minorSubscriptionData'])
+        : null;
 
     return EventSubscriptionEntityModel(
       id: doc.id,
@@ -49,6 +55,7 @@ class EventSubscriptionEntityModel extends EventSubscriptionEntity{
       selectedProducts: selectedProducts,
       createdAt: createdAt ?? DateTime.now(),
       verificationCode: data['verificationCode'],
+      minorStudentSubscriptionData: minorSubscriptionData
     );
   }
   factory EventSubscriptionEntityModel.fromEntity(EventSubscriptionEntity entity){

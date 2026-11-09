@@ -1,4 +1,4 @@
-class MinorStudentSubscriptionData {
+class MinorStudentSubscriptionEntity {
 
   final String legalGuardianName;
   final String studentFullName;
@@ -7,7 +7,7 @@ class MinorStudentSubscriptionData {
   final String legalGuardianPhoneNumber;
   final bool   hasLegalGuardianConsent;
 
-  const MinorStudentSubscriptionData({
+  const MinorStudentSubscriptionEntity({
     required this.studentFullName,
     required this.studentNickname,
     required this.studentCurrentBelt,
