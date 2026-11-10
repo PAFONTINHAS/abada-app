@@ -18,7 +18,7 @@ class MinorStudentSubscriptionEntityModel extends MinorStudentSubscriptionEntity
       studentFullName: snapshot['studentFullName'],
       studentNickname: snapshot['studentNickname'],
       studentCurrentBelt: snapshot['studentCurrentBelt'],
-      legalGuardianName: snapshot['legalGuardianName'],
+      legalGuardianName: snapshot['legalGuardian'],
       legalGuardianPhoneNumber: snapshot['legalGuardianPhoneNumber'],
       hasLegalGuardianConsent: snapshot['hasLegalGuardianConsent'],
     );

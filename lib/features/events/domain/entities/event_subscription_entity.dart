@@ -36,7 +36,7 @@ class EventSubscriptionEntity {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'userId': userId,
+      'userId': userId, 
       'eventId': eventId,
       'status': status.name,
       'totalValue': totalValue,
@@ -44,6 +44,7 @@ class EventSubscriptionEntity {
       'selectedProducts': selectedProducts,
       'verificationCode': verificationCode,
       'createdAt': createdAt,
+      'minorStudentSubscriptionData': minorStudentSubscriptionData?.toMap()
     };
   }
 

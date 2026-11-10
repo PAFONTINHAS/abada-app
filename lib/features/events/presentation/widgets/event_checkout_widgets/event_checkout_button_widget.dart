@@ -9,9 +9,13 @@ class EventCheckoutButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final controller = context.read<EventDetailsSubscriptionController>();
     return Selector<EventDetailsSubscriptionController, bool>(
       selector: (_, controller) => controller.isProcessing,
       builder: (context, isProcessing, child) {
+
+        final isFreeEvent = controller.totalAmount == 0.00;
         return SizedBox(
           width: double.infinity,
           child: ElevatedButton(
@@ -29,8 +33,8 @@ class EventCheckoutButtonWidget extends StatelessWidget {
                       strokeWidth: 2,
                     ),
                   )
-                : const Text(
-                    "Finalizar e Pagar",
+                : Text(
+                    !isFreeEvent ? "Finalizar e Pagar" : "Finalizar Inscrição",
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,

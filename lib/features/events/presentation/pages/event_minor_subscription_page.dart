@@ -91,9 +91,6 @@ class _EventMinorSubscriptionPageState
 
             const SizedBox(height: 20),
 
-            // Seleção da Forma de Pagamento
-            const SizedBox(height: 20),
-
             // --- CHECKBOX LGPD / CONSENTIMENTO (RN05) ---
             const LegalGuardianConsentCheckboxWidget(),
 
@@ -102,7 +99,10 @@ class _EventMinorSubscriptionPageState
             // Botão Confirmar
             EventCheckoutButtonWidget(
               onProceed: () async {
-                final minorSubscriptonController = context .read<EventMinorSubscriptionController>();
+
+                controller.setIsProcessing(true);
+
+                final minorSubscriptonController = context.read<EventMinorSubscriptionController>();
 
                 if (controller.isProcessing) return;
 
@@ -111,8 +111,9 @@ class _EventMinorSubscriptionPageState
                   user.fullName,
                 );
 
-                final subscription = await minorSubscriptonController
-                    .subscribeMinorToEvent(eventSubscription);
+                final subscription = await minorSubscriptonController.subscribeMinorToEvent(eventSubscription);
+
+                controller.setIsProcessing(false);
 
                 if (!context.mounted) return;
 

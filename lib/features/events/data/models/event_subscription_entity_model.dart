@@ -40,8 +40,8 @@ class EventSubscriptionEntityModel extends EventSubscriptionEntity{
     final createdAt = DateController.toDate(data['createdAt']);
     final status = SubscriptionStatusExtension.fromString(data['status']);
     final paymentMethod = PaymentMethodExtension.fromString(data['paymentMethod']);
-    final minorSubscriptionData = data['minorSubscriptionData'] != null
-        ? MinorStudentSubscriptionEntityModel.fromSnapshot(data['minorSubscriptionData'])
+    final minorSubscriptionData = data['minorStudentSubscriptionData'] != null
+        ? MinorStudentSubscriptionEntityModel.fromSnapshot(data['minorStudentSubscriptionData'])
         : null;
 
     return EventSubscriptionEntityModel(

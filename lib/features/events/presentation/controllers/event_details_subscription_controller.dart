@@ -54,6 +54,12 @@ class EventDetailsSubscriptionController extends ChangeNotifier{
     notifyListeners();
   }
 
+  void setIsProcessing(bool value){
+    _isProcessing = value;
+
+    notifyListeners();
+  }
+
   void addOptionalProduct(EventProductItem product){
     final currentProducts = Set<EventProductItem>.from(_selectedOptionalProducts);
 
@@ -102,9 +108,6 @@ class EventDetailsSubscriptionController extends ChangeNotifier{
       createdAt: DateTime.now(),
     );
   }
-
-  
-
   
   Future<EventSubscriptionEntity?> processPayment(String userId, String userName) async {
 
@@ -114,30 +117,6 @@ class EventDetailsSubscriptionController extends ChangeNotifier{
     if(_currentEvent == null) return null;
 
     final subscription = buildSubscriptionEntity(userId, userName);
-
-    // String eventReceipt = Generator.generateVerificationCode(userId, _currentEvent!.eventId);
-
-    // final Set<SelectedEventProduct> selectedEventProducts =
-    //   _selectedOptionalProducts.map(
-    //     (product) => SelectedEventProduct(
-    //       product: product.product,
-    //       price: product.price,
-    //     ),
-    //   )
-    //   .toSet();
-
-    // final subscription = EventSubscriptionEntity(
-    //   id: '',
-    //   userId: userId,
-    //   userName: userName,
-    //   totalValue: totalAmount,
-    //   paymentMethod: _paymentMethod,
-    //   verificationCode: eventReceipt,
-    //   eventId: _currentEvent!.eventId,
-    //   selectedProducts: selectedEventProducts,
-    //   createdAt: DateTime.now(),
-    // );
-   
 
     final updatedSubscription = await subscribeToEvent(subscription);
    

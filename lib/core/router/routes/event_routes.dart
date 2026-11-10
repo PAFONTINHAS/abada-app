@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/pages/created_events_page.dart';
@@ -62,8 +63,9 @@ class EventRoutes {
 
               final event= parameters['event'] as EventEntity;
               final subscription = parameters['subscription'] as EventSubscriptionEntity;
+              final showTotalPayed = parameters['showTotalPayed'];
 
-              return EventReceiptPage(event: event, subscription: subscription);
+              return EventReceiptPage(event: event, subscription: subscription, showTotalPayed: showTotalPayed);
             }
           ),
 

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
+import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
+import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/core/utils/date_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/general_event_subscriptions_controller.dart';
-import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
 
 class EventRegistrantsListPage extends StatefulWidget {
   final EventEntity event;
@@ -192,7 +193,11 @@ class _EventRegistrantsListPageState extends State<EventRegistrantsListPage> {
                           ),
                         ),
                         title: Text(
-                          subscription.userName,
+                          isMinor
+                              ? subscription
+                                    .minorStudentSubscriptionData!
+                                    .studentFullName
+                              : subscription.userName,
                           style: const TextStyle(
                             fontWeight: FontWeight.w600,
                             color: ColorConstants.textPrimary,
@@ -207,9 +212,12 @@ class _EventRegistrantsListPageState extends State<EventRegistrantsListPage> {
                           ),
                         ),
                         trailing: const Icon(Icons.chevron_right, color: ColorConstants.textSecondary),
-                        onTap: () {
-                          // TODO: Navegar para a EventReceiptPage passando a inscrição
-                        },
+                        onTap: () => RouteController.redirectToEventReceiptPage(
+                          context: context,
+                          event: widget.event,
+                          subscription: subscription,
+                          showTotalPayed: false,
+                        ),
                       );
                     },
                   );

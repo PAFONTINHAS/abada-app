@@ -67,10 +67,12 @@ class PurchaseDetailsWidget extends StatelessWidget {
             label: "Incrito em",
             value: DateController.formatDDMMYYYYHM(subscription.createdAt),
           ),
-          EventInfoRowWidget(
-            label: "Pagamento",
-            value: subscription.paymentMethod.displayPortugueseText,
-          ),
+
+          if(subscription.totalValue > 0.00)
+            EventInfoRowWidget(
+              label: "Pagamento",
+              value: subscription.paymentMethod.displayPortugueseText,
+            ),
 
           if (subscription.selectedProducts.isNotEmpty) ...[
             const SizedBox(height: 16),
@@ -101,7 +103,7 @@ class PurchaseDetailsWidget extends StatelessWidget {
             ),
           ],
 
-          if (showTotalPayed) ...[
+          if (showTotalPayed && subscription.totalValue > 0.00) ...[
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 12),
               child: Divider(color: ColorConstants.borderColor),
