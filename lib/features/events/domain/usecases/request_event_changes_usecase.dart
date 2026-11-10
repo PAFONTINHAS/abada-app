@@ -49,6 +49,10 @@ Future<Either<Failure, void>> call(
             'decidedBy': params.coordinatorId,
             'decidedByName': params.coordinatorName,
           },
+          transitions: const {
+            GenericRequestStatus.requested: GenericRequestStatus.changesRequested,
+            GenericRequestStatus.updated: GenericRequestStatus.changesRequested,
+          },
         ),
       );
     },

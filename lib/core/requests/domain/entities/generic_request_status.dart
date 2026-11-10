@@ -4,16 +4,19 @@ enum GenericRequestStatus {
   updated, //membro corrigiu
   approved, //prof aprovou
   rejected, //prof recusou
-  unknow
+  unknow // o sistema nao conseguiu identificar o status
 }
 
 class GenericRequestStatusExtension{
   GenericRequestStatusExtension._();
+  //construtor privado, impede que outras partes do app criem objetos dessa classe,
 
 
   static GenericRequestStatus fromString(String status){
 
     switch(status){
+      //recebe status como texto e retorna como valor o status do enum 
+      //centraliza a conversao para que nao precise replicar essa logica em cada datasource (dtsc nao sabe qual é o status até ele ser convertido)
       case 'updated': return GenericRequestStatus.updated;
       case 'approved': return GenericRequestStatus.approved;
       case 'rejected': return GenericRequestStatus.rejected;
@@ -24,6 +27,8 @@ class GenericRequestStatusExtension{
   }
 }
 
+//extensão do enum, recebe um valor de status do enum e retorna para impressao em pt
+//modularização
 extension GenericRequestStatusExt on GenericRequestStatus{
 
   String get portugueseName {

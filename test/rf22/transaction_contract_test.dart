@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'firebase_test_platform.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
-import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistema_abada_capoeira/core/requests/data/request_datasource_impl.dart';
 import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
@@ -9,61 +9,34 @@ import 'package:sistema_abada_capoeira/features/events/data/datasources/event_re
 import 'package:sistema_abada_capoeira/features/events/data/models/event_entity_model.dart';
 import 'fixtures.dart';
 
-// fake_cloud_firestore does not simulate atomic commits or native retries.
-// This harness verifies our callback contract, not the Firebase conflict engine.
-class BufferedTransaction implements Transaction {
-  final writes = <Future<void> Function()>[];
-  @override
-  Future<DocumentSnapshot<T>> get<T extends Object?>(
-    DocumentReference<T> ref,
-  ) => ref.get();
-  @override
-  Transaction update(DocumentReference ref, Map<Object, Object?> data) {
-    writes.add(() => ref.update(data));
-    return this;
-  }
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
-}
-
-class TransactionHarness implements FirebaseFirestore {
-  final FakeFirebaseFirestore db;
-  Future<void> Function()? beforeRetry;
-  int attempts = 0;
-  TransactionHarness(this.db);
-  @override
-  CollectionReference<Map<String, dynamic>> collection(String path) =>
-      db.collection(path);
-  @override
-  Future<T> runTransaction<T>(
-    TransactionHandler<T> handler, {
-    Duration timeout = const Duration(seconds: 30),
-    int maxAttempts = 5,
-  }) async {
-    while (true) {
-      attempts++;
-      final transaction = BufferedTransaction();
-      final result = await handler(transaction);
-      final retry = beforeRetry;
-      beforeRetry = null;
-      if (retry != null) {
-        await retry();
-        continue;
-      }
-      for (final write in transaction.writes) {
-        await write();
-      }
-      await Future<void>.delayed(Duration.zero);
-      return result;
-    }
-  }
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
-}
-
 void main() {
+  setUpAll(initializeTestFirebase);
+  test(
+    'failed commit discards event and request writes in test platform',
+    () async {
+      final db = FakeFirebaseFirestore();
+      await db
+          .collection('events')
+          .doc('event-1')
+          .set(EventEntityModel.fromEntity(eventFixture()).toMap());
+      await db.collection('event_requests').doc('request-1').set({
+        'status': 'changesRequested',
+        'eventId': 'event-1',
+        'requesterId': 'teacher',
+      });
+      testFirestore.reset(db);
+      testFirestore.failCommit = true;
+      testAuth.uid = 'teacher';
+      final before = db.dump();
+      final result = await EventRequestsRemoteDatasourceImpl()
+          .resubmitEventRequest(
+            'request-1',
+            eventFixture().copyWith(eventName: 'Partial'),
+          );
+      expect(result.isLeft(), true);
+      expect(db.dump(), before);
+    },
+  );
   test(
     'callback failure after queuing event write leaves both documents intact',
     () async {
@@ -75,16 +48,18 @@ void main() {
         'status': 'requested',
       });
       final before = db.dump();
-      final helper = RequestDatasourceImpl(firestore: TransactionHarness(db));
+      testFirestore.reset(db);
+      final helper = RequestDatasourceImpl();
       final result = await helper.updateGenericRequestWithTransaction(
         collectionId: 'event_requests',
         params: const GenericRequestUpdateParameters(requestId: 'request-1'),
         expectedStatus: GenericRequestStatus.requested,
         newStatus: GenericRequestStatus.requested,
         updateRelatedDocuments: (transaction, request) async {
-          transaction.update(db.collection('events').doc('event-1'), {
-            'eventName': 'Partial',
-          });
+          transaction.update(
+            FirebaseFirestore.instance.collection('events').doc('event-1'),
+            {'eventName': 'Partial'},
+          );
           throw StateError('Failure before request update');
         },
       );
@@ -111,19 +86,15 @@ void main() {
           'userRole': 'professor',
           'isActive': true,
         });
-        final harness = TransactionHarness(db)
+        testFirestore.reset(db);
+        testAuth.uid = "teacher";
+        final harness = testFirestore
           ..beforeRetry = () async {
             await db.collection('event_requests').doc('request-1').update({
               'status': terminal,
             });
           };
-        final datasource = EventRequestsRemoteDatasourceImpl(
-          firestore: harness,
-          auth: MockFirebaseAuth(
-            signedIn: true,
-            mockUser: MockUser(uid: 'teacher'),
-          ),
-        );
+        final datasource = EventRequestsRemoteDatasourceImpl();
         expect(
           (await datasource.resubmitEventRequest(
             'request-1',

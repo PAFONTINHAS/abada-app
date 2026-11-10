@@ -48,6 +48,10 @@ Future<Either<Failure, void>> call(EventRequestDecisionParameters params,) async
             'decidedBy': params.coordinatorId,
             'decidedByName': params.coordinatorName,
           },
+          transitions: const {
+            GenericRequestStatus.requested: GenericRequestStatus.rejected,
+            GenericRequestStatus.updated: GenericRequestStatus.rejected,
+          },
         ),
       );
     },
