@@ -1,3 +1,4 @@
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_entity.dart';
 import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
 import 'dart:io';
 import 'package:dartz/dartz.dart';
@@ -29,6 +30,24 @@ class RepositoryStub implements EventRepository {
   EventEntity persisted = eventFixture();
   EventEntity? submitted;
   String? submittedRequestId;
+  EventRequestEntity request = EventRequestEntity(
+    eventId: 'event-1',
+    requestId: 'request-1',
+    requesterId: 'teacher',
+    requestedAt: DateTime(2026),
+    initDate: DateTime(2027),
+    endingDate: DateTime(2027, 1, 2),
+    eventName: 'Evento original',
+    requesterNickname: 'Professor',
+    status: GenericRequestStatus.requested,
+  );
+  bool failRequestRead = false;
+  @override
+  Future<Either<Failure, EventRequestEntity>> getEventRequestById(
+    String requestId,
+  ) async => failRequestRead
+      ? const Left(NetworkFailure('request offline'))
+      : Right(request);
   bool failRead = false;
   bool failUpload = false;
   int uploads = 0;

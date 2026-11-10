@@ -80,7 +80,7 @@ class ListRepository extends RepositoryStub {
   ) async => const Right([]);
   @override
   Future<Either<Failure, List<EventRequestEntity>>>
-  getPendingEventsRequestsByUserId(String userId) async {
+  getEventRequestsByUserId(String userId) async {
     listReads++;
     return Right([
       requestFixture(status).copyWith(eventName: persisted.eventName),

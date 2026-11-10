@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/usecases/get_event_request_by_id_usecase.dart';
 import 'package:sistema_abada_capoeira/core/errors/failure.dart';
 import 'package:sistema_abada_capoeira/core/utils/generator.dart';
 import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
@@ -264,7 +264,7 @@ void main() {
 
   test('details clears old data and ignores out-of-order responses', () async {
     final repository = DelayedRepository();
-    final controller = EventDetailsController(GetEventByIdUsecase(repository));
+    final controller = EventDetailsController(GetEventByIdUsecase(repository), GetEventRequestByIdUsecase(repository));
     addTearDown(controller.dispose);
     controller.setEventEntity(eventFixture());
     final a = controller.getEventById('a');
@@ -285,25 +285,19 @@ void main() {
   test(
     'details requires valid request-event association before decisions',
     () async {
-      final db = FakeFirebaseFirestore();
+      final repository = RepositoryStub();
       final controller = EventDetailsController(
-        GetEventByIdUsecase(RepositoryStub()),
-        firestore: db,
+        GetEventByIdUsecase(repository),
+        GetEventRequestByIdUsecase(repository),
       );
       addTearDown(controller.dispose);
-      await db.collection('event_requests').doc('request-1').set({
-        'status': 'requested',
-        'eventId': 'wrong',
-        'requesterId': 'teacher',
-      });
+      repository.request = repository.request.copyWith(eventId: 'wrong');
       expect(
         await controller.getEventById('event-1', requestId: 'request-1'),
         false,
       );
       expect(controller.canDecide('request-1', 'event-1'), false);
-      await db.collection('event_requests').doc('request-1').update({
-        'eventId': 'event-1',
-      });
+      repository.request = repository.request.copyWith(eventId: 'event-1');
       expect(
         await controller.getEventById('event-1', requestId: 'request-1'),
         true,

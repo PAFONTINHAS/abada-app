@@ -24,8 +24,30 @@ class EventRequestsRemoteDatasourceImpl extends RequestDatasourceImpl
       _auth = auth ?? FirebaseAuth.instance;
 
   @override
+  Future<Either<Failure, EventRequestEntity>> getEventRequestById(String requestId,) async {
+    try {
+      final snapshot = await _firestore
+          .collection(_requestCollectionId)
+          .doc(requestId)
+          .get();
+
+      if (!snapshot.exists) {
+        return const Left(
+          ValidationFailure('Solicitação de evento não encontrada.'),
+        );
+      }
+      return Right(EventRequestEntityModel.fromSnapshot(snapshot));
+    } catch (exception) {
+      return ExceptionHandler.handleException(
+        exception: exception,
+        contextMessage: 'getEventRequestById',
+      );
+    }
+  }
+
+  @override
   Future<Either<Failure, List<EventRequestEntity>>>
-  getPendingEventsRequestsByUserId(String userId) async {
+  getEventRequestsByUserId(String userId) async {
     try {
       final QuerySnapshot query = await _firestore
           .collection(_requestCollectionId)
@@ -41,7 +63,7 @@ class EventRequestsRemoteDatasourceImpl extends RequestDatasourceImpl
     } catch (exception) {
       return ExceptionHandler.handleException(
         exception: exception,
-        contextMessage: "getPendingEventsRequestsByUserId",
+        contextMessage: "getEventRequestsByUserId",
       );
     }
   }

@@ -39,58 +39,39 @@ class EventRepositoryImpl implements EventRepository {
   }
 
   @override
-  Future<Either<Failure, EventRequestEntity>> createEventRequest(
-    EventRequestEntity params,
-  ) async {
+  Future<Either<Failure, EventRequestEntity>> createEventRequest(EventRequestEntity params,) async {
     return await eventRequestsRemoteDatasource.createEventRequest(params);
   }
 
   @override
-  Future<Either<Failure, void>> approveRequest(
-    GenericRequestUpdateParameters params,
-  ) async {
+  Future<Either<Failure, void>> approveRequest(GenericRequestUpdateParameters params,) async {
     return await eventRequestsRemoteDatasource.approveRequest(params);
   }
 
   @override
-  Future<Either<Failure, void>> rejectRequest(
-    GenericRequestUpdateParameters params,
-  ) async {
+  Future<Either<Failure, void>> rejectRequest(GenericRequestUpdateParameters params,) async {
     return await eventRequestsRemoteDatasource.rejectRequest(params);
   }
 
   @override
-  Future<Either<Failure, void>> requestChanges(
-    GenericRequestUpdateParameters params,
-  ) async {
+  Future<Either<Failure, void>> requestChanges(GenericRequestUpdateParameters params,) async {
     return await eventRequestsRemoteDatasource.requestChanges(params);
   }
 
   @override
-  Future<Either<Failure, void>> markRequestAsUpdated(
-    GenericRequestUpdateParameters params,
-  ) async {
+  Future<Either<Failure, void>> markRequestAsUpdated(GenericRequestUpdateParameters params,) async {
     return await eventRequestsRemoteDatasource.markRequestAsUpdated(params);
   }
 
   @override
-  Future<Either<Failure, String>> uploadEventImage(
-    File eventImage,
-    String fileName,
-  ) async {
+  Future<Either<Failure, String>> uploadEventImage(File eventImage,String fileName,) async {
     return await eventRemoteDatasource.uploadEventImage(eventImage, fileName);
   }
 
   // Reenvia uma solicitação de evento após as alterações solicitadas.
   @override
-  Future<Either<Failure, GenericRequestStatus>> resubmitEventRequest(
-    String requestId,
-    EventEntity event,
-  ) async {
-    return await eventRequestsRemoteDatasource.resubmitEventRequest(
-      requestId,
-      event,
-    );
+  Future<Either<Failure, GenericRequestStatus>> resubmitEventRequest(String requestId,EventEntity event,) async {
+    return await eventRequestsRemoteDatasource.resubmitEventRequest(requestId,event,);
   }
 
   @override
@@ -99,30 +80,27 @@ class EventRepositoryImpl implements EventRepository {
   }
 
   @override
-  Future<Either<Failure, List<EventEntity>>> getEventsByUserId(
-    String userId,
-  ) async {
+  Future<Either<Failure, List<EventEntity>>> getEventsByUserId(String userId,) async {
     return await eventRemoteDatasource.getEventsByUserId(userId);
   }
 
   @override
-  Future<Either<Failure, List<EventRequestEntity>>>
-  getPendingEventsRequestsByUserId(String userId) async {
-    return await eventRequestsRemoteDatasource.getPendingEventsRequestsByUserId(
-      userId,
-    );
+  Future<Either<Failure, List<EventRequestEntity>>>getEventRequestsByUserId(String userId) async {
+    return await eventRequestsRemoteDatasource.getEventRequestsByUserId(userId);
   }
 
   @override
-  Future<Either<Failure, List<EventRequestEntity>>>
-  getPendingEventsRequests() async {
+  Future<Either<Failure, EventRequestEntity>> getEventRequestById(String requestId,) async {
+    return await eventRequestsRemoteDatasource.getEventRequestById(requestId);
+  }
+
+  @override
+  Future<Either<Failure, List<EventRequestEntity>>>getPendingEventsRequests() async {
     return await eventRequestsRemoteDatasource.getPendingEventsRequests();
   }
 
   @override
-  Future<Either<Failure, EventEntity>> getEventById(
-    String eventId, {
-    bool serverOnly = false,
+  Future<Either<Failure, EventEntity>> getEventById(String eventId, {bool serverOnly = false,
   }) async {
     return await eventRemoteDatasource.getEventById(
       eventId,

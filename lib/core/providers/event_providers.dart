@@ -21,6 +21,8 @@ import 'package:sistema_abada_capoeira/features/events/domain/usecases/reject_ev
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/request_event_changes_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/resubmit_event_request_usecase.dart';
 
+import 'package:sistema_abada_capoeira/features/events/domain/usecases/get_event_request_by_id_usecase.dart';
+
 class EventProviders {
 
   EventProviders._();
@@ -31,6 +33,7 @@ class EventProviders {
   static EventRepository eventRepository = EventRepositoryImpl(eventRequestsRemoteDatasource, eventRemoteDatasource);
 
   static GetEventByIdUsecase getEventByIdUsecase = GetEventByIdUsecase(eventRepository);
+  static final GetEventRequestByIdUsecase getEventRequestByIdUsecase = GetEventRequestByIdUsecase(eventRepository);
   static GetUserEventsUsecase getUserEventsUsecase = GetUserEventsUsecase(eventRepository);
   static CreateEventRequestUsecase createEventRequestUsecase = CreateEventRequestUsecase(eventRepository);
   static final ResubmitEventRequestUsecase resubmitEventRequestUsecase =ResubmitEventRequestUsecase(eventRepository);
@@ -42,7 +45,7 @@ class EventProviders {
     ChangeNotifierProvider(create: (_) => EventProductsController()),
     ChangeNotifierProvider(create: (_) => EventFormPhasesController()),
     ChangeNotifierProvider(create: (_) => EventGraduationController()),
-    ChangeNotifierProvider(create: (_) => EventDetailsController(getEventByIdUsecase)),
+    ChangeNotifierProvider(create: (_) => EventDetailsController(getEventByIdUsecase, getEventRequestByIdUsecase)),
     ChangeNotifierProvider(create: (_) => CreatedEventsController(getUserEventsUsecase, getEventByIdUsecase)),
     ChangeNotifierProvider(create: (_) => EventFormController(createEventRequestUsecase,resubmitEventRequestUsecase,),),
     ChangeNotifierProvider(create: (_) => EventRequestsController(getPendingEventsRequestsUsecase,rejectEventRequestUsecase,requestEventChangesUsecase,)),  

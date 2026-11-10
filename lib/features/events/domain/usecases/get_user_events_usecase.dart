@@ -18,7 +18,7 @@ class GetUserEventsUsecase extends StandardEventUsecase{
 
     final eventsFuture = await Future.wait([
         eventRepository.getEventsByUserId(userId),
-        eventRepository.getPendingEventsRequestsByUserId(userId)
+        eventRepository.getEventRequestsByUserId(userId)
       ]
     );
 
