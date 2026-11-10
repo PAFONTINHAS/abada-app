@@ -41,7 +41,6 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (!mounted) return;
       final controller = context.read<EventDetailsController>();
 
       if (widget.eventId != null) {
