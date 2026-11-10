@@ -32,6 +32,11 @@ class EventRequestsController extends ChangeNotifier {
   String? _actionError;
   String? get actionError => _actionError;
 
+  void cleanController(){
+    _eventRequests.clear();
+
+  }
+
   Future<bool> getPendingRequests() async {
     _isLoading = true;
     _errorMessage = null;

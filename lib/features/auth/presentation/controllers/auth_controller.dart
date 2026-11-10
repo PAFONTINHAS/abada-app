@@ -1,6 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sistema_abada_capoeira/features/auth/domain/usecases/logout_user_usecase.dart';
 import 'package:sistema_abada_capoeira/features/auth/domain/usecases/delete_user_usecase.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/models/auth_status.dart';
@@ -15,6 +14,15 @@ class AuthController extends ChangeNotifier {
     _auth.authStateChanges().listen(_onAuthStateChanged);
   }
   
+  void cleanController(){
+    _user = null;
+    _userRole = UserRole.unknown;
+    _status = AuthStatus.initializing;
+    _isLoading = false;
+    _isRegistering = false;
+    _isSigningIn = false;
+  }
+
   User? _user;
   User? get user => _user;
 

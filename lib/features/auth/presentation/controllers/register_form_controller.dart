@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/features/auth/domain/entities/user_registration_params.dart';
 import 'package:sistema_abada_capoeira/features/auth/domain/usecases/register_user_usecase.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/models/register_phase.dart';
@@ -31,6 +30,16 @@ class RegisterFormController extends ChangeNotifier {
     super.dispose();
   }
 
+  void cleanController(){
+    _registerPhase = RegisterPhase.firstPhase;
+    fullNameController.clear();
+    phoneController.clear();
+    emailController.clear();
+    passwordController.clear();
+    confirmPasswordController.clear();
+    nicknameController.clear();
+    beltController.clear();
+  }
   TextEditingController fullNameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController emailController = TextEditingController();

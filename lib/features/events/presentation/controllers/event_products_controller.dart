@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_products_item.dart';
 
-class EventProductsController extends ChangeNotifier{
-
+class EventProductsController extends ChangeNotifier {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
 
@@ -10,28 +9,35 @@ class EventProductsController extends ChangeNotifier{
   bool get optionalProduct => _mandatoryProduct;
 
   List<EventProductItem> _products = [];
-  List<EventProductItem> get products => _products;  
+  List<EventProductItem> get products => _products;
+
+  void cleanController(){
+    nameController.clear();
+    priceController.clear();
+    _mandatoryProduct = false;
+    _products.clear();
+  }
 
   void loadProducts(List<EventProductItem> products) {
-  _products = List<EventProductItem>.from(products);
+    _products = List<EventProductItem>.from(products);
 
-  nameController.clear();
-  priceController.clear();
-  _mandatoryProduct = false;
+    nameController.clear();
+    priceController.clear();
+    _mandatoryProduct = false;
 
-  notifyListeners();
-}
+    notifyListeners();
+  }
 
-void reset() {
-  _products = [];
+  void reset() {
+    _products = [];
 
-  nameController.clear();
-  priceController.clear();
+    nameController.clear();
+    priceController.clear();
 
-  _mandatoryProduct = false;
+    _mandatoryProduct = false;
 
-  notifyListeners();
-}
+    notifyListeners();
+  }
 
   @override
   void dispose() {
@@ -40,27 +46,32 @@ void reset() {
     super.dispose();
   }
 
-  void setOptionalProduct(bool value){
+  void setOptionalProduct(bool value) {
     _mandatoryProduct = value;
 
     notifyListeners();
   }
 
+  void addProduct() {
+    if (nameController.text.trim().isEmpty) return;
 
-  void addProduct(){
-    if(nameController.text.trim().isEmpty) return;
-    
     final currentProductsList = List.from(_products);
 
     final cleanPrice = priceController.text
-      .replaceAll('R\$', '')
-      .replaceAll('.', '')
-      .replaceAll(',', '.')
-      .trim();
+        .replaceAll('R\$', '')
+        .replaceAll('.', '')
+        .replaceAll(',', '.')
+        .trim();
 
     final double price = double.tryParse(cleanPrice) ?? 0.0;
 
-    currentProductsList.add(EventProductItem(product: nameController.text.trim(), price: price, mandatory: _mandatoryProduct));
+    currentProductsList.add(
+      EventProductItem(
+        product: nameController.text.trim(),
+        price: price,
+        mandatory: _mandatoryProduct,
+      ),
+    );
 
     _products = List.from(currentProductsList);
 
@@ -72,7 +83,6 @@ void reset() {
   }
 
   void removeProduct(int index) {
-
     final currentProductsList = List.from(_products);
 
     currentProductsList.removeAt(index);
@@ -80,6 +90,4 @@ void reset() {
     _products = List.from(currentProductsList);
     notifyListeners();
   }
-
-
 }

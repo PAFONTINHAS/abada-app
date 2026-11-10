@@ -44,6 +44,17 @@ class CreateLocationController extends ChangeNotifier{
 
   Timer? _debounce;
 
+  void cleanController(){
+    _state = LocationFormState.initial;
+    _suggestions.clear();
+    _selectedSuggestion = null;
+    _selectedLocationAddress = null;
+    _selectedLocationId = null;
+    _isSearching = false;
+    _debounce = null;
+    _fullAddress.clear();
+  }
+
   void onSearchChanged(String query){
 
     if(_debounce?.isActive ?? false) _debounce!.cancel();

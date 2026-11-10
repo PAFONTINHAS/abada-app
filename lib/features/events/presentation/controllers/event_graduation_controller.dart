@@ -5,6 +5,8 @@ class EventGraduationController extends ChangeNotifier {
   ClassEntity? _selectedClass;
   ClassEntity? get selectedClass => _selectedClass;
 
+
+
   // IDs dos alunos selecionados para graduação.
   final Set<String> _selectedMemberIds = {};
 
@@ -14,6 +16,11 @@ class EventGraduationController extends ChangeNotifier {
   bool get isGraduationPhaseComplete =>
       _selectedClass != null && _selectedMemberIds.isNotEmpty;
 
+  void cleanController(){
+    _selectedClass = null;
+    _selectedMemberIds.clear();
+  }
+  
   // Seleciona uma turma e limpa os alunos da turma anterior.
   void selectClass(ClassEntity? classEntity) {
     _selectedClass = classEntity;

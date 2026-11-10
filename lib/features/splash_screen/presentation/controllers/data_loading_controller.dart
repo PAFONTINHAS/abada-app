@@ -24,6 +24,12 @@ class DataLoadingController extends ChangeNotifier{
 
   int _currentStepIndex = 0;
 
+  void cleanController(){
+    _progress = 0.0;
+    _currentStepIndex = 0;
+    _progressText = "Iniciando...";
+  }
+
   void nextStep(){
     if(_currentStepIndex < _loadingSteps.length){
       _progressText = _loadingSteps[_currentStepIndex];

@@ -1,7 +1,9 @@
 
 import 'package:flutter/foundation.dart';
-import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_policy.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
+import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_policy.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/get_event_by_id_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/get_event_request_by_id_usecase.dart';
 
@@ -13,6 +15,12 @@ class EventDetailsController extends ChangeNotifier {
     this._getEventByIdUsecase,
     this._getEventRequestByIdUsecase,
   );
+
+  void cleanController(){
+    _eventEntity = null;
+    _verifiedRequestId = null;
+    _generation = 0;
+  }
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;

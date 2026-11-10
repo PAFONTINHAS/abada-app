@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sistema_abada_capoeira/core/utils/controllers_utils.dart';
 import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/tusca_entity.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
@@ -91,9 +92,9 @@ class ProfilePage extends StatelessWidget {
               onPressed: () async {
 
                 final authController = context.read<AuthController>();
-                final studentController = context.read<StudentClassSelectionController>();
 
-                studentController.reset();
+                ControllersUtils.cleanControllers(context);
+
                 final success = await authController.logoutUser();  
 
                 if (success && context.mounted) {

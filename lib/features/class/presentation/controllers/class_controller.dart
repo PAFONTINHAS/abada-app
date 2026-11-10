@@ -20,6 +20,12 @@ class ClassController extends ChangeNotifier{
     this._getLecturedClassesUsecase,
   );
 
+  void cleanController(){
+    _attendedClasses.clear();
+    _lecturedClasses.clear();
+  }
+
+
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
@@ -32,7 +38,7 @@ class ClassController extends ChangeNotifier{
   List<ClassEntity> _lecturedClasses = [];
   List<ClassEntity> get lecturedClasses => _lecturedClasses;
 
-  Future<bool> createClassUsecase(ClassEntity classEntity) async{
+  Future<bool> createClass(ClassEntity classEntity) async{
 
     _isLoading = true;
     _errorMessage = null;
@@ -69,7 +75,7 @@ class ClassController extends ChangeNotifier{
     return success;
   }
 
-  Future<bool> updateClassUsecase(ClassEntity classEntity) async{
+  Future<bool> updateClass(ClassEntity classEntity) async{
 
     _isLoading = true;
     _errorMessage = null;

@@ -1,11 +1,20 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> 705d01ed6c6960a205e9f598933b4d4d4778fceb
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/core/utils/mask_formatter.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_products_item.dart';
+<<<<<<< HEAD
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_type.dart';
+=======
+import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/usecases/create_event_request_usecase.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/usecases/resubmit_event_request_usecase.dart';
+>>>>>>> 705d01ed6c6960a205e9f598933b4d4d4778fceb
 
 class EventFormController extends ChangeNotifier {
   bool _isInitializing = true;
@@ -18,10 +27,16 @@ class EventFormController extends ChangeNotifier {
   bool get isSubmitting => _isSubmitting;
 
   EventEntity? _originalEvent;
-  String? _requestId;
-
   bool get isEditing => _originalEvent != null;
+  
+  String? _requestId;
+<<<<<<< HEAD
+=======
   String? get requestId => _requestId;
+
+  GenericRequestStatus? _savedStatus;
+  GenericRequestStatus? get savedStatus => _savedStatus;
+>>>>>>> 705d01ed6c6960a205e9f598933b4d4d4778fceb
 
   final TextEditingController eventName = TextEditingController();
   final TextEditingController eventValue = TextEditingController();
@@ -33,6 +48,7 @@ class EventFormController extends ChangeNotifier {
 
   File? _eventImage;
   File? get eventImage => _eventImage;
+
   String? get existingImageUrl => _originalEvent?.eventImagePath;
 
   DateTime? _eventInitDate;
@@ -41,6 +57,7 @@ class EventFormController extends ChangeNotifier {
   DateTime? _eventEndingDate;
   DateTime? get eventEndingDate => _eventEndingDate;
 
+<<<<<<< HEAD
   bool get isFirstPhaseComplete {
     if (eventName.text.trim().isEmpty) return false;
     if (eventLocation.text.trim().isEmpty) return false;
@@ -67,6 +84,15 @@ class EventFormController extends ChangeNotifier {
     if (_isSubmitting == value) return;
     _isSubmitting = value;
     notifyListeners();
+=======
+  void cleanController(){
+    _originalEvent = null;
+    _requestId = null;
+    _savedStatus = null;
+    _eventInitDate = null;
+    _eventEndingDate = null;
+    _eventImage = null;
+>>>>>>> 705d01ed6c6960a205e9f598933b4d4d4778fceb
   }
 
   /// Carrega os dados do evento existente para edição e reenvio.

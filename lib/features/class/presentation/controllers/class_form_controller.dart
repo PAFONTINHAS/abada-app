@@ -15,6 +15,12 @@ class ClassFormController extends ChangeNotifier{
   ClassEntity? _classForEdit;
   ClassEntity? get classForEdit => _classForEdit;
   
+  void cleanController(){
+    classUnitController.clear();
+    locationController.clear();
+    _isEditing = false;
+    _classForEdit = null;
+  }
 
   void beginEditing(ClassEntity classEntity){
 
