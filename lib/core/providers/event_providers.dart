@@ -20,34 +20,32 @@ import 'package:sistema_abada_capoeira/features/events/presentation/controllers/
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/reject_event_request_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/request_event_changes_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/resubmit_event_request_usecase.dart';
-
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/get_event_request_by_id_usecase.dart';
-
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_request_submission_controller.dart';
 class EventProviders {
 
   EventProviders._();
 
   static EventRequestsRemoteDatasource eventRequestsRemoteDatasource = EventRequestsRemoteDatasourceImpl();
   static EventRemoteDatasource eventRemoteDatasource = EventRemoteDatasourceImpl();
-
   static EventRepository eventRepository = EventRepositoryImpl(eventRequestsRemoteDatasource, eventRemoteDatasource);
-
   static GetEventByIdUsecase getEventByIdUsecase = GetEventByIdUsecase(eventRepository);
-  static final GetEventRequestByIdUsecase getEventRequestByIdUsecase = GetEventRequestByIdUsecase(eventRepository);
+  static final GetEventRequestByIdUsecase getEventRequestByIdUsecase =GetEventRequestByIdUsecase(eventRepository);
   static GetUserEventsUsecase getUserEventsUsecase = GetUserEventsUsecase(eventRepository);
   static CreateEventRequestUsecase createEventRequestUsecase = CreateEventRequestUsecase(eventRepository);
   static final ResubmitEventRequestUsecase resubmitEventRequestUsecase =ResubmitEventRequestUsecase(eventRepository);
   static GetPendingEventsRequestsUsecase getPendingEventsRequestsUsecase = GetPendingEventsRequestsUsecase(eventRepository);
   static final RejectEventRequestUsecase rejectEventRequestUsecase =RejectEventRequestUsecase(eventRepository);
   static final RequestEventChangesUsecase requestEventChangesUsecase =RequestEventChangesUsecase(eventRepository);
-  
+
   static final List<SingleChildWidget> providers = [
     ChangeNotifierProvider(create: (_) => EventProductsController()),
     ChangeNotifierProvider(create: (_) => EventFormPhasesController()),
     ChangeNotifierProvider(create: (_) => EventGraduationController()),
-    ChangeNotifierProvider(create: (_) => EventDetailsController(getEventByIdUsecase, getEventRequestByIdUsecase)),
+    ChangeNotifierProvider(create: (_) => EventDetailsController(getEventByIdUsecase,getEventRequestByIdUsecase,),),  
     ChangeNotifierProvider(create: (_) => CreatedEventsController(getUserEventsUsecase, getEventByIdUsecase)),
-    ChangeNotifierProvider(create: (_) => EventFormController(createEventRequestUsecase,resubmitEventRequestUsecase,),),
+    ChangeNotifierProvider(create: (_) => EventFormController()),
+    ChangeNotifierProvider(create: (_) => EventRequestSubmissionController(createEventRequestUsecase,resubmitEventRequestUsecase,)),
     ChangeNotifierProvider(create: (_) => EventRequestsController(getPendingEventsRequestsUsecase,rejectEventRequestUsecase,requestEventChangesUsecase,)),  
     ];
 }

@@ -1,3 +1,4 @@
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_request_submission_controller.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:dartz/dartz.dart';
@@ -89,14 +90,23 @@ void main() {
     () async {
       final repository = RepositoryStub()
         ..nextStatus = GenericRequestStatus.updated;
-      final form = EventFormController(
+      final form = EventFormController();
+      final submission = EventRequestSubmissionController(
         CreateEventRequestUsecase(repository),
         ResubmitEventRequestUsecase(repository),
       );
       addTearDown(form.dispose);
+      addTearDown(submission.dispose);
       form.loadEventForEditing(event: eventFixture(), requestId: 'request-1');
-      expect(await form.resubmitEventRequest(eventFixture()), true);
-      expect(form.savedStatus, GenericRequestStatus.updated);
+      expect(
+        await submission.resubmitEventRequest(
+          requestId: form.requestId,
+          event: eventFixture(),
+          eventImage: form.eventImage,
+        ),
+        true,
+      );
+      expect(submission.savedStatus, GenericRequestStatus.updated);
     },
   );
 
@@ -116,7 +126,8 @@ void main() {
     'form restores base value, dates, image, products and resets state',
     () async {
       final repository = RepositoryStub();
-      final form = EventFormController(
+      final form = EventFormController();
+      final submission = EventRequestSubmissionController(
         CreateEventRequestUsecase(repository),
         ResubmitEventRequestUsecase(repository),
       );
@@ -125,6 +136,7 @@ void main() {
       final phases = EventFormPhasesController();
       addTearDown(() {
         form.dispose();
+        submission.dispose();
         products.dispose();
         graduation.dispose();
         phases.dispose();
@@ -157,8 +169,10 @@ void main() {
       repository.result = const Left(NetworkFailure('offline'));
       form.eventName.text = 'Unsaved data';
       expect(
-        await form.resubmitEventRequest(
-          built.copyWith(eventName: 'Unsaved data'),
+        await submission.resubmitEventRequest(
+          requestId: form.requestId,
+          event: built.copyWith(eventName: 'Unsaved data'),
+          eventImage: form.eventImage,
         ),
         false,
       );
@@ -264,7 +278,10 @@ void main() {
 
   test('details clears old data and ignores out-of-order responses', () async {
     final repository = DelayedRepository();
-    final controller = EventDetailsController(GetEventByIdUsecase(repository), GetEventRequestByIdUsecase(repository));
+    final controller = EventDetailsController(
+      GetEventByIdUsecase(repository),
+      GetEventRequestByIdUsecase(repository),
+    );
     addTearDown(controller.dispose);
     controller.setEventEntity(eventFixture());
     final a = controller.getEventById('a');

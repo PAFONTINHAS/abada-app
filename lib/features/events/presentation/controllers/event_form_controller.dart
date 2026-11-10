@@ -1,35 +1,24 @@
-import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
 
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/core/utils/mask_formatter.dart';
-import 'package:sistema_abada_capoeira/features/events/domain/entities/event_type.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_products_item.dart';
-import 'package:sistema_abada_capoeira/features/events/domain/usecases/create_event_request_usecase.dart';
-import 'package:sistema_abada_capoeira/features/events/domain/usecases/resubmit_event_request_usecase.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_type.dart';
 
 class EventFormController extends ChangeNotifier {
-  final CreateEventRequestUsecase _createEventRequestUsecase;
-  final ResubmitEventRequestUsecase _resubmitEventRequestUsecase;
+  bool _isInitializing = true;
+  bool get isInitializing => _isInitializing;
 
-  EventFormController(
-    this._createEventRequestUsecase,
-    this._resubmitEventRequestUsecase,
-  );
+  String? _initializationError;
+  String? get initializationError => _initializationError;
 
-  bool _isLoading = false;
-  bool get isLoading => _isLoading;
-
-  String? _errorMessage;
-  String? get errorMessage => _errorMessage;
+  bool _isSubmitting = false;
+  bool get isSubmitting => _isSubmitting;
 
   EventEntity? _originalEvent;
   String? _requestId;
-  GenericRequestStatus? _savedStatus;
-  GenericRequestStatus? get savedStatus => _savedStatus;
 
   bool get isEditing => _originalEvent != null;
   String? get requestId => _requestId;
@@ -38,17 +27,6 @@ class EventFormController extends ChangeNotifier {
   final TextEditingController eventValue = TextEditingController();
   final TextEditingController eventLocation = TextEditingController();
   final TextEditingController eventDescription = TextEditingController();
-
-  bool get isFirstPhaseComplete {
-    if (eventName.text.trim().isEmpty) return false;
-    if (eventLocation.text.trim().isEmpty) return false;
-
-    return true;
-  }
-
-  bool get isSecondPhaseComplete {
-    return _eventType != EventType.UNKNOWN;
-  }
 
   EventType _eventType = EventType.UNKNOWN;
   EventType get eventType => _eventType;
@@ -63,6 +41,34 @@ class EventFormController extends ChangeNotifier {
   DateTime? _eventEndingDate;
   DateTime? get eventEndingDate => _eventEndingDate;
 
+  bool get isFirstPhaseComplete {
+    if (eventName.text.trim().isEmpty) return false;
+    if (eventLocation.text.trim().isEmpty) return false;
+    return true;
+  }
+
+  bool get isSecondPhaseComplete {
+    return _eventType != EventType.UNKNOWN;
+  }
+
+  void startInitialization() {
+    _isInitializing = true;
+    _initializationError = null;
+    notifyListeners();
+  }
+
+  void finishInitialization({String? error}) {
+    _initializationError = error;
+    _isInitializing = false;
+    notifyListeners();
+  }
+
+  void setSubmitting(bool value) {
+    if (_isSubmitting == value) return;
+    _isSubmitting = value;
+    notifyListeners();
+  }
+
   /// Carrega os dados do evento existente para edição e reenvio.
   void loadEventForEditing({
     required EventEntity event,
@@ -72,30 +78,19 @@ class EventFormController extends ChangeNotifier {
     _requestId = requestId;
 
     eventName.text = event.eventName;
-    final totalValue = MaskFormatter.convertMoneyStringToDouble(
-      event.eventValue,
-    );
 
-    final mandatoryProductsValue = event.products.fold<double>(
-      0,
-      (total, product) => total + (product.mandatory ? product.price : 0),
-    );
-
+    final totalValue = MaskFormatter.convertMoneyStringToDouble(event.eventValue,);
+    final mandatoryProductsValue = event.products.fold<double>(0,(total, product) => total + (product.mandatory ? product.price : 0),);
     final baseValue = totalValue - mandatoryProductsValue;
 
-    eventValue.text = MaskFormatter.convertMoneyDoubleToString(
-      baseValue < 0 ? 0 : baseValue,
-    );
+    eventValue.text = MaskFormatter.convertMoneyDoubleToString( baseValue < 0 ? 0 : baseValue,);
     eventLocation.text = event.eventLocation;
     eventDescription.text = event.eventDescription ?? '';
-
     _eventType = event.eventType;
     _eventInitDate = event.eventInitDate;
     _eventEndingDate = event.eventEndingDate;
 
     _eventImage = null;
-    _errorMessage = null;
-
     notifyListeners();
   }
 
@@ -106,6 +101,7 @@ class EventFormController extends ChangeNotifier {
 
   void setEventInitDate(DateTime selectedDate, TimeOfDay selectedTime) {
     if (isEditing) return;
+
     _eventInitDate = DateTime(
       selectedDate.year,
       selectedDate.month,
@@ -113,7 +109,6 @@ class EventFormController extends ChangeNotifier {
       selectedTime.hour,
       selectedTime.minute,
     );
-
     notifyListeners();
   }
 
@@ -127,7 +122,6 @@ class EventFormController extends ChangeNotifier {
       selectedTime.hour,
       selectedTime.minute,
     );
-
     notifyListeners();
   }
 
@@ -138,7 +132,6 @@ class EventFormController extends ChangeNotifier {
 
   void setEventImage(File? imageFile) {
     if (imageFile == null) return;
-
     _eventImage = imageFile;
     notifyListeners();
   }
@@ -165,10 +158,7 @@ class EventFormController extends ChangeNotifier {
       }
     }
 
-    final totalEventStringValue = MaskFormatter.convertMoneyDoubleToString(
-      totalEventDoubleValue,
-    );
-
+    final totalEventStringValue = MaskFormatter.convertMoneyDoubleToString(totalEventDoubleValue,);
     final now = DateTime.now();
     final originalEvent = _originalEvent;
 
@@ -191,74 +181,9 @@ class EventFormController extends ChangeNotifier {
     );
   }
 
-  // Cria um novo evento e sua solicitação.
-  Future<bool> createEventRequest(EventEntity event) async {
-    _isLoading = true;
-    _errorMessage = null;
-    notifyListeners();
-
-    try {
-      final result = await _createEventRequestUsecase.call(event, _eventImage);
-
-      return result.fold((failure) {
-        _errorMessage = failure.message;
-        return false;
-      }, (_) => true);
-    } catch (exception) {
-      _errorMessage = 'Não foi possível criar a solicitação.';
-      return false;
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
-  }
-
-  // Reenvia um evento corrigido sem criar outra solicitação.
-  Future<bool> resubmitEventRequest(EventEntity event) async {
-    final currentRequestId = _requestId;
-
-    if (currentRequestId == null ||
-        currentRequestId.trim().isEmpty ||
-        event.eventId.trim().isEmpty) {
-      _errorMessage = 'Solicitação ou evento inválido.';
-      notifyListeners();
-      return false;
-    }
-
-    _isLoading = true;
-    _errorMessage = null;
-    notifyListeners();
-
-    try {
-      final result = await _resubmitEventRequestUsecase.call(
-        currentRequestId,
-        event,
-        _eventImage,
-      );
-
-      return result.fold(
-        (failure) {
-          _errorMessage = failure.message;
-          return false;
-        },
-        (status) {
-          _savedStatus = status;
-          return true;
-        },
-      );
-    } catch (exception) {
-      _errorMessage = 'Não foi possível reenviar o evento.';
-      return false;
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
-  }
-
   void reset() {
     _originalEvent = null;
     _requestId = null;
-    _savedStatus = null;
 
     eventName.clear();
     eventValue.clear();
@@ -270,8 +195,9 @@ class EventFormController extends ChangeNotifier {
     _eventInitDate = null;
     _eventEndingDate = null;
 
-    _errorMessage = null;
-    _isLoading = false;
+    _isInitializing = true;
+    _initializationError = null;
+    _isSubmitting = false;
 
     notifyListeners();
   }

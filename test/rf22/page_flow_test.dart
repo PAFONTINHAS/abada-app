@@ -1,3 +1,4 @@
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_request_submission_controller.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -79,8 +80,9 @@ class ListRepository extends RepositoryStub {
     String userId,
   ) async => const Right([]);
   @override
-  Future<Either<Failure, List<EventRequestEntity>>>
-  getEventRequestsByUserId(String userId) async {
+  Future<Either<Failure, List<EventRequestEntity>>> getEventRequestsByUserId(
+    String userId,
+  ) async {
     listReads++;
     return Right([
       requestFixture(status).copyWith(eventName: persisted.eventName),
@@ -109,10 +111,7 @@ void main() {
   ) async {
     final repository = RepositoryStub()
       ..result = const Left(NetworkFailure('offline'));
-    final form = EventFormController(
-      CreateEventRequestUsecase(repository),
-      ResubmitEventRequestUsecase(repository),
-    );
+    final form = EventFormController();
     final graduation = EventGraduationController();
     final classes = ClassStub();
     const replacement = ClassEntity(
@@ -131,6 +130,12 @@ void main() {
       MultiProvider(
         providers: [
           ChangeNotifierProvider<EventFormController>.value(value: form),
+          ChangeNotifierProvider<EventRequestSubmissionController>(
+            create: (_) => EventRequestSubmissionController(
+              CreateEventRequestUsecase(repository),
+              ResubmitEventRequestUsecase(repository),
+            ),
+          ),
           ChangeNotifierProvider<EventProductsController>(
             create: (_) => EventProductsController(),
           ),
@@ -186,10 +191,7 @@ void main() {
     (tester) async {
       final repository = ListRepository()
         ..persisted = eventFixture().copyWith(clearEventImage: true);
-      final form = EventFormController(
-        CreateEventRequestUsecase(repository),
-        ResubmitEventRequestUsecase(repository),
-      );
+      final form = EventFormController();
       final phases = EventFormPhasesController();
       final products = EventProductsController();
       final graduation = EventGraduationController();
@@ -206,6 +208,12 @@ void main() {
         MultiProvider(
           providers: [
             ChangeNotifierProvider<EventFormController>.value(value: form),
+            ChangeNotifierProvider<EventRequestSubmissionController>(
+              create: (_) => EventRequestSubmissionController(
+                CreateEventRequestUsecase(repository),
+                ResubmitEventRequestUsecase(repository),
+              ),
+            ),
             ChangeNotifierProvider<EventProductsController>.value(
               value: products,
             ),
@@ -274,15 +282,18 @@ void main() {
 
   testWidgets('existing image is restored in form and review', (tester) async {
     final repository = RepositoryStub();
-    final form = EventFormController(
-      CreateEventRequestUsecase(repository),
-      ResubmitEventRequestUsecase(repository),
-    );
+    final form = EventFormController();
     final phases = EventFormPhasesController();
     await tester.pumpWidget(
       MultiProvider(
         providers: [
           ChangeNotifierProvider<EventFormController>.value(value: form),
+          ChangeNotifierProvider<EventRequestSubmissionController>(
+            create: (_) => EventRequestSubmissionController(
+              CreateEventRequestUsecase(repository),
+              ResubmitEventRequestUsecase(repository),
+            ),
+          ),
           ChangeNotifierProvider<EventProductsController>(
             create: (_) => EventProductsController(),
           ),
