@@ -97,7 +97,7 @@ class EventRemoteDatasourceImpl implements EventRemoteDatasource {
       await _firestore
           .collection('events')
           .doc(entity.eventId)
-          .update(entityModel.toMap());
+          .update({...entityModel.toMap(),'selectedMembersId': entityModel.selectedMembersId?.toList(),} );
 
       return const Right(null);
     } catch (exception) {
@@ -139,7 +139,7 @@ class EventRemoteDatasourceImpl implements EventRemoteDatasource {
 
       final docReference = _firestore.collection('events').doc();
 
-      await docReference.set(entityModel.toMap());
+      await docReference.set({...entityModel.toMap(),'selectedMembersId': entityModel.selectedMembersId?.toList()});
 
       return Right(entityModel.copyWith(eventId: docReference.id));
     } catch (exception) {

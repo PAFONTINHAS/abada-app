@@ -102,7 +102,7 @@ class EventEntityModel extends EventEntity{
       'eventEndingDate': eventEndingDate,
       'selectedClassId': selectedClassId,
       'eventDescription': eventDescription,
-      'selectedMembersId': selectedMembersId?.toList(),
+      'selectedMembersId': selectedMembersId,
       'eventCreatorNickname': eventCreatorNickname,
     };
   }

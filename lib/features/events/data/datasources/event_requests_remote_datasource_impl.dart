@@ -194,6 +194,7 @@ class EventRequestsRemoteDatasourceImpl extends RequestDatasourceImpl
 
           final existingEventData = eventSnapshot.data();
           final eventData = eventModel.toMap();
+          eventData['selectedMembersId'] = eventModel.selectedMembersId?.toList();
           eventData['eventName'] = event.eventName.trim();
 
           // Preserva a imagem existente quando nenhuma nova é informada.
