@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/models/event_phases.dart';
 
-class PhaseProgressMarkerWidget extends StatelessWidget {
+class PhaseProgressMarkerWidget<T> extends StatelessWidget {
   const PhaseProgressMarkerWidget({
     super.key,
     required this.phase,
@@ -17,9 +16,9 @@ class PhaseProgressMarkerWidget extends StatelessWidget {
   final String phaseText;
   final Color phaseColor;
   final bool isLastPhase;
-  final EventPhases phase;
+  final T phase;
   final String phaseNumber;
-  final EventPhases currentPhase;
+  final T currentPhase;
   final bool isCompleted;
 
   @override
@@ -53,7 +52,7 @@ class PhaseProgressMarkerWidget extends StatelessWidget {
                           color: ColorConstants.indigoColor.withOpacity(0.3),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
-                        )
+                        ),
                       ]
                     : [],
               ),
