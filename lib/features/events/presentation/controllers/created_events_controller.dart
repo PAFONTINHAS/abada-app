@@ -26,8 +26,20 @@ class CreatedEventsController extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
+  //edição está sendo aberta?
+  bool _isOpeningEditor = false;
+  bool get isOpeningEditor => _isOpeningEditor;
+
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
+
+  void setOpeningEditor(bool value) {
+    //Atualiza o estado e notifica os widgets ouvintes
+    if (_isOpeningEditor == value) return;
+
+    _isOpeningEditor = value;
+    notifyListeners();
+  }
 
   Future<bool> getUserEvents(String userId) async {
     _isLoading = true;
@@ -35,7 +47,6 @@ class CreatedEventsController extends ChangeNotifier {
     notifyListeners();
 
     final result = await _getUserEventsUsecase.call(userId);
-
     final bool success = result.fold(
       (failure) {
         _errorMessage = failure.message;
@@ -50,14 +61,9 @@ class CreatedEventsController extends ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
-
     return success;
   }
-
-  // RF22 - Busca o evento atualizado pelo ID para edição.
-  Future<Either<Failure, EventEntity>> getEventById(
-    String eventId,
-  ) async {
+  Future<Either<Failure, EventEntity>> getEventById(String eventId,) async {
     return _getEventByIdUsecase.call(eventId);
   }
 }
