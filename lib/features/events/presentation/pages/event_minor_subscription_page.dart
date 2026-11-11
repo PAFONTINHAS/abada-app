@@ -100,11 +100,11 @@ class _EventMinorSubscriptionPageState
             EventCheckoutButtonWidget(
               onProceed: () async {
 
+                if (controller.isProcessing) return;
+
                 controller.setIsProcessing(true);
 
                 final minorSubscriptonController = context.read<EventMinorSubscriptionController>();
-
-                if (controller.isProcessing) return;
 
                 final eventSubscription = controller.buildSubscriptionEntity(
                   user.uid,
