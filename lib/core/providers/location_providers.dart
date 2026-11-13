@@ -11,28 +11,30 @@ import 'package:sistema_abada_capoeira/features/location/domain/usecases/get_nea
 import 'package:sistema_abada_capoeira/features/location/domain/usecases/save_class_location_usecase.dart';
 
 class LocationProviders {
-
   LocationProviders._();
 
-  static final LocationRemoteDatasource locationRemoteDatasource = LocationRemoteDatasourceImpl();
+  static final LocationRemoteDatasource locationRemoteDatasource =
+      LocationRemoteDatasourceImpl();
 
-  static final LocationRepository locationRepository = LocationRepositoryImpl(locationRemoteDatasource);
+  static final LocationRepository locationRepository = LocationRepositoryImpl(
+    locationRemoteDatasource,
+  );
 
-  static final SaveClassLocationUsecase saveClassLocationUsecase = SaveClassLocationUsecase(locationRepository);
+  static final SaveClassLocationUsecase saveClassLocationUsecase =
+      SaveClassLocationUsecase(locationRepository);
 
-  static final GetNearbyLocationsStreamUsecase getNearbyLocationsStreamUsecase = GetNearbyLocationsStreamUsecase(locationRepository);
+  static final GetNearbyLocationsStreamUsecase getNearbyLocationsStreamUsecase =
+      GetNearbyLocationsStreamUsecase(locationRepository);
 
   static final List<SingleChildWidget> providers = [
-
-    ChangeNotifierProvider(create: (_) => CreateLocationController(saveClassLocationUsecase)),
+    ChangeNotifierProvider(
+      create: (_) => CreateLocationController(saveClassLocationUsecase),
+    ),
     ChangeNotifierProvider(
       create: (_) => StudentClassSelectionController(
         ClassProviders.getClassesForLocationUsecase,
         getNearbyLocationsStreamUsecase,
       ),
-    )
-
+    ),
   ];
-
-
 }

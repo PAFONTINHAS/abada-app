@@ -15,25 +15,33 @@ class MembershipValidationProviders {
   //Representa como tudo dessa feature é montado
   MembershipValidationProviders._();
 
-  static final MembershipValidationRemoteDataSource remoteDataSource = MembershipValidationRemoteDataSourceImpl();
+  static final MembershipValidationRemoteDataSource remoteDataSource =
+      MembershipValidationRemoteDataSourceImpl();
   //quero uma variável seguindo o contrato MembershipValidationRemoteDataSource
   //com a implementação real DataSource, aqui está seu telefone para falar com o Firebase
 
-  static final MembershipValidationRepository repository = MembershipValidationRepositoryImpl(remoteDataSource);
+  static final MembershipValidationRepository repository =
+      MembershipValidationRepositoryImpl(remoteDataSource);
   //crie uma variavel seguindo o contrato
   // o RepositoryImpl precisa de alguém que realmente fale com o banco
 
-  static final GetProfessorMembershipRequestsUseCase getProfessorRequests = GetProfessorMembershipRequestsUseCase(repository);
+  static final GetProfessorMembershipRequestsUseCase getProfessorRequests =
+      GetProfessorMembershipRequestsUseCase(repository);
   //quando precisar buscar, use esse Repository
 
   static final ApproveMembershipRequestUseCase approveMembershipRequest =
-      ApproveMembershipRequestUseCase(repository, ClassProviders.classRepository);
+      ApproveMembershipRequestUseCase(
+        repository,
+        ClassProviders.classRepository,
+      );
   //quando precisar aprovar, use esse Repository
 
-  static final RequestMembershipChangesUseCase requestMembershipChanges = RequestMembershipChangesUseCase(repository);
+  static final RequestMembershipChangesUseCase requestMembershipChanges =
+      RequestMembershipChangesUseCase(repository);
   //quando precisar de correção, use esse Repository
 
-  static final RejectMembershipRequestUsecase rejectMembershipRequest = RejectMembershipRequestUsecase(repository);
+  static final RejectMembershipRequestUsecase rejectMembershipRequest =
+      RejectMembershipRequestUsecase(repository);
   //quando precisar rejeitar, use esse Repository
 
   static List<SingleChildWidget> providers = [
