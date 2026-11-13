@@ -55,7 +55,11 @@ class LoginFormController extends ChangeNotifier {
 
     notifyListeners();
 
-    cleanControllers();
+    if(success){
+
+      cleanControllers();
+    }
+
 
     return success;
   }

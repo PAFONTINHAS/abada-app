@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
+import 'package:sistema_abada_capoeira/features/class/domain/entities/schedule_entity.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 
 class StudentPageClassInfoCardWidget extends StatelessWidget {
   const StudentPageClassInfoCardWidget({
@@ -13,12 +17,10 @@ class StudentPageClassInfoCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final classLocation = "${classEntity.location}, ${classEntity.city} - ${classEntity.state}, ${classEntity.cep}";
 
-    String classSchedule = "";
-    for (final schedule in classEntity.schedule){
-      classSchedule += "$schedule\n";
-    }
+    final profileController = context.read<ProfileController>();
+    final bool userIsProfessor =  profileController.userProfile.uid == classEntity.professor.professorId;
+
 
     return Container(
       decoration: BoxDecoration(
@@ -29,23 +31,16 @@ class StudentPageClassInfoCardWidget extends StatelessWidget {
           width: 1.0,
         ),
       ),
-      // O ClipRRect garante que a imagem do topo respeite o raio da borda
       child: ClipRRect(
         borderRadius: BorderRadius.circular(11.0), // Levemente menor que a borda externa
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // IMAGEM DO TOPO
             Container(
               height: 120,
               decoration:  BoxDecoration(
                 color: Color(0xFF2B2073), // Cor de fundo caso a imagem demore a carregar
-                // image: DecorationImage(
-                //   // Substitua por NetworkImage ou AssetImage com a foto da turma
-                //   image: AssetImage("assets/images/class_image.jpg"), 
-                //   fit: BoxFit.cover,
-                // ),
               ),
             ),
             
@@ -58,7 +53,7 @@ class StudentPageClassInfoCardWidget extends StatelessWidget {
                   // Título e Badge
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                        Expanded(
                         child: Text(
@@ -70,29 +65,27 @@ class StudentPageClassInfoCardWidget extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: Colors.green.shade50,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: const Text(
-                          'Ativa',
-                          style: TextStyle(
-                            color: Colors.green,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
+                      
+
+                      if (userIsProfessor)
+                        TextButton(
+                          onPressed: () =>
+                              RouteController.redirectToEditClassPage(
+                                context: context,
+                                classEntity: classEntity,
+                              ),
+                          child: Row(
+                            children: [Icon(Icons.edit), Text("Editar")],
                           ),
                         ),
-                      ),
                     ],
                   ),
                   const SizedBox(height: 16),
                   
                   // Informações em lista
-                  _buildInfoRow(Icons.access_time, classSchedule),
+                  _buildScheduleWidget(Icons.access_time, classEntity.schedule),
                   const SizedBox(height: 8),
-                  _buildInfoRow(Icons.location_on_outlined, classLocation),
+                  _buildInfoRow(Icons.location_on_outlined, classEntity.locationAddress),
                   const SizedBox(height: 8),
                   _buildInfoRow(Icons.person_outline, "Responsável: ${classEntity.professor.professorNickname}"),
                   const SizedBox(height: 8),
@@ -106,7 +99,6 @@ class StudentPageClassInfoCardWidget extends StatelessWidget {
     );
   }
 
-  // Widget auxiliar para as linhas de informação com ícone
   Widget _buildInfoRow(IconData icon, String text) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,6 +112,52 @@ class StudentPageClassInfoCardWidget extends StatelessWidget {
               fontSize: 14,
               color: Colors.black87,
               height: 1.3,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildScheduleWidget(
+    IconData icon,
+    List<ScheduleEntity> scheduleList,
+  ) {
+    final List<String> weekDays = const [
+      'Seg', 'Ter', 'Qua', 'Qui',
+      'Sex', 'Sáb', 'Dom',
+    ];
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, size: 20, color: Colors.black87),
+        const SizedBox(width: 8),
+        Expanded(
+          child: SizedBox(
+            height: classEntity.schedule.length * 20,
+            child: ListView.builder(
+              itemCount: classEntity.schedule.length,
+              itemBuilder: (context, index) {
+                final schedule = classEntity.schedule[index];
+
+                final openingHour = schedule.openingHour;
+                final closingHour = schedule.closingHour;
+                String days = "";
+
+                for (int i = 0; i < schedule.scheduleDays.length; i++) {
+                  days += weekDays[schedule.scheduleDays[i]];
+
+                  if (i != schedule.scheduleDays.length - 1) {
+                    days += ", ";
+                  }
+                }
+
+                return Text(
+                  "$days - $openingHour às $closingHour",
+                  style: TextStyle(fontSize: 13, color: Colors.grey.shade700),
+                );
+              },
             ),
           ),
         ),

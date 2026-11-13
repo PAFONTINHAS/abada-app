@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sistema_abada_capoeira/core/utils/format_date.dart';
+import 'package:sistema_abada_capoeira/core/utils/date_formatter.dart';
 
 import '../../domain/entities/fee_exemption_request_entity.dart';
 
@@ -44,7 +44,7 @@ class FeeExemptionRequestInfoWidget extends StatelessWidget {
 
           const SizedBox(height: 12),
 
-          _InfoRow(label: 'Data', value: formatDate(request.requestedAt)),
+          _InfoRow(label: 'Data', value: DateFormatter.formatDDMMYYYY(request.requestedAt)),
 
           const SizedBox(height: 12),
 

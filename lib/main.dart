@@ -5,12 +5,14 @@ import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:sistema_abada_capoeira/core/router/app_router.dart';
 import 'package:sistema_abada_capoeira/core/providers/providers_injection.dart';
+import 'package:sistema_abada_capoeira/core/services/location_service/location_service.dart';
 
 void main() async{
 
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
+  await LocationService().requestLocationPermission();
 
   final ProvidersInjection providerInjection = ProvidersInjection();
 

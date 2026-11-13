@@ -47,12 +47,12 @@ class RegisterUserUsecase {
           final MembershipRequest membershipRequest = MembershipRequest(
             id: '',
             status: MembershipRequestStatus.requested,
-            classId: 'KZ4v5bkXtgdNXKftkGK5',
             memberId: userEntity.uid,
-            className: "Turma CEP",
+            className: userRegistrationParams.className,
             memberBelt: userEntity.belt,
             memberName: userEntity.fullName,
-            professorId: "ymm7Mvj1jmSoPrndCJR9LjnVhbQ2",
+            classId: userRegistrationParams.classId,
+            professorId: userRegistrationParams.professorId,
             requestedAt: DateTime.now(),
             memberNickname: userEntity.nickname,
           );

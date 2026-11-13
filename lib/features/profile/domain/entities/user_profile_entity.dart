@@ -1,6 +1,6 @@
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
+import 'package:sistema_abada_capoeira/features/profile/domain/entities/tusca_entity.dart';
 
-enum TuscaStatus { regular, pending, exempt, notApplicable }
 
 class UserProfileEntity {
   final String uid;
@@ -10,8 +10,7 @@ class UserProfileEntity {
   final String phoneNumber;
   final String currentBelt;
   final UserRole role;
-  final TuscaStatus tuscaStatus;
-  final DateTime? tuscaExpirationDate;
+  final TuscaEntity tusca;
   final String? photoUrl;
   final String city;
   final List<String> attendedClasses;
@@ -27,10 +26,9 @@ class UserProfileEntity {
     required this.phoneNumber,
     required this.currentBelt,
     required this.role,
-    required this.tuscaStatus,
+    required this.tusca,
     required this.attendedClasses,
     required this.lecturedClasses,
-    this.tuscaExpirationDate,
     this.photoUrl,
     this.city = '',
     this.state = '',
@@ -53,7 +51,7 @@ class UserProfileEntity {
     String? phoneNumber,
     String? currentBelt,
     UserRole? role,
-    TuscaStatus? tuscaStatus,
+    TuscaEntity? tusca,
     DateTime? tuscaExpirationDate,
     String? photoUrl,
     String? city,
@@ -66,6 +64,7 @@ class UserProfileEntity {
       uid: uid ?? this.uid,
       city: city ?? this.city,
       role: role ?? this.role,
+      tusca: tusca ?? this.tusca,
       email: email ?? this.email,
       state: state ?? this.state,
       isActive: isActive ?? this.isActive,
@@ -74,10 +73,8 @@ class UserProfileEntity {
       fullName: fullName ?? this.fullName,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       currentBelt: currentBelt ?? this.currentBelt,
-      tuscaStatus: tuscaStatus ?? this.tuscaStatus,
       attendedClasses: attendedClasses ?? this.attendedClasses,
       lecturedClasses: lecturedClasses ?? this.lecturedClasses,
-      tuscaExpirationDate: tuscaExpirationDate ?? this.tuscaExpirationDate,
     );
   }
 }

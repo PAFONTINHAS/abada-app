@@ -69,6 +69,7 @@ export const approveMemberRequestAndAddToClass = functions.https.onCall(
       );
     }
 
+    let currentUserRole = "";
     try {
       const batch = db.batch();
 
@@ -79,8 +80,14 @@ export const approveMemberRequestAndAddToClass = functions.https.onCall(
         displaySensitiveData: true,
       });
 
+      if (memberData.lecturedClasses.lenght !== 0) {
+        currentUserRole = "professor";
+      } else {
+        currentUserRole = "student";
+      }
+
       batch.update(memberReference, {
-        userRole: "student",
+        userRole: currentUserRole,
         attendedClasses: FieldValue.arrayUnion(memberRequestData.classId),
       });
 

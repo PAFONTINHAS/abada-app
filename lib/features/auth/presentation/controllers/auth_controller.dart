@@ -14,7 +14,7 @@ class AuthController extends ChangeNotifier {
   AuthController(this._logoutUserUsecase, this._deleteUserUseCase) {
     _auth.authStateChanges().listen(_onAuthStateChanged);
   }
-
+  
   User? _user;
   User? get user => _user;
 
@@ -41,7 +41,6 @@ class AuthController extends ChangeNotifier {
       notifyListeners();
       return;
     }
-
 
     if((!_isRegistering || !_isSigningIn) && _userRole != UserRole.unknown){
 

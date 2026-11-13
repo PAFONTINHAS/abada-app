@@ -1,45 +1,46 @@
 // data/models/user_profile_model.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sistema_abada_capoeira/features/auth/domain/extensions/user_role_extension.dart';
-import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
 import '../../domain/entities/user_profile_entity.dart';
+import 'package:sistema_abada_capoeira/features/auth/domain/extensions/user_role_extension.dart';
+import 'package:sistema_abada_capoeira/features/profile/data/models/tusca_entity_model.dart';
+import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
+import 'package:sistema_abada_capoeira/features/profile/domain/entities/tusca_entity.dart';
 
 class UserProfileModel extends UserProfileEntity {
   const UserProfileModel({
     required super.uid,
-    required super.fullName,
+    required super.role,
+    required super.tusca,
     required super.email,
+    required super.fullName,
     required super.phoneNumber,
     required super.currentBelt,
-    required super.role,
-    required super.tuscaStatus,
     required super.attendedClasses,
     required super.lecturedClasses,
-    super.nickname,
-    super.tuscaExpirationDate,
-    super.photoUrl,
     super.city,
     super.state,
+    super.nickname,
+    super.photoUrl,
     super.isActive = true,
   });
 
   factory UserProfileModel.fromEntity(UserProfileEntity profile) {
+
     return UserProfileModel(
       uid: profile.uid,
+      role: profile.role,
+      city: profile.city,
+      tusca: profile.tusca,
+      email: profile.email,
+      state: profile.state,
       nickname: profile.nickname,
       fullName: profile.fullName,
-      email: profile.email,
+      isActive: profile.isActive,
+      photoUrl: profile.photoUrl,
       phoneNumber: profile.phoneNumber,
       currentBelt: profile.currentBelt,
-      role: profile.role,
-      tuscaStatus: profile.tuscaStatus,
-      tuscaExpirationDate: profile.tuscaExpirationDate,
-      photoUrl: profile.photoUrl,
-      city: profile.city,
-      state: profile.state,
       attendedClasses: profile.attendedClasses,
       lecturedClasses: profile.lecturedClasses,
-      isActive: profile.isActive,
     );
   }
 
@@ -47,21 +48,20 @@ class UserProfileModel extends UserProfileEntity {
     final data = document.data() as Map<String, dynamic>;
 
     final UserRole userRole = UserRoleExtension.getFromString(data['userRole']);
+    final TuscaEntity tuscaEntity = TuscaEntityModel.fromSnapshotData(data['tusca']);
 
     return UserProfileModel(
+      role: userRole,
       uid: document.id,
+      tusca: tuscaEntity,
+      email: data['email'] ?? '',
+      photoUrl: data['photoUrl'],
       nickname: data['nickname'] ?? '',
       fullName: data['fullName'] ?? '',
-      email: data['email'] ?? '',
-      phoneNumber: data['phoneNumber'] ?? data['phone'] ?? '',
-      currentBelt: data['currentBeltName'] ?? data['belt'] ?? '',
-      role: userRole,
-      tuscaStatus: _tuscaStatusFromString(data['tuscaStatus']),
-      tuscaExpirationDate: (data['tuscaExpirationDate'] as Timestamp?)
-          ?.toDate(),
-      photoUrl: data['photoUrl'],
       city: data['city'] ?? data['cidade'] ?? '',
+      phoneNumber: data['phoneNumber'] ?? data['phone'] ?? '',
       state: data['uf'] ?? data['state'] ?? data['estado'] ?? '',
+      currentBelt: data['currentBeltName'] ?? data['belt'] ?? '',
       attendedClasses: List.from(data['attendedClasses'] ?? []), 
       lecturedClasses: List.from(data['lecturedClasses'] ?? []),
       isActive: data['isActive'] ?? true,
@@ -69,9 +69,6 @@ class UserProfileModel extends UserProfileEntity {
   }
 
   Map<String, dynamic> toMap() {
-    final Timestamp? expirationDate = tuscaExpirationDate != null
-        ? Timestamp.fromDate(tuscaExpirationDate!)
-        : null;
 
     return {
       'nickname': nickname,
@@ -80,9 +77,8 @@ class UserProfileModel extends UserProfileEntity {
       'phoneNumber': phoneNumber,
       'currentBeltName': currentBelt,
       'role': role.name,
-      'tuscaStatus': tuscaStatus.name,
-      'tuscaExpirationDate': expirationDate,
       'photoUrl': photoUrl,
+      'tusca': tusca.toMap(),
       'city': city,
       'attendedClasses': attendedClasses,
       'lecturedClasses': lecturedClasses,
@@ -91,10 +87,4 @@ class UserProfileModel extends UserProfileEntity {
     };
   }
 
-  static TuscaStatus _tuscaStatusFromString(String? value) {
-    return TuscaStatus.values.firstWhere(
-      (e) => e.name == value,
-      orElse: () => TuscaStatus.notApplicable,
-    );
-  }
 }

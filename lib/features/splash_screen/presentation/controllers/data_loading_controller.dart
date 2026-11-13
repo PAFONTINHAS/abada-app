@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sistema_abada_capoeira/core/services/location_service/location_service.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_controller.dart';
 import 'package:sistema_abada_capoeira/features/member_validation/presentation/controllers/membership_validation_controller.dart';
@@ -14,6 +15,7 @@ class DataLoadingController extends ChangeNotifier{
   String get progressText => _progressText;
 
   final List<String> _loadingSteps = [
+    "Verificando permissões",
     "Pegando dados do usuário",
     "Carregando turmas do usuário",
     "Finalizando Configurações"
@@ -70,6 +72,7 @@ class DataLoadingController extends ChangeNotifier{
 
     authController.setAuthenticatedUser(role: userRole);  
   }
+
 
 
 

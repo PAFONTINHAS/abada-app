@@ -23,7 +23,6 @@ class ProfileProviders {
     profileRemoteDatasource,
   );
 
-
   static final UpdateProfileInfoUseCase updateProfileInfoUseCase =
       UpdateProfileInfoUseCase(profileRepository);
   static final GetChangeRequestsUseCase getChangeRequestsUseCase =
