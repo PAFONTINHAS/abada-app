@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
+import 'package:sistema_abada_capoeira/shared/inputs/dropdown_input_widget.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_type.dart';
 import 'package:sistema_abada_capoeira/shared/inputs/custom_text_input/custom_text_input.dart';
@@ -39,65 +39,14 @@ class EventFormSecondPhaseWidget extends StatelessWidget {
           title: "Tipo e Investimento",
           icon: Icons.category_outlined,
           children: [
-            // Dropdown Nativo Estilizado
-            DropdownButtonFormField<String>(
-              value: initialDropdownValue,
-              hint: const Text(
-                "Selecione o tipo de evento",
-                style: TextStyle(
-                  color: ColorConstants.textSecondary,
-                  fontSize: 14,
-                ),
-              ),
-              icon: const Icon(
-                Icons.keyboard_arrow_down_rounded,
-                color: ColorConstants.indigoColor,
-              ),
-              dropdownColor: ColorConstants.surfaceColor,
-              style: const TextStyle(
-                color: ColorConstants.textPrimary,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-              ),
-              decoration: InputDecoration(
-                labelText: "Tipo de Evento",
-                labelStyle: const TextStyle(
-                  color: ColorConstants.textSecondary,
-                  fontSize: 14,
-                ),
-                floatingLabelStyle: const TextStyle(
-                  color: ColorConstants.indigoColor,
-                  fontWeight: FontWeight.bold,
-                ),
-                filled: true,
-                fillColor: ColorConstants.backgroundColor,
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 14,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: ColorConstants.borderColor),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: ColorConstants.borderColor),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(
-                    color: ColorConstants.indigoColor,
-                    width: 1.5,
-                  ),
-                ),
-              ),
+
+            DropdownInputWidget(
+              inputHint: "Selecione o tipo de evento",
+              initialValue: initialDropdownValue,
               items: eventTypes.map((String type) {
-                return DropdownMenuItem<String>(
-                  value: type,
-                  child: Text(type),
-                );
+                return DropdownMenuItem<String>(value: type, child: Text(type));
               }).toList(),
-              onChanged: (eventType) {
+              onSelectedItem: (eventType) {
                 if (eventType == null) return;
                 formController.setEventType(
                   EventTypeExtension.getFromString(eventType),

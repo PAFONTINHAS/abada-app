@@ -46,6 +46,16 @@ class AbadaBelts {
   ];
 }
 
+
+extension AbadaBeltsListExtension on List<AbadaBelt>{
+  List<AbadaBelt> students(){
+    return where((belt) => belt.category == 'aluno').toList();
+  }
+}
+
+
+
+
 class AbadaBelt {
   final String belt;
   final String category;

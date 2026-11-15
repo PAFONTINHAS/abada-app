@@ -125,6 +125,8 @@ class _EventMinorSubscriptionPageState
                 }
 
                 if (subscription != null) {
+
+                  minorSubscriptonController.cleanController();
                   context.pop();
 
                   AppMessageHandler.showSuccess(

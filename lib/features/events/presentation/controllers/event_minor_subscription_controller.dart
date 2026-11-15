@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:sistema_abada_capoeira/features/events/domain/entities/minor_student_subscription_entity.dart';
+import 'package:sistema_abada_capoeira/core/utils/abada_belts.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/subscribe_minor_to_event_usecase.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/minor_student_subscription_entity.dart';
 
 class EventMinorSubscriptionController extends ChangeNotifier {
 
   final SubscribeMinorToEventUsecase _subscribeMinorToEventUsecase;
 
-  EventMinorSubscriptionController(this._subscribeMinorToEventUsecase);
+  EventMinorSubscriptionController(this._subscribeMinorToEventUsecase){
+    studentGraduationController.text = AbadaBelts.belts.first.belt;
+  }
 
   final studentNameController = TextEditingController();
   final studentGraduationController = TextEditingController();
@@ -25,6 +28,7 @@ class EventMinorSubscriptionController extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
 
 
+
   @override
   void dispose() {
     studentNameController.dispose();
@@ -33,6 +37,15 @@ class EventMinorSubscriptionController extends ChangeNotifier {
     guardianNameController.dispose();
     guardianPhoneController.dispose();
     super.dispose();
+  }
+
+  void cleanController(){
+    studentNameController.clear();
+    studentGraduationController.text = AbadaBelts.belts.first.belt;
+    studentNicknameController.clear();
+    guardianNameController.clear();
+    guardianPhoneController.clear();
+    _hasGuardianConsent = false;
   }
   
 
@@ -52,6 +65,14 @@ class EventMinorSubscriptionController extends ChangeNotifier {
       legalGuardianPhoneNumber: guardianPhoneController.text.trim(),
       hasLegalGuardianConsent: _hasGuardianConsent,
     );
+  }
+
+
+  void setStudentGraduation(String belt){
+
+    studentGraduationController.text = belt;
+
+    notifyListeners();
   }
 
 
