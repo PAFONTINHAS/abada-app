@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
 import 'package:sistema_abada_capoeira/core/utils/app_message_handler.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/tusca_entity.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
@@ -56,9 +57,7 @@ class ProfilePage extends StatelessWidget {
             const SizedBox(height: 16),
             CurrentBeltCardWidget(
               currentBeltName: profile.currentBelt,
-              onViewHistory: () {
-                // TODO: histórico de graduação (RF03)
-              },
+              onViewHistory: () => RouteController.redirectToGraduationHistoryPage(context: context),
             ),
             const SizedBox(height: 16),
             

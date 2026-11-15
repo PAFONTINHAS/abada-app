@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:pdf/pdf.dart';
+import 'package:printing/printing.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
+import 'package:sistema_abada_capoeira/core/utils/event_receipt_generator.dart';
 import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
@@ -40,8 +43,18 @@ class EventReceiptPage extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.picture_as_pdf),
             tooltip: "Exportar PDF",
-            onPressed: () {
-              // Lógica para gerar/compartilhar PDF individual do comprovante
+            onPressed: () async {
+
+              final pdfBytes = await EventReceiptGenerator.generateReceipt(
+                event: event,
+                subscription: subscription,
+                showTotalPayed: showTotalPayed,
+              );
+
+              await Printing.sharePdf(
+                bytes: pdfBytes,
+                filename:'comprovante_inscricao_${subscription.verificationCode}.pdf',
+              );
 
             },
           ),
@@ -77,8 +90,6 @@ class EventReceiptPage extends StatelessWidget {
                     child: Divider(
                       color: ColorConstants.borderColor,
                       thickness: 2,
-                      // Aqui você poderia usar um package de linha tracejada, 
-                      // mas um divider simples já cumpre o papel visual
                     ),
                   ),
 
@@ -94,7 +105,7 @@ class EventReceiptPage extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: OutlinedButton(
-                onPressed: () => Navigator.of(context).pop(), // Ou GoRouter.pop() dependendo de como sua rota funciona
+                onPressed: () => Navigator.of(context).pop(), 
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   side: const BorderSide(color: ColorConstants.indigoColor),

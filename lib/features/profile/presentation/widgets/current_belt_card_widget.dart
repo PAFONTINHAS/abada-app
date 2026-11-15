@@ -17,44 +17,44 @@ class CurrentBeltCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InfoCardWidget(
-      children: [
-        Row(
-          children: [
-            Container(
-              width: 38,
-              height: 38,
-              decoration: BoxDecoration(
-                color: _lightPurple,
-                borderRadius: BorderRadius.circular(10),
+    return GestureDetector(
+      onTap: onViewHistory,
+      child: InfoCardWidget(
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 38,
+                height: 38,
+                decoration: BoxDecoration(
+                  color: _lightPurple,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(
+                  Icons.emoji_events_outlined,
+                  color: _primaryPurple,
+                  size: 20,
+                ),
               ),
-              child: const Icon(
-                Icons.emoji_events_outlined,
-                color: _primaryPurple,
-                size: 20,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Corda Atual',
-                    style: TextStyle(fontSize: 12, color: Colors.black54),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    currentBeltName,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Corda Atual',
+                      style: TextStyle(fontSize: 12, color: Colors.black54),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  GestureDetector(
-                    onTap: onViewHistory,
-                    child: const Row(
+                    const SizedBox(height: 4),
+                    Text(
+                      currentBeltName,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(Icons.history, size: 14, color: _primaryPurple),
@@ -69,14 +69,14 @@ class CurrentBeltCardWidget extends StatelessWidget {
                         ),
                       ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            const Icon(Icons.chevron_right, color: Colors.black45),
-          ],
-        ),
-      ],
+              const Icon(Icons.chevron_right, color: Colors.black45),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
