@@ -82,7 +82,7 @@ class EventDetailsSubscriptionController extends ChangeNotifier{
     notifyListeners();
   }
 
-  EventSubscriptionEntity buildSubscriptionEntity(String userId, String userName){
+  EventSubscriptionEntity buildSubscriptionEntity(String userId, String userName, String userNickname){
 
     String eventReceipt = Generator.generateVerificationCode(userId, _currentEvent!.eventId);
 
@@ -101,6 +101,7 @@ class EventDetailsSubscriptionController extends ChangeNotifier{
       userId: userId,
       userName: userName,
       totalValue: totalAmount,
+      userNickname: userNickname,
       paymentMethod: _paymentMethod,
       verificationCode: eventReceipt,
       eventId: _currentEvent!.eventId,
@@ -109,14 +110,14 @@ class EventDetailsSubscriptionController extends ChangeNotifier{
     );
   }
   
-  Future<EventSubscriptionEntity?> processPayment(String userId, String userName) async {
+  Future<EventSubscriptionEntity?> processPayment(String userId, String userName, String userNickname) async {
 
     _isProcessing = true;
     notifyListeners();
 
     if(_currentEvent == null) return null;
 
-    final subscription = buildSubscriptionEntity(userId, userName);
+    final subscription = buildSubscriptionEntity(userId, userName, userNickname);
 
     final updatedSubscription = await subscribeToEvent(subscription);
    

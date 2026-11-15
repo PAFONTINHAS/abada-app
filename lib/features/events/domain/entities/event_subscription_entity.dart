@@ -11,6 +11,7 @@ class EventSubscriptionEntity {
   final String userName;
   final double totalValue;
   final DateTime createdAt;
+  final String userNickname;
   final String verificationCode;
   final SubscriptionStatus status;
   final PaymentMethod paymentMethod;
@@ -25,6 +26,7 @@ class EventSubscriptionEntity {
     required this.userName,
     required this.createdAt,
     required this.totalValue,
+    required this.userNickname,
     required this.paymentMethod,
     required this.selectedProducts,
     required this.verificationCode,
@@ -39,11 +41,12 @@ class EventSubscriptionEntity {
       'userId': userId, 
       'eventId': eventId,
       'status': status.name,
+      'createdAt': createdAt,
       'totalValue': totalValue,
+      'userNickname': userName,
       'paymentMethod': paymentMethod,
       'selectedProducts': selectedProducts,
       'verificationCode': verificationCode,
-      'createdAt': createdAt,
       'minorStudentSubscriptionData': minorStudentSubscriptionData?.toMap()
     };
   }
@@ -56,6 +59,7 @@ class EventSubscriptionEntity {
     String? userName,
     double? totalValue,
     DateTime? createdAt,
+    String? userNickname,
     String? legalGuardian,
     String? verificationCode,
     SubscriptionStatus? status,
@@ -71,6 +75,7 @@ class EventSubscriptionEntity {
       userId: userId ?? this.userId,
       eventId: eventId ?? this.eventId,
       totalValue: totalValue ?? this.totalValue,
+      userNickname: userNickname ?? this.userNickname,
       selectedProducts: Set<SelectedEventProduct>.from(
         selectedProducts ?? this.selectedProducts,
       ),

@@ -109,6 +109,7 @@ class _EventMinorSubscriptionPageState
                 final eventSubscription = controller.buildSubscriptionEntity(
                   user.uid,
                   user.fullName,
+                  user.nickname
                 );
 
                 final subscription = await minorSubscriptonController.subscribeMinorToEvent(eventSubscription);

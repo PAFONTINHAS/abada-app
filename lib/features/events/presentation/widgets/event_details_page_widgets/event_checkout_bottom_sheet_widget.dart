@@ -97,6 +97,7 @@ class _EventCheckoutBottomSheetWidgetState extends State<EventCheckoutBottomShee
                 final subscription = await controller.processPayment(
                   user.uid,
                   user.fullName,
+                  user.nickname
                 );
 
                 if (!context.mounted) return;

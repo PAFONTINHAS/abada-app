@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:pdf/pdf.dart';
+import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
-import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/core/utils/date_controller.dart';
+import 'package:sistema_abada_capoeira/core/utils/event_registrants_list_generator.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/general_event_subscriptions_controller.dart';
 
@@ -23,11 +25,14 @@ class _EventRegistrantsListPageState extends State<EventRegistrantsListPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // Busca a lista de inscritos baseada no ID do evento
       context.read<GeneralEventSubscriptionsController>().getEventSubscriptions(widget.event.eventId);
+
+
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    
 
     final eventDate = DateController.formatEventDate(
       widget.event.eventInitDate,
@@ -50,9 +55,33 @@ class _EventRegistrantsListPageState extends State<EventRegistrantsListPage> {
         iconTheme: const IconThemeData(color: ColorConstants.textPrimary),
         actions: [
           IconButton(
-            icon: const Icon(Icons.picture_as_pdf, color: ColorConstants.indigoColor),
+            icon: const Icon(Icons.picture_as_pdf, color: Colors.red),
             tooltip: "Exportar para PDF",
-            onPressed: () {
+            onPressed: () async {
+
+
+              final controller = context.read<GeneralEventSubscriptionsController>();
+
+              if (controller.eventSubscriptions.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Não há inscritos para exportar."),
+                  ),
+                );
+                return;
+              }
+
+              final pdfBytes = await EventRegistrantsListGenerator.generatePdf(
+                event: widget.event,
+                subscriptions: controller.eventSubscriptions,
+              );
+
+              await Printing.sharePdf(
+                bytes: pdfBytes,
+                filename: 'lista_inscritos_${widget.event.eventId}.pdf',
+              );    
+
+
               // TODO: Implementar lógica de geração de PDF geral do evento
             },
           ),
@@ -95,7 +124,6 @@ class _EventRegistrantsListPageState extends State<EventRegistrantsListPage> {
                       const Icon(Icons.calendar_today, size: 16, color: ColorConstants.textSecondary),
                       const SizedBox(width: 6),
                       Text(
-                        // Formatação simples (ideal usar intl DateFormat)
                         eventDate,
                         style: const TextStyle(fontSize: 14, color: ColorConstants.textSecondary),
                       ),
@@ -165,7 +193,7 @@ class _EventRegistrantsListPageState extends State<EventRegistrantsListPage> {
                     );
                   }
 
-                  if (controller.eventSubscriptions.isEmpty) {
+                  if (controller.registrantsNames.isEmpty) {
                     return const Center(
                       child: Text(
                         "Nenhuma inscrição encontrada para este evento.",
@@ -175,36 +203,36 @@ class _EventRegistrantsListPageState extends State<EventRegistrantsListPage> {
                   }
 
                   return ListView.separated(
-                    itemCount: controller.eventSubscriptions.length,
+                    itemCount: controller.registrantsNames.length,
                     separatorBuilder: (context, index) => const Divider(height: 1, color: ColorConstants.borderColor),
                     itemBuilder: (context, index) {
-                      final subscription = controller.eventSubscriptions[index];
+                      final subscriptionView = controller.registrantsNames[index];
                       
                       // Identifica se é uma inscrição de menor de idade
-                      final isMinor = subscription.minorStudentSubscriptionData != null;
+                      final isMinor = subscriptionView.isMinor;
+
+                      final userName = subscriptionView.userNickname != "-"
+                          ? "${subscriptionView.userName} - ${subscriptionView.userNickname}"
+                          : subscriptionView.userName;
 
                       return ListTile(
                         contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         leading: CircleAvatar(
                           backgroundColor: isMinor ? Colors.orange.shade100 : Colors.green.shade100,
                           child: Icon(
-                            isMinor ? Icons.child_care : Icons.person,
+                            isMinor ? Icons.escalator_warning : Icons.person,
                             color: isMinor ? Colors.orange.shade700 : Colors.green.shade700,
                           ),
                         ),
                         title: Text(
-                          isMinor
-                              ? subscription
-                                    .minorStudentSubscriptionData!
-                                    .studentFullName
-                              : subscription.userName,
+                          userName,
                           style: const TextStyle(
                             fontWeight: FontWeight.w600,
                             color: ColorConstants.textPrimary,
                           ),
                         ),
                         subtitle: Text(
-                          "Código: ${subscription.verificationCode}",
+                          "Código: ${subscriptionView.verificationCode}",
                           style: const TextStyle(
                             fontSize: 13,
                             color: ColorConstants.textSecondary,
@@ -215,7 +243,7 @@ class _EventRegistrantsListPageState extends State<EventRegistrantsListPage> {
                         onTap: () => RouteController.redirectToEventReceiptPage(
                           context: context,
                           event: widget.event,
-                          subscription: subscription,
+                          subscription: subscriptionView.subscription,
                           showTotalPayed: false,
                         ),
                       );

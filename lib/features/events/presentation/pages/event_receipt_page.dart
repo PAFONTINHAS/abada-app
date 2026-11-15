@@ -41,7 +41,7 @@ class EventReceiptPage extends StatelessWidget {
         iconTheme: const IconThemeData(color: ColorConstants.textPrimary),
         actions: [
           IconButton(
-            icon: const Icon(Icons.picture_as_pdf),
+            icon: const Icon(Icons.picture_as_pdf, color: Colors.red,),
             tooltip: "Exportar PDF",
             onPressed: () async {
 
