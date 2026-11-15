@@ -54,6 +54,12 @@ class EventDetailsSubscriptionController extends ChangeNotifier{
     notifyListeners();
   }
 
+  void setIsProcessing(bool value){
+    _isProcessing = value;
+
+    notifyListeners();
+  }
+
   void addOptionalProduct(EventProductItem product){
     final currentProducts = Set<EventProductItem>.from(_selectedOptionalProducts);
 
@@ -76,20 +82,9 @@ class EventDetailsSubscriptionController extends ChangeNotifier{
     notifyListeners();
   }
 
-  
-
-  
-  Future<EventSubscriptionEntity?> processPayment(String userId) async {
-
-    _isProcessing = true;
-    notifyListeners();
-
-    if(_currentEvent == null) return null;
+  EventSubscriptionEntity buildSubscriptionEntity(String userId, String userName, String userNickname){
 
     String eventReceipt = Generator.generateVerificationCode(userId, _currentEvent!.eventId);
-
-
-    final double totalAmount = this.totalAmount;
 
     final Set<SelectedEventProduct> selectedEventProducts =
       _selectedOptionalProducts.map(
@@ -100,17 +95,29 @@ class EventDetailsSubscriptionController extends ChangeNotifier{
       )
       .toSet();
 
-    final subscription = EventSubscriptionEntity(
+
+    return EventSubscriptionEntity(
       id: '',
       userId: userId,
+      userName: userName,
       totalValue: totalAmount,
+      userNickname: userNickname,
+      paymentMethod: _paymentMethod,
       verificationCode: eventReceipt,
       eventId: _currentEvent!.eventId,
-      paymentMethod: _paymentMethod,
       selectedProducts: selectedEventProducts,
       createdAt: DateTime.now(),
     );
-   
+  }
+  
+  Future<EventSubscriptionEntity?> processPayment(String userId, String userName, String userNickname) async {
+
+    _isProcessing = true;
+    notifyListeners();
+
+    if(_currentEvent == null) return null;
+
+    final subscription = buildSubscriptionEntity(userId, userName, userNickname);
 
     final updatedSubscription = await subscribeToEvent(subscription);
    
@@ -127,7 +134,4 @@ class EventDetailsSubscriptionController extends ChangeNotifier{
     return result.fold((failiure) => null, (subscription) => subscription); 
   }
   
-
-  
-
 }

@@ -9,7 +9,7 @@ import 'package:sistema_abada_capoeira/features/events/presentation/widgets/even
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/events_controller.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_subscription_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/user_event_subscription_controller.dart';
 
 class EventsCalendarViewWidget extends StatelessWidget {
   const EventsCalendarViewWidget({super.key});
@@ -58,10 +58,9 @@ class EventsCalendarViewWidget extends StatelessWidget {
           );
         }
 
-        return Consumer<EventSubscriptionController>(
+        return Consumer<UserEventSubscriptionController>(
           builder: (context, controller, child){
             
-            LoggingService.displayInfo("Mudanças no controller de ingressos");
             final subscriptions = controller.subscriptions;
 
             return ListView.separated(

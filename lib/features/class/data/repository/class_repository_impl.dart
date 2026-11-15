@@ -1,10 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:sistema_abada_capoeira/core/errors/failure.dart';
-import 'package:sistema_abada_capoeira/features/class/data/datasources/class_remote_datasource/class_remote_datasource.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
-import 'package:sistema_abada_capoeira/features/location/domain/entities/location_entity.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/repository/class_repository.dart';
+import 'package:sistema_abada_capoeira/features/class/data/datasources/class_remote_datasource/class_remote_datasource.dart';
 
 class ClassRepositoryImpl implements ClassRepository {
   final ClassRemoteDatasource remoteDatasource;

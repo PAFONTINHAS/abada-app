@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
@@ -58,6 +59,7 @@ class RouteController {
     context.push('classes/graduation_history');
   }
 
+
   static void redirectToEventDetailsPage({
     required BuildContext context,
     String? eventId,
@@ -78,17 +80,34 @@ class RouteController {
     context.push('/events/event_requests');
   }
 
-  static void redirectToEventReceiptPage({required BuildContext context, required EventEntity event, required EventSubscriptionEntity subscription}){
+  static void redirectToMinorSubscriptionPage({required BuildContext context, required EventEntity event}){
+    context.push('/events/event_details/minor_subscription', extra: event);
+  }
+
+  static void redirectToEventRegistrantsListPage({required BuildContext context, required EventEntity event}){
+    context.push('/events/event_details/registrants_list', extra: event);
+  }
+
+  static void redirectToEventReceiptPage({
+    required BuildContext context,
+    required EventEntity event,
+    required EventSubscriptionEntity subscription,
+    bool showTotalPayed = true,
+  }) {
+
+    LoggingService.displayInfo("Show Total payed: $showTotalPayed");
     context.push('/events/event_details/subscription_receipt', extra: {
       'event': event,
-      'subscription': subscription
+      'subscription': subscription,
+      'showTotalPayed': showTotalPayed 
     });
   }
 
-  static void pushReplacementEventReceiptPage({required BuildContext context, required EventEntity event, required EventSubscriptionEntity subscription}){
+  static void pushReplacementEventReceiptPage({required BuildContext context, required EventEntity event, required EventSubscriptionEntity subscription, bool showTotalPayed = true}){
     context.pushReplacement('/events/event_details/subscription_receipt', extra: {
       'event': event,
-      'subscription': subscription
+      'subscription': subscription,
+      'showTotalPayed': showTotalPayed 
     });
   }
 

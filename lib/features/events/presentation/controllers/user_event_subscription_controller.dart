@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
 
-class EventSubscriptionController extends ChangeNotifier{
+class UserEventSubscriptionController extends ChangeNotifier{
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;

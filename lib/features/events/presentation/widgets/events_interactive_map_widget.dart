@@ -7,7 +7,7 @@ import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_subscription_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/user_event_subscription_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/location/presentation/controllers/location_controller.dart';
 
@@ -25,7 +25,7 @@ class EventsInteractiveMapWidget extends StatelessWidget {
       backgroundColor: Colors.transparent, // Deixa transparente para vermos as bordas do Card
       isScrollControlled: true,
       builder: (context) {
-        return Consumer<EventSubscriptionController>(
+        return Consumer<UserEventSubscriptionController>(
           builder: (context, controller, child) {
 
             final subscriptions = controller.subscriptions;
@@ -117,7 +117,6 @@ class EventsInteractiveMapWidget extends StatelessWidget {
             ),
           ),
           children: [
-            // Camada de imagens do OpenStreetMap (Gratuito e sem chave de API)
             TileLayer(
               urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
               userAgentPackageName: 'br.ufpr.sistema_abada_capoeira', // Coloque o package name do seu app,
@@ -136,8 +135,6 @@ class EventsInteractiveMapWidget extends StatelessWidget {
             // Camada de Marcadores (Pins dos eventos)
             MarkerLayer(
               markers: events.map((event) {
-                // ATENÇÃO: Aqui assumimos que o EventEntity tem latitude e longitude!
-                // Caso não tenha, o mapa não tem como saber onde colocar o Pin.
                 return Marker(
                   point: LatLng(event.latitude, event.longitude), 
                   width: 50,

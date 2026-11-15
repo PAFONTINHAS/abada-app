@@ -1,10 +1,13 @@
 import 'package:go_router/go_router.dart';
+import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/pages/created_events_page.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_details_page.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_form_page.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_minor_subscription_page.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_receipt_page.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_registrants_list_page.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/pages/events_page.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/pages/pending_event_requests_page.dart';
 
@@ -60,10 +63,28 @@ class EventRoutes {
 
               final event= parameters['event'] as EventEntity;
               final subscription = parameters['subscription'] as EventSubscriptionEntity;
+              final showTotalPayed = parameters['showTotalPayed'];
 
-              return EventReceiptPage(event: event, subscription: subscription);
+              return EventReceiptPage(event: event, subscription: subscription, showTotalPayed: showTotalPayed);
             }
-          )
+          ),
+
+          GoRoute(
+            path: 'registrants_list',
+            builder: (context, state){
+
+              final event = state.extra as EventEntity;
+
+              return EventRegistrantsListPage(event: event);
+            }
+          ),
+
+          GoRoute(path: 'minor_subscription', builder:(context, state){
+
+            final event = state.extra as EventEntity;
+
+            return EventMinorSubscriptionPage(event: event);
+          },)
         ]
       ),
 

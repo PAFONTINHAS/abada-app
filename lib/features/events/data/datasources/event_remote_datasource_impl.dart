@@ -155,13 +155,18 @@ class EventRemoteDatasourceImpl implements EventRemoteDatasource{
   Future<Either<Failure, EventSubscriptionEntity>> subscribeToEvent(EventSubscriptionEntity subscription) async{
     try{
 
+
       final subscriptionModel = EventSubscriptionEntityModel.fromEntity(subscription);
+
+      String? documentId = subscription.minorStudentSubscriptionData != null
+          ? null
+          : subscription.userId;
 
       final collectionReference = _firestore
           .collection(DBCollections.ongoingEventsCollection)
           .doc(subscription.eventId)
           .collection(DBCollections.eventSubscriptionsCollection)
-          .doc(subscription.userId);
+          .doc(documentId);
       
       await collectionReference.set(subscriptionModel.toMap());
 
@@ -193,7 +198,28 @@ class EventRemoteDatasourceImpl implements EventRemoteDatasource{
     }catch(exception){
       return ExceptionHandler.handleException(exception: exception, contextMessage: "getEventSubscriptionByUserAndEventId");
     }
+  }
 
+  @override
+  Future<Either<Failure, List<EventSubscriptionEntity>>> getEventSubscriptions(String eventId) async{
+
+    try{
+
+      final subscriptionQuery = await _firestore
+        .collection(DBCollections.ongoingEventsCollection)
+        .doc(eventId)
+        .collection(DBCollections.eventSubscriptionsCollection)
+        .get();
+
+      final List<EventSubscriptionEntity> subscriptions = subscriptionQuery.docs
+          .map((document) => EventSubscriptionEntityModel.fromSnapshot(document))
+          .toList();
+
+      return Right(subscriptions);
+
+    }catch(exception){
+      return ExceptionHandler.handleException(exception: exception, contextMessage: "getEventSubscriptions");
+    }
 
   }
   

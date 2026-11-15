@@ -11,7 +11,7 @@ import 'package:sistema_abada_capoeira/features/events/presentation/controllers/
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 import 'package:sistema_abada_capoeira/features/location/presentation/controllers/location_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_requests_controller.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_subscription_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/user_event_subscription_controller.dart';
 import 'package:sistema_abada_capoeira/features/splash_screen/presentation/controllers/data_loading_controller.dart';
 import 'package:sistema_abada_capoeira/features/member_validation/presentation/controllers/membership_validation_controller.dart';
 
@@ -44,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen> {
     final LocationController locationController = context.read<LocationController>();
     final DataLoadingController dataLoadingController = context.read<DataLoadingController>();
     final EventRequestsController eventRequestsController = context.read<EventRequestsController>();
-    final EventSubscriptionController eventSubscriptionController = context.read<EventSubscriptionController>();
+    final UserEventSubscriptionController eventSubscriptionController = context.read<UserEventSubscriptionController>();
     final MembershipValidationController membershipValidationController = context.read<MembershipValidationController>();
 
     final User? user = authController.user;

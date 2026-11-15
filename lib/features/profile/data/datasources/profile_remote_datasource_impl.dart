@@ -52,7 +52,7 @@ class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
     } catch (exception) {
       return ExceptionHandler.handleException(
         exception: exception,
-        contextMessage: 'fetchProfile',
+        contextMessage: 'getGraduationHistory',
       );
     }
   }

@@ -1,24 +1,30 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sistema_abada_capoeira/core/utils/date_controller.dart';
+import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/core/utils/list_converter.dart';
-import 'package:sistema_abada_capoeira/features/events/data/models/selcted_event_product_model.dart';
-import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
+import 'package:sistema_abada_capoeira/core/utils/date_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/data/models/minor_student_subscription_entity_model.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/payment_method.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/subscription_status.dart';
+import 'package:sistema_abada_capoeira/features/events/data/models/selcted_event_product_model.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
 
 class EventSubscriptionEntityModel extends EventSubscriptionEntity{
 
   const EventSubscriptionEntityModel({
-    super.classId,
+    required super.userName,
     required super.id,
     required super.status,
     required super.userId,
     required super.eventId,
     required super.createdAt,
     required super.totalValue,
+    required super.userNickname,
     required super.paymentMethod,
     required super.selectedProducts,
     required super.verificationCode,
+
+    super.minorStudentSubscriptionData,
+
   });
   
 
@@ -30,20 +36,28 @@ class EventSubscriptionEntityModel extends EventSubscriptionEntity{
       (map) => SelectedEventProductModel.fromMap(map),
     ).toSet();
 
+    
+
     final createdAt = DateController.toDate(data['createdAt']);
     final status = SubscriptionStatusExtension.fromString(data['status']);
     final paymentMethod = PaymentMethodExtension.fromString(data['paymentMethod']);
+    final minorSubscriptionData = data['minorStudentSubscriptionData'] != null
+        ? MinorStudentSubscriptionEntityModel.fromSnapshot(data['minorStudentSubscriptionData'])
+        : null;
 
     return EventSubscriptionEntityModel(
       id: doc.id,
       status: status,
       userId: data['userId'],
       eventId: data['eventId'],
-      createdAt: createdAt ?? DateTime.now(),
-      totalValue: data['totalValue'],
       paymentMethod: paymentMethod,
+      totalValue: data['totalValue'],
+      userName: data['userName'] ?? "",
       selectedProducts: selectedProducts,
+      userNickname: data['userNickname'] ?? '-',
+      createdAt: createdAt ?? DateTime.now(),
       verificationCode: data['verificationCode'],
+      minorStudentSubscriptionData: minorSubscriptionData
     );
   }
   factory EventSubscriptionEntityModel.fromEntity(EventSubscriptionEntity entity){
@@ -53,33 +67,50 @@ class EventSubscriptionEntityModel extends EventSubscriptionEntity{
       status: entity.status,
       userId: entity.userId,
       eventId: entity.eventId,
-      classId: entity.classId,
+      userName: entity.userName,
       createdAt: entity.createdAt,
       totalValue: entity.totalValue,
+      userNickname: entity.userNickname,
       paymentMethod: entity.paymentMethod,
       selectedProducts: entity.selectedProducts,
       verificationCode: entity.verificationCode,
+      minorStudentSubscriptionData: entity.minorStudentSubscriptionData
     );
   }
 
   @override
   Map<String, dynamic> toMap() {
-    return {
+
+    LoggingService.displayInfo("Dados do menor: $minorStudentSubscriptionData");
+
+    final map = {
       'userId': userId,
       'eventId': eventId,
-      'classId': classId,
+      'userName': userName,
+      'status': status.name,
       'totalValue': totalValue,
+      'userNickname': userNickname,
+      'paymentMethod': paymentMethod.name,
+      'verificationCode': verificationCode,
+      'createdAt': createdAt,
       'selectedProducts': selectedProducts.map((product){
         return {
           'product': product.product,
           'price': product.price,
         };
       }),
-      'paymentMethod': paymentMethod.name,
-      'verificationCode': verificationCode,
-      'status': status.name,
-      'createdAt': createdAt.toIso8601String(),
     };
+
+    if(minorStudentSubscriptionData != null){
+      map.addAll({
+        'minorStudentSubscriptionData': minorStudentSubscriptionData!.toMap()
+      });
+    }
+
+
+    LoggingService.displayInfo("Mapa: $map");
+
+    return map;
   }
 
 }

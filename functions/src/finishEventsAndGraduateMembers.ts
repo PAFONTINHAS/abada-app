@@ -62,7 +62,15 @@ export const finishEventsAndGraduateMembers = functions
           for (const subDoc of eventSubscriptionsSnap.docs) {
             const newSubDocRef = eventSubscriptionRef.doc(subDoc.id);
 
-            await newSubDocRef.set(subDoc.data());
+            const docData = subDoc.data();
+
+            const mapData = {...docData};
+
+            if ("minorStudentSubscriptionData" in mapData) {
+              delete mapData.minorStudentSubscriptionData;
+            }
+
+            await newSubDocRef.set(mapData);
             await subDoc.ref.delete();
           }
         }
