@@ -1,10 +1,9 @@
 import 'dart:typed_data';
-
+import 'profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/user_profile_entity.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/validators/info_profile_validator.dart';
-import 'profile_controller.dart';
 
 class ProfileFormController extends ChangeNotifier {
   final ProfileController _profileController;
@@ -20,6 +19,17 @@ class ProfileFormController extends ChangeNotifier {
   bool isSaving = false;
   String? errorMessage;
   String? photoErrorMessage;
+
+  void cleanController(){
+    _initialized = false;
+    isUploadingPhoto = false;
+    isSaving = false;
+    nameController.clear();
+    emailController.clear();
+    phoneController.clear();
+    nicknameController.clear();
+    beltController.clear();
+  }
 
   ProfileFormController(this._profileController) {
     nameController = TextEditingController();
@@ -58,11 +68,7 @@ class ProfileFormController extends ChangeNotifier {
     }
 
     final profile = _profileController.userProfile;
-    if (profile == null) {
-      errorMessage = 'Perfil não carregado.';
-      notifyListeners();
-      return false;
-    }
+
 
     isSaving = true;
     errorMessage = null;
@@ -85,11 +91,7 @@ class ProfileFormController extends ChangeNotifier {
     final profile = _profileController.userProfile;
     final newNickname = nicknameController.text.trim();
     final newBelt = beltController.text.trim();
-    if (profile == null) {
-      errorMessage = 'Perfil não carregado.';
-      notifyListeners();
-      return false;
-    }
+
     if (newNickname.isEmpty && newBelt.isEmpty) {
       errorMessage = 'Informe um novo apelido ou uma nova corda.';
       notifyListeners();

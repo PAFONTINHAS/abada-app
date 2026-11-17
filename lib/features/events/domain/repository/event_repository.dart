@@ -1,3 +1,4 @@
+import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
@@ -9,22 +10,27 @@ import 'package:sistema_abada_capoeira/features/events/domain/entities/event_sub
 import 'package:sistema_abada_capoeira/features/events/domain/entities/events_and_user_subscriptions.dart';
 
 abstract class EventRepository {
-  
   Future<Either<Failure, EventEntity>> createEvent(EventEntity entity);
+  Future<Either<Failure, void>> deleteEventImage(String imageUrl);
   Future<Either<Failure, void>> removeEvent(String eventId);
-  Future<Either<Failure, EventRequestEntity>> createEventRequest(EventRequestEntity params);
-  Future<Either<Failure, void>> approveRequest(GenericRequestUpdateParameters params); 
-  Future<Either<Failure, void>> rejectRequest(GenericRequestUpdateParameters params);
-  Future<Either<Failure, void>> requestChanges(GenericRequestUpdateParameters params);
-  Future<Either<Failure, void>> markRequestAsUpdated(GenericRequestUpdateParameters params);
-  Future<Either<Failure, String>> uploadEventImage(File eventImage, String fileName);
   Future<Either<Failure, List<EventEntity>>> getEventsByUserId(String userId);
   Future<Either<Failure, EventsAndUserSubscriptions>> getEventsAndSubscriptions(String userId);
   Future<Either<Failure, List<EventRequestEntity>>> getPendingEventsRequestsByUserId(String userId);
   Future<Either<Failure, List<EventRequestEntity>>> getPendingEventsRequests();
-  Future<Either<Failure, EventEntity>> getEventById(String eventId);
   Future<Either<Failure, EventSubscriptionEntity>> subscribeToEvent(EventSubscriptionEntity subscription);  
   Future<Either<Failure, EventSubscriptionEntity?>> validateEventSubscriptionAvailability(String userId, String eventId);
   Future<Either<Failure, List<EventSubscriptionEntity>>> getEventSubscriptions(String eventId);
 
+  Future<Either<Failure, EventRequestEntity>> createEventRequest(EventRequestEntity params,);
+  Future<Either<Failure, void>> approveRequest(GenericRequestUpdateParameters params,);
+  Future<Either<Failure, void>> rejectRequest(GenericRequestUpdateParameters params,);
+  Future<Either<Failure, void>> requestChanges(GenericRequestUpdateParameters params,);
+  Future<Either<Failure, void>> markRequestAsUpdated(GenericRequestUpdateParameters params,);
+  Future<Either<Failure, void>> updateEvent(EventEntity entity);
+  Future<Either<Failure, String>> uploadEventImage(File eventImage,String fileName);
+  Future<Either<Failure, List<EventEntity>>> getEvents();
+  Future<Either<Failure, List<EventRequestEntity>>>getEventRequestsByUserId(String userId);
+  Future<Either<Failure, EventEntity>> getEventById(String eventId, {bool serverOnly = false});
+  Future<Either<Failure, GenericRequestStatus>> resubmitEventRequest(String requestId,EventEntity event,);
+  Future<Either<Failure, EventRequestEntity>> getEventRequestById(String requestId);
 }

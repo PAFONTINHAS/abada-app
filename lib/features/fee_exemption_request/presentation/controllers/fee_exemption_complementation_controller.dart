@@ -23,6 +23,10 @@ class FeeExemptionComplementationController extends ChangeNotifier {
   bool isLoading = false;
   String? errorMessage;
 
+  void cleanController(){
+    selectedFile = null;
+  }
+
   // Guarda temporariamente o novo arquivo selecionado pelo
   //professor antes do enviar a solicitação para o Firebase.
   void selectFile(FeeExemptionFileEntity file) {

@@ -4,17 +4,20 @@ import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_entity.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_policy.dart';
 
 class EventStatusCardWidget extends StatelessWidget {
   final dynamic item; // Aceita EventEntity ou EventRequestEntity
   final VoidCallback onViewEventDetails;
   final VoidCallback? onViewRequestDetails; // Usado apenas para solicitações (requests)
+  final VoidCallback? onEditRequest;
 
   const EventStatusCardWidget({
     super.key,
     required this.item,
     required this.onViewEventDetails,
     this.onViewRequestDetails,
+    this.onEditRequest
   });
 
   bool get _isRequest => item is EventRequestEntity;
@@ -27,6 +30,7 @@ class EventStatusCardWidget extends StatelessWidget {
   // Extração segura de dados caso seja um EventEntity completo
   String? get _location => _isEvent ? "${(item as EventEntity).city} - ${(item as EventEntity).state}" : null;
   String? get _description => _isEvent ? (item as EventEntity).eventDescription : null;
+
 
   String get _statusName {
     if (_isRequest) return (item as EventRequestEntity).status.portugueseName;
@@ -99,6 +103,11 @@ class EventStatusCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (!_isRequest && !_isEvent) return const SizedBox.shrink();
+
+
+    final canEditRequest = _isRequest && EventRequestPolicy.canDecide(item.status) && onEditRequest != null;
+
+
 
     final bgColor = _getStatusBackgroundColor();
     final textColor = _getStatusTextColor();
@@ -200,7 +209,19 @@ class EventStatusCardWidget extends StatelessWidget {
                 ] else ...[
                   const SizedBox(height: 8),
                 ],
+                
 
+                if (canEditRequest) ...[
+                  const SizedBox(height: 8),
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: onEditRequest,
+                      icon: const Icon(Icons.edit_outlined),
+                      label: const Text('Editar evento'),
+                    ),
+                  ),
+                ],
                 // Data Inteligente
                 Row(
                   children: [

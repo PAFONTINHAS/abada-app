@@ -16,6 +16,10 @@ class RequestStatusController extends ChangeNotifier {
     loadStatus();
   }
 
+  void cleanController(){
+    _latestRequest = null;
+  }
+
   Future<void> loadStatus() async {
     final result = await _getChangeRequestsUseCase.execute();
     result.fold(

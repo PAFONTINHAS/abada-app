@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
+import 'package:sistema_abada_capoeira/core/utils/controllers_utils.dart';
 import 'package:sistema_abada_capoeira/core/utils/app_message_handler.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/tusca_entity.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
@@ -17,7 +18,6 @@ import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/tus
 import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/quick_actions_section_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/change_request_status_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/widgets/profile_action_button_widget.dart';
-import 'package:sistema_abada_capoeira/features/location/presentation/controllers/student_class_selection_controller.dart';
 
 /// RF04 - Gerenciar Perfil
 class ProfilePage extends StatelessWidget {
@@ -90,9 +90,9 @@ class ProfilePage extends StatelessWidget {
               onPressed: () async {
 
                 final authController = context.read<AuthController>();
-                final studentController = context.read<StudentClassSelectionController>();
 
-                studentController.reset();
+                ControllersUtils.cleanControllers(context);
+
                 final success = await authController.logoutUser();  
 
                 if (success && context.mounted) {
