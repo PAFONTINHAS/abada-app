@@ -1,15 +1,13 @@
 
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:sistema_abada_capoeira/core/services/location_service/place_suggestion.dart';
 import 'package:sistema_abada_capoeira/core/utils/mask_formatter.dart';
+import 'package:sistema_abada_capoeira/core/services/location_service/place_suggestion.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_products_item.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_type.dart';
 import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
-import 'package:sistema_abada_capoeira/features/events/domain/usecases/create_event_request_usecase.dart';
-import 'package:sistema_abada_capoeira/features/events/domain/usecases/resubmit_event_request_usecase.dart';
 
 class EventFormController extends ChangeNotifier {
   bool _isInitializing = true;
@@ -49,6 +47,9 @@ class EventFormController extends ChangeNotifier {
   DateTime? _eventEndingDate;
   DateTime? get eventEndingDate => _eventEndingDate;
 
+  PlaceSuggestion? _savedLocation;
+  PlaceSuggestion? get savedLocation => _savedLocation;
+
   bool get isFirstPhaseComplete {
     if (eventName.text.trim().isEmpty) return false;
     if (eventLocation.text.trim().isEmpty) return false;
@@ -75,6 +76,8 @@ class EventFormController extends ChangeNotifier {
     if (_isSubmitting == value) return;
     _isSubmitting = value;
     notifyListeners();
+  } 
+  
   void cleanController(){
     _originalEvent = null;
     _requestId = null;
@@ -89,6 +92,17 @@ class EventFormController extends ChangeNotifier {
     required EventEntity event,
     required String requestId,
   }) {
+
+    _savedLocation = PlaceSuggestion(
+      city: event.city,
+      state: event.state,
+      osmKey: '',
+      latitude: event.latitude,
+      district: '',
+      longitude: event.longitude,
+      fullAddress: event.eventLocation,
+    );
+
     _originalEvent = event;
     _requestId = requestId;
 
@@ -99,11 +113,12 @@ class EventFormController extends ChangeNotifier {
     final baseValue = totalValue - mandatoryProductsValue;
 
     eventValue.text = MaskFormatter.convertMoneyDoubleToString( baseValue < 0 ? 0 : baseValue,);
-    eventLocation.text = event.eventLocation;
     eventDescription.text = event.eventDescription ?? '';
     _eventType = event.eventType;
     _eventInitDate = event.eventInitDate;
     _eventEndingDate = event.eventEndingDate;
+    eventLocation.text = event.eventLocation;
+
 
     _eventImage = null;
     notifyListeners();
@@ -155,6 +170,7 @@ class EventFormController extends ChangeNotifier {
     _eventImage = null;
     notifyListeners();
   }
+
 
   EventEntity? buildEventEntity({
     // required String city,
@@ -222,7 +238,6 @@ class EventFormController extends ChangeNotifier {
 
     notifyListeners();
   }
-}
 
   @override
   void dispose() {

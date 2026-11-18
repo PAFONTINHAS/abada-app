@@ -23,7 +23,7 @@ abstract class EventRemoteDatasource {
   Future<Either<Failure, void>> deleteEventImage(String imageUrl);
   Future<Either<Failure, void>> updateEvent(EventEntity entity);
 
-  Future<Either<Failure, List<EventEntity>>> getEvents();
+  // Future<Either<Failure, List<EventEntity>>> getEvents();
   Future<Either<Failure, EventEntity>> getEventById(
     String eventId, {
     bool serverOnly = false,

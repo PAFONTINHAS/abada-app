@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/core/utils/date_controller.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
@@ -105,8 +106,7 @@ class EventStatusCardWidget extends StatelessWidget {
     if (!_isRequest && !_isEvent) return const SizedBox.shrink();
 
 
-    final canEditRequest = _isRequest && EventRequestPolicy.canDecide(item.status) && onEditRequest != null;
-
+    final canEditRequest = _isRequest && EventRequestPolicy.canEdit(item.status) && onEditRequest != null;
 
 
     final bgColor = _getStatusBackgroundColor();

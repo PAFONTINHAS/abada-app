@@ -10,7 +10,7 @@ import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/v
 import 'package:sistema_abada_capoeira/features/member_validation/presentation/widgets/membership_request_item_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/dashboard_local_summary_card_list_widget.dart';
 import 'package:sistema_abada_capoeira/features/member_validation/presentation/controllers/membership_validation_controller.dart';
-import 'package:sistema_abada_capoeira/features/member_validation/presentation/widgets/membership_requests_empty_state_widget.dart';
+import 'package:sistema_abada_capoeira/shared/widgets/requests_empty_state_widget.dart';
 
 class ProfessorDashboardPage extends StatelessWidget {
   const ProfessorDashboardPage({super.key});
@@ -70,7 +70,7 @@ class ProfessorDashboardPage extends StatelessWidget {
                 selector: (_, controller) => controller.requests,
                 builder: (context, requests, child){
 
-                  if(requests.isEmpty) return const MembershipRequestsEmptyStateWidget();
+                  if(requests.isEmpty) return const RequestEmptyStateWidget();
 
                   return ListView.builder(
                     itemCount: memberEntryRequests.length,

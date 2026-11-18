@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-
+import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/models/event_details_modals.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_decision_parameters.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_details_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_requests_controller.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/models/event_details_modals.dart';
-import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
-import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 
 class EventDetailsRevisionBottomWidget extends StatelessWidget {
   const EventDetailsRevisionBottomWidget({super.key, required this.controller, required this.requestId});
@@ -41,9 +41,6 @@ class EventDetailsRevisionBottomWidget extends StatelessWidget {
     }
 
     final eventId = controller.eventEntity?.eventId ?? '';
-    if (!controller.canDecide(requestId, eventId)) {
-      return false;
-    }
 
     // Dados necessários para registrar a decisão.
     final params = EventRequestDecisionParameters(
@@ -63,6 +60,8 @@ class EventDetailsRevisionBottomWidget extends StatelessWidget {
     if (!context.mounted) {
       return success;
     }
+
+    context.pop();
 
     if (success) {
       await controller.getEventById(eventId, requestId: requestId);

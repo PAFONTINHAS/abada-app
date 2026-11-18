@@ -55,23 +55,22 @@ class EventRoutes {
       GoRoute(
         path: 'event_details',
         builder: (context, state) {
-          final Map<String, dynamic> parameters =
-              state.extra as Map<String, dynamic>;
+          final Map<String, dynamic> parameters = state.extra as Map<String, dynamic>;
 
           final String? eventId = parameters['eventId'] as String?;
-          final bool isSubscriptionAllowed= parameters['isSubscriptionAllowed'] as bool;
           final String? requestId = parameters['requestId'] as String?;
-          final EventEntity? eventEntity =
-              parameters['eventEntity'] as EventEntity?;
-          final bool analyseEventDetails =
-              parameters['analyseEventDetails'] as bool;
+          final EventEntity? eventEntity = parameters['eventEntity'] as EventEntity?;
+          final bool analyseEventDetails = parameters['analyseEventDetails'] as bool;
+          final bool isSubscriptionAllowed= parameters['isSubscriptionAllowed'] as bool;
+          final bool isProfessorActionsAllowed = parameters['isProfessorActionsAllowed'] as bool;
 
-          return EventDetailsPage(
+        return EventDetailsPage(
             eventId: eventId,
             event: eventEntity,
-            isSubscriptionAllowed: isSubscriptionAllowed,
             requestId: requestId,
             analyseEventDetails: analyseEventDetails,
+            isSubscriptionAllowed: isSubscriptionAllowed,
+            isProfessorActionsAllowed: isProfessorActionsAllowed,
           );
         },
         routes: [

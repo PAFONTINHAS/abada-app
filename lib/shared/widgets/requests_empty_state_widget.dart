@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class MembershipRequestsEmptyStateWidget extends StatelessWidget {
-  const MembershipRequestsEmptyStateWidget({super.key});
+class RequestEmptyStateWidget extends StatelessWidget {
+  const RequestEmptyStateWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

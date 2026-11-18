@@ -12,7 +12,7 @@ import 'package:sistema_abada_capoeira/features/events/presentation/controllers/
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/rapid_metrics_chart_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/view_more_requests_button_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/regional_metric_summary_card_list_widget.dart';
-import 'package:sistema_abada_capoeira/features/member_validation/presentation/widgets/membership_requests_empty_state_widget.dart';
+import 'package:sistema_abada_capoeira/shared/widgets/requests_empty_state_widget.dart';
 
 class CoordinatorDashboardPage extends StatelessWidget {
   const CoordinatorDashboardPage({super.key});
@@ -83,11 +83,13 @@ class CoordinatorDashboardPage extends StatelessWidget {
     final eventRequests = eventRequestsController.eventRequests;
     final eventRequestsQuantity = eventRequests.length;
     
-    void navigateToEventDetails(String eventId) {
+    void navigateToEventDetails(String eventId, String requestId) {
       RouteController.redirectToEventDetailsPage(
         context: context,
         eventId: eventId,
-        analyseEventDetails: true
+        analyseEventDetails: true,
+        requestId: requestId
+        
       );
     }
 
@@ -127,18 +129,19 @@ class CoordinatorDashboardPage extends StatelessWidget {
                 ],
               ),
               child: eventRequests.isEmpty
-                  ? const MembershipRequestsEmptyStateWidget()
+                  ? const RequestEmptyStateWidget()
                   : ListView.separated(
                       itemCount: eventRequestsQuantity,
                       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-                      separatorBuilder: (_, __) => const SizedBox(height: 12),
+                      separatorBuilder: (_, _) => const SizedBox(height: 12),
                       itemBuilder: (context, index) {
                         if (index > 2) return const SizedBox.shrink();
 
                         final item = eventRequests[index];
+
                         final card = EventStatusCardWidget(
                           item: item,
-                          onViewEventDetails: () => navigateToEventDetails(item.eventId),
+                          onViewEventDetails: () => navigateToEventDetails(item.eventId, item.requestId),
                           onViewRequestDetails: () => _showRequestDetailsModal(context, item),
                         );
 

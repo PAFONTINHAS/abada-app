@@ -20,9 +20,7 @@ class _PendingEventRequestsPageState extends State<PendingEventRequestsPage> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
         context.read<EventRequestsController>().getPendingRequests();
-      }
     });
   }
 
@@ -56,7 +54,7 @@ class _PendingEventRequestsPageState extends State<PendingEventRequestsPage> {
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
 
-        child: Consumer<CreatedEventsController>(
+        child: Consumer<EventRequestsController>(
           builder: (context, controller, child) {
             if (controller.isLoading) {
               return const Center(child: CircularProgressIndicator());

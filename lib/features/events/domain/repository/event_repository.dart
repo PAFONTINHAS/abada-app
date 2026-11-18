@@ -15,7 +15,7 @@ abstract class EventRepository {
   Future<Either<Failure, void>> removeEvent(String eventId);
   Future<Either<Failure, List<EventEntity>>> getEventsByUserId(String userId);
   Future<Either<Failure, EventsAndUserSubscriptions>> getEventsAndSubscriptions(String userId);
-  Future<Either<Failure, List<EventRequestEntity>>> getPendingEventsRequestsByUserId(String userId);
+  // Future<Either<Failure, List<EventRequestEntity>>> getPendingEventsRequestsByUserId(String userId);
   Future<Either<Failure, List<EventRequestEntity>>> getPendingEventsRequests();
   Future<Either<Failure, EventSubscriptionEntity>> subscribeToEvent(EventSubscriptionEntity subscription);  
   Future<Either<Failure, EventSubscriptionEntity?>> validateEventSubscriptionAvailability(String userId, String eventId);
@@ -28,7 +28,7 @@ abstract class EventRepository {
   Future<Either<Failure, void>> markRequestAsUpdated(GenericRequestUpdateParameters params,);
   Future<Either<Failure, void>> updateEvent(EventEntity entity);
   Future<Either<Failure, String>> uploadEventImage(File eventImage,String fileName);
-  Future<Either<Failure, List<EventEntity>>> getEvents();
+  // Future<Either<Failure, List<EventEntity>>> getEvents();
   Future<Either<Failure, List<EventRequestEntity>>>getEventRequestsByUserId(String userId);
   Future<Either<Failure, EventEntity>> getEventById(String eventId, {bool serverOnly = false});
   Future<Either<Failure, GenericRequestStatus>> resubmitEventRequest(String requestId,EventEntity event,);

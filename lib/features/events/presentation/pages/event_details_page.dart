@@ -16,6 +16,7 @@ class EventDetailsPage extends StatefulWidget {
     this.requestId,
     this.analyseEventDetails = false,
     this.isSubscriptionAllowed = false,
+    required this.isProfessorActionsAllowed,
   });
 
   final String? eventId;
@@ -23,6 +24,7 @@ class EventDetailsPage extends StatefulWidget {
   final EventEntity? event;
   final bool analyseEventDetails;
   final bool isSubscriptionAllowed;
+  final bool isProfessorActionsAllowed;
 
   @override
   State<EventDetailsPage> createState() => _EventDetailsPageState();
@@ -136,8 +138,10 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
           bottomNavigationBar: EventBottomNavigationBarWidget(
             controller: controller,
             eventEntity: eventEntity,
+            requestId: widget.requestId,
             analyseEventDetails: widget.analyseEventDetails,
             isSubscriptionAllowed: widget.isSubscriptionAllowed,
+            isProfessorActionsAllowed: widget.isProfessorActionsAllowed,
           )
         );
       },

@@ -53,6 +53,9 @@ class _SplashScreenState extends State<SplashScreen> {
       throw Exception("Usuário não autenticado");
     }
 
+
+    LoggingService.displayEntityId("Id do usuário: ${user.uid}");
+
     try{ 
 
 

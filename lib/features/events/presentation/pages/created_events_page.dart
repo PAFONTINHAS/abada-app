@@ -2,19 +2,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
-import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
 import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
+import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_entity.dart';
+import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_policy.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_status_card_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/created_events_controller.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/widgets/created_event_alert_dialog_widget.dart';
-import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_policy.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/controllers/created_events_controller.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/widgets/created_events_list_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/request_decision_details_dialog_widget.dart';
-import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 
 class CreatedEventsPage extends StatefulWidget {
   const CreatedEventsPage({super.key});
@@ -39,11 +36,15 @@ class _CreatedEventsPageState extends State<CreatedEventsPage> {
   void _navigateToEventDetails({
     String? eventId,
     EventEntity? eventEntity,
+    bool isRejectedRequest = false
   }) {
+
+    LoggingService.displayInfo("IsRejectedRequest: $isRejectedRequest");
     RouteController.redirectToEventDetailsPage(
       context: context,
       eventId: eventId,
       eventEntity: eventEntity,
+      isProfessorActionsAllowed: !isRejectedRequest
     );
   }
 
@@ -175,12 +176,21 @@ class _CreatedEventsPageState extends State<CreatedEventsPage> {
               itemBuilder: (context, index) {
                 final item = allItems[index];
 
+                
+                final isRejectedRequest = item is EventRequestEntity && item.status == GenericRequestStatus.rejected;
+
                 return EventStatusCardWidget(
                   item: item,
                   onViewEventDetails: () => _navigateToEventDetails(
                     eventId: item is EventRequestEntity ? item.eventId : null,
                     eventEntity: item is EventEntity ? item : null,
+                    isRejectedRequest: isRejectedRequest
                   ),
+                  onEditRequest: item is EventRequestEntity
+                    ? () async {
+                        await _navigateToEditEventRequest(item);
+                      }
+                    : null,
                   onViewRequestDetails: item is EventRequestEntity 
                       ? () => _showRequestDetailsModal( item)
                       : null,

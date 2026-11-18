@@ -90,7 +90,8 @@ class RouteController {
     String? requestId,
     EventEntity? eventEntity,
     bool analyseEventDetails = false,
-    bool isSubscriptionAllowed = false
+    bool isSubscriptionAllowed = false,
+    bool isProfessorActionsAllowed = true,
 
   }) {
     context.push(
@@ -99,8 +100,9 @@ class RouteController {
         'eventId': eventId,
         'requestId': requestId,
         'eventEntity': eventEntity,
-      'isSubscriptionAllowed': isSubscriptionAllowed,
+        'isSubscriptionAllowed': isSubscriptionAllowed,
         'analyseEventDetails': analyseEventDetails,
+        'isProfessorActionsAllowed': isProfessorActionsAllowed,
       },
     );
   }

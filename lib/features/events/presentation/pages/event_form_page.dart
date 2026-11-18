@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
-import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
-import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_type.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/models/event_phases.dart';
+import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_content.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/services/event_form_actions.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_phases_controller.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/models/event_phases.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/services/event_form_actions.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_content.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_page_widgets/event_form_navigation_bar_widget.dart';
 
 class EventFormPage extends StatefulWidget {

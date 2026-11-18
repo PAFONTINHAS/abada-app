@@ -9,13 +9,13 @@ import 'package:sistema_abada_capoeira/features/events/domain/usecases/reject_ev
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/request_event_changes_usecase.dart';
 class EventRequestsController extends ChangeNotifier {
   final GetPendingEventsRequestsUsecase _getPendingUsecase;
-  final RejectEventRequestUsecase _rejectUsecase;
-  final RequestEventChangesUsecase _changesUsecase;
+  final RejectEventRequestUsecase _rejectEventRequestUsecase;
+  final RequestEventChangesUsecase _requestEventChangesUsecase;
 
   EventRequestsController(
     this._getPendingUsecase,
-    this._rejectUsecase,
-    this._changesUsecase,
+    this._rejectEventRequestUsecase,
+    this._requestEventChangesUsecase,
   );
 
   List<EventRequestEntity> _eventRequests = [];
@@ -61,17 +61,14 @@ class EventRequestsController extends ChangeNotifier {
   }
 
   Future<bool> reject(EventRequestDecisionParameters params) {
-    return _execute(() => _rejectUsecase.call(params), params.requestId);
+    return _execute(() => _rejectEventRequestUsecase.call(params), params.requestId);
   }
 
   Future<bool> requestChanges(EventRequestDecisionParameters params) {
-    return _execute(() => _changesUsecase.call(params), params.requestId);
+    return _execute(() => _requestEventChangesUsecase.call(params), params.requestId);
   }
 
-  Future<bool> _execute(Future<Either<Failure, void>> Function() action,String requestId,
-  //Centraliza o fluxo de decisão: liga _isProcessing, executa o UseCase injetado, 
-  //trata o Either, atualiza erros e a lista, e notifica a interface
-  ) async {
+  Future<bool> _execute(Future<Either<Failure, void>> Function() action, String requestId) async {
     if (_isProcessing) return false;
     _isProcessing = true;
     _actionError = null;
@@ -85,9 +82,11 @@ class EventRequestsController extends ChangeNotifier {
           return false;
         },
         (_) {
-          _eventRequests.removeWhere(
-            (request) => request.requestId == requestId,
-          );
+
+          final requests = List<EventRequestEntity>.from(_eventRequests);
+          requests.removeWhere((request) => request.requestId == requestId);
+
+          _eventRequests = requests;
           return true;
         },
       );

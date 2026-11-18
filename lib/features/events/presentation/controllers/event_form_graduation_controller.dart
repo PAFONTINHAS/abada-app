@@ -3,14 +3,8 @@ import 'package:sistema_abada_capoeira/features/class/domain/entities/class_enti
 
 class EventFormGraduationController extends ChangeNotifier{
 
-  bool get isGraduationPhaseComplete{
-    return _selectedMemberIds.isNotEmpty;
-  }
-
   ClassEntity? _selectedClass;
   ClassEntity? get selectedClass => _selectedClass;
-
-
 
   // IDs dos alunos selecionados para graduação.
   final Set<String> _selectedMemberIds = {};

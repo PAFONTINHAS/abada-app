@@ -1,17 +1,92 @@
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /users/{userId} {
-      allow update: if request.auth != null
-        && request.auth.uid == userId
-        && request.resource.data.isActive == false
-        && request.resource.data.diff(resource.data).affectedKeys()
-            .hasOnly(['isActive']);
+
+      match /{document=**} {
+        allow read, write: if false;
+      }
+
+      match /users/{userId}/graduation_history/{graduationId} {
+        allow read, create: if request.auth != null;
+      }
+
+      match /users/{userId} {
+        allow read, update, delete: if request.auth != null && request.auth.uid == userId;
+        allow create: if request.auth != null;
+      }
+
+      match /change_requests/{requestId} {
+        allow create: if request.auth != null;
+        allow read: if request.auth != null && resource.data.userId == request.auth.uid;
+        allow update: if request.auth != null && resource.data.userId == request.auth.uid;
+      }
+      
+      match /membership_requests/{requestId} {
+        allow create: if true;
+        allow read, write: if request.auth != null;
+      }
+
+      match /fee_exemption_requests/{requestId} {
+        allow create: if request.auth != null && request.resource.data.professorId == request.auth.uid;
+        allow read: if request.auth != null && resource.data.professorId == request.auth.uid;
+        allow update: if request.auth != null && resource.data.professorId == request.auth.uid;
+        allow delete: if false;
+      }
+      
+      match /fee_exemption_requests/{requestId}/documents/{documentId} {
+        allow create: if request.auth != null && request.resource.data.uploadedBy == request.auth.uid;
+        allow read: if request.auth != null;
+        allow update, delete: if false;
+      }
+      
+      match /classes/{classId} {
+        allow read: if true;
+        allow create: if request.auth != null;
+        allow update, delete: if request.auth != null 
+          && request.auth.uid == request.resource.data.professor.professorId;
+      }
+
+      match /locations/{locationId} {
+        allow read: if true;
+        allow create, update, delete: if request.auth != null;
+        allow delete: if false;
+      }
+      
+      match /classes/{classId}/students/{studentId} {
+        allow create, read, update: if request.auth != null;
+        allow delete: if false;
+      }
+
+    match /events/{eventId} {
+        allow create, read, update, delete: if request.auth != null;
+      }
+      
+      match /ongoing_events/{eventId} {
+        allow create, read, update, delete: if request.auth != null;
+      }
+      
+      match /ongoing_events/{eventId}/subscriptions/{subscriptionId} {
+        allow create, read: if request.auth != null;
+      }
+      
+      match /finished_events/{eventId} {
+        allow read: if request.auth != null;
+      }
+    match /event_requests/{requestId} {
+
+      allow create: if request.auth != null;
+      allow read, update: if isCoordinator() || isValidEventOwner();
     }
 
-    match /{document=**} {
-      allow read, write: if false;
+    function isCoordinator() {
+      return request.auth != null && 
+      get(/databases/$(database)/documents/users/$(request.auth.uid)).data.userRole == 'coordinator';
+    }
+
+
+    function isValidEventOwner() {
+      return request.auth != null &&
+      && get(/databases/$(database)/documents/events/$(resource.data.eventId)).data.eventCreatorId == request.auth.uid;
     }
   }
 }
