@@ -30,7 +30,7 @@ class EventFormRevisionPhaseWidget extends StatelessWidget {
 
     // Cálculo do valor total (Evento + Produtos Obrigatórios)
     double totalEventDoubleValue = MaskFormatter.convertMoneyStringToDouble(
-      formController.eventValue.text,
+      formController.eventValueController.text,
     );
 
     for (final product in products) {
@@ -62,10 +62,10 @@ class EventFormRevisionPhaseWidget extends StatelessWidget {
 
         // 2. Informações Gerais do Evento
         RevisionPhaseGeneralEventInfoWidget(
-          eventName: formController.eventName.text,
-          eventDescription: formController.eventDescription.text.isEmpty
+          eventName: formController.eventNameController.text,
+          eventDescription: formController.eventDescriptionController.text.isEmpty
               ? "Sem descrição informada"
-              : formController.eventDescription.text,
+              : formController.eventDescriptionController.text,
           eventType: EventTypeExtension.convertToUIText(
             formController.eventType,
           ),
@@ -81,7 +81,7 @@ class EventFormRevisionPhaseWidget extends StatelessWidget {
           children: [
             RevisionPhaseInfoRowWidget(
               label: "Localização",
-              value: formController.eventLocation.text,
+              value: formController.eventLocationController.text,
             ),
             RevisionPhaseInfoRowWidget(
               label: "Período",

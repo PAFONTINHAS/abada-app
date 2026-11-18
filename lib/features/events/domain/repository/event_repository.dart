@@ -30,7 +30,7 @@ abstract class EventRepository {
   Future<Either<Failure, String>> uploadEventImage(File eventImage,String fileName);
   // Future<Either<Failure, List<EventEntity>>> getEvents();
   Future<Either<Failure, List<EventRequestEntity>>>getEventRequestsByUserId(String userId);
-  Future<Either<Failure, EventEntity>> getEventById(String eventId, {bool serverOnly = false});
+  Future<Either<Failure, EventEntity>> getEventById(String eventId);
   Future<Either<Failure, GenericRequestStatus>> resubmitEventRequest(String requestId,EventEntity event,);
   Future<Either<Failure, EventRequestEntity>> getEventRequestById(String requestId);
 }

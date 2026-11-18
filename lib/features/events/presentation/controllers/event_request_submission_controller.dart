@@ -60,9 +60,7 @@ class EventRequestSubmissionController extends ChangeNotifier {
     required EventEntity event,
     required File? eventImage,
   }) async {
-    if (requestId == null ||
-        requestId.trim().isEmpty ||
-        event.eventId.trim().isEmpty) {
+    if (requestId == null || requestId.trim().isEmpty || event.eventId.trim().isEmpty) {
       _errorMessage = 'Solicitação ou evento inválido.';
       notifyListeners();
       return false;

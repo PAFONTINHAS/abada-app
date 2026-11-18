@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/core/utils/date_controller.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
@@ -161,18 +160,52 @@ class EventStatusCardWidget extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
+                
 
-                // Título
-                Text(
-                  _eventName,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: ColorConstants.textPrimary,
+                Row(
+                  children: [
+                   
+                   Expanded(
+                    child:                     Text(
+                      _eventName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: ColorConstants.textPrimary,
+                      ),
+                    ),
                   ),
+
+     
+                  const SizedBox(width: 5),
+
+                    if (canEditRequest) ...[
+                      Column(
+                        children: [
+                          IconButton(
+                            onPressed: onEditRequest,
+                            icon: Icon(
+                              Icons.edit_outlined,
+                              color: Colors.amber,
+                            ),
+                          ),
+
+                          Text(
+                            "Editar Evento",
+                            style: const TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              color: ColorConstants.textPrimary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ],
                 ),
+                // Título
                 const SizedBox(height: 4),
 
                 // Descrição Opcional
@@ -211,17 +244,7 @@ class EventStatusCardWidget extends StatelessWidget {
                 ],
                 
 
-                if (canEditRequest) ...[
-                  const SizedBox(height: 8),
-                  SizedBox(
-                    width: double.infinity,
-                    child: OutlinedButton.icon(
-                      onPressed: onEditRequest,
-                      icon: const Icon(Icons.edit_outlined),
-                      label: const Text('Editar evento'),
-                    ),
-                  ),
-                ],
+
                 // Data Inteligente
                 Row(
                   children: [

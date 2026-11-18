@@ -28,13 +28,13 @@ class EventFormFirstPhaseWidget extends StatelessWidget {
           children: [
             CustomTextInput(
               label: "Nome do Evento",
-              controller: formController.eventName,
+              controller: formController.eventNameController,
               hintText: "Batizado e Troca de Cordas 2026",
             ),
             const SizedBox(height: 16),
             CustomTextInput(
               label: "Descrição do Evento (opcional)",
-              controller: formController.eventDescription,
+              controller: formController.eventDescriptionController,
               hintText: "Descreva o que ocorrerá no evento...",
               maxLines: 3,
             ),

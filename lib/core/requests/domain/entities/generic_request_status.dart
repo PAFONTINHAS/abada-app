@@ -12,6 +12,8 @@ class GenericRequestStatusExtension{
   //construtor privado, impede que outras partes do app criem objetos dessa classe,
 
 
+
+
   static GenericRequestStatus fromString(String status){
 
     switch(status){
@@ -30,6 +32,10 @@ class GenericRequestStatusExtension{
 //extensão do enum, recebe um valor de status do enum e retorna para impressao em pt
 //modularização
 extension GenericRequestStatusExt on GenericRequestStatus{
+
+  bool get isApproved{
+    return this == GenericRequestStatus.approved;
+  }
 
   String get portugueseName {
 

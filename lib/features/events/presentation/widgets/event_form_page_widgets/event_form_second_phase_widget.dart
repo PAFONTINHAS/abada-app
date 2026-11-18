@@ -63,7 +63,7 @@ class EventFormSecondPhaseWidget extends StatelessWidget {
               hintText: "R\$ 0,00",
               mask: moneyMaskFormatter,
               hasMask: true,
-              controller: formController.eventValue,
+              controller: formController.eventValueController,
             ),
           ],
         ),

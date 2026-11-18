@@ -1,11 +1,10 @@
-import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
-
 import 'dart:io';
-
 import 'package:dartz/dartz.dart';
 import 'package:sistema_abada_capoeira/core/errors/failure.dart';
+import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/core/utils/generator.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
+import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/standard_event_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/validators/create_event_request_usecase_validator.dart';
 
@@ -13,11 +12,10 @@ class ResubmitEventRequestUsecase extends StandardEventUsecase {
   ResubmitEventRequestUsecase(super.eventRepository);
 
   /// Valida o evento corrigido e reenvia a solicitação existente.
-  Future<Either<Failure, GenericRequestStatus>> call(
-    String requestId,
-    EventEntity eventEntity,
-    File? eventImage,
-  ) async {
+  Future<Either<Failure, GenericRequestStatus>> call(String requestId, EventEntity eventEntity, File? eventImage) async {
+
+    LoggingService.displayInfo("Validando slicitação de evento");
+
     if (requestId.trim().isEmpty || eventEntity.eventId.trim().isEmpty) {
       return const Left(
         ValidationFailure('ID da solicitação ou do evento inválido.'),
@@ -60,33 +58,33 @@ class ResubmitEventRequestUsecase extends StandardEventUsecase {
       });
     }
 
+
+    LoggingService.displayInfo("Reenviando solicitação de evento");
+
+
     // Atualiza o evento e a solicitação na mesma transação.
     final result = await eventRepository.resubmitEventRequest(
       requestId,
       updatedEvent,
     );
+      
     final definitelyRejected = result.fold(
-      (failure) =>
-          failure is ValidationFailure || failure is UnauthorizedFailure,
+      (failure) => failure is ValidationFailure || failure is UnauthorizedFailure,
       (_) => false,
     );
+    
     if (definitelyRejected && uploadedImage != null) {
-      // A failed acknowledgement can be ambiguous. Delete only after a
-      // successful read confirms the new object is not referenced.
-      try {
-        final persisted = await eventRepository.getEventById(
-          eventEntity.eventId,
-          serverOnly: true,
-        );
-        await persisted.fold((_) async {}, (event) async {
-          if (event.eventImagePath != uploadedImage) {
-            await eventRepository.deleteEventImage(uploadedImage!);
-          }
-        });
-      } catch (_) {
-        // Preserve the original failure; leave uncertain uploads for cleanup.
-      }
+      
+      final persisted = await eventRepository.getEventById(eventEntity.eventId);
+
+      await persisted.fold((_) async {}, (event) async {
+        if (event.eventImagePath != uploadedImage) {
+          await eventRepository.deleteEventImage(uploadedImage!);
+        }
+      });
     }
+
+  LoggingService.displayInfo("Evento atualizado com sucesso");
     return result;
   }
 }

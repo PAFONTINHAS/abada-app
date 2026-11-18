@@ -2,11 +2,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:sistema_abada_capoeira/core/utils/mask_formatter.dart';
-import 'package:sistema_abada_capoeira/core/services/location_service/place_suggestion.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_type.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
+import 'package:sistema_abada_capoeira/core/services/location_service/place_suggestion.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_products_item.dart';
-import 'package:sistema_abada_capoeira/features/events/domain/entities/event_type.dart';
 import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
 
 class EventFormController extends ChangeNotifier {
@@ -19,8 +19,8 @@ class EventFormController extends ChangeNotifier {
   bool _isSubmitting = false;
   bool get isSubmitting => _isSubmitting;
 
-  EventEntity? _originalEvent;
-  bool get isEditing => _originalEvent != null;
+  EventEntity? _eventToEdit;
+  bool get isEditing => _eventToEdit != null;
   
   String? _requestId;
   String? get requestId => _requestId;
@@ -28,10 +28,10 @@ class EventFormController extends ChangeNotifier {
   GenericRequestStatus? _savedStatus;
   GenericRequestStatus? get savedStatus => _savedStatus;
 
-  final TextEditingController eventName = TextEditingController();
-  final TextEditingController eventValue = TextEditingController();
-  final TextEditingController eventLocation = TextEditingController();
-  final TextEditingController eventDescription = TextEditingController();
+  final TextEditingController eventNameController = TextEditingController();
+  final TextEditingController eventValueController = TextEditingController();
+  final TextEditingController eventLocationController = TextEditingController();
+  final TextEditingController eventDescriptionController = TextEditingController();
 
   EventType _eventType = EventType.UNKNOWN;
   EventType get eventType => _eventType;
@@ -39,7 +39,7 @@ class EventFormController extends ChangeNotifier {
   File? _eventImage;
   File? get eventImage => _eventImage;
 
-  String? get existingImageUrl => _originalEvent?.eventImagePath;
+  String? get existingImageUrl => _eventToEdit?.eventImagePath;
 
   DateTime? _eventInitDate;
   DateTime? get eventInitDate => _eventInitDate;
@@ -51,8 +51,8 @@ class EventFormController extends ChangeNotifier {
   PlaceSuggestion? get savedLocation => _savedLocation;
 
   bool get isFirstPhaseComplete {
-    if (eventName.text.trim().isEmpty) return false;
-    if (eventLocation.text.trim().isEmpty) return false;
+    if (eventNameController.text.trim().isEmpty) return false;
+    if (eventLocationController.text.trim().isEmpty) return false;
     return true;
   }
 
@@ -79,7 +79,7 @@ class EventFormController extends ChangeNotifier {
   } 
   
   void cleanController(){
-    _originalEvent = null;
+    _eventToEdit = null;
     _requestId = null;
     _savedStatus = null;
     _eventInitDate = null;
@@ -88,7 +88,7 @@ class EventFormController extends ChangeNotifier {
   }
 
   /// Carrega os dados do evento existente para edição e reenvio.
-  void loadEventForEditing({
+  void beginEditing({
     required EventEntity event,
     required String requestId,
   }) {
@@ -103,21 +103,26 @@ class EventFormController extends ChangeNotifier {
       fullAddress: event.eventLocation,
     );
 
-    _originalEvent = event;
+    _eventToEdit = event;
     _requestId = requestId;
 
-    eventName.text = event.eventName;
+    eventNameController.text = event.eventName;
 
-    final totalValue = MaskFormatter.convertMoneyStringToDouble(event.eventValue,);
-    final mandatoryProductsValue = event.products.fold<double>(0,(total, product) => total + (product.mandatory ? product.price : 0),);
+    final totalValue = MaskFormatter.convertMoneyStringToDouble(event.eventValue);
+    final mandatoryProductsValue = event.products.fold<double>(0, (total, product) => total + (product.mandatory ? product.price : 0));
     final baseValue = totalValue - mandatoryProductsValue;
 
-    eventValue.text = MaskFormatter.convertMoneyDoubleToString( baseValue < 0 ? 0 : baseValue,);
-    eventDescription.text = event.eventDescription ?? '';
+    eventValueController.text = MaskFormatter.convertMoneyDoubleToString(baseValue);
+
+    eventValueController.text = eventValueController.text == "0.00"
+      ? ""
+      : eventValueController.text;
+
+    eventDescriptionController.text = event.eventDescription ?? '';
     _eventType = event.eventType;
     _eventInitDate = event.eventInitDate;
     _eventEndingDate = event.eventEndingDate;
-    eventLocation.text = event.eventLocation;
+    eventLocationController.text = event.eventLocation;
 
 
     _eventImage = null;
@@ -125,7 +130,7 @@ class EventFormController extends ChangeNotifier {
   }
 
   void setEventLocation(String value) {
-    eventLocation.text = value;
+    eventLocationController.text = value;
     notifyListeners();
   }
 
@@ -172,18 +177,17 @@ class EventFormController extends ChangeNotifier {
   }
 
 
-  EventEntity? buildEventEntity({
-    // required String city,
-    // required String state,
-    required String userId,
+  EventEntity? buildUpdatedEventEntity({
     required PlaceSuggestion place,
-    required String userNickname,
     required ClassEntity? selectedClass,
     required Set<String> selectedMemberIds,
     required List<EventProductItem> products,
-  }) {
+  }){
+
+    if(_eventToEdit == null) return null;
+
     double totalEventDoubleValue = MaskFormatter.convertMoneyStringToDouble(
-      eventValue.text.trim(),
+      eventValueController.text.trim(),
     );
 
     for (final product in products) {
@@ -194,7 +198,48 @@ class EventFormController extends ChangeNotifier {
 
     final totalEventStringValue = MaskFormatter.convertMoneyDoubleToString(totalEventDoubleValue,);
     final now = DateTime.now();
-    final originalEvent = _originalEvent;
+
+    return EventEntity(
+      city: place.city,
+      state: place.state,
+      products: products,
+      eventType: eventType,
+      latitude: place.latitude,
+      longitude: place.longitude,
+      eventId: _eventToEdit!.eventId,
+      eventValue: totalEventStringValue,
+      eventInitDate: eventInitDate ?? now,
+      eventName: eventNameController.text,
+      selectedMembersId: selectedMemberIds,
+      selectedClassId: selectedClass?.classId,
+      eventEndingDate: eventEndingDate ?? now,
+      eventCreatorId: _eventToEdit!.eventCreatorId,
+      eventDescription: eventDescriptionController.text,
+      eventLocation: eventLocationController.text.trim(),
+      eventCreatorNickname: _eventToEdit!.eventCreatorNickname,
+    );
+  }
+
+  EventEntity? buildEventEntity({
+    required String userId,
+    required PlaceSuggestion place,
+    required String userNickname,
+    required ClassEntity? selectedClass,
+    required Set<String> selectedMemberIds,
+    required List<EventProductItem> products,
+  }) {
+    double totalEventDoubleValue = MaskFormatter.convertMoneyStringToDouble(
+      eventValueController.text.trim(),
+    );
+
+    for (final product in products) {
+      if (product.mandatory) {
+        totalEventDoubleValue += product.price;
+      }
+    }
+
+    final totalEventStringValue = MaskFormatter.convertMoneyDoubleToString(totalEventDoubleValue,);
+    final now = DateTime.now();
 
     return EventEntity(
       eventId: '',
@@ -205,27 +250,26 @@ class EventFormController extends ChangeNotifier {
       eventCreatorId: userId,
       latitude: place.latitude,
       longitude: place.longitude,
-      eventName: eventName.text.trim(),
-      eventCreatorNickname: originalEvent?.eventCreatorNickname ?? userNickname,
+      eventName: eventNameController.text.trim(),
+      eventCreatorNickname:  userNickname,
       eventValue: totalEventStringValue,
-      eventInitDate: originalEvent?.eventInitDate ?? eventInitDate ?? now,
+      eventInitDate: eventInitDate ?? now,
       selectedMembersId: selectedMemberIds,
-      eventLocation: eventLocation.text.trim(),
-      eventEndingDate: originalEvent?.eventEndingDate ?? eventEndingDate ?? now,
-      selectedClassId: selectedClass?.classId ?? originalEvent?.selectedClassId,
-      eventDescription: eventDescription.text.trim(),
-      eventImagePath: originalEvent?.eventImagePath,
+      eventLocation: eventLocationController.text.trim(),
+      eventEndingDate: eventEndingDate ?? now,
+      selectedClassId: selectedClass?.classId,
+      eventDescription: eventDescriptionController.text.trim(),
     );
   }
 
   void reset() {
-    _originalEvent = null;
+    _eventToEdit = null;
     _requestId = null;
 
-    eventName.clear();
-    eventValue.clear();
-    eventLocation.clear();
-    eventDescription.clear();
+    eventNameController.clear();
+    eventValueController.clear();
+    eventLocationController.clear();
+    eventDescriptionController.clear();
 
     _eventType = EventType.UNKNOWN;
     _eventImage = null;
@@ -241,10 +285,10 @@ class EventFormController extends ChangeNotifier {
 
   @override
   void dispose() {
-    eventName.dispose();
-    eventValue.dispose();
-    eventLocation.dispose();
-    eventDescription.dispose();
+    eventNameController.dispose();
+    eventValueController.dispose();
+    eventLocationController.dispose();
+    eventDescriptionController.dispose();
     super.dispose();
   }
 }

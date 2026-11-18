@@ -173,7 +173,7 @@ class EventRequestsRemoteDatasourceImpl extends RequestDatasourceImpl implements
     EventEntity event,
   ) async {
     try {
-      final eventReference = _firestore.collection('events').doc(event.eventId);
+      final eventReference = _firestore.collection(DBCollections.ongoingEventsCollection).doc(event.eventId);
       final eventModel = EventEntityModel.fromEntity(event);
 
       GenericRequestStatus? persistedStatus;

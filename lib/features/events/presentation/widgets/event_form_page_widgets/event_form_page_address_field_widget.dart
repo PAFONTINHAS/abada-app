@@ -23,7 +23,7 @@ class EventFormPageAddressFieldWidget extends StatelessWidget {
             CustomTextInput(
               label: "Endereço",
               hintText: "Digite o endereço do evento...",
-              controller: formController.eventLocation,
+              controller: formController.eventLocationController,
               prefixIcon: const Icon(Icons.location_on_outlined),
               maxLines: 2,
               onChanged: (value) {

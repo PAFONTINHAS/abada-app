@@ -3,8 +3,8 @@ import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_details_controller.dart';
 
-class CanceledEventBottomNavigationBarWidget extends StatelessWidget {
-  const CanceledEventBottomNavigationBarWidget({super.key, required this.controller});
+class UnavailableEventBottomNavigationBarWidget extends StatelessWidget {
+  const UnavailableEventBottomNavigationBarWidget({super.key, required this.controller});
 
   final EventDetailsController controller;
 
@@ -38,8 +38,8 @@ class CanceledEventBottomNavigationBarWidget extends StatelessWidget {
                   ),
                 ),
                 child: const Text(
-                  "Evento Cancelado (Modo Leitura)",
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                  "-|- EVENTO EM MODO LEITURA -|-",
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                 ),
               ),
             ),

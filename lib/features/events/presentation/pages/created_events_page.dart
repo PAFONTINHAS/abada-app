@@ -36,15 +36,15 @@ class _CreatedEventsPageState extends State<CreatedEventsPage> {
   void _navigateToEventDetails({
     String? eventId,
     EventEntity? eventEntity,
-    bool isRejectedRequest = false
+    bool isProfessorActionsAllowed = true
   }) {
 
-    LoggingService.displayInfo("IsRejectedRequest: $isRejectedRequest");
+    LoggingService.displayInfo("isProfessorActionsAllowed: $isProfessorActionsAllowed");
     RouteController.redirectToEventDetailsPage(
       context: context,
       eventId: eventId,
       eventEntity: eventEntity,
-      isProfessorActionsAllowed: !isRejectedRequest
+      isProfessorActionsAllowed: isProfessorActionsAllowed
     );
   }
 
@@ -176,15 +176,15 @@ class _CreatedEventsPageState extends State<CreatedEventsPage> {
               itemBuilder: (context, index) {
                 final item = allItems[index];
 
-                
-                final isRejectedRequest = item is EventRequestEntity && item.status == GenericRequestStatus.rejected;
+                final isProfessorActionsAllowed = item is EventEntity;
 
                 return EventStatusCardWidget(
                   item: item,
                   onViewEventDetails: () => _navigateToEventDetails(
                     eventId: item is EventRequestEntity ? item.eventId : null,
                     eventEntity: item is EventEntity ? item : null,
-                    isRejectedRequest: isRejectedRequest
+                    isProfessorActionsAllowed: isProfessorActionsAllowed,
+                    
                   ),
                   onEditRequest: item is EventRequestEntity
                     ? () async {

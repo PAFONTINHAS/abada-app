@@ -20,10 +20,10 @@ class EventFormPage extends StatefulWidget {
     this.changeReason,
   });
 
-  final EventEntity? eventToEdit;
   final String? requestId;
-  final GenericRequestStatus? requestStatus;
   final String? changeReason;
+  final EventEntity? eventToEdit;
+  final GenericRequestStatus? requestStatus;
 
   @override
   State<EventFormPage> createState() => _EventFormPageState();
@@ -109,10 +109,7 @@ class _EventFormPageState extends State<EventFormPage> {
                         }
                       },
                       onProceed: () => EventFormActions.proceed(context, phase),
-                      onFinish: () => EventFormActions.finish(
-                        context,
-                        isEditing: isEditing,
-                      ),
+                      onFinish: () => EventFormActions.finish(context, isEditing: isEditing),
                     ),
                   ],
                 );

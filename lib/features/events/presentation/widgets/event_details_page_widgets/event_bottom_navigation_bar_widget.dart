@@ -47,15 +47,15 @@ class EventBottomNavigationBarWidget extends StatelessWidget {
         requestId != null &&
         controller.canDecide(requestId!, eventEntity!.eventId);
 
-    if(canManageSubscriptions) return EventDetailsProfessorBottomOptionsWidget(controller: controller);
 
     if(isSubscriptionAllowed && !analyseEventDetails) return EventDetailsSubscriptionBottomButtonWidget(controller: controller);
 
     if(isRevisionAllowed) return EventDetailsRevisionBottomWidget(controller: controller, requestId: requestId!);
 
+    if(!canManageSubscriptions) return UnavailableEventBottomNavigationBarWidget(controller: controller);
 
-    if(!canManageSubscriptions) return CanceledEventBottomNavigationBarWidget(controller: controller);
-
+    if(canManageSubscriptions) return EventDetailsProfessorBottomOptionsWidget(controller: controller);
+    
     return const SizedBox.shrink();
   }
 }

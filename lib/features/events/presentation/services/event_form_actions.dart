@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -27,62 +28,79 @@ class EventFormActions {
     required String? requestId,
     required GenericRequestStatus? requestStatus,
   }) {
-    final form = context.read<EventFormController>();
-    form.reset();
-    context.read<EventRequestSubmissionController>().reset();
-    context.read<EventFormProductsController>().reset();
-    context.read<EventFormGraduationController>().reset();
-    context.read<EventFormPhasesController>().reset();
 
-    if (event == null && requestId == null) {
-      form.finishInitialization();
+
+    final classController = context.read<ClassController>();
+    final eventFormController = context.read<EventFormController>();
+    final eventFormPhasesController = context.read<EventFormPhasesController>();
+    final eventFormProductsController = context.read<EventFormProductsController>();
+    final eventFormGraduationController = context.read<EventFormGraduationController>();
+    final eventRequestSubsmissionController = context.read<EventRequestSubmissionController>();
+
+    eventFormController.reset();
+    eventFormPhasesController.reset();
+    eventFormProductsController.reset();
+    eventFormGraduationController.reset();
+    eventRequestSubsmissionController.reset();
+
+    final isValidEvent = event != null;
+    final isValidRequest = requestId != null;
+    final canEditEvent = EventRequestPolicy.canEdit(requestStatus ?? GenericRequestStatus.unknow);
+
+    if (!isValidEvent && isValidRequest) {
+      eventFormController.finishInitialization();
       return;
     }
-    if (event == null ||
-        requestId == null ||
-        !EventRequestPolicy.canEdit(
-          requestStatus ?? GenericRequestStatus.unknow,
-        )) {
-      form.finishInitialization(
+
+    if (!isValidEvent || !isValidRequest || !canEditEvent) {
+      eventFormController.finishInitialization(
         error: 'Dados insuficientes para editar o evento.',
       );
       return;
     }
+
     try {
-      form.loadEventForEditing(event: event, requestId: requestId);
-      context.read<EventFormProductsController>().loadProducts(event.products);
-      final classes = context.read<ClassController>().lecturedClasses;
+
+      eventFormController.beginEditing(event: event, requestId: requestId);
+      eventFormProductsController.loadProducts(event.products);
+
+      final classes = classController.lecturedClasses;
       final selectedClass = classes.where(
         (item) => item.classId == event.selectedClassId,
       );
-      context.read<EventFormGraduationController>().loadGraduationSelection(
+
+      eventFormGraduationController.loadGraduationSelection(
         selectedClass: selectedClass.isEmpty ? null : selectedClass.first,
         selectedMemberIds: event.selectedMembersId,
       );
-      form.finishInitialization();
+
+      eventFormController.finishInitialization();
+
     } catch (error) {
-      form.finishInitialization(
+      eventFormController.finishInitialization(
         error: 'Não foi possível carregar o evento: $error',
       );
     }
   }
 
   static void proceed(BuildContext context, EventPhases phase) {
+    
     final form = context.read<EventFormController>();
+    
     if (form.isSubmitting) return;
+    
     final graduation = context.read<EventFormGraduationController>();
-    final isGraduation =
-        phase == EventPhases.thirdPhase &&
-        form.eventType == EventType.GRADUATION;
+    final isGraduation = phase == EventPhases.thirdPhase && form.eventType == EventType.GRADUATION;
+
     final valid =
-        (phase == EventPhases.firstPhase && form.isFirstPhaseComplete) ||
-        (phase == EventPhases.secondPhase && form.isSecondPhaseComplete) ||
-        (isGraduation && graduation.isGraduationPhaseComplete);
-    if (phase == EventPhases.fourthPhase ||
-        (phase == EventPhases.thirdPhase &&
-            form.eventType == EventType.COMPETITION)) {
+      (phase == EventPhases.firstPhase && form.isFirstPhaseComplete)   ||
+      (phase == EventPhases.secondPhase && form.isSecondPhaseComplete) ||
+      (isGraduation && graduation.isGraduationPhaseComplete);
+
+    if (phase == EventPhases.fourthPhase || (phase == EventPhases.thirdPhase && form.eventType == EventType.COMPETITION)) {
       return;
     }
+
     if (valid) {
       context.read<EventFormPhasesController>().nextFormPhase();
     } else {
@@ -95,25 +113,26 @@ class EventFormActions {
     }
   }
 
-  static Future<void> finish(
-    BuildContext context, {
-    required bool isEditing,
-  }) async {
+  static Future<void> finish(BuildContext context, {required bool isEditing}) async {
+
     final classController = context.read<ClassController>();
     final profileController = context.read<ProfileController>();
     final eventFormController = context.read<EventFormController>();
+    final graduationController = context.read<EventFormGraduationController>();
     final locationController = context.read<CreateLocationController>();
     final productsController = context.read<EventFormProductsController>();
     final eventRequestubmissionController = context.read<EventRequestSubmissionController>();
 
+    final user = profileController.userProfile;
+
     if (eventFormController.isSubmitting || eventRequestubmissionController.isLoading) return;
 
-    final graduation = context.read<EventFormGraduationController>();
-
-    final isGraduatingUnavailable = isEditing &&   eventFormController.eventType == EventType.GRADUATION &&
-        !classController.lecturedClasses.any(
-          (item) => item.classId == graduation.selectedClass?.classId,
-        );
+    final isGraduatingUnavailable = 
+      isEditing && 
+      eventFormController.eventType.isGraduationEvent &&
+      !classController.lecturedClasses.any(
+        (item) => item.classId == graduationController.selectedClass?.classId,
+      );
 
     if (isGraduatingUnavailable) {
       AppMessageHandler.showWarning(
@@ -125,63 +144,66 @@ class EventFormActions {
 
     eventFormController.setSubmitting(true);
     
-    try {
-      PlaceSuggestion? place = locationController.selectedSuggestion ?? eventFormController.savedLocation;
+    PlaceSuggestion? place = locationController.selectedSuggestion ?? eventFormController.savedLocation;
 
-      if (place == null) {
-        LoggingService.displayError(
-          "Erro ao finalizar. PlaceSugestion está nulo",
-        );
-        return;
-      }
+    if (place == null) {
+      return LoggingService.displayError("Erro ao finalizar. PlaceSugestion está nulo");
+    }
 
-      LoggingService.displayInfo("Atualizando evento: ${eventFormController.requestId}");
+    EventEntity? event;
 
-      final user = profileController.userProfile;
+    if(isEditing){
+      event = eventFormController.buildUpdatedEventEntity(
+        products: productsController.products,
+        selectedMemberIds: graduationController.selectedMemberIds,
+        selectedClass: graduationController.selectedClass,
+        place: place
+      );
+    } else{
 
-      final event = eventFormController.buildEventEntity(
+      event = eventFormController.buildEventEntity(
         products: productsController.products,
         userId: user.uid,
         userNickname: user.nickname,
-        selectedMemberIds: graduation.selectedMemberIds,
-        selectedClass: graduation.selectedClass,
+        selectedMemberIds: graduationController.selectedMemberIds,
+        selectedClass: graduationController.selectedClass,
         place: place
       );
-
-      if (event == null) return;
-
-      final success = isEditing
-          ? await eventRequestubmissionController.resubmitEventRequest(
-              event: event,
-              requestId: eventFormController.requestId,
-              eventImage: eventFormController.eventImage,
-            )
-          : await eventRequestubmissionController.createEventRequest(event, eventFormController.eventImage);
-
-      if (!context.mounted) return;
-
-      if (success) {
-        AppMessageHandler.showSuccess(
-          context,
-          isEditing
-              ? (eventRequestubmissionController.savedStatus == GenericRequestStatus.updated
-                    ? 'Evento corrigido e reenviado com sucesso'
-                    : 'Alterações salvas com sucesso')
-              : 'Solicitação de evento criada com sucesso',
-        );
-        context.pop(true);
-      } else {
-        AppMessageHandler.showError(
-          context,
-          'Erro: ${eventRequestubmissionController.errorMessage}',
-        );
-      }
-    } catch (error) {
-      if (context.mounted) {
-        AppMessageHandler.showError(context, 'Erro ao salvar o evento: $error');
-      }
-    } finally {
-      eventFormController.setSubmitting(false);
     }
+
+    if (event == null) return;
+
+    if(isEditing){
+      LoggingService.displayInfo("Atualizando o evento: ${event.eventId}. Solicitação: ${eventFormController.requestId}");
+    }
+
+    final success = isEditing
+      ? await eventRequestubmissionController.resubmitEventRequest(
+          event: event,
+          requestId: eventFormController.requestId,
+          eventImage: eventFormController.eventImage,
+        )
+      : await eventRequestubmissionController.createEventRequest(event, eventFormController.eventImage);
+
+    if (!context.mounted) return;
+
+    if (success) {
+      AppMessageHandler.showSuccess(
+        context,
+        isEditing
+            ? (eventRequestubmissionController.savedStatus == GenericRequestStatus.updated
+                  ? 'Evento corrigido e reenviado com sucesso'
+                  : 'Alterações salvas com sucesso')
+            : 'Solicitação de evento criada com sucesso',
+      );
+      context.pop(true);
+    } else {
+      AppMessageHandler.showError(
+        context,
+        'Erro: ${eventRequestubmissionController.errorMessage}',
+      );
+    }
+
+    eventFormController.setSubmitting(false);
   }
 }

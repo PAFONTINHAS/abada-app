@@ -98,12 +98,8 @@ class EventRepositoryImpl implements EventRepository {
   }
 
   @override
-  Future<Either<Failure, EventEntity>> getEventById(String eventId, {bool serverOnly = false,
-  }) async {
-    return await eventRemoteDatasource.getEventById(
-      eventId,
-      serverOnly: serverOnly,
-    );
+  Future<Either<Failure, EventEntity>> getEventById(String eventId) async {
+    return await eventRemoteDatasource.getEventById(eventId);
   }
 
   @override
