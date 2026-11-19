@@ -11,6 +11,9 @@ import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_
 import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_registrants_list_page.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/pages/events_page.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/pages/pending_event_requests_page.dart';
+import 'package:sistema_abada_capoeira/features/event/presentation/pages/event_cancellation_page.dart';
+import 'package:sistema_abada_capoeira/features/event/presentation/pages/event_page.dart';
+import 'package:sistema_abada_capoeira/features/event/domain/entities/event_entity_errado.dart';
 
 class EventRoutes {
   EventRoutes._();
@@ -18,7 +21,7 @@ class EventRoutes {
   static final route = GoRoute(
     path: '/events',
     builder: (context, state) {
-      return EventsPage();
+      return EventPage();
     },
     routes: [
       GoRoute(
@@ -42,6 +45,19 @@ class EventRoutes {
             requestStatus: parameters['requestStatus'] as GenericRequestStatus?,
             changeReason: parameters['changeReason'] as String?,
           );
+        },
+      ),
+
+      GoRoute(
+        path: 'cancel',
+        builder: (context, state) {
+          final event = state.extra;
+          if (event is! EventEntityErrado) {
+            return const Scaffold(
+              body: Center(child: Text('Evento inválido para cancelamento.')),
+            );
+          }
+          return EventCancellationPage(event: event);
         },
       ),
 
@@ -114,6 +130,9 @@ class EventRoutes {
           return PendingEventRequestsPage();
         },
       ),
+
+
+
     ],
   );
 }

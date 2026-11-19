@@ -26,7 +26,6 @@ class ProfileProviders {
     profileRemoteDatasource,
   );
 
-
   static final UpdateProfileInfoUseCase updateProfileInfoUseCase = UpdateProfileInfoUseCase(profileRepository);
   static final DeactivateAccountUseCase deactivateAccountUseCase = DeactivateAccountUseCase(profileRepository);
   static final GetChangeRequestsUseCase getChangeRequestsUseCase = GetChangeRequestsUseCase(profileRepository);

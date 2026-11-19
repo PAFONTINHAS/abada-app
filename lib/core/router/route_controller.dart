@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
@@ -129,7 +128,6 @@ class RouteController {
     bool showTotalPayed = true,
   }) {
 
-    LoggingService.displayInfo("Show Total payed: $showTotalPayed");
     context.push('/events/event_details/subscription_receipt', extra: {
       'event': event,
       'subscription': subscription,
