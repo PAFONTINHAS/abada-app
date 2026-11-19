@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
+import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/models/event_details_modals.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
@@ -57,15 +59,12 @@ class EventDetailsRevisionBottomWidget extends StatelessWidget {
         : await requestsController.requestChanges(params);
 
     // Evita usar o contexto se o widget foi desmontado.
-    if (!context.mounted) {
-      return success;
-    }
-
-    context.pop();
+    if (!context.mounted) return success;
 
     if (success) {
-      await controller.getEventById(eventId, requestId: requestId);
-      if (!context.mounted) return success;
+      // await controller.getEventById(eventId, requestId: requestId);
+      // if (!context.mounted) return success;
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -76,7 +75,8 @@ class EventDetailsRevisionBottomWidget extends StatelessWidget {
         ),
       );
 
-      await requestsController.getPendingRequests();
+      RouteController.redirectToPendingEventRequestsPage(context: context);
+
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -107,54 +107,91 @@ class EventDetailsRevisionBottomWidget extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         child: Row(
           children: [
-            // Recusar solicitação
-            Expanded(
-              child: OutlinedButton(
-                onPressed: requestsController.isProcessing
-                    ? null
-                    : () => EventDetailsModals.showReasonModal(
-                        context: context,
-                        title: 'Recusar Solicitação',
-                        labelText: 'Informe o motivo da recusa...',
-                        buttonColor: Colors.red,
-                        onSubmit: (reason) =>
-                            _decide(context, reject: true, reason: reason),
-                      ),
-                child: const Text('Recusar'),
-              ),
-            ),
-
-            const SizedBox(width: 8),
-
-            // Solicitar alterações
-            Expanded(
-              child: OutlinedButton(
-                onPressed: requestsController.isProcessing
-                    ? null
-                    : () => EventDetailsModals.showReasonModal(
-                        context: context,
-                        title: 'Solicitar Alterações',
-                        labelText: 'Descreva as correções...',
-                        buttonColor: Colors.orange,
-                        onSubmit: (reason) =>
-                            _decide(context, reject: false, reason: reason),
-                      ),
-                child: const Text('Ajustes'),
-              ),
-            ),
-
-            const SizedBox(width: 8),
-
-            // Aprovar solicitação
             Expanded(
               child: ElevatedButton(
-                onPressed: requestsController.isProcessing
-                    ? null
-                    : () => EventDetailsModals.showConfirmApproveDialog(
-                        context,
-                        controller,
-                      ),
-                child: const Text('Aprovar'),
+                onPressed: () {
+                  
+                  if (requestsController.isProcessing) return;
+
+                  EventDetailsModals.showReasonModal(
+                    context: context,
+                    title: 'Recusar Solicitação',
+                    labelText: 'Informe o motivo da recusa...',
+                    buttonColor: Colors.red,
+                    onSubmit: (reason) => _decide(context, reject: true, reason: reason),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red.shade700,
+                  foregroundColor: ColorConstants.whiteColor,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: const Text(
+                  "Recusar",
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+
+            SizedBox(width: 10),
+
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () {
+                  if (requestsController.isProcessing) return;
+                  EventDetailsModals.showReasonModal(
+                    context: context,
+                    title: 'Solicitar Alterações',
+                    labelText: 'Descreva as correções...',
+                    buttonColor: Colors.orange,
+                    onSubmit: (reason) => _decide(context, reject: false, reason: reason),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.amber.shade700,
+                  foregroundColor: ColorConstants.whiteColor,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: const Text(
+                  "Ajustes",
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+
+            SizedBox(width: 10),
+
+
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () {
+                  if (requestsController.isProcessing) return;
+                  EventDetailsModals.showConfirmApproveDialog(
+                    context,
+                    controller,
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green.shade700,
+                  foregroundColor: ColorConstants.whiteColor,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: const Text(
+                  "Aprovar",
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ],

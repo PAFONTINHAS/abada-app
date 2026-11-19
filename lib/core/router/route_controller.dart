@@ -107,7 +107,7 @@ class RouteController {
     );
   }
 
-  static void redirectToPendingEventDetailsPage({
+  static void redirectToPendingEventRequestsPage({
     required BuildContext context,
   }) {
     context.push('/events/event_requests');

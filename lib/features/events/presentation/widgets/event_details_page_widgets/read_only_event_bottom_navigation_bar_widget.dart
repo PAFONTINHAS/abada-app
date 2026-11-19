@@ -3,8 +3,8 @@ import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_details_controller.dart';
 
-class UnavailableEventBottomNavigationBarWidget extends StatelessWidget {
-  const UnavailableEventBottomNavigationBarWidget({super.key, required this.controller});
+class ReadOnlyEventBottomNavigationBarWidget extends StatelessWidget {
+  const ReadOnlyEventBottomNavigationBarWidget({super.key, required this.controller});
 
   final EventDetailsController controller;
 

@@ -47,7 +47,7 @@ class ManagementEventsActionsSectionWidget extends StatelessWidget {
             icon: Icons.pending_actions_outlined,
             badgeCount: pendingEventRequestsCount,
             isFullWidth: true,
-            onTap: () => RouteController.redirectToPendingEventDetailsPage(context: context),
+            onTap: () => RouteController.redirectToPendingEventRequestsPage(context: context),
           ),
         ]
       ],

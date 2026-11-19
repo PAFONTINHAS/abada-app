@@ -47,7 +47,7 @@ class EventFormActions {
     final isValidRequest = requestId != null;
     final canEditEvent = EventRequestPolicy.canEdit(requestStatus ?? GenericRequestStatus.unknow);
 
-    if (!isValidEvent && isValidRequest) {
+    if (!isValidEvent && !isValidRequest) {
       eventFormController.finishInitialization();
       return;
     }

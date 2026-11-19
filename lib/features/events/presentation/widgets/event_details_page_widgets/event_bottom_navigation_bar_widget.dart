@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_details_page_widgets/canceled_event_bottom_navigation_bar_widget.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_details_page_widgets/read_only_event_bottom_navigation_bar_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_details_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_details_page_widgets/event_details_professor_bottom_options_widget.dart';
@@ -52,7 +52,7 @@ class EventBottomNavigationBarWidget extends StatelessWidget {
 
     if(isRevisionAllowed) return EventDetailsRevisionBottomWidget(controller: controller, requestId: requestId!);
 
-    if(!canManageSubscriptions) return UnavailableEventBottomNavigationBarWidget(controller: controller);
+    if(!canManageSubscriptions) return ReadOnlyEventBottomNavigationBarWidget(controller: controller);
 
     if(canManageSubscriptions) return EventDetailsProfessorBottomOptionsWidget(controller: controller);
     

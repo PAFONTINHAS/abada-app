@@ -152,7 +152,7 @@ class CoordinatorDashboardPage extends StatelessWidget {
                               const SizedBox(height: 12),
                               if (eventRequestsQuantity > 3 || index == eventRequestsQuantity - 1)
                                 ViewMoreRequestsButtonWidget(
-                                  onPressed: () => RouteController.redirectToPendingEventDetailsPage(context: context),
+                                  onPressed: () => RouteController.redirectToPendingEventRequestsPage(context: context),
                                 ),
                             ],
                           );
