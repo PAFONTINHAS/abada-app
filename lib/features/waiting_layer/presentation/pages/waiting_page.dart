@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
+import 'package:sistema_abada_capoeira/core/utils/controllers_utils.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:sistema_abada_capoeira/features/location/presentation/controllers/student_class_selection_controller.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
@@ -73,7 +75,7 @@ class WaitingPage extends StatelessWidget {
                   height: 52,
                   child: ElevatedButton.icon(
                     onPressed: () {
-                      debugPrint('Editar Perfil');
+                      LoggingService.displayInfo('Editar Perfil');
                     },
                     icon: Icon(Icons.person_outline, color: Colors.white),
                     label: Text(
@@ -100,10 +102,8 @@ class WaitingPage extends StatelessWidget {
                   height: 52,
                   child: OutlinedButton.icon(
                     onPressed: ()  async {
+                      ControllersUtils.cleanControllers(context);
 
-                      final studentController = context.read<StudentClassSelectionController>();
-
-                      studentController.reset();
                       final authController = context.read<AuthController>();
 
                       await authController.logoutUser();

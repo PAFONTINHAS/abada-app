@@ -1,44 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:go_router/go_router.dart';
-import 'package:sistema_abada_capoeira/core/utils/app_message_handler.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
-import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_type.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/models/event_phases.dart';
-import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
+import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_content.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/services/event_form_actions.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_controller.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_phase_progress_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_phases_controller.dart';
-import 'package:sistema_abada_capoeira/features/location/presentation/controllers/create_location_controller.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_products_controller.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_graduation_controller.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_page_widgets/event_form_first_phase_widget.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_page_widgets/event_form_second_phase_widget.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_page_widgets/event_form_revision_phase_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_page_widgets/event_form_navigation_bar_widget.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_page_widgets/event_form_graduation_phase_widget.dart';
 
-class EventFormPage extends StatelessWidget {
-  const EventFormPage({super.key});
+class EventFormPage extends StatefulWidget {
+  const EventFormPage({
+    super.key,
+    this.eventToEdit,
+    this.requestId,
+    this.requestStatus,
+    this.changeReason,
+  });
+
+  final String? requestId;
+  final String? changeReason;
+  final EventEntity? eventToEdit;
+  final GenericRequestStatus? requestStatus;
+
+  @override
+  State<EventFormPage> createState() => _EventFormPageState();
+}
+
+class _EventFormPageState extends State<EventFormPage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      EventFormActions.initialize(
+        context,
+        event: widget.eventToEdit,
+        requestId: widget.requestId,
+        requestStatus: widget.requestStatus,
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final formController = context.read<EventFormController>();
-    final profileController = context.read<ProfileController>();
-    final locationController = context.read<CreateLocationController>();
-    final eventProductsController = context.read<EventFormProductsController>();
-    final eventFormPhasesController = context.read<EventFormPhasesController>();
-    final eventGraduationController = context.read<EventFormGraduationController>();
-
-    final user = profileController.userProfile;
+    final form = context.watch<EventFormController>();
+    final isEditing = widget.eventToEdit != null && widget.requestId != null;
 
     return Scaffold(
       backgroundColor: ColorConstants.backgroundColor,
       appBar: AppBar(
-        title: const Text(
-          "Criar Evento",
-          style: TextStyle(
+        title: Text(
+          isEditing ? 'Editar Evento' : 'Criar Evento',
+          style: const TextStyle(
             color: ColorConstants.textPrimary,
             fontWeight: FontWeight.bold,
             fontSize: 20,
@@ -50,120 +66,55 @@ class EventFormPage extends StatelessWidget {
         scrolledUnderElevation: 0.5,
         iconTheme: const IconThemeData(color: ColorConstants.textPrimary),
       ),
-      body: Selector<EventFormPhasesController, EventPhases>(
-        selector: (_, controller) => controller.currentPhase,
-        builder: (context, currentPhase, child) {
-
-          final bool isGraduationEvent =
-              currentPhase == EventPhases.thirdPhase &&
-              formController.eventType == EventType.GRADUATION;
-
-          final bool isEventRevisionPhase =
-              currentPhase == EventPhases.fourthPhase ||
-              (currentPhase == EventPhases.thirdPhase &&
-                  formController.eventType == EventType.COMPETITION);
-
-          final String proceedButtonText =
-              isEventRevisionPhase ? "Realizar Solicitação" : "Prosseguir";
-
-          final bool showBackButton = currentPhase != EventPhases.firstPhase;
-
-          return Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
-                  child: StandardScaffoldBodyWidget(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        const EventPhaseProgressWidget(),
-                        const SizedBox(height: 24),
-
-                        if (currentPhase == EventPhases.firstPhase)
-                          const EventFormFirstPhaseWidget(),
-
-                        if (currentPhase == EventPhases.secondPhase)
-                          const EventFormSecondPhaseWidget(),
-
-                        if (isGraduationEvent)
-                          const EventFormGraduationPhaseWidget(),
-
-                        if (isEventRevisionPhase)
-                          EventFormRevisionPhaseWidget(),
-                      ],
-                    ),
-                  ),
+      body: form.isInitializing
+          ? const Center(child: CircularProgressIndicator())
+          : form.initializationError != null
+          ? Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Text(
+                  form.initializationError!,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Colors.red),
                 ),
               ),
-
-              EventFormNavigationBarWidget(
-                proceedText: proceedButtonText,
-                showBackButton: showBackButton,
-                onBack: () => eventFormPhasesController.previousFormPhase(),
-                onProceed: () {
-
-                  final bool isFirstPhaseComplete =
-                      formController.isFirstPhaseComplete &&
-                      currentPhase == EventPhases.firstPhase;
-
-                  final bool isSecondPhaseComplete =
-                      formController.isSecondPhaseComplete &&
-                      currentPhase == EventPhases.secondPhase;
-
-                  final bool isGraduationPhaseComplete =
-                      eventGraduationController.isGraduationPhaseComplete && isGraduationEvent;
-
-                  if(isEventRevisionPhase) return;
-
-                  if (isFirstPhaseComplete ||
-                      isSecondPhaseComplete ||
-                      isGraduationPhaseComplete) {
-                    return eventFormPhasesController.nextFormPhase();
-                  }
-
-
-                  if(isGraduationEvent){
-                    return AppMessageHandler.showWarning(context, "Selecione uma turma ou ao menos um aluno para prosseguir");
-                  }
-
-                  return AppMessageHandler.showWarning(context, "Preencha todas as informações antes de prosseguir");
-                },
-                onFinish: () async{
-
-                  final selectedSuggestion = locationController.selectedSuggestion;
-
-                  if(selectedSuggestion == null) return;
-
-                  final createdEvent = formController.buildEventEntity(
-                    userId: user.uid,
-                    place: selectedSuggestion,
-                    userNickname: user.nickname,
-                    products: eventProductsController.products,
-                    selectedClass: eventGraduationController.selectedClass,
-                    selectedMemberIds: eventGraduationController.selectedMemberIds,
-                  );
-
-                  if(createdEvent == null) return;
-
-                  final success = await formController.createEventRequest(createdEvent);
-
-                  if(!context.mounted) return;
-
-                  if(success){
-                    AppMessageHandler.showSuccess(context, "Solicitação de evento criada com sucesso");
-                    context.pop();
-                    return;
-                  }
-
-                  AppMessageHandler.showError(context, "Erro: ${formController.errorMessage}");
-                },
-              ),
-            ],
-          );
-        },
-      ),
+            )
+          : Selector<EventFormPhasesController, EventPhases>(
+              selector: (_, controller) => controller.currentPhase,
+              builder: (context, phase, child) {
+                final isRevision =
+                    phase == EventPhases.fourthPhase ||
+                    (phase == EventPhases.thirdPhase &&
+                        form.eventType == EventType.COMPETITION);
+                return Column(
+                  children: [
+                    EventFormContent(
+                      phase: phase,
+                      eventType: form.eventType,
+                      requestStatus: widget.requestStatus,
+                      changeReason: widget.changeReason,
+                    ),
+                    EventFormNavigationBarWidget(
+                      proceedText: isRevision
+                          ? (isEditing
+                                ? 'Salvar alterações'
+                                : 'Realizar Solicitação')
+                          : 'Prosseguir',
+                      showBackButton: phase != EventPhases.firstPhase,
+                      onBack: () {
+                        if (!form.isSubmitting) {
+                          context
+                              .read<EventFormPhasesController>()
+                              .previousFormPhase();
+                        }
+                      },
+                      onProceed: () => EventFormActions.proceed(context, phase),
+                      onFinish: () => EventFormActions.finish(context, isEditing: isEditing),
+                    ),
+                  ],
+                );
+              },
+            ),
     );
   }
 }

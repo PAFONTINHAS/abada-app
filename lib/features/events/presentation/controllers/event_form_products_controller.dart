@@ -10,7 +10,35 @@ class EventFormProductsController extends ChangeNotifier{
   bool get optionalProduct => _mandatoryProduct;
 
   List<EventProductItem> _products = [];
-  List<EventProductItem> get products => _products;  
+  List<EventProductItem> get products => _products;
+
+  void cleanController(){
+    nameController.clear();
+    priceController.clear();
+    _mandatoryProduct = false;
+    _products.clear();
+  }
+
+  void loadProducts(List<EventProductItem> products) {
+    _products = List<EventProductItem>.from(products);
+
+    nameController.clear();
+    priceController.clear();
+    _mandatoryProduct = false;
+
+    notifyListeners();
+  }
+
+  void reset() {
+    _products = [];
+
+    nameController.clear();
+    priceController.clear();
+
+    _mandatoryProduct = false;
+
+    notifyListeners();
+  }
 
   @override
   void dispose() {
@@ -19,27 +47,32 @@ class EventFormProductsController extends ChangeNotifier{
     super.dispose();
   }
 
-  void setOptionalProduct(bool value){
+  void setOptionalProduct(bool value) {
     _mandatoryProduct = value;
 
     notifyListeners();
   }
 
+  void addProduct() {
+    if (nameController.text.trim().isEmpty) return;
 
-  void addProduct(){
-    if(nameController.text.trim().isEmpty) return;
-    
     final currentProductsList = List.from(_products);
 
     final cleanPrice = priceController.text
-      .replaceAll('R\$', '')
-      .replaceAll('.', '')
-      .replaceAll(',', '.')
-      .trim();
+        .replaceAll('R\$', '')
+        .replaceAll('.', '')
+        .replaceAll(',', '.')
+        .trim();
 
     final double price = double.tryParse(cleanPrice) ?? 0.0;
 
-    currentProductsList.add(EventProductItem(product: nameController.text.trim(), price: price, mandatory: _mandatoryProduct));
+    currentProductsList.add(
+      EventProductItem(
+        product: nameController.text.trim(),
+        price: price,
+        mandatory: _mandatoryProduct,
+      ),
+    );
 
     _products = List.from(currentProductsList);
 
@@ -51,7 +84,6 @@ class EventFormProductsController extends ChangeNotifier{
   }
 
   void removeProduct(int index) {
-
     final currentProductsList = List.from(_products);
 
     currentProductsList.removeAt(index);
@@ -59,6 +91,4 @@ class EventFormProductsController extends ChangeNotifier{
     _products = List.from(currentProductsList);
     notifyListeners();
   }
-
-
 }

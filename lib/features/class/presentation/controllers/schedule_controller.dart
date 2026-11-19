@@ -19,6 +19,14 @@ class ScheduleController extends ChangeNotifier{
 
   ScheduleColorController scheduleColorController = ScheduleColorController();
 
+  void cleanController(){
+    _weekDays.clear();
+    _scheduleList.clear();
+    _currentScheduleEntity = null;
+    openingHourController.clear();
+    closingHourController.clear();
+  }
+
   void beginEditing(List<ScheduleEntity> scheduleListToEdit){
 
     _scheduleList = List.from(scheduleListToEdit);

@@ -3,9 +3,9 @@ import 'package:sistema_abada_capoeira/features/auth/domain/entities/user_regist
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/tusca_entity.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/tusca_status.dart';
 
-class UserEntity {
+class UserRegistrationEntity {
   
-  UserEntity({
+  UserRegistrationEntity({
     required this.uid,
     required this.fullName,
     required this.email,
@@ -34,11 +34,11 @@ class UserEntity {
 
   final bool isActive;
 
-  factory UserEntity.fromRegisterParams(
+  factory UserRegistrationEntity.fromRegisterParams(
     UserCredential userCredential,
     UserRegistrationParams userRegistrationParams,
   ) {
-    return UserEntity(
+    return UserRegistrationEntity(
       uid: userCredential.user!.uid,
       fullName: userRegistrationParams.fullName,
       email: userRegistrationParams.email,

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sistema_abada_capoeira/features/auth/domain/entities/user_entity.dart';
+import 'package:sistema_abada_capoeira/features/auth/domain/entities/user_registration_entity.dart';
 
-class UserEntityModel extends UserEntity {
+class UserEntityModel extends UserRegistrationEntity {
   UserEntityModel({
     required super.uid,
     required super.fullName,

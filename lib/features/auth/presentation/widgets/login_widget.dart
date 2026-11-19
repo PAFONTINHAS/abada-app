@@ -68,6 +68,8 @@ class LoginWidget extends StatelessWidget {
 
                 AppMessageHandler.showSuccess(context, "Conta criada com sucesso! Redirecionando...");
 
+                formController.cleanControllers();
+
                 return;
               }
 

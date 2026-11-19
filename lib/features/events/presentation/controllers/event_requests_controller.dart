@@ -1,44 +1,98 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:dartz/dartz.dart';
+import 'package:sistema_abada_capoeira/core/errors/failure.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_entity.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_decision_parameters.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/get_pending_events_requests_usecase.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/usecases/reject_event_request_usecase.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/usecases/request_event_changes_usecase.dart';
+class EventRequestsController extends ChangeNotifier {
+  final GetPendingEventsRequestsUsecase _getPendingUsecase;
+  final RejectEventRequestUsecase _rejectEventRequestUsecase;
+  final RequestEventChangesUsecase _requestEventChangesUsecase;
 
-class EventRequestsController extends ChangeNotifier{
-
-  final GetPendingEventsRequestsUsecase _getPendingEventsRequestsUsecase;
-
-  EventRequestsController(this._getPendingEventsRequestsUsecase);
-
-  TextEditingController reasonController = TextEditingController();
+  EventRequestsController(
+    this._getPendingUsecase,
+    this._rejectEventRequestUsecase,
+    this._requestEventChangesUsecase,
+  );
 
   List<EventRequestEntity> _eventRequests = [];
   List<EventRequestEntity> get eventRequests => _eventRequests;
 
-  bool _isLoading = false;
+  bool _isLoading = false; //carrega a tela
   bool get isLoading => _isLoading;
+
+  bool _isProcessing = false; //evita duas ações ao mesmo tempo
+  bool get isProcessing => _isProcessing;
 
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
 
-  Future<bool> getPendingRequests() async{
-    
+  String? _actionError;
+  String? get actionError => _actionError;
+
+  void cleanController(){
+    _eventRequests.clear();
+  }
+
+  Future<bool> getPendingRequests() async {
     _isLoading = true;
+    _errorMessage = null;
     notifyListeners();
 
-    final result = await _getPendingEventsRequestsUsecase.call();
+    try {
+      final result = await _getPendingUsecase.call();
 
-    final bool success = result.fold((failure){
-      _errorMessage = failure.message;
-      return false;
-    }, (requests){
-      _eventRequests = requests;
+      return result.fold((failure) {
+          _errorMessage = failure.message;
+          return false;
+        },
+        (requests) {
+          _eventRequests = requests;
+          return true;
+        },
+      );
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 
-      return true;
-    });
+  Future<bool> reject(EventRequestDecisionParameters params) {
+    return _execute(() => _rejectEventRequestUsecase.call(params), params.requestId);
+  }
 
+  Future<bool> requestChanges(EventRequestDecisionParameters params) {
+    return _execute(() => _requestEventChangesUsecase.call(params), params.requestId);
+  }
 
-    _isLoading = false;
+  Future<bool> _execute(Future<Either<Failure, void>> Function() action, String requestId) async {
+    if (_isProcessing) return false;
+    _isProcessing = true;
+    _actionError = null;
     notifyListeners();
 
-    return success;
+    try {
+      final result = await action();
+      return result.fold(
+        (failure) {
+          _actionError = failure.message;
+          return false;
+        },
+        (_) {
+
+          final requests = List<EventRequestEntity>.from(_eventRequests);
+          requests.removeWhere((request) => request.requestId == requestId);
+
+          _eventRequests = requests;
+          return true;
+        },
+      );
+    } finally {
+      _isProcessing = false;
+      notifyListeners();
+    }
   }
 }

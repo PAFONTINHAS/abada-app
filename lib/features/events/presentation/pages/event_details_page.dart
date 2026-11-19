@@ -13,20 +13,25 @@ class EventDetailsPage extends StatefulWidget {
     super.key,
     this.event,
     this.eventId,
+    this.requestId,
     this.analyseEventDetails = false,
     this.isSubscriptionAllowed = false,
+    required this.isProfessorActionsAllowed,
   });
 
   final String? eventId;
+  final String? requestId;
   final EventEntity? event;
   final bool analyseEventDetails;
   final bool isSubscriptionAllowed;
+  final bool isProfessorActionsAllowed;
 
   @override
   State<EventDetailsPage> createState() => _EventDetailsPageState();
 }
 
 class _EventDetailsPageState extends State<EventDetailsPage> {
+  bool _initialized = false;
   final TextEditingController _reasonController = TextEditingController();
 
 
@@ -40,16 +45,21 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       final controller = context.read<EventDetailsController>();
 
       if (widget.eventId != null) {
-        controller.getEventById(widget.eventId!);
+        await controller.getEventById(
+          widget.eventId!,
+          requestId: widget.analyseEventDetails ? widget.requestId : null,
+        );
+        if (mounted) setState(() => _initialized = true);
         return;
       }
 
       if (widget.event != null) {
         controller.setEventEntity(widget.event!);
+        setState(() => _initialized = true);
         return;
       }
     });
@@ -82,7 +92,12 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
           ),
           body: StandardScaffoldBodyWidget(
             child: () {
-              if (controller.isLoading || eventEntity == null) {
+              if (_initialized && controller.errorMessage != null) {
+                return Center(child: Text(controller.errorMessage!));
+              }
+              if (!_initialized ||
+                  controller.isLoading ||
+                  eventEntity == null) {
                 return const Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -123,8 +138,10 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
           bottomNavigationBar: EventBottomNavigationBarWidget(
             controller: controller,
             eventEntity: eventEntity,
+            requestId: widget.requestId,
             analyseEventDetails: widget.analyseEventDetails,
             isSubscriptionAllowed: widget.isSubscriptionAllowed,
+            isProfessorActionsAllowed: widget.isProfessorActionsAllowed,
           )
         );
       },

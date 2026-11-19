@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'request_dialog_widget.dart';
 
 /// Confirms an action without collecting input or knowing feature rules.
@@ -43,9 +46,7 @@ class _RequestConfirmationDialogWidgetState
         Navigator.of(context).pop(true);
       }
     } catch (error, stackTrace) {
-      debugPrint('Confirmation action failed: $error');
-      debugPrintStack(stackTrace: stackTrace);
-
+      LoggingService.displayError('Confirmation action failed', error: error, stack: stackTrace);
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(

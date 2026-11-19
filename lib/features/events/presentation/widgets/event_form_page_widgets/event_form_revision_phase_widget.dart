@@ -7,6 +7,7 @@ import 'package:sistema_abada_capoeira/features/events/domain/entities/event_pro
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/section_detail_card_widget.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/existing_event_image_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_products_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_graduation_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_form_page_widgets/revision_phase_info_row_widget.dart';
@@ -29,7 +30,7 @@ class EventFormRevisionPhaseWidget extends StatelessWidget {
 
     // Cálculo do valor total (Evento + Produtos Obrigatórios)
     double totalEventDoubleValue = MaskFormatter.convertMoneyStringToDouble(
-      formController.eventValue.text,
+      formController.eventValueController.text,
     );
 
     for (final product in products) {
@@ -53,24 +54,24 @@ class EventFormRevisionPhaseWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // 1. Resumo Financeiro Destacado
-        RevisionPhaseFinancialSummaryWidget(totalEventValue: totalEventStringValue),
+        RevisionPhaseFinancialSummaryWidget(
+          totalEventValue: totalEventStringValue,
+        ),
 
         const SizedBox(height: 16),
 
         // 2. Informações Gerais do Evento
         RevisionPhaseGeneralEventInfoWidget(
-          eventName: formController.eventName.text,
-          eventDescription: formController.eventDescription.text.isEmpty
+          eventName: formController.eventNameController.text,
+          eventDescription: formController.eventDescriptionController.text.isEmpty
               ? "Sem descrição informada"
-              : formController.eventDescription.text,
+              : formController.eventDescriptionController.text,
           eventType: EventTypeExtension.convertToUIText(
             formController.eventType,
-
           ),
           eventCreatorNickname: userProfile.nickname,
         ),
 
-    
         const SizedBox(height: 16),
 
         // 3. Data e Localização
@@ -80,7 +81,7 @@ class EventFormRevisionPhaseWidget extends StatelessWidget {
           children: [
             RevisionPhaseInfoRowWidget(
               label: "Localização",
-              value: formController.eventLocation.text,
+              value: formController.eventLocationController.text,
             ),
             RevisionPhaseInfoRowWidget(
               label: "Período",
@@ -99,11 +100,13 @@ class EventFormRevisionPhaseWidget extends StatelessWidget {
               RevisionPhaseInfoRowWidget(
                 label: "Turma Selecionada",
                 value:
-                    eventGraduationController.selectedClass?.unitName ?? "Não informada",
+                    eventGraduationController.selectedClass?.unitName ??
+                    "Não informada",
               ),
               RevisionPhaseInfoRowWidget(
                 label: "Alunos Subindo de Corda",
-                value: "${eventGraduationController.selectedMemberIds.length} aluno(s)",
+                value:
+                    "${eventGraduationController.selectedMemberIds.length} aluno(s)",
               ),
             ],
           ),
@@ -117,7 +120,9 @@ class EventFormRevisionPhaseWidget extends StatelessWidget {
           products: products,
         ),
 
-
+        if (formController.eventImage == null &&
+            formController.existingImageUrl != null)
+          ExistingEventImageWidget(url: formController.existingImageUrl!),
         // 6. Imagem de Capa do Evento
         if (formController.eventImage != null) ...[
           const SizedBox(height: 16),

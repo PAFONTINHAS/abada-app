@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../controllers/membership_validation_controller.dart';
 import 'membership_request_item_widget.dart';
-import 'membership_requests_empty_state_widget.dart';
+import '../../../../shared/widgets/requests_empty_state_widget.dart';
 import 'membership_requests_error_state_widget.dart';
 import 'membership_requests_header_widget.dart';
 import 'membership_requests_info_card_widget.dart';
@@ -45,7 +45,7 @@ class MembershipRequestsBodyWidget extends StatelessWidget {
               ),
               const SizedBox(height: 14),
               if (controller.requests.isEmpty)
-                const MembershipRequestsEmptyStateWidget()
+                const RequestEmptyStateWidget()
               else
                 ...controller.requests.map(
                   (request) => Padding(

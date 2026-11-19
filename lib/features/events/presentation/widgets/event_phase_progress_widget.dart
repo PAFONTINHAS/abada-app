@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_type.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/models/event_phases.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_controller.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/widgets/phase_progress_marker_widget.dart';
+import 'package:sistema_abada_capoeira/shared/progress/phase_progress_marker_widget.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_phases_controller.dart';
 
 class EventPhaseProgressWidget extends StatelessWidget {
@@ -19,7 +19,6 @@ class EventPhaseProgressWidget extends StatelessWidget {
           child: Selector<EventFormController, EventType>(
             selector: (_, controller) => controller.eventType,
             builder: (context, eventType, child) {
-
               bool isEventGraduation = eventType == EventType.GRADUATION;
 
               return Row(
@@ -44,12 +43,12 @@ class EventPhaseProgressWidget extends StatelessWidget {
                       phaseNumber: "2",
                       currentPhase: currentPhase,
                       isCompleted:
-                        currentPhase.phaseNumber > EventPhases.secondPhase.phaseNumber
+                          currentPhase.phaseNumber >
+                          EventPhases.secondPhase.phaseNumber,
                     ),
                   ),
-                  
-                  
-                  if(isEventGraduation) 
+
+                  if (isEventGraduation)
                     Expanded(
                       child: PhaseProgressMarkerWidget(
                         phase: EventPhases.thirdPhase,
@@ -58,12 +57,15 @@ class EventPhaseProgressWidget extends StatelessWidget {
                         phaseNumber: isEventGraduation ? "3" : "2",
                         currentPhase: currentPhase,
                         isCompleted:
-                          currentPhase.phaseNumber > EventPhases.thirdPhase.phaseNumber
+                            currentPhase.phaseNumber >
+                            EventPhases.thirdPhase.phaseNumber,
                       ),
                     ),
 
                   PhaseProgressMarkerWidget(
-                    phase: isEventGraduation ? EventPhases.fourthPhase: EventPhases.thirdPhase ,
+                    phase: isEventGraduation
+                        ? EventPhases.fourthPhase
+                        : EventPhases.thirdPhase,
                     phaseText: "Revisão",
                     phaseColor: Colors.black,
                     phaseNumber: isEventGraduation ? "4" : "3",

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
+import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/member_graduation_tile.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/section_detail_card_widget.dart';
@@ -15,15 +16,18 @@ class EventFormGraduationPhaseWidget extends StatelessWidget {
     final graduationController = context.watch<EventFormGraduationController>();
     final classController = context.watch<ClassController>();
 
-    final classes = classController.lecturedClasses;
-    final selectedClass = graduationController.selectedClass;
-    final selectedIds = graduationController.selectedMemberIds;
+  final classes = classController.lecturedClasses;
 
-    final bool allSelected = selectedClass != null &&
-        selectedClass.members.isNotEmpty &&
-        selectedIds.length == selectedClass.members.length;
+  LoggingService.displayInfo('Turmas disponíveis: ${classes.length}');
 
-    return Column(
+  final selectedClass = graduationController.selectedClass;
+  final selectedIds = graduationController.selectedMemberIds;
+
+  final bool allSelected = selectedClass != null &&
+      selectedClass.members.isNotEmpty &&
+      selectedIds.length == selectedClass.members.length;
+
+  return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Cartão 1: Seleção de Turma
@@ -103,8 +107,7 @@ class EventFormGraduationPhaseWidget extends StatelessWidget {
                     return MemberGraduationTileWidget(
                       member: member,
                       isSelected: isSelected,
-                      onChanged: () =>
-                          graduationController.toggleMemberSelection(member.studentId),
+                      onChanged: () => graduationController.toggleMemberSelection(member.studentId),
                     );
                   },
                 ),

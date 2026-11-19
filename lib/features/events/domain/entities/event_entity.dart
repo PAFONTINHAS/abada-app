@@ -2,7 +2,6 @@ import 'package:sistema_abada_capoeira/features/events/domain/entities/event_pro
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_type.dart';
 
 class EventEntity {
-
   const EventEntity({
     required this.city,
     required this.state,
@@ -64,6 +63,7 @@ class EventEntity {
     EventType? eventType,
     String? eventLocation,
     String? eventImagePath,
+    bool clearEventImage = false,
     String? eventCreatorId,
     String? selectedClassId,
     DateTime? eventInitDate,
@@ -72,8 +72,7 @@ class EventEntity {
     String? eventCreatorNickname,
     Set<String>? selectedMembersId,
     List<EventProductItem>? products,
-  }){
-
+  }) {
     return EventEntity(
       city:                 city                 ?? this.city,
       state:                state                ?? this.state,
@@ -88,18 +87,15 @@ class EventEntity {
       finishedEvent:        finishedEvent        ?? this.finishedEvent,
       eventInitDate:        eventInitDate        ?? this.eventInitDate,
       eventLocation:        eventLocation        ?? this.eventLocation,
-      eventImagePath:       eventImagePath       ?? this.eventImagePath,
       eventCreatorId:       eventCreatorId       ?? this.eventCreatorId,
       selectedClassId:      selectedClassId      ?? this.selectedClassId,
       eventEndingDate:      eventEndingDate      ?? this.eventEndingDate,
       eventDescription:     eventDescription     ?? this.eventDescription,
       selectedMembersId:    selectedMembersId    ?? this.selectedMembersId,
       eventCreatorNickname: eventCreatorNickname ?? this.eventCreatorNickname,
-      
+      eventImagePath: clearEventImage
+        ? null
+        : eventImagePath ?? this.eventImagePath,
     );
   }
-
-
-  
-
 }
