@@ -29,10 +29,6 @@ class RouteController {
     context.go('/profile');
   }
 
-  static void redirectToHistoricalArchivePage({required BuildContext context}) {
-    context.push('/news/archive');
-  }
-
   static void redirectToCreateClassPage({required BuildContext context}) {
     context.push('/classes/create');
   }
