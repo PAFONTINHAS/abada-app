@@ -6,85 +6,105 @@ import 'package:sistema_abada_capoeira/features/events/domain/entities/event_ent
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
 
 class RouteController {
-
   RouteController._();
 
-  static void redirectToDashboardPage({required BuildContext context}){
-
+  static void redirectToDashboardPage({required BuildContext context}) {
     context.go("/dashboard");
   }
 
-  static void redirectToStudentClassPage({required BuildContext context, required ClassEntity classEntity}){
-
+  static void redirectToStudentClassPage({
+    required BuildContext context,
+    required ClassEntity classEntity,
+  }) {
     context.go("/classes/class", extra: classEntity);
   }
 
-  static void redirectoToClassesEntryRequestsPage({required BuildContext context}){
-
+  static void redirectoToClassesEntryRequestsPage({
+    required BuildContext context,
+  }) {
     context.push("classes/entry_requests");
   }
 
-  static void redirectToProfilePage({required BuildContext context}){
-
+  static void redirectToProfilePage({required BuildContext context}) {
     context.go('/profile');
   }
 
-  static void redirectToCreateClassPage({required BuildContext context}){
+  static void redirectToHistoricalArchivePage({required BuildContext context}) {
+    context.push('/news/archive');
+  }
 
+  static void redirectToCreateClassPage({required BuildContext context}) {
     context.push('/classes/create');
   }
 
-  static void redirectToEditClassPage({required BuildContext context, required ClassEntity classEntity}){
-
+  static void redirectToEditClassPage({
+    required BuildContext context,
+    required ClassEntity classEntity,
+  }) {
     context.push('/classes/edit', extra: classEntity);
   }
 
-  static void pushReplacementClassPage({required BuildContext context, required ClassEntity classEntity}){
+  static void pushReplacementClassPage({
+    required BuildContext context,
+    required ClassEntity classEntity,
+  }) {
     context.pushReplacement('/classes/class', extra: classEntity);
   }
 
-  static void redirectToMigrateClassPage({required BuildContext context, required ClassEntity classEntity}){
+  static void redirectToMigrateClassPage({
+    required BuildContext context,
+    required ClassEntity classEntity,
+  }) {
     context.push('/classes/migrate', extra: classEntity);
   }
 
-  static void redirectToCreateEventPage({required BuildContext context}){
+  static void redirectToCreateEventPage({required BuildContext context}) {
     context.push('/events/create');
   }
 
-  static void redirectToCreatedEventsPage({required BuildContext context}){
+  static void redirectToCreatedEventsPage({required BuildContext context}) {
     context.push('/events/created_events');
   }
 
-  static void redirectToGraduationHistoryPage({required BuildContext context}){
+  static void redirectToGraduationHistoryPage({required BuildContext context}) {
     context.push('classes/graduation_history');
   }
-
 
   static void redirectToEventDetailsPage({
     required BuildContext context,
     String? eventId,
     EventEntity? eventEntity,
     bool analyseEventDetails = false,
-    bool isSubscriptionAllowed = false
-
+    bool isSubscriptionAllowed = false,
   }) {
-    context.push('/events/event_details', extra: {
-      'eventId': eventId,
-      'eventEntity': eventEntity,
-      'isSubscriptionAllowed': isSubscriptionAllowed,
-      'analyseEventDetails': analyseEventDetails,
-    });
+    context.push(
+      '/events/event_details',
+      extra: {
+        'eventId': eventId,
+        'eventEntity': eventEntity,
+        'isSubscriptionAllowed': isSubscriptionAllowed,
+        'analyseEventDetails': analyseEventDetails,
+      },
+    );
   }
 
-  static void redirectToPendingEventDetailsPage({required BuildContext context}){
+  static void redirectToPendingEventDetailsPage({
+    required BuildContext context,
+  }) {
     context.push('/events/event_requests');
   }
 
-  static void redirectToMinorSubscriptionPage({required BuildContext context, required EventEntity event}){
+  static void redirectToMinorSubscriptionPage({
+    required BuildContext context,
+    required EventEntity event,
+  }) {
     context.push('/events/event_details/minor_subscription', extra: event);
   }
 
-  static void redirectToEventRegistrantsListPage({required BuildContext context, required EventEntity event}){
+  static void redirectToEventRegistrantsListPage({
+    required BuildContext context,
+    required EventEntity event,
+  }) {
     context.push('/events/event_details/registrants_list', extra: event);
   }
 
@@ -94,22 +114,30 @@ class RouteController {
     required EventSubscriptionEntity subscription,
     bool showTotalPayed = true,
   }) {
-
     LoggingService.displayInfo("Show Total payed: $showTotalPayed");
-    context.push('/events/event_details/subscription_receipt', extra: {
-      'event': event,
-      'subscription': subscription,
-      'showTotalPayed': showTotalPayed 
-    });
+    context.push(
+      '/events/event_details/subscription_receipt',
+      extra: {
+        'event': event,
+        'subscription': subscription,
+        'showTotalPayed': showTotalPayed,
+      },
+    );
   }
 
-  static void pushReplacementEventReceiptPage({required BuildContext context, required EventEntity event, required EventSubscriptionEntity subscription, bool showTotalPayed = true}){
-    context.pushReplacement('/events/event_details/subscription_receipt', extra: {
-      'event': event,
-      'subscription': subscription,
-      'showTotalPayed': showTotalPayed 
-    });
+  static void pushReplacementEventReceiptPage({
+    required BuildContext context,
+    required EventEntity event,
+    required EventSubscriptionEntity subscription,
+    bool showTotalPayed = true,
+  }) {
+    context.pushReplacement(
+      '/events/event_details/subscription_receipt',
+      extra: {
+        'event': event,
+        'subscription': subscription,
+        'showTotalPayed': showTotalPayed,
+      },
+    );
   }
-
-  
 }
