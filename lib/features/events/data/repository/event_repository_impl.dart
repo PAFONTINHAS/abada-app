@@ -4,6 +4,7 @@ import 'package:dartz/dartz.dart';
 import 'package:sistema_abada_capoeira/core/errors/failure.dart';
 import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_type.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/events_and_user_subscriptions.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/repository/event_repository.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_entity.dart';
@@ -123,7 +124,10 @@ class EventRepositoryImpl implements EventRepository {
     return await eventRequestsRemoteDatasource.resubmitEventRequest(requestId,event,);
   }
 
-
-
-
+  @override
+  Future<Either<Failure, bool>> checkIfRequestAlreadyExists(String eventId, {
+    EventRequestType requestType = EventRequestType.creation,
+  }) async{
+    return await eventRequestsRemoteDatasource.checkIfRequestAlreadyExists(eventId, requestType: requestType);
+  }
 }

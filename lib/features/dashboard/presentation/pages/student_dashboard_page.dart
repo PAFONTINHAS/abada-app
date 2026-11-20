@@ -87,8 +87,7 @@ class StudentDashboardPage extends StatelessWidget {
                                     RouteController.redirectToEventDetailsPage(
                                       context: context,
                                       eventEntity: event,
-                                      isSubscriptionAllowed:
-                                          isSubscriptionAllowed,
+                                      isSubscriptionAllowed: isSubscriptionAllowed,
                                     );
                                   }
                                 },

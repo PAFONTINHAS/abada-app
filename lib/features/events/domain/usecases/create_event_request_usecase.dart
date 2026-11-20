@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:sistema_abada_capoeira/core/errors/failure.dart';
 import 'package:sistema_abada_capoeira/core/utils/generator.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_type.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/standard_event_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/validators/create_event_request_usecase_validator.dart';
@@ -49,6 +50,7 @@ class CreateEventRequestUsecase extends StandardEventUsecase{
         eventId: createdEvent.eventId,
         eventName: eventEntity.eventName,
         initDate: eventEntity.eventInitDate,
+        requestType: EventRequestType.creation,
         endingDate: eventEntity.eventEndingDate,
         requesterId: createdEvent.eventCreatorId,
         requesterNickname: eventEntity.eventCreatorNickname,

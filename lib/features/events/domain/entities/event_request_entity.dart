@@ -1,36 +1,43 @@
-import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_creation_parameters.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_cancelation_aditional_data_entity.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_type.dart';
 import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
+import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_creation_parameters.dart';
 
 class EventRequestEntity extends GenericRequestCreationParameters {
 
   EventRequestEntity({
-    required this.eventId,
-    required super.requestId,
-    required this.requesterId,
-    required super.requestedAt,
-    required this.endingDate,
-    required this.eventName,
-    required this.initDate,
-    required this.requesterNickname,
     this.decidedBy,
-    this.decidedByName,
     this.decidedAt,   
+    this.decidedByName,
+    this.eventCancelationAditionalDataEntity,
+
+    required this.eventId,
+    required this.initDate,
+    required this.eventName,
+    required this.endingDate,
+    required this.requestType,
+    required this.requesterId,
+    required this.requesterNickname,
 
     super.status,
     super.updatedAt,
     super.changeReason,
     super.rejectionReason,
+    required super.requestId,
+    required super.requestedAt,
   });
 
-  final String? decidedBy;
-  final String? decidedByName;
-  final DateTime? decidedAt;
-  final String requesterId;
-  final String requesterNickname;
   final String eventId;
   final String eventName;
+  final String? decidedBy;
   final DateTime initDate;
+  final String requesterId;
+  final DateTime? decidedAt;
   final DateTime endingDate;
+  final String? decidedByName;
+  final String requesterNickname;
+  final EventRequestType requestType;
+  final EventCancelationAditionalDataEntity? eventCancelationAditionalDataEntity;
 
   Map<String, dynamic> toMap(){
 
@@ -38,37 +45,40 @@ class EventRequestEntity extends GenericRequestCreationParameters {
       'eventId': eventId,
       'initDate': initDate,
       'status': status.name,
+      'decidedBy': decidedBy,
+      'decidedAt': decidedAt,
       'updatedAt': updatedAt,
       'eventName': eventName,
       'endingDate': endingDate,
       'requesterId': requesterId,
       'requestedAt': requestedAt,
       'changeReason': changeReason,
+      'decidedByName': decidedByName,
+      'requestType': requestType.name,
       'rejectionReason': rejectionReason,
       'requesterNickname': requesterNickname,
-      'decidedBy': decidedBy,
-      'decidedByName': decidedByName,
-      'decidedAt': decidedAt,
+      'eventCancelationAditionalData': eventCancelationAditionalDataEntity?.toMap()
     };
   }
 
   EventRequestEntity copyWith({
-    final String? requestId,
-    final String? rejectionReason,
-    final String? changeReason,
-    final DateTime? requestedAt,
-    final DateTime? updatedAt,
-    final GenericRequestStatus? status,
-    final String? requesterId,
-    final String? requesterNickname,
-    final String? eventId,
-    final String? eventInitDate,
-    final String? eventName,
-    final DateTime? initDate,
-    final DateTime? endingDate,
+    String? requestId,
+    String? eventId,
     String? decidedBy,
-    String? decidedByName,
+    String? eventName,
+    DateTime? initDate,
+    String? requesterId,
+    DateTime? updatedAt,
     DateTime? decidedAt,
+    String? changeReason,
+    DateTime? endingDate,
+    String? decidedByName,
+    String? eventInitDate,
+    DateTime? requestedAt,
+    String? rejectionReason,
+    String? requesterNickname,
+    GenericRequestStatus? status,
+    EventRequestType? requestType,
   }){
     return EventRequestEntity(
       status: status ?? this.status,
@@ -76,16 +86,17 @@ class EventRequestEntity extends GenericRequestCreationParameters {
       initDate: initDate ?? this.initDate,
       updatedAt: updatedAt ?? this.updatedAt,
       eventName: eventName ?? this.eventName,
+      decidedBy: decidedBy ?? this.decidedBy,
       requestId: requestId ?? this.requestId,
+      decidedAt: decidedAt ?? this.decidedAt,
       endingDate: endingDate ?? this.endingDate,
+      requestType: requestType ?? this.requestType,
       requesterId: requesterId ?? this.requesterId,
       requestedAt: requestedAt ?? this.requestedAt,
       changeReason: changeReason ?? this.changeReason,
+      decidedByName: decidedByName ?? this.decidedByName,
       rejectionReason: rejectionReason ?? this.rejectionReason,
       requesterNickname: requesterNickname ?? this.requesterNickname,
-      decidedBy: decidedBy ?? this.decidedBy,
-      decidedByName: decidedByName ?? this.decidedByName,
-      decidedAt: decidedAt ?? this.decidedAt,
     );
   }
 

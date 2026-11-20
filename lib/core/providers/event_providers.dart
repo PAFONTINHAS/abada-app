@@ -6,7 +6,9 @@ import 'package:sistema_abada_capoeira/features/events/data/repository/event_rep
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/get_user_events_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/get_event_by_id_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/data/datasources/event_remote_datasource.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/usecases/request_event_cancellation_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/subscribe_to_event_usecase.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_cancellation_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/events_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/reject_event_request_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/create_event_request_usecase.dart';
@@ -43,15 +45,17 @@ class EventProviders {
   static final GetEventRequestByIdUsecase getEventRequestByIdUsecase =GetEventRequestByIdUsecase(eventRepository);
   static GetUserEventsUsecase getUserEventsUsecase = GetUserEventsUsecase(eventRepository);
   static CreateEventRequestUsecase createEventRequestUsecase = CreateEventRequestUsecase(eventRepository);
-  static final ResubmitEventRequestUsecase resubmitEventRequestUsecase =ResubmitEventRequestUsecase(eventRepository);
+  static final ResubmitEventRequestUsecase resubmitEventRequestUsecase = ResubmitEventRequestUsecase(eventRepository);
   static GetPendingEventsRequestsUsecase getPendingEventsRequestsUsecase = GetPendingEventsRequestsUsecase(eventRepository);
-  static final RejectEventRequestUsecase rejectEventRequestUsecase =RejectEventRequestUsecase(eventRepository);
+  static final RejectEventRequestUsecase rejectEventRequestUsecase = RejectEventRequestUsecase(eventRepository);
+  static final RequestEventCancellationUseCase requestEventCancellationUseCase = RequestEventCancellationUseCase(eventRepository);
+
 
   static GetEventsUsecase getEventsUsecase = GetEventsUsecase(eventRepository);
   static SubscribeToEventUsecase subscribeToEventUsecase = SubscribeToEventUsecase(eventRepository);
   static GetEventSubscriptionsUsecase getEventSubscriptionsUsecase = GetEventSubscriptionsUsecase(eventRepository);
   static SubscribeMinorToEventUsecase subscribeMinorToEventUsecase = SubscribeMinorToEventUsecase(eventRepository);
-  static final RequestEventChangesUsecase requestEventChangesUsecase =RequestEventChangesUsecase(eventRepository);
+  static final RequestEventChangesUsecase requestEventChangesUsecase = RequestEventChangesUsecase(eventRepository);
 
   static final List<SingleChildWidget> providers = [
     ChangeNotifierProvider(create: (_) => EventFormProductsController()),
@@ -73,6 +77,8 @@ class EventProviders {
     ChangeNotifierProvider(create: (_) => EventRequestsController(getPendingEventsRequestsUsecase, rejectEventRequestUsecase, requestEventChangesUsecase)),
     ChangeNotifierProvider(create: (_) => EventDetailsSubscriptionController(subscribeToEventUsecase)),
     ChangeNotifierProvider(create: (_) => EventMinorSubscriptionController(subscribeMinorToEventUsecase)),
-    ChangeNotifierProvider(create: (_) => GeneralEventSubscriptionsController(getEventSubscriptionsUsecase))
+    ChangeNotifierProvider(create: (_) => GeneralEventSubscriptionsController(getEventSubscriptionsUsecase)),
+    ChangeNotifierProvider(create: (_) => EventCancellationController(requestEventCancellationUseCase))
+    
   ];
 }

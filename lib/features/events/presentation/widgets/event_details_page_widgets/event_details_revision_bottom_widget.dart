@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_entity.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_type.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/models/event_details_modals.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
@@ -11,10 +12,10 @@ import 'package:sistema_abada_capoeira/features/events/presentation/controllers/
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_requests_controller.dart';
 
 class EventDetailsRevisionBottomWidget extends StatelessWidget {
-  const EventDetailsRevisionBottomWidget({super.key, required this.controller, required this.requestId});
+  const EventDetailsRevisionBottomWidget({super.key, required this.controller, required this.request});
 
+  final EventRequestEntity request;
   final EventDetailsController controller;
-  final String requestId;
 
   Future<bool> _decide(
     BuildContext context, {
@@ -46,11 +47,11 @@ class EventDetailsRevisionBottomWidget extends StatelessWidget {
 
     // Dados necessários para registrar a decisão.
     final params = EventRequestDecisionParameters(
-      requestId: requestId,
+      reason: reason,
       eventId: eventId,
+      requestId: request.requestId,
       coordinatorId: profile.uid,
       coordinatorName: profile.displayName,
-      reason: reason,
     );
 
     // Executa a recusa ou a solicitação de alterações.
@@ -139,33 +140,35 @@ class EventDetailsRevisionBottomWidget extends StatelessWidget {
 
             SizedBox(width: 10),
 
-            Expanded(
-              child: ElevatedButton(
-                onPressed: () {
-                  if (requestsController.isProcessing) return;
-                  EventDetailsModals.showReasonModal(
-                    context: context,
-                    title: 'Solicitar Alterações',
-                    labelText: 'Descreva as correções...',
-                    buttonColor: Colors.orange,
-                    onSubmit: (reason) => _decide(context, reject: false, reason: reason),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.amber.shade700,
-                  foregroundColor: ColorConstants.whiteColor,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+            if(request.requestType.isCreationRequest)
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (requestsController.isProcessing) return;
+
+                    EventDetailsModals.showReasonModal(
+                      context: context,
+                      title: 'Solicitar Alterações',
+                      labelText: 'Descreva as correções...',
+                      buttonColor: Colors.orange,
+                      onSubmit: (reason) => _decide(context, reject: false, reason: reason),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.amber.shade700,
+                    foregroundColor: ColorConstants.whiteColor,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: const Text(
+                    "Ajustes",
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                   ),
                 ),
-                child: const Text(
-                  "Ajustes",
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                ),
               ),
-            ),
 
             SizedBox(width: 10),
 

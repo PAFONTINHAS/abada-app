@@ -8,12 +8,12 @@ import 'package:sistema_abada_capoeira/features/events/domain/usecases/get_pendi
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/reject_event_request_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/request_event_changes_usecase.dart';
 class EventRequestsController extends ChangeNotifier {
-  final GetPendingEventsRequestsUsecase _getPendingUsecase;
   final RejectEventRequestUsecase _rejectEventRequestUsecase;
   final RequestEventChangesUsecase _requestEventChangesUsecase;
+  final GetPendingEventsRequestsUsecase _getPendingEventsRequestsUsecase;
 
   EventRequestsController(
-    this._getPendingUsecase,
+    this._getPendingEventsRequestsUsecase,
     this._rejectEventRequestUsecase,
     this._requestEventChangesUsecase,
   );
@@ -43,7 +43,7 @@ class EventRequestsController extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final result = await _getPendingUsecase.call();
+      final result = await _getPendingEventsRequestsUsecase.call();
 
       return result.fold((failure) {
           _errorMessage = failure.message;

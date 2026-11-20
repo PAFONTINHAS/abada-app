@@ -2,15 +2,38 @@
 // ou pelas regras do Firestore, incluindo a identidade do coordenador.
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
+import 'package:sistema_abada_capoeira/core/constants/database_constants.dart';
 import 'package:sistema_abada_capoeira/core/errors/exception_handler.dart';
 import 'package:sistema_abada_capoeira/core/errors/failure.dart';
 import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
 import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_update_parameters.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_type.dart';
 
 /// Operações genéricas de atualização de solicitações.
 /// Não executa regras de negócio específicas das features.
 class RequestDatasourceImpl {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<Either<Failure, bool>> checkIfGenericRequestAlreadyExists(List<String> parameters, String requestId, {
+    EventRequestType requestType = EventRequestType.creation,
+  }) async{
+    try{
+
+      final query = await _firestore.collection(DBCollections.eventsRequestsCollection)
+      .where(parameters[0], isEqualTo: requestId)
+      .where(parameters[1], isEqualTo: requestType.name)
+      .limit(1)
+      .get();
+
+      if(query.docs.isNotEmpty) return Right(true);
+
+      return Right(false);
+    }catch(exception){
+
+      return ExceptionHandler.handleException(exception: exception, contextMessage: "checkIfRequestAlreadyExists");
+    }
+  }
+
 
   Future<Either<Failure, void>> approveGenericRequest(String collectionId,GenericRequestUpdateParameters params,
   ) {

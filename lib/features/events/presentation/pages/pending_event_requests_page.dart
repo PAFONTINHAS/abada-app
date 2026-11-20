@@ -28,7 +28,7 @@ class _PendingEventRequestsPageState extends State<PendingEventRequestsPage> {
     RouteController.redirectToEventDetailsPage(
       context: context,
       eventId: request.eventId,
-      requestId: request.requestId,
+      request: request,
       analyseEventDetails: true,
     );
   }

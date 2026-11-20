@@ -104,8 +104,8 @@ class RouteController {
   static void redirectToEventDetailsPage({
     required BuildContext context,
     String? eventId,
-    String? requestId,
     EventEntity? eventEntity,
+    EventRequestEntity? request,
     bool analyseEventDetails = false,
     bool isSubscriptionAllowed = false,
     bool isProfessorActionsAllowed = true,
@@ -115,7 +115,7 @@ class RouteController {
       '/events/event_details',
       extra: {
         'eventId': eventId,
-        'requestId': requestId,
+        'requestEntity': request,
         'eventEntity': eventEntity,
         'isSubscriptionAllowed': isSubscriptionAllowed,
         'analyseEventDetails': analyseEventDetails,

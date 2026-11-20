@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/pages/events_page.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_form_page.dart';
 import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
@@ -72,16 +73,16 @@ class EventRoutes {
           final Map<String, dynamic> parameters = state.extra as Map<String, dynamic>;
 
           final String? eventId = parameters['eventId'] as String?;
-          final String? requestId = parameters['requestId'] as String?;
           final EventEntity? eventEntity = parameters['eventEntity'] as EventEntity?;
           final bool analyseEventDetails = parameters['analyseEventDetails'] as bool;
           final bool isSubscriptionAllowed= parameters['isSubscriptionAllowed'] as bool;
           final bool isProfessorActionsAllowed = parameters['isProfessorActionsAllowed'] as bool;
+          final EventRequestEntity? requestId = parameters['requestEntity'] as EventRequestEntity?;
 
-        return EventDetailsPage(
+          return EventDetailsPage(
             eventId: eventId,
             event: eventEntity,
-            requestId: requestId,
+            request: requestId,
             analyseEventDetails: analyseEventDetails,
             isSubscriptionAllowed: isSubscriptionAllowed,
             isProfessorActionsAllowed: isProfessorActionsAllowed,

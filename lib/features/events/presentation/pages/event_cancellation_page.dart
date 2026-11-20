@@ -3,10 +3,15 @@ import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:sistema_abada_capoeira/core/utils/mask_formatter.dart';
+import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
 import 'package:sistema_abada_capoeira/core/utils/app_message_handler.dart';
+import 'package:sistema_abada_capoeira/core/router/redirection_method.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
-import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
-import 'package:sistema_abada_capoeira/features/event_cancellation/presentation/controllers/event_cancellation_controller.dart';
+import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_cancellation_controller.dart';
+import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
+import 'package:sistema_abada_capoeira/shared/inputs/custom_text_input/custom_text_input.dart';
+import 'package:sistema_abada_capoeira/shared/inputs/dropdown_input_widget.dart';
 
 class EventCancellationPage extends StatefulWidget {
   const EventCancellationPage({super.key, required this.event});
@@ -18,25 +23,6 @@ class EventCancellationPage extends StatefulWidget {
 }
 
 class _EventCancellationPageState extends State<EventCancellationPage> {
-  final _detailsController = TextEditingController();
-  String? _reason;
-
-  @override
-  void initState() {
-    super.initState();
-    _detailsController.addListener(_onDetailsChanged);
-  }
-
-  @override
-  void dispose() {
-    _detailsController.removeListener(_onDetailsChanged);
-    _detailsController.dispose();
-    super.dispose();
-  }
-
-  void _onDetailsChanged() {
-    setState(() {});
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,9 +37,12 @@ class _EventCancellationPageState extends State<EventCancellationPage> {
         leading: BackButton(onPressed: () => context.pop()),
         title: const Text('Cancelar evento'),
       ),
-      body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+      body: StandardScaffoldBodyWidget(
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+        child: Consumer<EventCancellationController>(builder:(context, controller, child) {
+
+                  
+        return Column(
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
@@ -129,63 +118,39 @@ class _EventCancellationPageState extends State<EventCancellationPage> {
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
-                  DropdownButtonFormField<String>(
-                    initialValue: _reason,
-                    decoration: const InputDecoration(
-                      labelText: 'Selecione um motivo',
-                      border: OutlineInputBorder(),
-                    ),
+
+                  DropdownInputWidget(
+                    inputHint: 'Selecione um motivo',
+                    initialValue: controller.reasonController.text,
+                    onSelectedItem: (value) {
+                      controller.setReasonController(value);
+                    },
                     items: const [
                       DropdownMenuItem(
-                        value: 'imprevisto',
+                        value: 'Imprevisto',
                         child: Text('Imprevisto'),
                       ),
                       DropdownMenuItem(
-                        value: 'baixa adesao',
+                        value: 'Baixa adesão',
                         child: Text('Baixa adesão'),
                       ),
-                      DropdownMenuItem(value: 'outro', child: Text('Outro')),
+                      DropdownMenuItem(
+                        value: 'outro',
+                        child: Text('Outro'),
+                      ),
                     ],
-                    onChanged: (value) => setState(() => _reason = value),
                   ),
+  
                   const SizedBox(height: 14),
                   const Text(
                     'Detalhes (opcional)',
                     style: TextStyle(fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(height: 8),
-                  Stack(
-                    children: [
-                      TextField(
-                        controller: _detailsController,
-                        maxLength: 300,
-                        maxLines: 4,
-                        buildCounter:
-                            (
-                              context, {
-                              required currentLength,
-                              required isFocused,
-                              maxLength,
-                            }) => null,
-                        decoration: const InputDecoration(
-                          hintText:
-                              'Conte mais detalhes sobre o cancelamento...',
-                          border: OutlineInputBorder(),
-                          contentPadding: EdgeInsets.fromLTRB(12, 12, 48, 28),
-                        ),
-                      ),
-                      Positioned(
-                        right: 12,
-                        bottom: 8,
-                        child: Text(
-                          '${_detailsController.text.length}/300',
-                          style: TextStyle(
-                            color: Colors.grey.shade600,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ),
-                    ],
+                  CustomTextInput(
+                    maxLines: 4,
+                    hintText: "Conte mais detalhes sobre o cancelamento",
+                    controller: controller.detailsController,
                   ),
                 ],
               ),
@@ -201,9 +166,9 @@ class _EventCancellationPageState extends State<EventCancellationPage> {
                   Expanded(
                     child: Text(
                       eventValue > 0 
-                          ? 'Todos os inscritos serão comunicados por e-mail e receberão um ticket para informar a forma de reembolso, preferencialmente via PIX.'
-                          : 'Todos os inscritos serão comunicados por e-mail sobre o cancelamento.',
-                      textAlign: TextAlign.justify,
+                          ? 'Após a aprovação, todos os inscritos serão comunicados por e-mail e receberão um ticket para informar a forma de reembolso, preferencialmente via PIX.'
+                          : 'Após a aprovação, todos os inscritos serão comunicados por e-mail sobre o cancelamento.',
+                      textAlign: TextAlign.center,
                       textWidthBasis: TextWidthBasis.parent,
                       style: const TextStyle(fontSize: 13, height: 1.35),
                     ),
@@ -223,30 +188,22 @@ class _EventCancellationPageState extends State<EventCancellationPage> {
                 label: const Text('Enviar solicitação de cancelamento'),
               ),
             ),
-            const SizedBox(height: 10),
-            SizedBox(
-              height: 52,
-              child: OutlinedButton(
-                onPressed: () => context.pop(),
-                child: const Text('Não cancelar'),
-              ),
-            ),
           ],
-        ),
+        );
+      
+
+        }, ),  
+
       ),
     );
   }
 
   Future<void> _confirmCancellation(BuildContext context) async {
+
+    final profileController = context.read<ProfileController>();
     final eventValue = MaskFormatter.convertMoneyStringToDouble(widget.event.eventValue);
 
-    if (_reason == null) {
-      AppMessageHandler.showError(
-        context,
-        'Selecione um motivo para o cancelamento.',
-      );
-      return;
-    }
+    final user = profileController.userProfile;
 
     final confirmed = await showDialog<bool>(
       context: context,
@@ -254,50 +211,43 @@ class _EventCancellationPageState extends State<EventCancellationPage> {
         title: const Text('Confirmar solicitação?'),
         content: Text(
           eventValue > 0
-              ? 'As inscrições serão desabilitadas imediatamente e os tickets de reembolso serão emitidos para cada participante inscrito.'
-              : 'As inscrições serão desabilitadas imediatamente e os participantes serão notificados.',
+              ? 'Você não poderá desistir do cancelamento após a confirmação. As inscrições serão desabilitadas imediatamente e os tickets de reembolso serão emitidos para cada participante inscrito.'
+              : 'Você não poderá desistir do cancelamento após a confirmação. As inscrições serão desabilitadas imediatamente e os participantes serão notificados.',
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context, false),
+            onPressed: () => context.pop(false),
             child: const Text('Voltar'),
           ),
           FilledButton(
-            onPressed: () => Navigator.pop(context, true),
+            onPressed: () => context.pop(true),
             child: const Text('Confirmar'),
           ),
         ],
       ),
     );
 
-    if (confirmed != true || !context.mounted) return;
+    if (confirmed == false || !context.mounted) return;
 
-    final requesterId = context.read<AuthController>().user?.uid;
-    if (requesterId == null) {
-      AppMessageHandler.showError(
-        context,
-        'É necessário estar autenticado para solicitar o cancelamento.',
-      );
-      return;
-    }
+    final requesterId = user.uid;
+    final requesterNickname = user.nickname;
 
     final controller = context.read<EventCancellationController>();
     final request = await controller.requestCancellation(
       event: widget.event,
       requesterId: requesterId,
-      reason: _reason!,
-      details: _detailsController.text.trim(),
+      requesterNickname: requesterNickname,
     );
+
     if (!context.mounted) return;
 
     if (request == null) {
-      final message =
-          controller.errorMessage ?? 'Não foi possível enviar a solicitação.';
+      final message = controller.errorMessage ?? 'Não foi possível enviar a solicitação.';
       AppMessageHandler.showError(context, message);
       return;
     }
 
-    context.pop();
+    RouteController.redirectToCreatedEventsPage(context: context, redirectionMethod: RedirectionMethod.PUSH_REPLACEMENT);
   }
 }
 

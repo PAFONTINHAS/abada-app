@@ -5,6 +5,7 @@ import 'package:sistema_abada_capoeira/features/events/domain/entities/event_ent
 import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_policy.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_type.dart';
 
 class EventStatusCardWidget extends StatelessWidget {
   final dynamic item; // Aceita EventEntity ou EventRequestEntity
@@ -21,11 +22,16 @@ class EventStatusCardWidget extends StatelessWidget {
   });
 
   bool get _isRequest => item is EventRequestEntity;
+
   bool get _isEvent => item is EventEntity;
+
+  bool get _isCreationRequest => _isRequest && (item as EventRequestEntity).requestType.isCreationRequest;
 
   String get _eventName => _isRequest ? item.eventName : item.eventName;
   DateTime get _initDate => _isRequest ? item.initDate : item.eventInitDate;
   DateTime get _endingDate => _isRequest ? item.endingDate : item.eventEndingDate;
+
+
 
   // Extração segura de dados caso seja um EventEntity completo
   String? get _location => _isEvent ? "${(item as EventEntity).city} - ${(item as EventEntity).state}" : null;
@@ -64,6 +70,26 @@ class EventStatusCardWidget extends StatelessWidget {
     return Colors.grey.shade100;
   }
 
+  Color _getRequestTypeBackgroundColor() {
+    switch ((item as EventRequestEntity).requestType) {
+      case EventRequestType.cancelation:
+        return Colors.red.shade50;
+      case EventRequestType.creation:
+        return Colors.green.shade50;
+    }
+  }
+
+
+
+  Color _getRequestTypeTextColor() {
+    switch ((item as EventRequestEntity).requestType) {
+      case EventRequestType.cancelation:
+        return Colors.red.shade800;
+      case EventRequestType.creation:
+        return Colors.green.shade800;
+    }
+  }
+  
   Color _getStatusTextColor() {
     if (_isRequest) {
       switch ((item as EventRequestEntity).status) {
@@ -105,7 +131,10 @@ class EventStatusCardWidget extends StatelessWidget {
     if (!_isRequest && !_isEvent) return const SizedBox.shrink();
 
 
-    final canEditRequest = _isRequest && EventRequestPolicy.canEdit(item.status) && onEditRequest != null;
+    final canEditRequest =
+      _isCreationRequest &&
+      EventRequestPolicy.canEdit(item.status) &&
+      onEditRequest != null;
 
 
     final bgColor = _getStatusBackgroundColor();
@@ -113,6 +142,8 @@ class EventStatusCardWidget extends StatelessWidget {
     final borderColor = _isEvent && (item as EventEntity).finishedEvent 
         ? Colors.blueGrey.shade700.withOpacity(0.3) 
         : textColor.withOpacity(0.3);
+
+    final String requestType = _isRequest ? (item as EventRequestEntity).requestType.portugueseName : '';
 
     return Container(
       decoration: BoxDecoration(
@@ -136,47 +167,83 @@ class EventStatusCardWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Tag de Status do Evento/Solicitação
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: bgColor,
-                    borderRadius: BorderRadius.circular(4),
-                    border: Border.all(color: borderColor),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(_getStatusIcon(), size: 12, color: textColor),
-                      const SizedBox(width: 6),
-                      Text(
-                        _statusName.toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                          color: textColor,
+
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: bgColor,
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: borderColor),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(_getStatusIcon(), size: 12, color: textColor),
+                          const SizedBox(width: 6),
+                          Text(
+                            _statusName.toUpperCase(),
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              color: textColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    if(_isRequest)
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: _getRequestTypeBackgroundColor(),
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(color: _getRequestTypeBackgroundColor()),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              requestType,
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                                color: _getRequestTypeTextColor(),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                  ],
                 ),
+
                 const SizedBox(height: 10),
                 
 
                 Row(
                   children: [
-                   
-                   Expanded(
-                    child:                     Text(
-                      _eventName,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: ColorConstants.textPrimary,
+                    Expanded(
+                      child: Text(
+                        _eventName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: ColorConstants.textPrimary,
+                        ),
                       ),
                     ),
-                  ),
 
      
                   const SizedBox(width: 5),
@@ -221,7 +288,8 @@ class EventStatusCardWidget extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                 ],
-
+                
+            
                 // Localização Opcional
                 if (_location != null && _location!.isNotEmpty) ...[
                   Row(
