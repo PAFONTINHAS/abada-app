@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:dartz/dartz.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -15,7 +16,40 @@ import 'package:sistema_abada_capoeira/features/events/domain/entities/events_an
 
 class EventRemoteDatasourceImpl implements EventRemoteDatasource {
   final _firestore = FirebaseFirestore.instance;
+  final _functions = FirebaseFunctions.instance;
+
   final ImageService _imageService = ImageService();
+
+  @override
+  Future<Either<Failure, void>> activateEvent(String eventId) async{
+    try{
+
+      final callbale = _functions.httpsCallable('activateEvent');
+
+
+      await callbale.call(eventId);
+
+      return Right(null);
+
+    } catch(exception){
+      return ExceptionHandler.handleException(exception: exception, contextMessage: "activeEvent");
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> cancelEvent(String eventId) async{
+    try{
+
+      final callbale = _functions.httpsCallable('cancelEvent');
+
+      await callbale.call(eventId);
+
+      return Right(null);
+
+    } catch(exception){
+      return ExceptionHandler.handleException(exception: exception, contextMessage: "activeEvent");
+    }
+  }
 
   @override
   Future<Either<Failure, EventEntity>> getEventById(String eventId) async {

@@ -1,7 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sistema_abada_capoeira/core/errors/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sistema_abada_capoeira/core/errors/failure.dart';
 import 'package:sistema_abada_capoeira/core/errors/exception_handler.dart';
 import 'package:sistema_abada_capoeira/core/constants/database_constants.dart';
 import 'package:sistema_abada_capoeira/core/requests/data/request_datasource_impl.dart';
@@ -14,11 +14,19 @@ import 'package:sistema_abada_capoeira/features/events/data/datasources/event_re
 import 'package:sistema_abada_capoeira/features/events/data/models/event_entity_model.dart';
 import 'package:sistema_abada_capoeira/features/events/data/models/event_request_entity_model.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_policy.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_type.dart';
 
 class EventRequestsRemoteDatasourceImpl extends RequestDatasourceImpl implements EventRequestsRemoteDatasource{
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  @override
+  Future<Either<Failure, EventRequestEntity?>> checkIfRequestAlreadyExists(String eventId, {
+    EventRequestType requestType = EventRequestType.creation,
+  }){
+    return checkIfGenericRequestAlreadyExists(['eventId', 'requestType'], eventId, requestType: requestType);
+  }
 
   @override
   Future<Either<Failure, EventRequestEntity>> getEventRequestById(String requestId,) async {
@@ -41,6 +49,8 @@ class EventRequestsRemoteDatasourceImpl extends RequestDatasourceImpl implements
       );
     }
   }
+
+
 
   @override
   Future<Either<Failure, List<EventRequestEntity>>> getEventRequestsByUserId( String userId,) async {
@@ -105,7 +115,7 @@ class EventRequestsRemoteDatasourceImpl extends RequestDatasourceImpl implements
 
   @override
   Future<Either<Failure, void>> approveRequest(GenericRequestUpdateParameters params,) =>
-      _updateDecisionTransaction(params,GenericRequestStatus.approved,
+      _updateDecisionTransaction(params, GenericRequestStatus.approved,
         const {
           GenericRequestStatus.requested: GenericRequestStatus.approved,
           GenericRequestStatus.updated: GenericRequestStatus.approved,

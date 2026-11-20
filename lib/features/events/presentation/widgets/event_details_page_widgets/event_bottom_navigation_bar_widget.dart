@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_details_page_widgets/read_only_event_bottom_navigation_bar_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_details_controller.dart';
@@ -13,7 +14,7 @@ class EventBottomNavigationBarWidget extends StatelessWidget {
 
   const EventBottomNavigationBarWidget({
     super.key,
-    this.requestId,
+    this.request,
     required this.controller,
     required this.eventEntity,
     required this.analyseEventDetails,
@@ -26,7 +27,7 @@ class EventBottomNavigationBarWidget extends StatelessWidget {
   final bool isSubscriptionAllowed;
   final EventDetailsController controller;
   final bool isProfessorActionsAllowed;
-  final String? requestId;
+  final EventRequestEntity? request;
   @override
   Widget build(BuildContext context) {
 
@@ -44,13 +45,13 @@ class EventBottomNavigationBarWidget extends StatelessWidget {
     final bool isRevisionAllowed =
         analyseEventDetails &&
         !isSubscriptionAllowed &&
-        requestId != null &&
-        controller.canDecide(requestId!, eventEntity!.eventId);
+        request != null &&
+        controller.canDecide(request!.requestId, eventEntity!.eventId);
 
 
     if(isSubscriptionAllowed && !analyseEventDetails) return EventDetailsSubscriptionBottomButtonWidget(controller: controller);
 
-    if(isRevisionAllowed) return EventDetailsRevisionBottomWidget(controller: controller, requestId: requestId!);
+    if(isRevisionAllowed) return EventDetailsRevisionBottomWidget(controller: controller, request: request!);
 
     if(!canManageSubscriptions) return ReadOnlyEventBottomNavigationBarWidget(controller: controller);
 

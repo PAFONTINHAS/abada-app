@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_details_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/widgets/approve_dialog_widget.dart';
 import 'package:sistema_abada_capoeira/shared/dialogs/request_justification_dialog_widget.dart';
 
 class EventDetailsModals {
   EventDetailsModals._();
 
-  static Future<void> showConfirmApproveDialog(
-    BuildContext context,
-    EventDetailsController controller,
-  ) async {
-    showDialog(
+  static Future<bool?> showConfirmApproveDialog({
+    required BuildContext context,
+    required Future<bool> Function() onApprove,
+  }) async {
+    return showDialog<bool>(
       context: context,
-      builder: (context) => ApproveDialogWidget(onApprove: () => context.pop()),
+      builder: (context) => ApproveDialogWidget(
+        onApprove: onApprove,
+      ),
     );
   }
 

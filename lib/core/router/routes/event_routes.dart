@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
-import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/pages/created_events_page.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_details_page.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_form_page.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_minor_subscription_page.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_receipt_page.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_registrants_list_page.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/pages/events_page.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_form_page.dart';
+import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_receipt_page.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_details_page.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/pages/created_events_page.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_cancellation_page.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_registrants_list_page.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/pages/pending_event_requests_page.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_minor_subscription_page.dart';
 
 class EventRoutes {
   EventRoutes._();
@@ -46,6 +48,19 @@ class EventRoutes {
       ),
 
       GoRoute(
+        path: 'cancel',
+        builder: (context, state) {
+          final event = state.extra;
+          if (event is! EventEntity) {
+            return const Scaffold(
+              body: Center(child: Text('Evento inválido para cancelamento.')),
+            );
+          }
+          return EventCancellationPage(event: event);
+        },
+      ),
+
+      GoRoute(
         path: 'created_events',
         builder: (context, state) {
           return CreatedEventsPage();
@@ -58,16 +73,16 @@ class EventRoutes {
           final Map<String, dynamic> parameters = state.extra as Map<String, dynamic>;
 
           final String? eventId = parameters['eventId'] as String?;
-          final String? requestId = parameters['requestId'] as String?;
           final EventEntity? eventEntity = parameters['eventEntity'] as EventEntity?;
           final bool analyseEventDetails = parameters['analyseEventDetails'] as bool;
           final bool isSubscriptionAllowed= parameters['isSubscriptionAllowed'] as bool;
           final bool isProfessorActionsAllowed = parameters['isProfessorActionsAllowed'] as bool;
+          final EventRequestEntity? requestId = parameters['requestEntity'] as EventRequestEntity?;
 
-        return EventDetailsPage(
+          return EventDetailsPage(
             eventId: eventId,
             event: eventEntity,
-            requestId: requestId,
+            request: requestId,
             analyseEventDetails: analyseEventDetails,
             isSubscriptionAllowed: isSubscriptionAllowed,
             isProfessorActionsAllowed: isProfessorActionsAllowed,
@@ -114,6 +129,9 @@ class EventRoutes {
           return PendingEventRequestsPage();
         },
       ),
+
+
+
     ],
   );
 }

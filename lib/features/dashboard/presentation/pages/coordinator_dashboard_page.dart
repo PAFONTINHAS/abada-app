@@ -83,12 +83,12 @@ class CoordinatorDashboardPage extends StatelessWidget {
     final eventRequests = eventRequestsController.eventRequests;
     final eventRequestsQuantity = eventRequests.length;
     
-    void navigateToEventDetails(String eventId, String requestId) {
+    void navigateToEventDetails(String eventId, EventRequestEntity request) {
       RouteController.redirectToEventDetailsPage(
         context: context,
         eventId: eventId,
         analyseEventDetails: true,
-        requestId: requestId
+        request: request
         
       );
     }
@@ -141,7 +141,7 @@ class CoordinatorDashboardPage extends StatelessWidget {
 
                         final card = EventStatusCardWidget(
                           item: item,
-                          onViewEventDetails: () => navigateToEventDetails(item.eventId, item.requestId),
+                          onViewEventDetails: () => navigateToEventDetails(item.eventId, item),
                           onViewRequestDetails: () => _showRequestDetailsModal(context, item),
                         );
 

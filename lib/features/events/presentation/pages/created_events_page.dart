@@ -28,7 +28,6 @@ class _CreatedEventsPageState extends State<CreatedEventsPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final profileController = context.read<ProfileController>();
       final controller = context.read<CreatedEventsController>();
-      if (profileController.status != ProfileLoadStatus.loaded) return;
       await controller.getUserEvents(profileController.userProfile.uid);
     });
   }
