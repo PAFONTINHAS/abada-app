@@ -59,14 +59,19 @@ class HistoricalArchiveWidget extends StatelessWidget {
               'Sistematizar e centralizar informações de todos os núcleos de Capoeira do Brasil e do mundo, facilitando o acesso ao conhecimento e o aperfeiçoamento técnico dos praticantes e professores.',
         ),
         const ArchiveSectionWidget(
+          title: 'História da formação',
+          content:
+              'A ABADÁ-Capoeira foi fundada em 1988, no Rio de Janeiro, pelo Mestre Camisa, capoeirista baiano formado por Mestre Bimba. Incentivado por seu irmão, o Grão-Mestre Camisa Roxa, Camisa iniciou sua formação ainda jovem e, após ensinar no Grupo Senzala, desenvolveu uma proposta pedagógica própria, reunindo elementos das capoeiras Regional, Angola e de rua. A organização se expandiu do Brasil para diversos países.',
+        ),
+        const ArchiveSectionWidget(
           title: 'Fundadores',
           content:
-              'Fundado pelos mestres Camisa e Nô, o ABADÁ-Capoeira nasceu da busca por organização pedagógica, expansão internacional e preservação da identidade da Capoeira.',
+              'Mestre Camisa é o fundador e presidente da ABADÁ-Capoeira. Seu irmão, o Grão-Mestre Camisa Roxa, teve papel importante no início de sua trajetória e é reconhecido in memoriam.',
         ),
         const ArchiveSectionWidget(
           title: 'Organizações vinculadas',
           content:
-              'Grupos e núcleos oficiais em diferentes estados e países mantêm intercâmbio cultural, eventos, competições e formação técnica vinculados à organização.',
+              'A rede reúne núcleos e grupos filiados no Brasil e no exterior, além do Instituto Mestre Camisa, no Rio de Janeiro, voltado à formação e à preservação da Capoeira Abadá.',
         ),
         const ArchiveSectionWidget(
           title: 'Impacto social',
@@ -76,7 +81,7 @@ class HistoricalArchiveWidget extends StatelessWidget {
         const ArchiveSectionWidget(
           title: 'Movimentos e iniciativas',
           content:
-              'Entre suas principais iniciativas estão os Jogos Mundiais, encontros internacionais, festivais, projetos sociais e ações voltadas à formação de mestres, professores e alunos.',
+              'Entre as principais iniciativas estão os Jogos Mundiais ABADÁ-Capoeira, o AbadÁcadêmico — encontro técnico-científico —, a formação de mestres e professores e a produção de livros, jornais e da Revista ABADÁ-Capoeira.',
         ),
       ],
     );
