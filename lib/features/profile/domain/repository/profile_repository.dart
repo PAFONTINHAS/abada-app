@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:sistema_abada_capoeira/core/errors/failure.dart';
+import 'package:sistema_abada_capoeira/features/profile/domain/entities/graduation_history_entity.dart';
 import 'dart:typed_data';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/profile_change_request_entity.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/user_profile_entity.dart';
@@ -18,7 +19,7 @@ abstract class ProfileRepository {
   Future<Either<Failure, List<ProfileChangeRequestEntity>>> getMyChangeRequests();
 
   Future<Either<Failure, bool>> checkPendingChangeRequests(String userId);
-
+  Future<Either<Failure, List<GraduationHistoryEntity>>> getGraduationHistory(String userId);
 
   Future<Either<Failure, void>> updateChangeRequest({
     required ProfileChangeRequestEntity request,

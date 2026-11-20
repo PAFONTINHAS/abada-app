@@ -16,6 +16,11 @@ class LoginFormController extends ChangeNotifier {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
+  void cleanController(){
+    emailController.clear();
+    passwordController.clear();
+  }
+  
   @override
   void dispose() {
     super.dispose();
@@ -54,8 +59,6 @@ class LoginFormController extends ChangeNotifier {
     _isLoading = false;
 
     notifyListeners();
-
-    cleanControllers();
 
     return success;
   }

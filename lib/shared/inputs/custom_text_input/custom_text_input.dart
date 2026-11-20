@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:sistema_abada_capoeira/shared/inputs/custom_text_input/cupertino_text_input_widget.dart';
 import 'package:sistema_abada_capoeira/shared/inputs/custom_text_input/material_text_input_widget.dart';
@@ -21,7 +22,7 @@ class CustomTextInput extends StatefulWidget {
   final bool readOnly; // Campo somente leitura (não editável)
   final bool isPasswordField;
   final bool hasMask;
-  final MaskTextInputFormatter? mask;
+  final TextInputFormatter? mask;
   final Color? onFocusBorderColor;
 
   const CustomTextInput({
@@ -31,7 +32,7 @@ class CustomTextInput extends StatefulWidget {
     this.hintStyle,
     this.controller,
     this.validator,
-    this.keyboardType = TextInputType.name,
+    this.keyboardType = TextInputType.text,
     this.obscureText = false,
     this.enabled = true,
     this.maxLines = 1,

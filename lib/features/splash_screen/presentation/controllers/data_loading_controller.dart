@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_controller.dart';
-import 'package:sistema_abada_capoeira/features/member_validation/presentation/controllers/membership_validation_controller.dart';
-import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/events_controller.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
+import 'package:sistema_abada_capoeira/features/location/presentation/controllers/location_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_requests_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/user_event_subscription_controller.dart';
+import 'package:sistema_abada_capoeira/features/member_validation/presentation/controllers/membership_validation_controller.dart';
 
 class DataLoadingController extends ChangeNotifier{
 
@@ -14,12 +18,19 @@ class DataLoadingController extends ChangeNotifier{
   String get progressText => _progressText;
 
   final List<String> _loadingSteps = [
+    "Verificando permissões",
     "Pegando dados do usuário",
     "Carregando turmas do usuário",
     "Finalizando Configurações"
   ];
 
   int _currentStepIndex = 0;
+
+  void cleanController(){
+    _progress = 0.0;
+    _currentStepIndex = 0;
+    _progressText = "Iniciando...";
+  }
 
   void nextStep(){
     if(_currentStepIndex < _loadingSteps.length){
@@ -64,13 +75,30 @@ class DataLoadingController extends ChangeNotifier{
     await membershipValidationController.loadRequests(userId);
   }
 
+  Future<void> fetchEventCreationRequests(EventRequestsController eventRequestsController) async{
+
+    await eventRequestsController.getPendingRequests();
+  }
+
+  Future<void> fetchEvents(EventsController eventsController, UserEventSubscriptionController subscriptionController, String userId) async{
+    
+    await eventsController.getEventsAndSubscriptions(userId);
+
+    subscriptionController.setEventSubscriptions(eventsController.temporarySubscriptionsList);
+
+    eventsController.clearTemporarySubscriptionsList();
+
+  }
+
+  Future<void> fetchUserLocation(LocationController locationController) async{
+    await locationController.getUserLocation();
+  }
+
   Future<void> finishSplash(AuthController authController, UserRole userRole) async{
 
     nextStep();
 
     authController.setAuthenticatedUser(role: userRole);  
   }
-
-
 
 }

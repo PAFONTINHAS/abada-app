@@ -1,0 +1,176 @@
+import 'request_dialog_widget.dart';
+import 'package:flutter/material.dart';
+import 'controllers/request_justification_dialog_controller.dart';
+import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
+import 'package:sistema_abada_capoeira/core/utils/app_message_handler.dart';
+import 'package:sistema_abada_capoeira/shared/inputs/custom_text_input/custom_text_input.dart';
+
+/// Collects a required free-text justification and delegates the action.
+/// Feature-specific behavior stays in the supplied callback.
+class RequestJustificationDialogWidget extends StatefulWidget {
+  final String title;
+  final String? description;
+  final String hintText;
+  final String confirmLabel;
+  final Color actionColor;
+  final IconData icon;
+  final Future<bool> Function(String justification) onConfirm;
+
+  const RequestJustificationDialogWidget({
+    super.key,
+    required this.title,
+    this.description,
+    required this.hintText,
+    required this.confirmLabel,
+    required this.actionColor,
+    required this.icon,
+    required this.onConfirm,
+  });
+
+  @override
+  State<RequestJustificationDialogWidget> createState() =>
+      _RequestJustificationDialogWidgetState();
+}
+
+class _RequestJustificationDialogWidgetState
+    extends State<RequestJustificationDialogWidget> {
+  // Each dialog instance owns its text input and loading state.
+  final _justificationController = TextEditingController();
+  final _submissionController = RequestJustificationDialogController();
+
+  Future<void> _confirm() async {
+    if (_submissionController.isSubmitting) return;
+
+    final justification = _justificationController.text.trim();
+
+    if (justification.isEmpty) {
+      AppMessageHandler.showWarning(context, 'Informe a justificativa.');
+      return;
+    }
+
+    _submissionController.setSubmitting(true);
+
+    try {
+      final success = await widget.onConfirm(justification);
+
+      if (!mounted) return;
+
+      if (success) {
+        Navigator.of(context).pop(true);
+      }
+    } catch (error, stackTrace) {
+      LoggingService.displayError('Justification action failed', error: error, stack: stackTrace);
+
+      if (!mounted) return;
+
+      AppMessageHandler.showError(
+        context,
+        'Não foi possível concluir a ação. Tente novamente.',
+      );
+    } finally {
+      if (mounted) {
+        _submissionController.setSubmitting(false);
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    // Release the text controller when this dialog leaves the widget tree.
+    _justificationController.dispose();
+    _submissionController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _submissionController,
+      builder: (context, child) {
+        return RequestDialogWidget(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  RequestDialogWidget.actionIcon(
+                    icon: widget.icon,
+                    color: widget.actionColor,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      widget.title,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: _submissionController.isSubmitting
+                        ? null
+                        : () => Navigator.of(context).pop(),
+                    icon: const Icon(Icons.close),
+                  ),
+                ],
+              ),
+              if (widget.description != null &&
+                  widget.description!.trim().isNotEmpty) ...[
+                const SizedBox(height: 14),
+                Text(widget.description!),
+              ],
+              const SizedBox(height: 20),
+              CustomTextInput(
+                label: 'Justificativa',
+                controller: _justificationController,
+                enabled: !_submissionController.isSubmitting,
+                hintText: widget.hintText,
+                maxLines: 3,
+                keyboardType: TextInputType.multiline,
+                onFocusBorderColor: widget.actionColor,
+              ),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextButton(
+                      onPressed: _submissionController.isSubmitting
+                          ? null
+                          : () => Navigator.of(context).pop(),
+                      child: const Text('Cancelar'),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    flex: 2,
+                    child: FilledButton(
+                      onPressed: _submissionController.isSubmitting
+                          ? null
+                          : _confirm,
+                      style: FilledButton.styleFrom(
+                        backgroundColor: widget.actionColor,
+                        foregroundColor: Colors.white,
+                      ),
+                      child: _submissionController.isSubmitting
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
+                            )
+                          : Text(widget.confirmLabel),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}

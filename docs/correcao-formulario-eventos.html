@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ABADÁ APP — Correção do formulário de eventos</title>
+  <style>
+    :root{color-scheme:light;--ink:#18233d;--muted:#58657a;--line:#dce3ee;--accent:#4338ca}
+    *{box-sizing:border-box}body{margin:0;background:#f3f5fa;color:var(--ink);font:16px/1.65 system-ui,sans-serif}
+    main{max-width:1050px;margin:auto;padding:48px 24px 64px}header{margin-bottom:30px}
+    .eyebrow{color:var(--accent);font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+    h1{font-size:clamp(28px,5vw,44px);line-height:1.15;max-width:800px;margin:12px 0 18px}h2{font-size:22px;margin:0 0 14px}h3{font-size:17px;margin:0 0 8px}
+    p{margin:8px 0 16px}.subtitle{color:var(--muted);max-width:780px}.tags{display:flex;gap:8px;flex-wrap:wrap}.tag{background:#e5e7ff;color:#3730a3;border-radius:30px;padding:5px 12px;font-size:13px}
+    section{background:white;border:1px solid var(--line);border-radius:16px;padding:26px;margin:20px 0}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.card{border:1px solid var(--line);border-radius:12px;padding:20px}.before{border-top:4px solid #c45830}.after{border-top:4px solid #16836b}
+    code{font: .9em ui-monospace,Consolas,monospace;overflow-wrap:anywhere}p code,td code{background:#eef1f7;padding:2px 5px;border-radius:4px}
+    pre{background:#152039;color:#e9eefc;border-radius:12px;padding:20px;overflow:auto;font-size:14px;line-height:1.8;margin:10px 0}.added{display:block;background:#194d48;color:#c3f7d8;margin:0 -8px;padding:0 8px}
+    .table-wrap{overflow:auto}table{border-collapse:collapse;width:100%;text-align:left}th,td{padding:13px 10px;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--muted);font-size:13px}td:first-child{font-weight:600}
+    .flow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.step{background:#eef1ff;border-radius:8px;padding:10px 14px}.arrow{color:var(--accent)}
+    .note{border-left:4px solid #d49a1d;padding:12px 16px;background:#fff8e7;border-radius:6px;color:#715117}
+    label.check{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--line);cursor:pointer}input[type=checkbox]{width:19px;height:19px;flex-shrink:0;accent-color:var(--accent);margin-top:4px}label:has(input:checked){color:#16836b}
+    button{border:1px solid var(--line);background:white;color:var(--ink);padding:9px 14px;border-radius:8px;cursor:pointer;font:inherit;font-size:14px}button:hover{background:#eef1ff}.toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:18px}.small,footer{font-size:13px;color:var(--muted)}
+    @media(max-width:650px){main{padding:28px 16px}section{padding:20px}.grid{grid-template-columns:1fr}}
+    @media print{body{background:white}main{padding:0}section{break-inside:avoid}.toolbar{display:none}pre{white-space:pre-wrap}.tag{border:1px solid var(--line)}}
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="eyebrow">ABADÁ APP · Registro de alteração</div>
+    <h1>Novo evento começa com o formulário limpo</h1>
+    <p class="subtitle">Correção do reaproveitamento de dados da última edição ao iniciar o cadastro de um evento. Este documento explica a alteração e ajuda a conferir o resultado.</p>
+    <div class="tags"><span class="tag">Correção aplicada</span><span class="tag">1 arquivo alterado na correção</span><span class="tag">Análise estática sem problemas no arquivo</span></div>
+  </header>
+
+  <section>
+    <h2>O que causava o problema</h2>
+    <p>Os controllers do formulário são registrados nos providers globais e continuam ativos quando a tela é fechada. Ao editar um evento, eles recebem seus dados. Antes da correção, o caminho de criação dentro de <code>_initializeForm()</code> apenas encerrava o carregamento e retornava, sem limpar esses controllers.</p>
+    <div class="grid">
+      <article class="card before"><h3>Antes</h3><p>Editar evento → sair → criar evento.</p><p>O novo formulário podia exibir campos, produtos, seleções e etapa da sessão anterior. A referência interna ao evento editado também permanecia no controller.</p></article>
+      <article class="card after"><h3>Depois</h3><p>Abrir formulário → limpar estado → escolher o fluxo.</p><p>Um novo cadastro começa vazio, na primeira etapa. Na edição, os dados do evento selecionado são carregados após a limpeza.</p></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>A alteração no código</h2>
+    <p>Arquivo: <code>lib/features/events/presentation/pages/event_form_page.dart</code><br>Local: início de <code>_initializeForm()</code>, linhas 60–64 no momento da correção.</p>
+    <p>Foram reutilizados os métodos <code>reset()</code> que já existiam nos quatro controllers. O trecho destacado foi adicionado antes da verificação entre criação e edição.</p>
+    <pre><code>void _initializeForm() {
+  final event = widget.eventToEdit;
+  final requestId = widget.requestId;
+
+<span class="added">  // Start each form session without state from a previous event.</span><span class="added">  context.read&lt;EventFormController&gt;().reset();</span><span class="added">  context.read&lt;EventProductsController&gt;().reset();</span><span class="added">  context.read&lt;EventGraduationController&gt;().reset();</span><span class="added">  context.read&lt;EventFormPhasesController&gt;().reset();</span>
+  // Criação de um novo evento.
+  if (event == null &amp;&amp; requestId == null) {
+    setState(() {
+      _isInitializing = false;
+    });
+    return;
+  }
+
+  // A validação e o carregamento da edição continuam abaixo.
+}</code></pre>
+    <p class="small">Trecho parcial: a última linha de comentário resume o restante do método para facilitar a leitura.</p>
+  </section>
+
+  <section>
+    <h2>O que é reiniciado</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Controller</th><th>Estado limpo</th></tr></thead>
+      <tbody>
+        <tr><td><code>EventFormController</code></td><td>Nome, valor, local, descrição, tipo, imagem, datas, evento original, ID da solicitação, erro e indicador de carregamento.</td></tr>
+        <tr><td><code>EventProductsController</code></td><td>Lista de produtos, nome e preço em preenchimento e opção de obrigatoriedade.</td></tr>
+        <tr><td><code>EventGraduationController</code></td><td>Turma e IDs dos participantes selecionados.</td></tr>
+        <tr><td><code>EventFormPhasesController</code></td><td>Etapa atual, que volta à primeira etapa.</td></tr>
+      </tbody>
+    </table></div>
+    <p>A inicialização é chamada no callback após o primeiro frame, já existente na tela. Durante esse processo, o corpo do formulário apresenta o indicador de carregamento.</p>
+  </section>
+
+  <section>
+    <h2>Como os dois fluxos ficam</h2>
+    <h3>Criar evento</h3>
+    <div class="flow" aria-label="Fluxo de criação"><span class="step">Abrir a tela</span><span class="arrow">→</span><span class="step">Limpar os 4 controllers</span><span class="arrow">→</span><span class="step">Exibir cadastro vazio</span></div>
+    <h3 style="margin-top:24px">Editar evento</h3>
+    <div class="flow" aria-label="Fluxo de edição"><span class="step">Abrir a tela</span><span class="arrow">→</span><span class="step">Limpar os 4 controllers</span><span class="arrow">→</span><span class="step">Carregar o evento selecionado</span></div>
+    <p style="margin-top:18px">A edição restaura os campos, produtos, turma e participantes do evento informado na rota, começando na primeira etapa.</p>
+  </section>
+
+  <section>
+    <h2>Verificação técnica</h2>
+    <p><strong>Executado:</strong> análise estática do arquivo alterado com o comando abaixo. Resultado: <code>No issues found!</code>. A checagem de whitespace com <code>git diff --check</code> também passou para o arquivo.</p>
+    <pre><code>dart analyze lib/features/events/presentation/pages/event_form_page.dart</code></pre>
+    <p class="note"><strong>Pendente:</strong> validação da navegação no app. O aplicativo não foi executado para conferir os cenários abaixo. A análise estática não comprova o comportamento da interface.</p>
+  </section>
+
+  <section>
+    <h2>Roteiro para acompanhar no app</h2>
+    <p>Marque cada cenário após conferir o resultado. As marcações ficam apenas nesta página aberta e são apagadas ao recarregar.</p>
+    <label class="check"><input type="checkbox"><span><strong>Editar → criar:</strong> abra uma edição, volte e toque em criar evento. Confira campos vazios, datas e imagem sem seleção e primeira etapa ativa.</span></label>
+    <label class="check"><input type="checkbox"><span><strong>Produtos e participantes:</strong> edite um evento com produtos, turma e alunos. Saia e crie outro; confira que nenhuma dessas informações foi herdada.</span></label>
+    <label class="check"><input type="checkbox"><span><strong>Cadastro abandonado:</strong> preencha parte de um novo evento e avance de etapa. Saia e abra um novo cadastro; ele deve começar vazio na primeira etapa.</span></label>
+    <label class="check"><input type="checkbox"><span><strong>Editar outro evento:</strong> abra a edição de um segundo evento. Confira que os campos e seleções pertencem a ele.</span></label>
+    <label class="check"><input type="checkbox"><span><strong>Envio:</strong> em ambiente de teste, conclua um novo cadastro após sair de uma edição. Confira que uma nova solicitação é criada com os dados recém-preenchidos.</span></label>
+    <div class="toolbar"><span id="progress" role="status" aria-live="polite">0 de 5 cenários conferidos</span><button id="reset-checks" type="button">Limpar marcações</button><button id="print" type="button">Imprimir / salvar PDF</button></div>
+  </section>
+  <footer>Registro da correção do formulário de eventos · Documento local, sem dependências externas.</footer>
+</main>
+<script>
+  const checks = [...document.querySelectorAll('input[type="checkbox"]')];
+  const progress = document.getElementById('progress');
+  function updateProgress() {
+    progress.textContent = `${checks.filter(check => check.checked).length} de ${checks.length} cenários conferidos`;
+  }
+  checks.forEach(check => check.addEventListener('change', updateProgress));
+  document.getElementById('reset-checks').addEventListener('click', () => {
+    checks.forEach(check => { check.checked = false; });
+    updateProgress();
+  });
+  document.getElementById('print').addEventListener('click', () => window.print());
+</script>
+</body>
+</html>

@@ -24,11 +24,12 @@ class ProfileController extends ChangeNotifier {
   );
 
   ProfileLoadStatus status = ProfileLoadStatus.loading;
-
+  
   late UserProfileEntity _userProfile;
   UserProfileEntity get userProfile => _userProfile;
 
   String? errorMessage;
+
 
   Future<void> getUserProfile(String userId) async {
     status = ProfileLoadStatus.loading;

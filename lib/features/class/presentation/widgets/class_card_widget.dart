@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
-import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
-import 'package:sistema_abada_capoeira/features/class/presentation/pages/student_class_page.dart';
-import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
 
 class ClassCardWidget extends StatelessWidget {
   const ClassCardWidget({
@@ -15,17 +11,14 @@ class ClassCardWidget extends StatelessWidget {
 
   final ClassEntity classEntity;
 
-
   @override
   Widget build(BuildContext context) {
+
+    final List<String> weekDays = const [
+      'Seg', 'Ter', 'Qua', 
+      'Qui', 'Sex', 'Sáb', 'Dom'
+    ];
     
-    final classLocation = "${classEntity.location}, ${classEntity.city} - ${classEntity.state}, ${classEntity.cep}";
-    String classSchedule = "";
-
-    for (final schedule in classEntity.schedule){
-      classSchedule += "$schedule\n";
-    }
-
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
       child: Material(
@@ -71,20 +64,42 @@ class ClassCardWidget extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        classLocation,
+                        classEntity.locationAddress,
                         style: TextStyle(
                           fontSize: 13,
                           color: Colors.grey.shade700, // Contraste hierárquico
                         ),
                       ),
-                      const SizedBox(height: 2),
-                      Text(
-                        classSchedule,
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.grey.shade700,
+                      SizedBox(
+                        height: classEntity.schedule.length * 20,
+                        child: ListView.builder(
+                          itemCount: classEntity.schedule.length,
+                          itemBuilder: (context, index) {
+                            final schedule = classEntity.schedule[index];
+
+                            final openingHour = schedule.openingHour;
+                            final closingHour = schedule.closingHour;
+                            String days = "";
+
+                            for (int i = 0; i < schedule.scheduleDays.length; i++) {
+                              days += weekDays[schedule.scheduleDays[i]];
+
+                              if (i != schedule.scheduleDays.length - 1) {
+                                days += ", ";
+                              }
+                            }
+
+                            return Text(
+                              "$days - $openingHour às $closingHour",
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: Colors.grey.shade700,
+                              ),
+                            );
+                          },
                         ),
                       ),
+
                     ],
                   ),
                 ),

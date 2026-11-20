@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/features/auth/domain/entities/user_registration_params.dart';
 import 'package:sistema_abada_capoeira/features/auth/domain/usecases/register_user_usecase.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/models/register_phase.dart';
+import 'package:sistema_abada_capoeira/features/class/domain/entities/class_request_entry_entity.dart';
 
 class RegisterFormController extends ChangeNotifier {
 
@@ -16,7 +16,6 @@ class RegisterFormController extends ChangeNotifier {
     confirmPasswordController.addListener(notifyListeners);
     nicknameController.addListener(notifyListeners);
     beltController.addListener(notifyListeners);
-    professorController.addListener(notifyListeners);
   }
 
   @override
@@ -28,10 +27,19 @@ class RegisterFormController extends ChangeNotifier {
     confirmPasswordController.dispose();
     nicknameController.dispose();
     beltController.dispose();
-    professorController.dispose();
     super.dispose();
   }
 
+  void cleanController(){
+    _registerPhase = RegisterPhase.firstPhase;
+    fullNameController.clear();
+    phoneController.clear();
+    emailController.clear();
+    passwordController.clear();
+    confirmPasswordController.clear();
+    nicknameController.clear();
+    beltController.clear();
+  }
   TextEditingController fullNameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -39,7 +47,8 @@ class RegisterFormController extends ChangeNotifier {
   TextEditingController confirmPasswordController = TextEditingController();
   TextEditingController nicknameController = TextEditingController();
   TextEditingController beltController = TextEditingController();
-  TextEditingController professorController = TextEditingController();
+
+
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -57,6 +66,7 @@ class RegisterFormController extends ChangeNotifier {
 
     return true;
   }
+
 
   RegisterPhase _registerPhase = RegisterPhase.firstPhase;
   RegisterPhase get registerPhase => _registerPhase;
@@ -78,7 +88,7 @@ class RegisterFormController extends ChangeNotifier {
     notifyListeners();
   }
 
-  UserRegistrationParams _buildUserRegistrationParamsEntity(){
+  UserRegistrationParams _buildUserRegistrationParamsEntity(ClassRequestEntryEntity classRequestEntry){
 
     return UserRegistrationParams(
       fullName: fullNameController.text,
@@ -87,7 +97,9 @@ class RegisterFormController extends ChangeNotifier {
       belt: beltController.text,
       nickname: nicknameController.text,
       password: passwordController.text,
-      professor: professorController.text,
+      professorId: classRequestEntry.professorId,
+      classId: classRequestEntry.classId,
+      className: classRequestEntry.classUnit,
       confirmPassword: confirmPasswordController.text,
     );
     
@@ -101,18 +113,16 @@ class RegisterFormController extends ChangeNotifier {
     beltController.clear();
     nicknameController.clear();
     passwordController.clear();
-    professorController.clear();
     confirmPasswordController.clear();
-
   }
 
-  Future<bool> registerUser() async{
+  Future<bool> registerUser(ClassRequestEntryEntity classRequestEntry) async{
 
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
 
-    final UserRegistrationParams user = _buildUserRegistrationParamsEntity();
+    final UserRegistrationParams user = _buildUserRegistrationParamsEntity(classRequestEntry);
 
     final result = await _registerUserUsecase.call(user);
 
@@ -123,7 +133,8 @@ class RegisterFormController extends ChangeNotifier {
       return false;
 
     }, (_){
-
+      
+      cleanControllers();
       return true;
     });
 
@@ -131,7 +142,6 @@ class RegisterFormController extends ChangeNotifier {
 
     notifyListeners();
 
-    cleanControllers();
 
     return success;
     

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sistema_abada_capoeira/core/utils/date_controller.dart';
 import 'package:sistema_abada_capoeira/features/member_validation/domain/entities/membership_request_status.dart';
 import 'package:sistema_abada_capoeira/features/member_validation/presentation/widgets/action_button_widget.dart';
 import 'package:sistema_abada_capoeira/shared/clickable/clickable_widget.dart';
@@ -23,7 +24,8 @@ class MembershipRequestCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String memberName = "${request.memberName} - ${request.memberNickname}";
+    final String memberName =
+        "${request.memberName} - ${request.memberNickname}";
 
     return ClickableWidget(
       padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
@@ -33,9 +35,7 @@ class MembershipRequestCardWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: Colors.grey.shade200,
-          ),
+          border: Border.all(color: Colors.grey.shade200),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,7 +88,7 @@ class MembershipRequestCardWidget extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        "Solicitado em ${_formatDateInline(request.requestedAt)}",
+                        "Solicitado em ${DateController.formatDDMMYYYYHM(request.requestedAt)}",
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.grey.shade700,
@@ -140,17 +140,5 @@ class MembershipRequestCardWidget extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  // Ajustado para formatar a data em uma única linha
-  String _formatDateInline(DateTime date) {
-    final day = date.day.toString().padLeft(2, '0');
-    final month = date.month.toString().padLeft(2, '0');
-    final year = date.year;
-
-    final hour = date.hour.toString().padLeft(2, '0');
-    final minute = date.minute.toString().padLeft(2, '0');
-
-    return '$day/$month/$year, $hour:$minute';
   }
 }

@@ -3,12 +3,17 @@ import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sistema_abada_capoeira/core/constants/app_spacing.dart';
 import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
-import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_controller.dart';
-import 'package:sistema_abada_capoeira/features/member_validation/presentation/controllers/membership_validation_controller.dart';
+import 'package:sistema_abada_capoeira/core/utils/app_message_handler.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
+import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/events_controller.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
+import 'package:sistema_abada_capoeira/features/location/presentation/controllers/location_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_requests_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/user_event_subscription_controller.dart';
 import 'package:sistema_abada_capoeira/features/splash_screen/presentation/controllers/data_loading_controller.dart';
+import 'package:sistema_abada_capoeira/features/member_validation/presentation/controllers/membership_validation_controller.dart';
 
 
 class SplashScreen extends StatefulWidget {
@@ -34,8 +39,12 @@ class _SplashScreenState extends State<SplashScreen> {
 
     final AuthController authController = context.read<AuthController>();
     final ClassController classController = context.read<ClassController>();
+    final EventsController eventsController = context.read<EventsController>();
     final ProfileController profileController = context.read<ProfileController>();
+    final LocationController locationController = context.read<LocationController>();
     final DataLoadingController dataLoadingController = context.read<DataLoadingController>();
+    final EventRequestsController eventRequestsController = context.read<EventRequestsController>();
+    final UserEventSubscriptionController eventSubscriptionController = context.read<UserEventSubscriptionController>();
     final MembershipValidationController membershipValidationController = context.read<MembershipValidationController>();
 
     final User? user = authController.user;
@@ -44,15 +53,25 @@ class _SplashScreenState extends State<SplashScreen> {
       throw Exception("Usuário não autenticado");
     }
 
+
+    LoggingService.displayEntityId("Id do usuário: ${user.uid}");
+
     try{ 
+
 
       await dataLoadingController.fetchUserData(authController, profileController);
       await dataLoadingController.fetchAttendedClasses(classController, profileController);
 
       final userRole = profileController.userProfile.role;
+   
+      dataLoadingController.fetchUserLocation(locationController);
 
-      if(userRole != UserRole.student) await dataLoadingController.fetchLecturedClasses(classController, profileController);
-      if(userRole != UserRole.student) await dataLoadingController.fetchClassEntryRequests(membershipValidationController, profileController);
+      await Future.wait([
+        dataLoadingController.fetchEvents(eventsController, eventSubscriptionController, user.uid),
+        if(userRole != UserRole.student) dataLoadingController.fetchLecturedClasses(classController, profileController),
+        if(userRole != UserRole.student) dataLoadingController.fetchClassEntryRequests(membershipValidationController, profileController),
+        if(userRole == UserRole.coordinator) dataLoadingController.fetchEventCreationRequests(eventRequestsController)
+      ]);
 
       if(userRole == UserRole.unknown) throw Exception("Papel de Usuário não reconhecido");
 
@@ -61,7 +80,14 @@ class _SplashScreenState extends State<SplashScreen> {
     }catch(error, stack){
 
       LoggingService.displayError( "Erro na inicialização do dispositivo. Saindo da conta...", error: error, stack: stack,);
+      
 
+      if(mounted){
+
+        AppMessageHandler.showError(context, "Erro na inicialização do dispositivo. Saindo da conta...");
+
+      }
+      
       await authController.logoutUser();
 
     }

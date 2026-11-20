@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/register_form_controller.dart';
 import 'package:sistema_abada_capoeira/shared/inputs/custom_text_input/custom_text_input.dart';
+import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/register_form_controller.dart';
+import 'package:sistema_abada_capoeira/shared/class_location_list_widget/classes_location_list_widget.dart';
 
-class RegisterSecondPhaseFormWidget extends StatelessWidget {
-  const RegisterSecondPhaseFormWidget({super.key});
+class RegisterSecondPhaseFormWidget extends StatefulWidget {
+  const  RegisterSecondPhaseFormWidget({super.key});
 
   @override
+  State<RegisterSecondPhaseFormWidget> createState() => _RegisterSecondPhaseFormWidgetState();
+}
+
+class _RegisterSecondPhaseFormWidgetState extends State<RegisterSecondPhaseFormWidget> {
+  @override
   Widget build(BuildContext context) {
-    final formController = context.read<RegisterFormController>();
+    final formController = context.watch<RegisterFormController>();
+
     return Column(
       children: [
         Align(
@@ -49,12 +56,9 @@ class RegisterSecondPhaseFormWidget extends StatelessWidget {
 
         SizedBox(height: 15),
 
-        CustomTextInput(
-          label: "Professor",
-          prefixIcon: Icon(Icons.group_outlined),
-          hintText: "Selecione o seu professor",
-          controller: formController.professorController,
-        ),
+
+
+        const ClassesLocationListWidget(),
       ],
     );
   }

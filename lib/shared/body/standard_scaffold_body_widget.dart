@@ -19,6 +19,7 @@ class StandardScaffoldBodyWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         padding: padding,
         child:  child,
       )

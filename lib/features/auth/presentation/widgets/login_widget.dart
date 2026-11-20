@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
-import 'package:sistema_abada_capoeira/core/utils/message_handler.dart';
+import 'package:sistema_abada_capoeira/core/utils/app_message_handler.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/models/auth_status.dart';
 import 'package:sistema_abada_capoeira/features/home_user/presentation/pages/home_user_page.dart';
@@ -56,22 +56,25 @@ class LoginWidget extends StatelessWidget {
             onPressed: () async {
               final authController = context.read<AuthController>();
 
-              MessageHandler.showInfo(context, "Autenticando...");
+              AppMessageHandler.showInfo(context, "Autenticando...");
 
               final success = await formController.loginUser();
 
               if (!context.mounted) return;
 
-              if (!success && formController.errorMessage != null) {
-                MessageHandler.showError(context, formController.errorMessage!);
+              if(success){
+
+                authController.setAuthStatus(AuthStatus.initializing);
+
+                AppMessageHandler.showSuccess(context, "Conta criada com sucesso! Redirecionando...");
+
+                formController.cleanControllers();
 
                 return;
               }
 
-              authController.setAuthStatus(AuthStatus.initializing);
-
-              MessageHandler.showSuccess(context, "Usuário autenticado com sucesso! Redirecionando...");
-        
+             
+              AppMessageHandler.showError(context, formController.errorMessage ?? "Erro");
             }
           ),
 

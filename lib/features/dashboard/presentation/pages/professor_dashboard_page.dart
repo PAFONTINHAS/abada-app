@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
+import 'package:sistema_abada_capoeira/shared/appBar/custom_app_bar_widget.dart';
 import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
 import 'package:sistema_abada_capoeira/shared/section_widgets/section_title_widget.dart';
 import 'package:sistema_abada_capoeira/features/profile/presentation/controllers/profile_controller.dart';
-import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/dashboard_app_bar_widget.dart';
-import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/irregular_tusca_badge_widget.dart';
+import 'package:sistema_abada_capoeira/features/member_validation/domain/entities/membership_request.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/view_more_requests_button_widget.dart';
 import 'package:sistema_abada_capoeira/features/member_validation/presentation/widgets/membership_request_item_widget.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/dashboard_local_summary_card_list_widget.dart';
 import 'package:sistema_abada_capoeira/features/member_validation/presentation/controllers/membership_validation_controller.dart';
-import 'package:sistema_abada_capoeira/features/member_validation/presentation/widgets/membership_requests_empty_state_widget.dart';
+import 'package:sistema_abada_capoeira/shared/widgets/requests_empty_state_widget.dart';
 
 class ProfessorDashboardPage extends StatelessWidget {
   const ProfessorDashboardPage({super.key});
@@ -22,13 +22,17 @@ class ProfessorDashboardPage extends StatelessWidget {
 
     final memberEntryRequests = membershipController.requests;
 
-
     final memberEntryRequestsQuantity = memberEntryRequests.length;
 
-    final userId = profileController.userProfile.uid;
+    final userProfile = profileController.userProfile;
+
+    final userId = userProfile.uid;
 
     return Scaffold(
-      appBar: DashboardAppBarWidget(onNotificationTap: () {}),
+      appBar: CustomAppBarWidget(
+        pageTitle: "Início",
+        onNotificationTap: (){} ,
+      ),
       body: StandardScaffoldBodyWidget(
         child: Column(
           children: [
@@ -36,8 +40,9 @@ class ProfessorDashboardPage extends StatelessWidget {
 
             const DashboardLocalMetricSummaryCardListWidget(),
 
-            SectionTitleWidget(sectionTitle: "Selo TUSCA"),
-            const IrregularTuscaBadgeWidget(),
+            // SectionTitleWidget(sectionTitle: "Selo TUSCA"),
+            
+            // TuscaBadgeCardWidget(tuscaEntity: userProfile.tusca),
 
             SectionTitleWidget(
               sectionTitle: "Solicitações de entrada na turma",
@@ -61,9 +66,13 @@ class ProfessorDashboardPage extends StatelessWidget {
                 ],
               ),
 
-              child: memberEntryRequests.isEmpty
-                ? const MembershipRequestsEmptyStateWidget()
-                : ListView.builder(
+              child: Selector<MembershipValidationController, List<MembershipRequest>>(
+                selector: (_, controller) => controller.requests,
+                builder: (context, requests, child){
+
+                  if(requests.isEmpty) return const RequestEmptyStateWidget();
+
+                  return ListView.builder(
                     itemCount: memberEntryRequests.length,
                     shrinkWrap: true,
                     physics: const ScrollPhysics(),
@@ -89,7 +98,10 @@ class ProfessorDashboardPage extends StatelessWidget {
 
                       return MembershipRequestItemWidget(request: request, professorId: userId);
                     },
-                  ),
+                  );
+                },
+              ),
+ 
             ),
           ],
         ),

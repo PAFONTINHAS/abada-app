@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/features/member_validation/presentation/controllers/membership_validation_controller.dart';
 import 'package:sistema_abada_capoeira/features/member_validation/presentation/widgets/membership_request_item_widget.dart';
-import 'package:sistema_abada_capoeira/features/member_validation/presentation/widgets/membership_requests_empty_state_widget.dart';
+import 'package:sistema_abada_capoeira/shared/widgets/requests_empty_state_widget.dart';
 import 'package:sistema_abada_capoeira/features/member_validation/presentation/widgets/membership_requests_error_state_widget.dart';
 import 'package:sistema_abada_capoeira/features/member_validation/presentation/widgets/membership_requests_header_widget.dart';
 import 'package:sistema_abada_capoeira/features/member_validation/presentation/widgets/membership_requests_info_card_widget.dart';
@@ -70,10 +70,10 @@ class MembershipRequestsPage extends StatelessWidget {
                     padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
                     itemCount: controller.requests.length,
                     itemBuilder: (context, index) {
-                      if (controller.requests.isEmpty) return const MembershipRequestsEmptyStateWidget();
-
+                      if (controller.requests.isEmpty) {
+                        return const RequestEmptyStateWidget();
+                      }
                       final request = controller.requests[index];
-
                       return Padding(
                         padding: const EdgeInsetsGeometry.only(bottom: 22),
 
@@ -84,9 +84,9 @@ class MembershipRequestsPage extends StatelessWidget {
                       );
                     },
                   ),
-                )
+                ),
               ],
-            )
+            ),
           );
         },
       ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_controller.dart';
 import 'package:sistema_abada_capoeira/features/dashboard/presentation/widgets/summary_card_widget.dart';
 
 class ClassLocalMetricSummaryCardListWidget extends StatelessWidget {
@@ -6,6 +8,15 @@ class ClassLocalMetricSummaryCardListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = context.read<ClassController>();
+
+    int totalStudents = 0;
+
+    for(final classEntity in controller.lecturedClasses){
+
+      totalStudents += classEntity.members.length;
+    }
+
     return LayoutBuilder(
       builder: (context, constraints) {
         // Se a tela for muito estreita (menos de 340px), permite rolar horizontalmente
@@ -20,8 +31,8 @@ class ClassLocalMetricSummaryCardListWidget extends StatelessWidget {
                 child: SummaryCardWidget(
                   metricIcon: Icons.group_outlined,
                   iconColor: const Color(0xFF1F18AB),
-                  metricValue: "3",
-                  metricDescription: "Turmas ativas",
+                  metricValue: "${controller.lecturedClasses.length}",
+                  metricDescription: "Turma(s) ativa(s)",
                   backgroundIconColor: const Color(0xFFE7E3FA),
                 ),
               ),
@@ -34,7 +45,7 @@ class ClassLocalMetricSummaryCardListWidget extends StatelessWidget {
                 child: SummaryCardWidget(
                   metricIcon: Icons.school,
                   iconColor: const Color.fromRGBO(31, 24, 171, 1),
-                  metricValue: "42",
+                  metricValue: "$totalStudents",
                   metricDescription: "Alunos matriculados",
                   backgroundIconColor: const Color(0xFFE7E3FA),
                 ),

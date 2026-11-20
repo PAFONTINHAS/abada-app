@@ -1,0 +1,159 @@
+import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
+import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/user_event_subscription_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/widgets/event_card_widget.dart';
+import 'package:sistema_abada_capoeira/features/location/presentation/controllers/location_controller.dart';
+
+class EventsInteractiveMapWidget extends StatelessWidget {
+  final List<EventEntity> events;
+
+  const EventsInteractiveMapWidget({
+    super.key,
+    required this.events,
+  });
+
+  void _showEventDetailsBottomSheet(BuildContext context, EventEntity event) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent, // Deixa transparente para vermos as bordas do Card
+      isScrollControlled: true,
+      builder: (context) {
+        return Consumer<UserEventSubscriptionController>(
+          builder: (context, controller, child) {
+
+            final subscriptions = controller.subscriptions;
+
+            
+            final EventSubscriptionEntity? subscription = subscriptions
+                .firstWhereOrNull(
+                  (eventSubscription) =>
+                      eventSubscription.eventId == event.eventId,
+                );
+
+            final bool alreadySubscribedToEvent = subscription != null;
+
+            return Padding(
+              // Dá um respiro das bordas da tela e da área de navegação do celular
+              padding: EdgeInsets.only(
+                left: 16,
+                right: 16,
+                bottom: MediaQuery.of(context).padding.bottom + 16,
+              ),
+              child: EventCardWidget(
+                event: event,
+                showEventAdress: true,
+                alreadySubscribed: alreadySubscribedToEvent,
+                onTap: () {
+                  Navigator.pop(context);
+
+                  if (alreadySubscribedToEvent) {
+                    return RouteController.redirectToEventReceiptPage(
+                      context: context,
+                      event: event,
+                      subscription: subscription,
+                    );
+                  }
+                  
+                  RouteController.redirectToEventDetailsPage(
+                    context: context,
+                    eventId: event.eventId,
+                  );
+                },
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    final controller = context.read<LocationController>();
+
+    final userLocation = controller.userLocationEntity;
+
+    LatLng initialCenter;
+    double initialZoom = 11;
+
+    final brazilCenter = LatLng(-15.7801, -47.9292);
+
+    if(userLocation == null || userLocation.cityCenterCoordinates == null){
+
+      initialCenter = brazilCenter; 
+      initialZoom = 4.5;
+    } else {
+
+      initialCenter = LatLng(
+        userLocation.cityCenterCoordinates!.latitude,
+        userLocation.cityCenterCoordinates!.longitude,
+      );
+    }
+
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: ColorConstants.borderColor),
+      ),
+      // ClipRRect garante que o mapa não "vaze" pelas bordas arredondadas do container
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(11),
+        child: FlutterMap(
+          options: MapOptions(
+            initialCenter: initialCenter,
+            initialZoom: initialZoom,
+            // Permite que o mapa responda a gestos normais
+            interactionOptions: const InteractionOptions(
+              flags: InteractiveFlag.all,
+            ),
+          ),
+          children: [
+            TileLayer(
+              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+              userAgentPackageName: 'br.ufpr.sistema_abada_capoeira', // Coloque o package name do seu app,
+              tileProvider: NetworkTileProvider(),
+            ),
+            
+            const RichAttributionWidget(
+              attributions: [
+                TextSourceAttribution(
+                  'OpenStreetMap contribuitors',
+                  onTap: null,
+                )
+              ],
+            ),
+            
+            // Camada de Marcadores (Pins dos eventos)
+            MarkerLayer(
+              markers: events.map((event) {
+                return Marker(
+                  point: LatLng(event.latitude, event.longitude), 
+                  width: 50,
+                  height: 50,
+                  alignment: Alignment.topCenter, // Faz a "ponta" do ícone apontar para o local exato
+                  child: GestureDetector(
+                    onTap: () => _showEventDetailsBottomSheet(context, event),
+                    child: const Icon(
+                      Icons.location_on,
+                      color: ColorConstants.indigoColor,
+                      size: 40,
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

@@ -1,20 +1,16 @@
-//esse arquivo faz a ligação entre tela e Use Cases
-
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/foundation.dart';
 import '../../domain/entities/membership_request.dart';
-import '../../domain/usecases/approve_membership_request_usecase.dart';
-import '../../domain/usecases/get_professor_membership_requests_usecase.dart';
 import '../../domain/usecases/reject_membership_request_usecase.dart';
 import '../../domain/usecases/request_membership_changes_usecase.dart';
+import '../../domain/usecases/approve_membership_request_usecase.dart';
+import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
+import '../../domain/usecases/get_professor_membership_requests_usecase.dart';
 
 class MembershipValidationController extends ChangeNotifier {
-  //herda funcionalidades de ChangeNotifier permite usar o notifyListeners
   final GetProfessorMembershipRequestsUseCase getProfessorRequestsUsecase;
   final ApproveMembershipRequestUseCase approveMembershipRequestUsecase;
   final RequestMembershipChangesUseCase requestMembershipChangesUsecase;
   final RejectMembershipRequestUsecase rejectMembershipRequestUsecase;
-  //define todas as ações do usecases
 
   MembershipValidationController({
     required this.getProfessorRequestsUsecase,
@@ -22,122 +18,149 @@ class MembershipValidationController extends ChangeNotifier {
     required this.requestMembershipChangesUsecase,
     required this.rejectMembershipRequestUsecase,
   });
-  //constructor da classe
 
   List<MembershipRequest> requests = [];
-  //lista de solicitações que o Controller vai guardar
 
-  bool isLoading = false; //"Estamos carregando alguma coisa agora?"
-  String? errorMessage; //Guarda uma mensagem caso alguma operação dê erro, podendo ser null
+  bool isLoading = false;
+  String? errorMessage;
+  String? actionErrorMessage;
 
-  //recebe a ação carregarSolicitações
+  bool _disposed = false;
+  int _loadVersion = 0;
+  final Set<String> _processingRequestIds = {};
+
+  void cleanController(){
+    _disposed = false;
+    _loadVersion = 0;
+    _processingRequestIds.clear();
+  }
+  bool isProcessingRequest(String requestId) {
+    return _processingRequestIds.contains(requestId);
+  }
+
+  void _notify() {
+    if (!_disposed) notifyListeners();
+  }
+
   Future<void> loadRequests(String professorId) async {
-    isLoading = true; //estamos carregando
-    errorMessage = null; //limpando erro antigo
-    notifyListeners();
-    //“Provider, avise quem estiver observando este controller que alguma coisa mudou.”
-    // Chama o use case responsável por buscar as solicitações
-    final result = await getProfessorRequestsUsecase.call(professorId);
-    result.fold(
-      (failure) {
-        // Se ocorreu uma falha, guarda a mensagem de erro
-        errorMessage = failure.message;
-      },
-      (loadedRequests) {
-        // Se deu certo, guarda a lista recebida
-        requests = loadedRequests;
-      },
-    );
+    final version = ++_loadVersion;
 
-    isLoading = false;
-    notifyListeners();
+    isLoading = true;
+    errorMessage = null;
+    _notify();
+
+    try {
+      final result = await getProfessorRequestsUsecase.call(professorId);
+
+      if (_disposed || version != _loadVersion) return;
+
+      result.fold(
+        (failure) => errorMessage = failure.message,
+        (loadedRequests) => requests = loadedRequests,
+      );
+    } catch (error) {
+      if (!_disposed && version == _loadVersion) {
+        errorMessage = 'Não foi possível carregar as solicitações.';
+        LoggingService.displayError('Error loading requests: $error');
+      }
+    } finally {
+      if (!_disposed && version == _loadVersion) {
+        isLoading = false;
+        _notify();
+      }
+    }
   }
 
-  //recebe a ação aprovarSolicitação + id
-  Future<bool> approve(MembershipRequest request, String professorId) async {
-    errorMessage = null;
-    final result = await approveMembershipRequestUsecase.call(request);
-    //e chama o use case correto, o approveMembershipRequest
-    final success = result.fold(
-      (failure) {
-        errorMessage = failure.message;
+  Future<bool> _executeAction(
+    String requestId,
+    Future<bool> Function() action,
+  ) async {
+    if (_disposed) {
+      return false;
+    }
+    if (_processingRequestIds.contains(requestId)) {
+      actionErrorMessage = 'Esta solicitação já está sendo processada.';
+      _notify();
+      return false;
+    }
+
+    _processingRequestIds.add(requestId);
+    actionErrorMessage = null;
+    _notify();
+
+    try {
+      return await action();
+    } catch (error) {
+      actionErrorMessage = 'Não foi possível concluir a operação.';
+      LoggingService.displayError('Error processing request: $error');
+      return false;
+    } finally {
+      _processingRequestIds.remove(requestId);
+      _notify();
+    }
+  }
+
+  Future<bool> approve(MembershipRequest request, String professorId) {
+    return _executeAction(request.id, () async {
+      final result = await approveMembershipRequestUsecase.call(request);
+
+      return result.fold((failure) {
+        actionErrorMessage = failure.message;
+        return false;
+      }, (_){
+
+        final updatedRequests = List.from(requests);
+
+        updatedRequests.remove((currentRequest) => currentRequest == request.id);
+
+        requests = List.from(updatedRequests);
+
         notifyListeners();
-        return false;
-      },
-      (_) {
+
         return true;
-      },
-    );
-
-    if(success) await loadRequests(professorId);
-
-    isLoading = false;
-    notifyListeners();
-    return success;
+      });
+    });
   }
 
-  //recebe a ação pedir correções + id + motivo
-  Future<bool> requestChanges(String requestId, String changeReason, String professorId) async {
-    isLoading = true;
-    errorMessage = null;
-    notifyListeners();
+  Future<bool> requestChanges(
+    String requestId,
+    String changeReason,
+    String professorId,
+  ) {
+    return _executeAction(requestId, () async {
+      final result = await requestMembershipChangesUsecase.call(
+        requestId,
+        changeReason,
+      );
 
-    // Chama o use case responsável por solicitar correções
-    final result = await requestMembershipChangesUsecase.call(
-      requestId,
-      changeReason,
-    );
-
-    // Trata os dois resultados possíveis do Either
-    final success = result.fold(
-      (failure) {
-        // Se ocorreu uma falha, guarda a mensagem
-        errorMessage = failure.message;
+      return result.fold((failure) {
+        actionErrorMessage = failure.message;
         return false;
-      },
-      (_){
-        return true;
-      },
-    );
-
-    if(success) await loadRequests(professorId);
-    
-    isLoading = false;
-    notifyListeners();
-
-    return success;
+      }, (_) => true);
+    });
   }
 
-  //recebe a ação rejeitarSolicitação + id + motivo
-  Future<bool> reject( String requestId, String rejectReason, String professorId) async {
-    isLoading = true;
-    errorMessage = null;
-    notifyListeners();
+  Future<bool> reject(
+    String requestId,
+    String rejectReason,
+    String professorId,
+  ) {
+    return _executeAction(requestId, () async {
+      final result = await rejectMembershipRequestUsecase.call(
+        requestId,
+        rejectReason,
+      );
 
-    // Chama o use case responsável por rejeitar a solicitação
-    final result = await rejectMembershipRequestUsecase.call(
-      requestId,
-      rejectReason,
-    );
-
-    // Trata os dois resultados possíveis do Either
-    final bool success = result.fold(
-      (failure){
-        // Se ocorreu uma falha, guarda a mensagem
-        errorMessage = failure.message;
+      return result.fold((failure) {
+        actionErrorMessage = failure.message;
         return false;
-      },
-      (_){
-        return true;
-      },
-    );
+      }, (_) => true);
+    });
+  }
 
-    if(success) await loadRequests(professorId);
-
-    isLoading = false;
-    notifyListeners();
-
-    return success;
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
   }
 }
-

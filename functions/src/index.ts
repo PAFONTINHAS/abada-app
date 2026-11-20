@@ -4,3 +4,27 @@ admin.initializeApp();
 
 export {approveMemberRequestAndAddToClass}
   from "./approveMemberRequestAndAddToClass";
+
+export {updateProfessorLecturedClasses}
+  from "./updateProfessorLecturedClasses";
+
+export {removeProfessorLecturedClasses}
+  from "./removeProfessorLecturedClasses";
+
+export {finishEventsAndGraduateMembers}
+  from "./finishEventsAndGraduateMembers";
+
+export {updateMemberData}
+  from "./updateMemberData";
+
+export {removeMemberFromClass}
+  from "./removeMemberFromClass";
+
+export {activateEvent}
+  from "./activateEvent";
+
+export {cancelEvent}
+  from "./cancelEvent";
+
+export {leaveClass}
+  from "./leaveClass";
