@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:sistema_abada_capoeira/core/utils/mask_formatter.dart';
 import 'package:sistema_abada_capoeira/core/utils/app_message_handler.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
-import 'package:sistema_abada_capoeira/features/event/domain/entities/event_entity_errado.dart';
 import 'package:sistema_abada_capoeira/features/event_cancellation/presentation/controllers/event_cancellation_controller.dart';
 
 class EventCancellationPage extends StatefulWidget {
   const EventCancellationPage({super.key, required this.event});
 
-  final EventEntityErrado event;
+  final EventEntity event;
 
   @override
   State<EventCancellationPage> createState() => _EventCancellationPageState();
@@ -38,6 +40,12 @@ class _EventCancellationPageState extends State<EventCancellationPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final eventValue = MaskFormatter.convertMoneyStringToDouble(widget.event.eventValue);
+    final eventImage = widget.event.eventImagePath;
+    final genericEventImage = "assets/images/generic_event_image.jpg";
+    final eventHasImage = eventImage != null;
+
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(onPressed: () => context.pop()),
@@ -49,20 +57,29 @@ class _EventCancellationPageState extends State<EventCancellationPage> {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: Image.asset(
-                widget.event.imagePath,
+              child: eventHasImage ?   CachedNetworkImage(
+                imageUrl: eventImage,
                 height: 138,
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(
+                errorWidget : (context, error, stackTrace) => Container(
                   height: 138,
                   color: Colors.grey.shade200,
                   child: const Icon(Icons.image_not_supported, size: 40),
                 ),
-              ),
+              ) : Image.asset(
+                genericEventImage,
+                height: 138,
+                fit: BoxFit.cover,
+                errorBuilder : (context, error, stackTrace) => Container(
+                  height: 138,
+                  color: Colors.grey.shade200,
+                  child: const Icon(Icons.image_not_supported, size: 40),
+                ),
+              ) ,
             ),
             const SizedBox(height: 14),
             Text(
-              widget.event.title,
+              widget.event.eventName,
               style: const TextStyle(
                 color: Color(0xFF20256B),
                 fontSize: 18,
@@ -70,7 +87,7 @@ class _EventCancellationPageState extends State<EventCancellationPage> {
               ),
             ),
             Text(
-              'Organizado por ${widget.event.organizer}',
+              'Organizado por ${widget.event.eventCreatorNickname}',
               style: TextStyle(color: Colors.grey.shade600),
             ),
             const SizedBox(height: 10),
@@ -183,7 +200,7 @@ class _EventCancellationPageState extends State<EventCancellationPage> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      widget.event.isPaid
+                      eventValue > 0 
                           ? 'Todos os inscritos serão comunicados por e-mail e receberão um ticket para informar a forma de reembolso, preferencialmente via PIX.'
                           : 'Todos os inscritos serão comunicados por e-mail sobre o cancelamento.',
                       textAlign: TextAlign.justify,
@@ -221,6 +238,8 @@ class _EventCancellationPageState extends State<EventCancellationPage> {
   }
 
   Future<void> _confirmCancellation(BuildContext context) async {
+    final eventValue = MaskFormatter.convertMoneyStringToDouble(widget.event.eventValue);
+
     if (_reason == null) {
       AppMessageHandler.showError(
         context,
@@ -234,8 +253,8 @@ class _EventCancellationPageState extends State<EventCancellationPage> {
       builder: (context) => AlertDialog(
         title: const Text('Confirmar solicitação?'),
         content: Text(
-          widget.event.isPaid
-              ? 'As inscrições serão desabilitadas imediatamente e ${widget.event.enrolledParticipants} ticket(s) de reembolso serão emitidos.'
+          eventValue > 0
+              ? 'As inscrições serão desabilitadas imediatamente e os tickets de reembolso serão emitidos para cada participante inscrito.'
               : 'As inscrições serão desabilitadas imediatamente e os participantes serão notificados.',
         ),
         actions: [
@@ -278,12 +297,7 @@ class _EventCancellationPageState extends State<EventCancellationPage> {
       return;
     }
 
-    context.pop(
-      widget.event.copyWith(
-        cancellationRequested: true,
-        registrationsEnabled: false,
-      ),
-    );
+    context.pop();
   }
 }
 

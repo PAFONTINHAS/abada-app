@@ -59,7 +59,7 @@ class EventDetailsProfessorBottomOptionsWidget extends StatelessWidget {
                   ),
                 ),
                 child: const Text(
-                  "Ver lista de Inscritos",
+                  "Inscritos",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
               ),

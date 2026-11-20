@@ -7,8 +7,9 @@ abstract class EventCancellationRemoteDatasource {
     EventCancellationRequestEntity request,
   );
 
-  Future<Either<Failure, List<EventCancellationRequestEntity>>>
-  getPendingRequests();
+  Future<Either<Failure, List<EventCancellationRequestEntity>>> getPendingRequests();
+
+  Future<Either<Failure, bool>> checkIfRequestAlreadyExists(String eventId);
 
   Future<Either<Failure, EventCancellationRequestEntity>> reviewCancellation({
     required EventCancellationRequestEntity request,

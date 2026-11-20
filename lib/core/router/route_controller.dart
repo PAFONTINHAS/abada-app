@@ -1,9 +1,14 @@
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sistema_abada_capoeira/core/router/redirection_method.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_entity.dart';
+
+
+
 
 class RouteController {
   RouteController._();
@@ -74,12 +79,25 @@ class RouteController {
     );
   }
 
-  static void redirectToCreatedEventsPage({required BuildContext context}) {
+  static void redirectToCreatedEventsPage({
+    required BuildContext context,
+    RedirectionMethod redirectionMethod = RedirectionMethod.PUSH,
+  }) {
+
+    if(redirectionMethod.isPushReplacementeMethod){
+      return context.pushReplacement('/events/created_events');
+    }
+
     context.push('/events/created_events');
   }
 
   static void redirectToGraduationHistoryPage({required BuildContext context}){
     context.push('classes/graduation_history');
+  }
+
+
+  static void redirectoToEventCancellationPage({required BuildContext context, required EventEntity event}){
+    context.push('/events/cancel', extra: event);
   }
 
 
@@ -126,22 +144,19 @@ class RouteController {
     required EventEntity event,
     required EventSubscriptionEntity subscription,
     bool showTotalPayed = true,
+    RedirectionMethod redirectionMethod = RedirectionMethod.PUSH
   }) {
 
-    context.push('/events/event_details/subscription_receipt', extra: {
+    final extras = {
       'event': event,
       'subscription': subscription,
       'showTotalPayed': showTotalPayed 
-    });
-  }
+    };
 
-  static void pushReplacementEventReceiptPage({required BuildContext context, required EventEntity event, required EventSubscriptionEntity subscription, bool showTotalPayed = true}){
-    context.pushReplacement('/events/event_details/subscription_receipt', extra: {
-      'event': event,
-      'subscription': subscription,
-      'showTotalPayed': showTotalPayed 
-    });
-  }
+    if(redirectionMethod.isPushReplacementeMethod){
+      return context.pushReplacement('/events/event_details/subscription_receipt', extra: extras);
+    }
 
-  
+    context.push('/events/event_details/subscription_receipt', extra: extras);
+  }
 }

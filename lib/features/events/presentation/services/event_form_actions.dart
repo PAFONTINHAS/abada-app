@@ -1,12 +1,12 @@
-import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:sistema_abada_capoeira/core/services/location_service/place_suggestion.dart';
+import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
 import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
+import 'package:sistema_abada_capoeira/core/router/redirection_method.dart';
 import 'package:sistema_abada_capoeira/core/utils/app_message_handler.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_type.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
+import 'package:sistema_abada_capoeira/core/services/location_service/place_suggestion.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/models/event_phases.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_policy.dart';
 import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
@@ -196,7 +196,7 @@ class EventFormActions {
                   : 'Alterações salvas com sucesso')
             : 'Solicitação de evento criada com sucesso',
       );
-      context.pop(true);
+      RouteController.redirectToCreatedEventsPage(context: context, redirectionMethod: RedirectionMethod.PUSH_REPLACEMENT);
     } else {
       AppMessageHandler.showError(
         context,

@@ -10,22 +10,31 @@ class EventCancellationRepositoryImpl implements EventCancellationRepository {
   final EventCancellationRemoteDatasource datasource;
 
   @override
-  Future<Either<Failure, EventCancellationRequestEntity>> requestCancellation(
-    EventCancellationRequestEntity request,
-  ) => datasource.requestCancellation(request);
+  Future<Either<Failure, bool>> checkIfRequestAlreadyExists(String eventId) async{
+    return datasource.checkIfRequestAlreadyExists(eventId);
+  }
+
 
   @override
-  Future<Either<Failure, List<EventCancellationRequestEntity>>>
-  getPendingRequests() => datasource.getPendingRequests();
+  Future<Either<Failure, EventCancellationRequestEntity>> requestCancellation(EventCancellationRequestEntity request) async {
+    return await datasource.requestCancellation(request);
+  }
+
+  @override
+  Future<Either<Failure, List<EventCancellationRequestEntity>>> getPendingRequests() async {
+    return await datasource.getPendingRequests();
+  }
 
   @override
   Future<Either<Failure, EventCancellationRequestEntity>> reviewCancellation({
     required EventCancellationRequestEntity request,
     required bool approve,
     required String reviewerId,
-  }) => datasource.reviewCancellation(
-    request: request,
-    approve: approve,
-    reviewerId: reviewerId,
-  );
+  }) async {
+    return await datasource.reviewCancellation(
+      request: request,
+      approve: approve,
+      reviewerId: reviewerId,
+    );
+  }
 }

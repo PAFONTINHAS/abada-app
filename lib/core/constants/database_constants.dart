@@ -12,6 +12,7 @@ class DBCollections {
   static final String membershipRequestsCollection = "membership_requests";
   static final String userGraduationHistoryCollection = "graduation_history";
   static final String feeExemptionRequestsCollection = "fee_exemption_requests";
+  static final String eventCancellationRequestsCollection = "event_cancellation_requests";
 
 }
 

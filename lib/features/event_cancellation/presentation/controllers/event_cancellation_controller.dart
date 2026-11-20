@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
-import 'package:sistema_abada_capoeira/features/event/domain/entities/event_entity_errado.dart';
 import 'package:sistema_abada_capoeira/features/event_cancellation/domain/entities/event_cancellation_request_entity.dart';
 import 'package:sistema_abada_capoeira/features/event_cancellation/domain/usecases/request_event_cancellation_usecase.dart';
 import 'package:sistema_abada_capoeira/features/event_cancellation/domain/usecases/review_event_cancellation_usecase.dart';
 import 'package:sistema_abada_capoeira/features/event_cancellation/domain/usecases/get_pending_event_cancellation_requests_usecase.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 
 class EventCancellationController extends ChangeNotifier {
   EventCancellationController(
@@ -27,7 +27,7 @@ class EventCancellationController extends ChangeNotifier {
   List<EventCancellationRequestEntity> get pendingRequests => _pendingRequests;
 
   Future<EventCancellationRequestEntity?> requestCancellation({
-    required EventEntityErrado event,
+    required EventEntity event,
     required String requesterId,
     required String reason,
     required String details,

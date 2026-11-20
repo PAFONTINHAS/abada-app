@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
-import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/pages/created_events_page.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_details_page.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_form_page.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_minor_subscription_page.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_receipt_page.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_registrants_list_page.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/pages/events_page.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_form_page.dart';
+import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_receipt_page.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_details_page.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/pages/created_events_page.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_subscription_entity.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_cancellation_page.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_registrants_list_page.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/pages/pending_event_requests_page.dart';
-import 'package:sistema_abada_capoeira/features/event/presentation/pages/event_cancellation_page.dart';
-import 'package:sistema_abada_capoeira/features/event/presentation/pages/event_page.dart';
-import 'package:sistema_abada_capoeira/features/event/domain/entities/event_entity_errado.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/pages/event_minor_subscription_page.dart';
 
 class EventRoutes {
   EventRoutes._();
@@ -21,7 +19,7 @@ class EventRoutes {
   static final route = GoRoute(
     path: '/events',
     builder: (context, state) {
-      return EventPage();
+      return EventsPage();
     },
     routes: [
       GoRoute(
@@ -52,7 +50,7 @@ class EventRoutes {
         path: 'cancel',
         builder: (context, state) {
           final event = state.extra;
-          if (event is! EventEntityErrado) {
+          if (event is! EventEntity) {
             return const Scaffold(
               body: Center(child: Text('Evento inválido para cancelamento.')),
             );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:sistema_abada_capoeira/core/router/redirection_method.dart';
 import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
 import 'package:sistema_abada_capoeira/core/utils/app_message_handler.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
@@ -135,10 +136,11 @@ class _EventMinorSubscriptionPageState
                     "Inscrição e produtos confirmados com sucesso!",
                   );
 
-                  RouteController.pushReplacementEventReceiptPage(
+                  RouteController.redirectToEventReceiptPage(
                     context: context,
                     event: widget.event,
                     subscription: subscription,
+                    redirectionMethod: RedirectionMethod.PUSH_REPLACEMENT
                   );
                 }
               },

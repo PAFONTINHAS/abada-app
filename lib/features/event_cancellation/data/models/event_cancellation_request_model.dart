@@ -18,9 +18,27 @@ class EventCancellationRequestModel extends EventCancellationRequestEntity {
     super.refundTicketIds,
   });
 
-  factory EventCancellationRequestModel.fromSnapshot(
-    DocumentSnapshot<Map<String, dynamic>> snapshot,
-  ) {
+  factory EventCancellationRequestModel.fromEntity(EventCancellationRequestEntity entity){
+
+    return EventCancellationRequestModel(
+      id: entity.id,
+      reason: entity.reason,
+      status: entity.status,
+      details: entity.details,
+      eventId: entity.eventId,
+      creatorId: entity.creatorId,
+      reviewedAt: entity.reviewedAt,
+      eventTitle: entity.eventTitle,
+      reviewerId: entity.reviewerId,
+      requesterId: entity.requesterId,
+      requestedAt: entity.requestedAt,
+      refundRequired: entity.refundRequired,
+      refundTicketIds: entity.refundTicketIds,
+    );
+
+  }
+
+  factory EventCancellationRequestModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> snapshot) {
     final data = snapshot.data() ?? {};
     return EventCancellationRequestModel(
       id: snapshot.id,

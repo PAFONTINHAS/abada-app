@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
 import 'package:sistema_abada_capoeira/core/utils/date_controller.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
 import 'package:sistema_abada_capoeira/shared/body/standard_scaffold_body_widget.dart';
@@ -89,6 +90,34 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
             elevation: 0,
             scrolledUnderElevation: 0.5,
             iconTheme: const IconThemeData(color: ColorConstants.textPrimary),
+            actions: [
+
+              Padding(
+                padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
+                child: ElevatedButton(
+                  onPressed: () => RouteController.redirectoToEventCancellationPage(
+                    context: context,
+                    event: controller.eventEntity!,
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red.shade700,
+                    foregroundColor: ColorConstants.whiteColor,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 15,
+                    ),
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: const Text(
+                    "Cancelar Evento",
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              )
+              
+            ],
           ),
           body: StandardScaffoldBodyWidget(
             child: () {

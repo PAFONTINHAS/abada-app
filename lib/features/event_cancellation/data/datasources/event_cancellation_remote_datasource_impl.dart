@@ -1,30 +1,39 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
+import 'package:sistema_abada_capoeira/core/constants/database_constants.dart';
 import 'package:sistema_abada_capoeira/core/errors/exception_handler.dart';
 import 'package:sistema_abada_capoeira/core/errors/failure.dart';
 import 'package:sistema_abada_capoeira/features/event_cancellation/data/datasources/event_cancellation_remote_datasource.dart';
 import 'package:sistema_abada_capoeira/features/event_cancellation/data/models/event_cancellation_request_model.dart';
 import 'package:sistema_abada_capoeira/features/event_cancellation/domain/entities/event_cancellation_request_entity.dart';
 
-class EventCancellationRemoteDatasourceImpl
-    implements EventCancellationRemoteDatasource {
-  EventCancellationRemoteDatasourceImpl({FirebaseFirestore? firestore})
-    : _firestore = firestore ?? FirebaseFirestore.instance;
+class EventCancellationRemoteDatasourceImpl implements EventCancellationRemoteDatasource {
 
-  final FirebaseFirestore _firestore;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  CollectionReference<Map<String, dynamic>> get _requests =>
-      _firestore.collection('event_cancellation_requests');
+  Future<Either<Failure, bool>> checkIfRequestAlreadyExists(String eventId) async{
+    try{
+
+      final query = await _firestore.collection(DBCollections.eventCancellationRequestsCollection)
+      .where('eventId', isEqualTo: eventId)
+      .limit(1)
+      .get();
+
+      if(query.docs.isNotEmpty) return Right(true);
+
+      return Right(false);
+    }catch(exception){
+
+      return ExceptionHandler.handleException(exception: exception, contextMessage: "checkIfRequestAlreadyExists");
+    }
+  }
 
   @override
-  Future<Either<Failure, EventCancellationRequestEntity>> requestCancellation(
-    EventCancellationRequestEntity request,
-  ) async {
+  Future<Either<Failure, EventCancellationRequestEntity>> requestCancellation(EventCancellationRequestEntity request) async {
     try {
-      final requestReference = _requests.doc();
-      final eventReference = _firestore
-          .collection('events')
-          .doc(request.eventId);
+      final requestReference = _firestore.collection(DBCollections.eventCancellationRequestsCollection).doc();
+      final eventReference = _firestore.collection('events').doc(request.eventId);
+
       final batch = _firestore.batch();
       final eventSnapshot = await eventReference.get();
       final eventData = eventSnapshot.data() ?? {};
@@ -54,19 +63,10 @@ class EventCancellationRemoteDatasourceImpl
       }
       batch.set(eventReference, eventUpdates, SetOptions(merge: true));
 
-      final model = EventCancellationRequestModel(
-        id: requestReference.id,
-        eventId: request.eventId,
-        eventTitle: request.eventTitle,
-        requesterId: request.requesterId,
-        creatorId: request.creatorId,
-        reason: request.reason,
-        details: request.details,
-        requestedAt: request.requestedAt,
-        refundRequired: request.refundRequired,
-        refundTicketIds: refundTicketIds,
-      );
+      final model = EventCancellationRequestModel.fromEntity(request);
+
       batch.set(requestReference, model.toMap());
+
       if (request.refundRequired) {
         for (var index = 0; index < participantCount; index++) {
           final ticketReference = _firestore
@@ -97,10 +97,13 @@ class EventCancellationRemoteDatasourceImpl
   }
 
   @override
-  Future<Either<Failure, List<EventCancellationRequestEntity>>>
-  getPendingRequests() async {
+  Future<Either<Failure, List<EventCancellationRequestEntity>>> getPendingRequests() async {
+
     try {
-      final snapshot = await _requests
+
+      final requestReference = _firestore.collection(DBCollections.eventCancellationRequestsCollection);
+
+      final snapshot = await requestReference
           .where('status', isEqualTo: EventCancellationStatus.pending.name)
           .orderBy('requestedAt', descending: true)
           .get();
@@ -122,6 +125,9 @@ class EventCancellationRemoteDatasourceImpl
     required String reviewerId,
   }) async {
     try {
+
+      final requestReference = _firestore.collection(DBCollections.eventCancellationRequestsCollection).doc(request.id);
+
       final reviewedRequest = request.copyWith(
         status: approve
             ? EventCancellationStatus.approved
@@ -129,25 +135,10 @@ class EventCancellationRemoteDatasourceImpl
         reviewedAt: DateTime.now(),
         reviewerId: reviewerId,
       );
-      await _requests
-          .doc(request.id)
-          .update(
-            EventCancellationRequestModel(
-              id: reviewedRequest.id,
-              eventId: reviewedRequest.eventId,
-              eventTitle: reviewedRequest.eventTitle,
-              requesterId: reviewedRequest.requesterId,
-              creatorId: reviewedRequest.creatorId,
-              reason: reviewedRequest.reason,
-              details: reviewedRequest.details,
-              requestedAt: reviewedRequest.requestedAt,
-              status: reviewedRequest.status,
-              reviewedAt: reviewedRequest.reviewedAt,
-              reviewerId: reviewedRequest.reviewerId,
-              refundRequired: reviewedRequest.refundRequired,
-              refundTicketIds: reviewedRequest.refundTicketIds,
-            ).toMap(),
-          );
+
+      final requestModel = EventCancellationRequestModel.fromEntity(request);
+
+      await requestReference.update(requestModel.toMap());
       return Right(reviewedRequest);
     } catch (exception) {
       return ExceptionHandler.handleException(
