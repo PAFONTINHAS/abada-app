@@ -246,7 +246,7 @@ class EventStatusCardWidget extends StatelessWidget {
                     ),
 
      
-                  const SizedBox(width: 5),
+                    const SizedBox(width: 5),
 
                     if (canEditRequest) ...[
                       Column(

@@ -126,7 +126,11 @@ class RouteController {
 
   static void redirectToPendingEventRequestsPage({
     required BuildContext context,
+    RedirectionMethod redirectionMethod = RedirectionMethod.PUSH 
   }) {
+
+    if(redirectionMethod.isPushReplacementeMethod) return context.pushReplacement('/events/event_requests');
+    
     context.push('/events/event_requests');
   }
 

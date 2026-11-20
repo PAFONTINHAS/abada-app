@@ -7,6 +7,8 @@ import 'package:sistema_abada_capoeira/core/errors/exception_handler.dart';
 import 'package:sistema_abada_capoeira/core/errors/failure.dart';
 import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
 import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_update_parameters.dart';
+import 'package:sistema_abada_capoeira/features/events/data/models/event_request_entity_model.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_type.dart';
 
 /// Operações genéricas de atualização de solicitações.
@@ -14,7 +16,7 @@ import 'package:sistema_abada_capoeira/features/events/domain/entities/event_req
 class RequestDatasourceImpl {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<Either<Failure, bool>> checkIfGenericRequestAlreadyExists(List<String> parameters, String requestId, {
+  Future<Either<Failure, EventRequestEntity?>> checkIfGenericRequestAlreadyExists(List<String> parameters, String requestId, {
     EventRequestType requestType = EventRequestType.creation,
   }) async{
     try{
@@ -25,9 +27,9 @@ class RequestDatasourceImpl {
       .limit(1)
       .get();
 
-      if(query.docs.isNotEmpty) return Right(true);
+      if(query.docs.isNotEmpty) return Right(EventRequestEntityModel.fromSnapshot(query.docs.first));
 
-      return Right(false);
+      return Right(null);
     }catch(exception){
 
       return ExceptionHandler.handleException(exception: exception, contextMessage: "checkIfRequestAlreadyExists");

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_abada_capoeira/core/constants/color_constants.dart';
+import 'package:sistema_abada_capoeira/core/router/redirection_method.dart';
 import 'package:sistema_abada_capoeira/core/router/route_controller.dart';
+import 'package:sistema_abada_capoeira/core/utils/app_message_handler.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_type.dart';
 import 'package:sistema_abada_capoeira/features/profile/domain/entities/acess_profile.dart';
@@ -31,17 +33,6 @@ class EventDetailsRevisionBottomWidget extends StatelessWidget {
     }
 
     final profile = profileController.userProfile;
-
-    // Somente coordenadores podem analisar solicitações.
-    if (profile.role != UserRole.coordinator) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Somente coordenadores podem analisar eventos.'),
-        ),
-      );
-
-      return false;
-    }
 
     final eventId = controller.eventEntity?.eventId ?? '';
 
@@ -172,15 +163,36 @@ class EventDetailsRevisionBottomWidget extends StatelessWidget {
 
             SizedBox(width: 10),
 
-
             Expanded(
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (requestsController.isProcessing) return;
-                  EventDetailsModals.showConfirmApproveDialog(
-                    context,
-                    controller,
+
+                  bool? success = await EventDetailsModals.showConfirmApproveDialog(
+                    context: context,
+                    onApprove: () async {
+
+
+                      if (request.requestType.isCreationRequest) {
+                        return await requestsController.approveCreationRequest(request);
+                      } else if (request.requestType.isCancelationRequest) {
+                        return await requestsController.approveCancelationRequest(request);
+                      }
+                      return false;
+                    },
                   );
+
+                  if(!context.mounted) return;
+
+
+                  if(success == true){
+                    AppMessageHandler.showSuccess(context, "Solicitação aprovada com sucesso");
+                    RouteController.redirectToPendingEventRequestsPage(context: context, redirectionMethod: RedirectionMethod.PUSH_REPLACEMENT);
+
+                    return;
+                  }
+
+                  AppMessageHandler.showError(context, "Erro ao aprovar a solicitação: ${requestsController.errorMessage}");
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green.shade700,

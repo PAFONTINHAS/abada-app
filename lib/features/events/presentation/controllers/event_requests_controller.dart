@@ -4,6 +4,8 @@ import 'package:dartz/dartz.dart';
 import 'package:sistema_abada_capoeira/core/errors/failure.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_decision_parameters.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/usecases/approve_event_cancelation_request_usecase.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/usecases/approve_event_creation_request_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/get_pending_events_requests_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/reject_event_request_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/request_event_changes_usecase.dart';
@@ -11,11 +13,16 @@ class EventRequestsController extends ChangeNotifier {
   final RejectEventRequestUsecase _rejectEventRequestUsecase;
   final RequestEventChangesUsecase _requestEventChangesUsecase;
   final GetPendingEventsRequestsUsecase _getPendingEventsRequestsUsecase;
+  final ApproveEventCreationRequestUsecase _approveEventCreationRequestUsecase;
+  final ApproveEventCancelationRequestUsecase _approveEventCancelationRequestUsecase;
+
 
   EventRequestsController(
-    this._getPendingEventsRequestsUsecase,
     this._rejectEventRequestUsecase,
     this._requestEventChangesUsecase,
+    this._getPendingEventsRequestsUsecase,
+    this._approveEventCreationRequestUsecase,
+    this._approveEventCancelationRequestUsecase,
   );
 
   List<EventRequestEntity> _eventRequests = [];
@@ -58,6 +65,15 @@ class EventRequestsController extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+
+  Future<bool> approveCreationRequest(EventRequestEntity request){
+    return _execute(() => _approveEventCreationRequestUsecase.call(request), request.requestId);
+  }
+
+  Future<bool> approveCancelationRequest(EventRequestEntity request){
+    return _execute(() => _approveEventCancelationRequestUsecase.call(request), request.requestId);
   }
 
   Future<bool> reject(EventRequestDecisionParameters params) {

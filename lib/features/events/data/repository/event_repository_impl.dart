@@ -125,9 +125,20 @@ class EventRepositoryImpl implements EventRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> checkIfRequestAlreadyExists(String eventId, {
+  Future<Either<Failure, EventRequestEntity?>> checkIfRequestAlreadyExists(String eventId, {
     EventRequestType requestType = EventRequestType.creation,
   }) async{
     return await eventRequestsRemoteDatasource.checkIfRequestAlreadyExists(eventId, requestType: requestType);
   }
+
+  @override
+  Future<Either<Failure, void>> activateEvent(String eventId) async{
+    return await eventRemoteDatasource.activateEvent(eventId);
+  }
+
+  @override
+  Future<Either<Failure, void>> cancelEvent(String eventId) async{
+    return await eventRemoteDatasource.cancelEvent(eventId);
+  }
+
 }

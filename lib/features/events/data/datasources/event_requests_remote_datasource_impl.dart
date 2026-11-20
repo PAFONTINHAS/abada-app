@@ -22,7 +22,7 @@ class EventRequestsRemoteDatasourceImpl extends RequestDatasourceImpl implements
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
-  Future<Either<Failure, bool>> checkIfRequestAlreadyExists(String eventId, {
+  Future<Either<Failure, EventRequestEntity?>> checkIfRequestAlreadyExists(String eventId, {
     EventRequestType requestType = EventRequestType.creation,
   }){
     return checkIfGenericRequestAlreadyExists(['eventId', 'requestType'], eventId, requestType: requestType);
@@ -115,7 +115,7 @@ class EventRequestsRemoteDatasourceImpl extends RequestDatasourceImpl implements
 
   @override
   Future<Either<Failure, void>> approveRequest(GenericRequestUpdateParameters params,) =>
-      _updateDecisionTransaction(params,GenericRequestStatus.approved,
+      _updateDecisionTransaction(params, GenericRequestStatus.approved,
         const {
           GenericRequestStatus.requested: GenericRequestStatus.approved,
           GenericRequestStatus.updated: GenericRequestStatus.approved,

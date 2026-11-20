@@ -6,9 +6,7 @@ import 'package:sistema_abada_capoeira/features/events/data/repository/event_rep
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/get_user_events_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/get_event_by_id_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/data/datasources/event_remote_datasource.dart';
-import 'package:sistema_abada_capoeira/features/events/domain/usecases/request_event_cancellation_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/subscribe_to_event_usecase.dart';
-import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_cancellation_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/events_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/reject_event_request_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/create_event_request_usecase.dart';
@@ -23,10 +21,14 @@ import 'package:sistema_abada_capoeira/features/events/data/datasources/event_re
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_details_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_requests_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/created_events_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/usecases/request_event_cancellation_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/usecases/get_pending_events_requests_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_phases_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_cancellation_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/data/datasources/event_requests_remote_datasource_impl.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/usecases/approve_event_creation_request_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_products_controller.dart';
+import 'package:sistema_abada_capoeira/features/events/domain/usecases/approve_event_cancelation_request_usecase.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_form_graduation_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/user_event_subscription_controller.dart';
 import 'package:sistema_abada_capoeira/features/events/presentation/controllers/event_request_submission_controller.dart';
@@ -38,47 +40,52 @@ class EventProviders {
 
   EventProviders._();
 
-  static EventRequestsRemoteDatasource eventRequestsRemoteDatasource = EventRequestsRemoteDatasourceImpl();
-  static EventRemoteDatasource eventRemoteDatasource = EventRemoteDatasourceImpl();
-  static EventRepository eventRepository = EventRepositoryImpl(eventRequestsRemoteDatasource, eventRemoteDatasource);
-  static GetEventByIdUsecase getEventByIdUsecase = GetEventByIdUsecase(eventRepository);
-  static final GetEventRequestByIdUsecase getEventRequestByIdUsecase =GetEventRequestByIdUsecase(eventRepository);
-  static GetUserEventsUsecase getUserEventsUsecase = GetUserEventsUsecase(eventRepository);
-  static CreateEventRequestUsecase createEventRequestUsecase = CreateEventRequestUsecase(eventRepository);
-  static final ResubmitEventRequestUsecase resubmitEventRequestUsecase = ResubmitEventRequestUsecase(eventRepository);
-  static GetPendingEventsRequestsUsecase getPendingEventsRequestsUsecase = GetPendingEventsRequestsUsecase(eventRepository);
+  static final EventRemoteDatasource eventRemoteDatasource = EventRemoteDatasourceImpl();
+  static final EventRequestsRemoteDatasource eventRequestsRemoteDatasource = EventRequestsRemoteDatasourceImpl();
+
+  static final EventRepository eventRepository = EventRepositoryImpl(eventRequestsRemoteDatasource, eventRemoteDatasource);
+  
+  static final GetEventByIdUsecase getEventByIdUsecase = GetEventByIdUsecase(eventRepository);
+  static final GetUserEventsUsecase getUserEventsUsecase = GetUserEventsUsecase(eventRepository);
   static final RejectEventRequestUsecase rejectEventRequestUsecase = RejectEventRequestUsecase(eventRepository);
+  static final CreateEventRequestUsecase createEventRequestUsecase = CreateEventRequestUsecase(eventRepository);
+  static final GetEventRequestByIdUsecase getEventRequestByIdUsecase =GetEventRequestByIdUsecase(eventRepository);
+  static final ResubmitEventRequestUsecase resubmitEventRequestUsecase = ResubmitEventRequestUsecase(eventRepository);
+  static final GetPendingEventsRequestsUsecase getPendingEventsRequestsUsecase = GetPendingEventsRequestsUsecase(eventRepository);
   static final RequestEventCancellationUseCase requestEventCancellationUseCase = RequestEventCancellationUseCase(eventRepository);
 
 
-  static GetEventsUsecase getEventsUsecase = GetEventsUsecase(eventRepository);
-  static SubscribeToEventUsecase subscribeToEventUsecase = SubscribeToEventUsecase(eventRepository);
-  static GetEventSubscriptionsUsecase getEventSubscriptionsUsecase = GetEventSubscriptionsUsecase(eventRepository);
-  static SubscribeMinorToEventUsecase subscribeMinorToEventUsecase = SubscribeMinorToEventUsecase(eventRepository);
+  static final GetEventsUsecase getEventsUsecase = GetEventsUsecase(eventRepository);
+  static final SubscribeToEventUsecase subscribeToEventUsecase = SubscribeToEventUsecase(eventRepository);
   static final RequestEventChangesUsecase requestEventChangesUsecase = RequestEventChangesUsecase(eventRepository);
+  static final GetEventSubscriptionsUsecase getEventSubscriptionsUsecase = GetEventSubscriptionsUsecase(eventRepository);
+  static final SubscribeMinorToEventUsecase subscribeMinorToEventUsecase = SubscribeMinorToEventUsecase(eventRepository);
+  static final ApproveEventCreationRequestUsecase approveEventCreationRequestUsecase = ApproveEventCreationRequestUsecase(eventRepository);
+  static final ApproveEventCancelationRequestUsecase approveEventCancelationRequestUsecase = ApproveEventCancelationRequestUsecase(eventRepository);
 
   static final List<SingleChildWidget> providers = [
-    ChangeNotifierProvider(create: (_) => EventFormProductsController()),
-    ChangeNotifierProvider(create: (_) => EventFormPhasesController()),
-    ChangeNotifierProvider(create: (_) => EventFormGraduationController()),
-    ChangeNotifierProvider(create: (_) => EventDetailsController(getEventByIdUsecase,getEventRequestByIdUsecase,),),  
-    ChangeNotifierProvider(create: (_) => CreatedEventsController(getUserEventsUsecase, getEventByIdUsecase)),
     ChangeNotifierProvider(create: (_) => EventFormController()),
-    ChangeNotifierProvider(create: (_) => EventRequestSubmissionController(createEventRequestUsecase,resubmitEventRequestUsecase,)),
-    ChangeNotifierProvider(create: (_) => EventRequestsController(getPendingEventsRequestsUsecase,rejectEventRequestUsecase,requestEventChangesUsecase,)),  
     ChangeNotifierProvider(create: (_) => EventFormPhasesController()),
+    ChangeNotifierProvider(create: (_) => EventFormProductsController()),
+    ChangeNotifierProvider(create: (_) => EventFormGraduationController()),
     ChangeNotifierProvider(create: (_) => UserEventSubscriptionController()),
-    ChangeNotifierProvider(create: (_) => EventFormProductsController()),
-    ChangeNotifierProvider(create: (_) => EventFormGraduationController()),
     ChangeNotifierProvider(create: (_) => EventsController(getEventsUsecase)),
-    ChangeNotifierProvider(create: (_) => EventDetailsController(getEventByIdUsecase, getEventRequestByIdUsecase)),
-    ChangeNotifierProvider(create: (_) => CreatedEventsController(getUserEventsUsecase, getEventByIdUsecase)),
-    ChangeNotifierProvider(create: (_) => EventFormController()),
-    ChangeNotifierProvider(create: (_) => EventRequestsController(getPendingEventsRequestsUsecase, rejectEventRequestUsecase, requestEventChangesUsecase)),
     ChangeNotifierProvider(create: (_) => EventDetailsSubscriptionController(subscribeToEventUsecase)),
+    ChangeNotifierProvider(create: (_) => EventCancellationController(requestEventCancellationUseCase)),
     ChangeNotifierProvider(create: (_) => EventMinorSubscriptionController(subscribeMinorToEventUsecase)),
     ChangeNotifierProvider(create: (_) => GeneralEventSubscriptionsController(getEventSubscriptionsUsecase)),
-    ChangeNotifierProvider(create: (_) => EventCancellationController(requestEventCancellationUseCase))
+    ChangeNotifierProvider(create: (_) => CreatedEventsController(getUserEventsUsecase, getEventByIdUsecase)),
+    ChangeNotifierProvider(create: (_) => EventDetailsController(getEventByIdUsecase, getEventRequestByIdUsecase)),
+    ChangeNotifierProvider(create: (_) => EventRequestSubmissionController(createEventRequestUsecase,resubmitEventRequestUsecase,)),
+    ChangeNotifierProvider(
+      create: (_) => EventRequestsController(
+        rejectEventRequestUsecase,
+        requestEventChangesUsecase,
+        getPendingEventsRequestsUsecase,
+        approveEventCreationRequestUsecase,
+        approveEventCancelationRequestUsecase,
+      ),
+    ),
     
   ];
 }

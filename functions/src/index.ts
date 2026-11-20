@@ -20,5 +20,11 @@ export {updateMemberData}
 export {removeMemberFromClass}
   from "./removeMemberFromClass";
 
+export {activateEvent}
+  from "./activateEvent";
+
+export {cancelEvent}
+  from "./cancelEvent";
+
 export {leaveClass}
   from "./leaveClass";

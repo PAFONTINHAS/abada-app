@@ -17,6 +17,7 @@ abstract class EventRemoteDatasource {
   Future<Either<Failure, EventSubscriptionEntity?>> validateEventSubscriptionAvailability(String userId, String eventId);
   Future<Either<Failure, EventSubscriptionEntity>> subscribeToEvent(EventSubscriptionEntity subscription);  
 
+  Future<Either<Failure, void>> activateEvent(String eventId);
 
 
 
@@ -24,5 +25,7 @@ abstract class EventRemoteDatasource {
   Future<Either<Failure, void>> updateEvent(EventEntity entity);
 
   // Future<Either<Failure, List<EventEntity>>> getEvents();
+  Future<Either<Failure, void>> cancelEvent(String eventId);
   Future<Either<Failure, EventEntity>> getEventById(String eventId);
+
 }

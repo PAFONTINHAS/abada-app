@@ -17,7 +17,7 @@ abstract class EventRequestsRemoteDatasource {
   Future<Either<Failure, void>> markRequestAsUpdated(GenericRequestUpdateParameters params,);
   Future<Either<Failure, GenericRequestStatus>> resubmitEventRequest(String requestId,EventEntity event);
 
-  Future<Either<Failure, bool>> checkIfRequestAlreadyExists(String eventId, {
+  Future<Either<Failure, EventRequestEntity?>> checkIfRequestAlreadyExists(String eventId, {
     EventRequestType requestType = EventRequestType.creation,
 
   });

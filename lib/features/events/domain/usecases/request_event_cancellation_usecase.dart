@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:sistema_abada_capoeira/core/errors/failure.dart';
+import 'package:sistema_abada_capoeira/core/requests/domain/entities/generic_request_status.dart';
 import 'package:sistema_abada_capoeira/core/utils/mask_formatter.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_entity.dart';
 import 'package:sistema_abada_capoeira/features/events/domain/entities/event_request_type.dart';
@@ -22,9 +23,26 @@ class RequestEventCancellationUseCase {
 
     final checkIfRequestAlreadyExists = await repository.checkIfRequestAlreadyExists(event.eventId, requestType: EventRequestType.cancelation);
 
-    return checkIfRequestAlreadyExists.fold((failure) => Left(failure), (alreadyExists) async{
+    return checkIfRequestAlreadyExists.fold((failure) => Left(failure), (fetchedRequest) async{
 
-      if(alreadyExists) return Left(ValidationFailure("Já existe uma solicitação para esse evento"));
+      if(fetchedRequest != null){
+
+        if(fetchedRequest.status == GenericRequestStatus.rejected){
+
+          return Left(ValidationFailure("Você não pode mais solicitar o cancelamento para esse evento"));
+        } 
+        
+        if(fetchedRequest.status.isApproved){
+
+          return Left(ValidationFailure("Seu evento já foi cancelado. Ele desaparecerá em alguns momentos"));
+        }
+
+
+        if(fetchedRequest.status == GenericRequestStatus.requested){
+
+          return Left(ValidationFailure("Sua solicitação já está em análise."));
+        }
+      }
 
       final eventValue = MaskFormatter.convertMoneyStringToDouble(event.eventValue);
 

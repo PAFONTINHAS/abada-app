@@ -34,9 +34,13 @@ abstract class EventRepository {
   Future<Either<Failure, EventEntity>> getEventById(String eventId);
   Future<Either<Failure, GenericRequestStatus>> resubmitEventRequest(String requestId,EventEntity event,);
   Future<Either<Failure, EventRequestEntity>> getEventRequestById(String requestId);
-  Future<Either<Failure, bool>> checkIfRequestAlreadyExists(
+  Future<Either<Failure, EventRequestEntity?>> checkIfRequestAlreadyExists(
     String eventId, {
     EventRequestType requestType = EventRequestType.creation,
   });
+  Future<Either<Failure, void>> activateEvent(String eventId);
+  Future<Either<Failure, void>> cancelEvent(String eventId);
+
+
 
 }
