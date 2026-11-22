@@ -17,12 +17,14 @@ class RouteController {
     context.go("/dashboard");
   }
 
+
   static void redirectToStudentClassPage({
     required BuildContext context,
     required ClassEntity classEntity,
   }) {
     context.go("/classes/class", extra: classEntity);
   }
+
 
   static void redirectoToClassesEntryRequestsPage({
     required BuildContext context,
@@ -45,12 +47,14 @@ class RouteController {
     context.push('/classes/edit', extra: classEntity);
   }
 
+
   static void pushReplacementClassPage({
     required BuildContext context,
     required ClassEntity classEntity,
   }) {
     context.pushReplacement('/classes/class', extra: classEntity);
   }
+
 
   static void redirectToMigrateClassPage({
     required BuildContext context,
@@ -91,10 +95,9 @@ class RouteController {
     context.push('/events/created_events');
   }
 
-  static void redirectToGraduationHistoryPage({required BuildContext context}){
+  static void redirectToGraduationHistoryPage({required BuildContext context}) {
     context.push('classes/graduation_history');
   }
-
 
   static void redirectoToEventCancellationPage({required BuildContext context, required EventEntity event}){
     context.push('/events/cancel', extra: event);
@@ -139,7 +142,10 @@ class RouteController {
     context.push('/events/event_details/minor_subscription', extra: event);
   }
 
-  static void redirectToEventRegistrantsListPage({required BuildContext context, required EventEntity event}){
+  static void redirectToEventRegistrantsListPage({
+    required BuildContext context,
+    required EventEntity event,
+  }) {
     context.push('/events/event_details/registrants_list', extra: event);
   }
 
