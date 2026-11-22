@@ -17,7 +17,7 @@ class LoginWidget extends StatelessWidget {
     final formController = context.read<LoginFormController>();
 
     return Padding(
-      padding: EdgeInsetsGeometry.all(25),
+      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 4),
       child: Column(
         children: [
           CustomTextInput(
@@ -28,7 +28,7 @@ class LoginWidget extends StatelessWidget {
             // onChanged: (email) => formController.fillEmailField(email),
           ),
 
-          SizedBox(height: 15),
+          const SizedBox(height: 6),
 
           CustomTextInput(
             label: "Senha",
@@ -43,15 +43,19 @@ class LoginWidget extends StatelessWidget {
             alignment: Alignment.centerRight,
             child: TextButton(
               onPressed: () {},
+              style: TextButton.styleFrom(
+                minimumSize: const Size(0, 36),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
               child: Text("Esqueceu a senha?", textAlign: TextAlign.end),
             ),
           ),
 
-          SizedBox(height: 20),
+          const SizedBox(height: 8),
 
           FormButtonWidget(
             text: "Entrar",
-            height: 52,
+            height: 48,
             buttonCollor: ColorConstants.indigoColor,
             onPressed: () async {
               final authController = context.read<AuthController>();
@@ -62,27 +66,31 @@ class LoginWidget extends StatelessWidget {
 
               if (!context.mounted) return;
 
-              if(success){
-
+              if (success) {
                 authController.setAuthStatus(AuthStatus.initializing);
 
-                AppMessageHandler.showSuccess(context, "Conta criada com sucesso! Redirecionando...");
+                AppMessageHandler.showSuccess(
+                  context,
+                  "Conta criada com sucesso! Redirecionando...",
+                );
 
                 formController.cleanControllers();
 
                 return;
               }
 
-             
-              AppMessageHandler.showError(context, formController.errorMessage ?? "Erro");
-            }
+              AppMessageHandler.showError(
+                context,
+                formController.errorMessage ?? "Erro",
+              );
+            },
           ),
 
-          SizedBox(height: 35, child: Divider()),
+          const SizedBox(height: 10, child: Divider()),
 
           FormButtonWidget(
             text: "Entrar com o Google",
-            height: 52,
+            height: 48,
             buttonCollor: ColorConstants.whiteColor,
             textColor: Colors.black,
             prefixImagePath: "assets/images/google.png",
