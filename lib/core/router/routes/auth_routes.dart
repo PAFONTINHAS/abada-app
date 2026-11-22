@@ -7,12 +7,7 @@ class AuthRoutes {
   static final route = GoRoute(
     path: '/',
     builder: (context, state) {
-      final tab = state.uri.queryParameters['tab'];
-      final section = state.uri.queryParameters['section'];
-      return HomePage(
-        initialTab: tab == 'register' ? 1 : 0,
-        publicSection: section == 'archive' ? 1 : 0,
-      );
+      return HomePage();
     },
   );
 }

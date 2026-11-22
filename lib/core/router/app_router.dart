@@ -6,7 +6,6 @@ import 'package:sistema_abada_capoeira/core/router/routes/bottom_navigation_bran
 import 'package:sistema_abada_capoeira/features/auth/presentation/models/auth_status.dart';
 import 'package:sistema_abada_capoeira/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:sistema_abada_capoeira/features/bottom_navigation/presentation/bottom_navigation_page.dart';
-import 'package:sistema_abada_capoeira/features/news/presentation/pages/news_page.dart';
 
 class AppRouter {
   AppRouter({required this.authController});
@@ -18,7 +17,6 @@ class AppRouter {
     refreshListenable: authController,
     redirect: (context, state) {
       final String loginRoute = '/';
-      final String publicNewsRoute = '/welcome/news';
       final String splashRoute = '/splash';
       final String dashboardRoute = '/dashboard';
 
@@ -28,12 +26,8 @@ class AppRouter {
 
       if (authStatus == AuthStatus.unauthenticated) {
         if (currentPath == loginRoute) return null;
-        if (currentPath == publicNewsRoute ||
-            currentPath.startsWith('$publicNewsRoute/')) {
-          return null;
-        }
 
-        return publicNewsRoute;
+        return loginRoute;
       }
 
       if (authStatus == AuthStatus.initializing ||
@@ -43,7 +37,7 @@ class AppRouter {
       }
 
       if (authStatus == AuthStatus.authenticated) {
-        if (currentPath == loginRoute || currentPath == splashRoute) {
+        if (currentPath == loginRoute || currentPath == splashRoute){
           return dashboardRoute;
         }
         return null;
@@ -57,17 +51,6 @@ class AppRouter {
       AuthRoutes.route,
       SplashRoute.route,
       ...FeeExemptionRoutes.routes,
-      GoRoute(
-        path: '/welcome/news',
-        builder: (context, state) => const NewsPage(isPublic: true),
-        routes: [
-          GoRoute(
-            path: 'archive',
-            builder: (context, state) =>
-                const NewsPage(isPublic: true, initialSection: 1),
-          ),
-        ],
-      ),
 
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
