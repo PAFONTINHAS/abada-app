@@ -3,8 +3,10 @@ import 'package:dartz/dartz.dart';
 import 'package:sistema_abada_capoeira/core/errors/failure.dart';
 import 'package:sistema_abada_capoeira/core/services/logging_service.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/entities/class_entity.dart';
+import 'package:sistema_abada_capoeira/features/class/domain/entities/class_metrics_entity.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/create_class_usecase.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/get_attended_classes_usecase.dart';
+import 'package:sistema_abada_capoeira/features/class/domain/usecases/get_class_metrics_usecase.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/get_lectured_classes_usecase.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/remove_student_from_class_usecase.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/update_class_usecase.dart';
@@ -14,6 +16,7 @@ class ClassController extends ChangeNotifier {
   final CreateClassUsecase _createClassUsecase;
   final GetAttendedClassesUsecase _getAttendedClassesUsecase;
   final GetLecturedClassesUsecase _getLecturedClassesUsecase;
+  final GetClassMetricsUsecase _getClassMetricsUsecase;
   final RemoveStudentFromClassUsecase _removeStudentFromClassUsecase;
 
   ClassController(
@@ -21,6 +24,7 @@ class ClassController extends ChangeNotifier {
     this._updateClassUsecase,
     this._getAttendedClassesUsecase,
     this._getLecturedClassesUsecase,
+    this._getClassMetricsUsecase,
     this._removeStudentFromClassUsecase,
   );
 
@@ -41,6 +45,16 @@ class ClassController extends ChangeNotifier {
 
   List<ClassEntity> _lecturedClasses = [];
   List<ClassEntity> get lecturedClasses => _lecturedClasses;
+
+  ClassMetricsEntity getClassMetrics(
+    ClassEntity classEntity, {
+    required String currentUserId,
+  }) {
+    return _getClassMetricsUsecase.call(
+      classEntity,
+      currentUserId: currentUserId,
+    );
+  }
 
   Future<bool> createClass(ClassEntity classEntity) async{
 

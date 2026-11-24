@@ -8,10 +8,12 @@ import 'package:sistema_abada_capoeira/features/profile/presentation/controllers
 class StudentPageClassInfoCardWidget extends StatelessWidget {
   const StudentPageClassInfoCardWidget({
     super.key,
-    required this.classEntity
+    required this.classEntity,
+    required this.totalStudents,
   });
 
   final ClassEntity classEntity;
+  final int totalStudents;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +44,7 @@ class StudentPageClassInfoCardWidget extends StatelessWidget {
                 color: Color(0xFF2B2073), // Cor de fundo caso a imagem demore a carregar
               ),
             ),
-            
+
             // CONTEÚDO DO CARD
             Padding(
               padding: const EdgeInsets.all(16.0),
@@ -64,7 +66,7 @@ class StudentPageClassInfoCardWidget extends StatelessWidget {
                           ),
                         ),
                       ),
-                      
+
 
                       if (userIsProfessor)
                         TextButton(
@@ -80,7 +82,7 @@ class StudentPageClassInfoCardWidget extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 16),
-                  
+
                   // Informações em lista
                   _buildScheduleWidget(Icons.access_time, classEntity.schedule),
                   const SizedBox(height: 8),
@@ -88,7 +90,10 @@ class StudentPageClassInfoCardWidget extends StatelessWidget {
                   const SizedBox(height: 8),
                   _buildInfoRow(Icons.person_outline, "Responsável: ${classEntity.professor.professorNickname}"),
                   const SizedBox(height: 8),
-                  _buildInfoRow(Icons.people_outline, '${classEntity.members.length} alunos'),
+                  _buildInfoRow(
+                    Icons.people_outline,
+                    'Total de alunos: $totalStudents',
+                  ),
                 ],
               ),
             ),

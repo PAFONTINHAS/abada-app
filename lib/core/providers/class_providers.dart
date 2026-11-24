@@ -9,6 +9,7 @@ import 'package:sistema_abada_capoeira/features/class/presentation/controllers/c
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_migration_controller.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/get_attended_classes_usecase.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/get_lectured_classes_usecase.dart';
+import 'package:sistema_abada_capoeira/features/class/domain/usecases/get_class_metrics_usecase.dart';
 import 'package:sistema_abada_capoeira/features/class/domain/usecases/remove_student_from_class_usecase.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/schedule_controller.dart';
 import 'package:sistema_abada_capoeira/features/class/presentation/controllers/class_form_controller.dart';
@@ -37,6 +38,8 @@ class ClassProviders {
       GetAttendedClassesUsecase(classRepository);
   static final GetLecturedClassesUsecase getLecturedClassesUsecase =
       GetLecturedClassesUsecase(classRepository);
+  static final GetClassMetricsUsecase getClassMetricsUsecase =
+      GetClassMetricsUsecase();
   static final RemoveStudentFromClassUsecase removeStudentFromClassUsecase =
       RemoveStudentFromClassUsecase(classRepository);
   static final GetClassesForLocationUsecase getClassesForLocationUsecase =
@@ -54,6 +57,7 @@ class ClassProviders {
         updateClassUsecase,
         getAttendedClassesUsecase,
         getLecturedClassesUsecase,
+        getClassMetricsUsecase,
         removeStudentFromClassUsecase,
       ),
     ),

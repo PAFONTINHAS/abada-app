@@ -60,6 +60,10 @@ class StudentClassPage extends StatelessWidget {
                   (item) => item!.classId == initialClass.classId,
                   orElse: () => initialClass,
                 )!;
+            final classMetrics = controller.getClassMetrics(
+              classEntity,
+              currentUserId: userProfile.uid,
+            );
 
             Future<void> removeStudent(ClassMemberEntity student) async {
               final shouldRemove = await showDialog<bool>(
@@ -103,7 +107,10 @@ class StudentClassPage extends StatelessWidget {
 
             return Column(
               children: [
-                StudentPageClassInfoCardWidget(classEntity: classEntity),
+                StudentPageClassInfoCardWidget(
+                  classEntity: classEntity,
+                  totalStudents: classMetrics.totalStudents,
+                ),
 
                 if (!userIsProfessor) ...[
                   const SizedBox(height: 12),
@@ -119,7 +126,8 @@ class StudentClassPage extends StatelessWidget {
 
                 // O Container agora estica para caber todos os alunos
                 ClassMembersListWidget(
-                  studentsList: classEntity.members,
+                  orderedStudents: classMetrics.orderedStudentsByBelt,
+                  visibleStudentNameIds: classMetrics.visibleStudentNameIds,
                   onRemoveStudent: userIsProfessor ? removeStudent : null,
                 ),
 
