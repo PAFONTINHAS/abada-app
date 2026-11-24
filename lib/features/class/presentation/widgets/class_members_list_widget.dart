@@ -5,19 +5,20 @@ import 'package:sistema_abada_capoeira/features/class/domain/entities/class_memb
 class ClassMembersListWidget extends StatelessWidget {
   const ClassMembersListWidget({
     super.key,
-    required this.studentsList,
+    required this.orderedStudents,
+    required this.visibleStudentNameIds,
     this.onRemoveStudent,
   });
 
-  final List<ClassMemberEntity> studentsList;
+  final List<ClassMemberEntity> orderedStudents;
+  final Set<String> visibleStudentNameIds;
   final Future<void> Function(ClassMemberEntity student)? onRemoveStudent;
+
   @override
   Widget build(BuildContext context) {
-    final double maxListSize = 300.0;
-
-    final double currentListSize = studentsList.length * 80.0;
-
-    final double listSize = (currentListSize > maxListSize)
+    const double maxListSize = 300.0;
+    final currentListSize = orderedStudents.length * 80.0;
+    final listSize = currentListSize > maxListSize
         ? maxListSize
         : currentListSize;
 
@@ -35,12 +36,12 @@ class ClassMembersListWidget extends StatelessWidget {
           ),
         ],
       ),
-      child: studentsList.isEmpty
+      child: orderedStudents.isEmpty
           ? const Padding(
               padding: EdgeInsets.all(32.0),
               child: Center(
                 child: Text(
-                  "Nenhum aluno matriculado.",
+                  'Nenhum aluno matriculado.',
                   style: TextStyle(color: Colors.grey),
                 ),
               ),
@@ -50,16 +51,11 @@ class ClassMembersListWidget extends StatelessWidget {
               child: ListView.separated(
                 shrinkWrap: true,
                 physics: const ScrollPhysics(),
-                itemCount: studentsList.length,
+                itemCount: orderedStudents.length,
                 separatorBuilder: (context, index) =>
                     Divider(height: 1, color: Colors.grey.shade200, indent: 72),
                 itemBuilder: (context, index) {
-                  final student = studentsList[index];
-
-                  final String memberName =
-                      (student.displaySensitiveData && student.name != null)
-                      ? student.name!
-                      : "Anônimo";
+                  final student = orderedStudents[index];
 
                   return ListTile(
                     contentPadding: const EdgeInsets.symmetric(
@@ -76,14 +72,19 @@ class ClassMembersListWidget extends StatelessWidget {
                       ),
                     ),
                     title: Text(
-                      memberName,
+                      _formattedMemberTitle(
+                        student,
+                        isNameVisible: visibleStudentNameIds.contains(
+                          student.studentId,
+                        ),
+                      ),
                       style: const TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 15,
                       ),
                     ),
                     subtitle: Text(
-                      'CORDA ${student.belt}',
+                      'CORDA ${student.belt.trim().toUpperCase()}',
                       style: TextStyle(
                         color: Colors.grey.shade600,
                         fontSize: 13,
@@ -105,5 +106,19 @@ class ClassMembersListWidget extends StatelessWidget {
               ),
             ),
     );
+  }
+
+  String _formattedMemberTitle(
+    ClassMemberEntity student, {
+    required bool isNameVisible,
+  }) {
+    final visibleName = isNameVisible ? student.name?.trim() : null;
+    final name = visibleName == null || visibleName.isEmpty
+        ? 'Anônimo'
+        : visibleName;
+    final nickname = student.nickname?.trim();
+
+    if (nickname == null || nickname.isEmpty) return name;
+    return '$name ($nickname)';
   }
 }
